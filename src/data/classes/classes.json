@@ -1,0 +1,1240 @@
+[
+  {
+    "id": "barbaro",
+    "nome": "Bárbaro",
+    "tipo": "Basica",
+    "pvInicial": 24,
+    "pvPorNivel": 6,
+    "pmPorNivel": 0,
+    "periciasIniciais": "4 + mod. Inteligência",
+    "periciasDeClasse": [
+      "Adestrar Animais",
+      "Atletismo",
+      "Cavalgar",
+      "Iniciativa",
+      "Intimidação",
+      "Ofício",
+      "Percepção",
+      "Sobrevivência"
+    ],
+    "bba": "1 por nível (total)",
+    "proficiencias": "Armaduras leves e médias, armas simples e marciais, escudos. Fortitude Maior.",
+    "habilidades": [
+      {
+        "nivel": 1,
+        "nome": "Fúria",
+        "descricao": "+2 em ataque e dano corpo-a-corpo, RD 1, –2 na CA. Dura 5 rodadas + mod. Con."
+      },
+      {
+        "nivel": 1,
+        "nome": "Analfabetismo",
+        "descricao": "Não sabe ler nem escrever (pode aprender ao adquirir nível em outra classe)."
+      },
+      {
+        "nivel": 2,
+        "nome": "Movimento Rápido",
+        "descricao": "+3m no deslocamento."
+      },
+      {
+        "nivel": 2,
+        "nome": "Esquiva Sobrenatural",
+        "descricao": "Não pode ser surpreendido nem perde mod. Des na CA se desprevenido."
+      },
+      {
+        "nivel": 3,
+        "nome": "Instinto Selvagem",
+        "descricao": "+1 em testes de Reflexos e Percepção (aumenta a cada 3 níveis)."
+      },
+      {
+        "nivel": 5,
+        "nome": "Esquiva Sobrenatural Aprimorada",
+        "descricao": "Não pode ser flanqueado."
+      },
+      {
+        "nivel": 7,
+        "nome": "Redução de Dano",
+        "descricao": "Recebe RD 1/- adicional (aumenta de tempos em tempos)."
+      },
+      {
+        "nivel": 11,
+        "nome": "Fúria Maior",
+        "descricao": "Os bônus de Fúria aumentam para +3 em ataque/dano e RD 2."
+      },
+      {
+        "nivel": 20,
+        "nome": "Fúria Incansável",
+        "descricao": "Não fica mais fatigado após a Fúria."
+      }
+    ],
+    "descricao": "Um guerreiro selvagem e indomável dos ermos que canaliza cólera primordial para dizimar seus inimigos.",
+    "livroFonte": "Manual Básico"
+  },
+  {
+    "id": "bardo",
+    "nome": "Bardo",
+    "tipo": "Basica",
+    "pvInicial": 12,
+    "pvPorNivel": 3,
+    "pmPorNivel": 3,
+    "periciasIniciais": "6 + mod. Inteligência",
+    "periciasDeClasse": [
+      "Acrobacia",
+      "Atuação",
+      "Cavalgar",
+      "Conhecimento",
+      "Diplomacia",
+      "Enganação",
+      "Furtividade",
+      "Iniciativa",
+      "Intuição",
+      "Jogatina",
+      "Ladinagem",
+      "Obter Informação",
+      "Ofício",
+      "Percepção"
+    ],
+    "bba": "3/4 do nível",
+    "proficiencias": "Armas simples, espada curta, espada longa, florete, chicote. Armaduras leves e escudos.",
+    "habilidades": [
+      {
+        "nivel": 1,
+        "nome": "Música de Bardo",
+        "descricao": "Usa Atuação para inspirar coragem (+1 em ataque, dano e resistência a medo) ou fascinar criaturas."
+      },
+      {
+        "nivel": 1,
+        "nome": "Conhecimento de Bardo",
+        "descricao": "Testa 1d20 + nível + mod. Int para saber fatos históricos e lendas de Arton."
+      },
+      {
+        "nivel": 1,
+        "nome": "Magias Arcanas",
+        "descricao": "Lança magias arcanas baseadas em Carisma sem precisar preparar."
+      },
+      {
+        "nivel": 6,
+        "nome": "Sugestão",
+        "descricao": "Pode implantar uma sugestão mental usando sua música."
+      },
+      {
+        "nivel": 8,
+        "nome": "Melodia Revigorante",
+        "descricao": "Cura aliados enquanto toca sua música."
+      }
+    ],
+    "descricao": "Músicos, sedutores, artistas e andarilhos versáteis capazes de combinar magia arcana, combate leve e lábia incomparável.",
+    "livroFonte": "Manual Básico"
+  },
+  {
+    "id": "clerigo",
+    "nome": "Clérigo",
+    "tipo": "Basica",
+    "pvInicial": 16,
+    "pvPorNivel": 4,
+    "pmPorNivel": 4,
+    "periciasIniciais": "2 + mod. Inteligência",
+    "periciasDeClasse": [
+      "Conhecimento (religião)",
+      "Cura",
+      "Diplomacia",
+      "Identificar Magia",
+      "Intuição",
+      "Ofício"
+    ],
+    "bba": "3/4 do nível",
+    "proficiencias": "Armaduras leves, médias e pesadas, escudos e armas simples. Arma favorita da divindade.",
+    "habilidades": [
+      {
+        "nivel": 1,
+        "nome": "Devoto de uma Divindade",
+        "descricao": "Deve seguir os dogmas e obrigações do seu deus, recebendo dois poderes concedidos."
+      },
+      {
+        "nivel": 1,
+        "nome": "Canalizar Energia",
+        "descricao": "Libera uma onda de energia positiva (cura vivos / fere mortos-vivos) ou negativa (cura mortos-vivos / fere vivos)."
+      },
+      {
+        "nivel": 1,
+        "nome": "Magias Divinas",
+        "descricao": "Acesso a toda a lista de magias divinas baseadas em Sabedoria."
+      }
+    ],
+    "descricao": "Os campeões da fé em Arton. Ministros dos vinte deuses maiores do Panteão, munidos de armaduras pesadas e milagres divinos.",
+    "livroFonte": "Manual Básico"
+  },
+  {
+    "id": "druida",
+    "nome": "Druida",
+    "tipo": "Basica",
+    "pvInicial": 16,
+    "pvPorNivel": 4,
+    "pmPorNivel": 4,
+    "periciasIniciais": "4 + mod. Inteligência",
+    "periciasDeClasse": [
+      "Adestrar Animais",
+      "Atletismo",
+      "Cavalgar",
+      "Conhecimento (natureza)",
+      "Cura",
+      "Percepção",
+      "Sobrevivência"
+    ],
+    "bba": "3/4 do nível",
+    "proficiencias": "Armas simples, cimitarras, foices e lanças. Armaduras leves e médias não-metálicas, escudos de madeira.",
+    "habilidades": [
+      {
+        "nivel": 1,
+        "nome": "Código de Conduta Druídico",
+        "descricao": "Não pode usar armaduras ou escudos de metal."
+      },
+      {
+        "nivel": 1,
+        "nome": "Empatia Selvagem",
+        "descricao": "Pode se comunicar e acalmar animais como se usasse Diplomacia."
+      },
+      {
+        "nivel": 1,
+        "nome": "Companheiro Animal",
+        "descricao": "Recebe a companhia de um animal leal que luta ao seu lado."
+      },
+      {
+        "nivel": 5,
+        "nome": "Forma Selvagem",
+        "descricao": "Pode se transformar em animais, recebendo bônus de tamanho, sentidos e ataques naturais."
+      }
+    ],
+    "descricao": "Guardiões da natureza selvagem devotados a Allihanna, Megalokk ou Oceano, mestres da transformação animal e magias telúricas.",
+    "livroFonte": "Manual Básico"
+  },
+  {
+    "id": "feiticeiro",
+    "nome": "Feiticeiro",
+    "tipo": "Basica",
+    "pvInicial": 8,
+    "pvPorNivel": 2,
+    "pmPorNivel": 4,
+    "periciasIniciais": "2 + mod. Inteligência",
+    "periciasDeClasse": [
+      "Conhecimento (arcano)",
+      "Enganação",
+      "Identificar Magia",
+      "Intimidação",
+      "Ofício"
+    ],
+    "bba": "1/2 do nível",
+    "proficiencias": "Armas simples. Nenhuma armadura.",
+    "habilidades": [
+      {
+        "nivel": 1,
+        "nome": "Linhagem Sobrenatural",
+        "descricao": "Escolhe entre linhagem aberrante, dracônica ou elemental, recebendo talentos e poderes associados."
+      },
+      {
+        "nivel": 1,
+        "nome": "Magias Espontâneas",
+        "descricao": "Lança magias arcanas baseadas em Carisma diretamente sem precisar preparar ou usar grimório."
+      }
+    ],
+    "descricao": "Conjuradores arcanos natos cujo poder corre no próprio sangue através de antepassados dragões, gênios ou aberrações.",
+    "livroFonte": "Manual Básico"
+  },
+  {
+    "id": "guerreiro",
+    "nome": "Guerreiro",
+    "tipo": "Basica",
+    "pvInicial": 20,
+    "pvPorNivel": 5,
+    "pmPorNivel": 0,
+    "periciasIniciais": "2 + mod. Inteligência",
+    "periciasDeClasse": [
+      "Adestrar Animais",
+      "Atletismo",
+      "Cavalgar",
+      "Iniciativa",
+      "Intimidação",
+      "Ofício"
+    ],
+    "bba": "1 por nível (total)",
+    "proficiencias": "Todas as armas simples e marciais, todas as armaduras e escudos (incluindo escudo de corpo).",
+    "habilidades": [
+      {
+        "nivel": 1,
+        "nome": "Talento Adicional de Combate",
+        "descricao": "Ganha 1 talento bônus de combate no 1º nível e a cada nível par subsequente (2º, 4º, 6º, 8º, etc.)."
+      }
+    ],
+    "descricao": "O mestre definitivo das armas e armaduras. O guerreiro compensa a ausência de magia com a maior quantidade de talentos marciais do jogo.",
+    "livroFonte": "Manual Básico"
+  },
+  {
+    "id": "ladino",
+    "nome": "Ladino",
+    "tipo": "Basica",
+    "pvInicial": 12,
+    "pvPorNivel": 3,
+    "pmPorNivel": 0,
+    "periciasIniciais": "8 + mod. Inteligência",
+    "periciasDeClasse": [
+      "Acrobacia",
+      "Atletismo",
+      "Atuação",
+      "Cavalgar",
+      "Conhecimento",
+      "Diplomacia",
+      "Enganação",
+      "Furtividade",
+      "Iniciativa",
+      "Intimidação",
+      "Intuição",
+      "Jogatina",
+      "Ladinagem",
+      "Obter Informação",
+      "Ofício",
+      "Percepção"
+    ],
+    "bba": "3/4 do nível",
+    "proficiencias": "Armas simples, espada curta, florete, besta leve, besta de mão. Armaduras leves.",
+    "habilidades": [
+      {
+        "nivel": 1,
+        "nome": "Ataque Furtivo",
+        "descricao": "Causa +1d6 de dano extra contra alvos desprevenidos ou flanqueados (aumenta em +1d6 a cada dois níveis)."
+      },
+      {
+        "nivel": 1,
+        "nome": "Encontrar Armadilhas",
+        "descricao": "Pode usar Percepção e Ladinagem para detectar e desarmar armadilhas mágicas."
+      },
+      {
+        "nivel": 2,
+        "nome": "Evasão",
+        "descricao": "Se passar em teste de Reflexos para metade do dano, não sofre dano algum."
+      },
+      {
+        "nivel": 3,
+        "nome": "Sentir Armadilhas",
+        "descricao": "+1 na CA e Reflexos contra armadilhas."
+      },
+      {
+        "nivel": 4,
+        "nome": "Esquiva Sobrenatural",
+        "descricao": "Mantém bônus de Des na CA mesmo se surpreendido."
+      }
+    ],
+    "descricao": "Especialistas em infiltração, armadilhas, ataques de precisão e perícias diversas. Mestres do submundo e da exploração de masmorras.",
+    "livroFonte": "Manual Básico"
+  },
+  {
+    "id": "mago",
+    "nome": "Mago",
+    "tipo": "Basica",
+    "pvInicial": 8,
+    "pvPorNivel": 2,
+    "pmPorNivel": 4,
+    "periciasIniciais": "2 + mod. Inteligência",
+    "periciasDeClasse": [
+      "Conhecimento (todos)",
+      "Identificar Magia",
+      "Ofício"
+    ],
+    "bba": "1/2 do nível",
+    "proficiencias": "Armas simples. Nenhuma armadura.",
+    "habilidades": [
+      {
+        "nivel": 1,
+        "nome": "Grimório & Preparação de Magias",
+        "descricao": "Estuda e prepara magias do seu livro pessoal, baseadas em Inteligência."
+      },
+      {
+        "nivel": 1,
+        "nome": "Item de Poder ou Familiar",
+        "descricao": "Pode escolher um item mágico pessoal (varinha, anel, cajado) ou um animal de estimação místico."
+      },
+      {
+        "nivel": 1,
+        "nome": "Especialização em Escola",
+        "descricao": "Pode escolher se especializar em uma escola de magia para ganhar magias extras diárias."
+      },
+      {
+        "nivel": 5,
+        "nome": "Talento de Magia Bônus",
+        "descricao": "Ganha 1 talento bônus de magia no 5º nível e a cada 5 níveis subsequentes."
+      }
+    ],
+    "descricao": "Eruditos dedicados ao estudo teórico e prático das energias mágicas. Mestres da versatilidade arcana e dos maiores feitiços do mundo.",
+    "livroFonte": "Manual Básico"
+  },
+  {
+    "id": "monge",
+    "nome": "Monge",
+    "tipo": "Basica",
+    "pvInicial": 16,
+    "pvPorNivel": 4,
+    "pmPorNivel": 0,
+    "periciasIniciais": "4 + mod. Inteligência",
+    "periciasDeClasse": [
+      "Acrobacia",
+      "Atletismo",
+      "Conhecimento (história/religião)",
+      "Furtividade",
+      "Iniciativa",
+      "Intuição",
+      "Ofício",
+      "Percepção"
+    ],
+    "bba": "3/4 do nível",
+    "proficiencias": "Armas de monge (bordão, nunchaku, sai, shuriken). Nenhuma armadura.",
+    "habilidades": [
+      {
+        "nivel": 1,
+        "nome": "Dano Desarmado",
+        "descricao": "Seus ataques desarmados causam dano letal aumentado (1d6 no 1º nível, escalando até 2d10 no 20º)."
+      },
+      {
+        "nivel": 1,
+        "nome": "Rajada de Golpes",
+        "descricao": "Pode desferir um ataque desarmado extra por rodada com penalidade de –2 em todos os ataques."
+      },
+      {
+        "nivel": 1,
+        "nome": "Sexto Sentido",
+        "descricao": "Quando sem armadura, soma o modificador de Sabedoria na Classe de Armadura."
+      },
+      {
+        "nivel": 2,
+        "nome": "Evasão",
+        "descricao": "Não sofre dano em sucessos de testes de Reflexos."
+      },
+      {
+        "nivel": 4,
+        "nome": "Movimento Rápido & Queda Suave",
+        "descricao": "Deslocamento ampliado e capacidade de deslizar por paredes amortecendo quedas."
+      }
+    ],
+    "descricao": "Artistas marciais ascetas que transformam o próprio corpo em uma arma letal, guiados pela disciplina física e espiritual.",
+    "livroFonte": "Manual Básico"
+  },
+  {
+    "id": "paladino",
+    "nome": "Paladino",
+    "tipo": "Basica",
+    "pvInicial": 20,
+    "pvPorNivel": 5,
+    "pmPorNivel": 2,
+    "periciasIniciais": "2 + mod. Inteligência",
+    "periciasDeClasse": [
+      "Adestrar Animais",
+      "Atletismo",
+      "Cavalgar",
+      "Conhecimento (religião)",
+      "Cura",
+      "Diplomacia",
+      "Iniciativa",
+      "Intuição"
+    ],
+    "bba": "1 por nível (total)",
+    "proficiencias": "Todas as armas simples e marciais, todas as armaduras e escudos.",
+    "habilidades": [
+      {
+        "nivel": 1,
+        "nome": "Código de Conduta & Devoção",
+        "descricao": "Deve ser Leal e Bondoso, servindo aos deuses do Bem e da Ordem (Khalmyr, Lena, Marah, Thyatis, Valkaria)."
+      },
+      {
+        "nivel": 1,
+        "nome": "Destruir o Mal",
+        "descricao": "Soma modificador de Carisma no ataque e o nível de paladino no dano contra criaturas malignas."
+      },
+      {
+        "nivel": 1,
+        "nome": "Detectar o Mal",
+        "descricao": "Pode concentrar-se para detectar a presença e aura do mal."
+      },
+      {
+        "nivel": 2,
+        "nome": "Graça Divina",
+        "descricao": "Soma o modificador de Carisma em todos os testes de resistência."
+      },
+      {
+        "nivel": 2,
+        "nome": "Cura pelas Mãos",
+        "descricao": "Pode curar PVs por toque com uma ação padrão gastando usos diários."
+      },
+      {
+        "nivel": 5,
+        "nome": "Montaria Sagrada",
+        "descricao": "Convoca uma montaria mágica abençoada pelos deuses."
+      }
+    ],
+    "descricao": "Cavaleiros sagrados que juraram suas vidas e espadas à defesa dos inocentes, à justiça e à erradicação das forças do mal.",
+    "livroFonte": "Manual Básico"
+  },
+  {
+    "id": "ranger",
+    "nome": "Ranger",
+    "tipo": "Basica",
+    "pvInicial": 16,
+    "pvPorNivel": 4,
+    "pmPorNivel": 2,
+    "periciasIniciais": "6 + mod. Inteligência",
+    "periciasDeClasse": [
+      "Adestrar Animais",
+      "Atletismo",
+      "Cavalgar",
+      "Conhecimento (geografia/natureza)",
+      "Cura",
+      "Furtividade",
+      "Iniciativa",
+      "Ofício",
+      "Percepção",
+      "Sobrevivência"
+    ],
+    "bba": "1 por nível (total)",
+    "proficiencias": "Armas simples e marciais, armaduras leves e médias, escudos.",
+    "habilidades": [
+      {
+        "nivel": 1,
+        "nome": "Inimigo Favorito",
+        "descricao": "Recebe +2 no ataque, dano, Percepção e Sobrevivência contra um tipo escolhido de criatura."
+      },
+      {
+        "nivel": 1,
+        "nome": "Rastrear",
+        "descricao": "+4 em testes de Sobrevivência para rastrear pegadas e rastros nos ermos."
+      },
+      {
+        "nivel": 2,
+        "nome": "Estilo de Combate",
+        "descricao": "Escolhe entre Combater com Duas Armas ou Disparo Preciso (Tiro com Arco)."
+      },
+      {
+        "nivel": 4,
+        "nome": "Companheiro Animal",
+        "descricao": "Ganha a leal companhia de uma fera dos ermos."
+      },
+      {
+        "nivel": 6,
+        "nome": "Tolerância",
+        "descricao": "Resistência a privações e bônus em testes de Fortitude."
+      }
+    ],
+    "descricao": "Caçadores e batedores dos ermos. Mestres do arco ou do combate com duas armas, que rastreiam presas implacavelmente.",
+    "livroFonte": "Manual Básico"
+  },
+  {
+    "id": "samurai",
+    "nome": "Samurai",
+    "tipo": "Basica",
+    "pvInicial": 20,
+    "pvPorNivel": 5,
+    "pmPorNivel": 0,
+    "periciasIniciais": "4 + mod. Inteligência",
+    "periciasDeClasse": [
+      "Adestrar Animais",
+      "Atletismo",
+      "Cavalgar",
+      "Conhecimento (nobreza/história)",
+      "Diplomacia",
+      "Iniciativa",
+      "Intimidação",
+      "Ofício",
+      "Percepção"
+    ],
+    "bba": "1 por nível (total)",
+    "proficiencias": "Armas simples e marciais, katana, wakizashi. Todas as armaduras e escudos.",
+    "habilidades": [
+      {
+        "nivel": 1,
+        "nome": "Código de Honra",
+        "descricao": "Deve ser Leal. Jamais pode atacar pelas costas ou quebrar uma promessa."
+      },
+      {
+        "nivel": 1,
+        "nome": "Espadas Ancestrais",
+        "descricao": "Começa com um conjunto de armas de família (katana e wakizashi) que se aprimoram magicamente com o avanço de níveis sem custo."
+      },
+      {
+        "nivel": 2,
+        "nome": "Grito de Poder (Kiai)",
+        "descricao": "Pode declarar um golpe que causa o dano máximo da arma gastando usos diários."
+      },
+      {
+        "nivel": 3,
+        "nome": "Olhar Aterrorizante",
+        "descricao": "Soma modificador de Força em testes de Intimidação e pode paralisar inimigos com o olhar."
+      }
+    ],
+    "descricao": "Guerreiros nobres originários do Império de Tamu-ra que vivem pelo código do Bushido, armados de espadas ancestrais sagradas.",
+    "livroFonte": "Manual Básico"
+  },
+  {
+    "id": "swashbuckler",
+    "nome": "Swashbuckler",
+    "tipo": "Basica",
+    "pvInicial": 16,
+    "pvPorNivel": 4,
+    "pmPorNivel": 0,
+    "periciasIniciais": "4 + mod. Inteligência",
+    "periciasDeClasse": [
+      "Acrobacia",
+      "Atletismo",
+      "Atuação",
+      "Cavalgar",
+      "Diplomacia",
+      "Enganação",
+      "Iniciativa",
+      "Jogatina",
+      "Ladinagem",
+      "Obter Informação",
+      "Ofício",
+      "Percepção"
+    ],
+    "bba": "1 por nível (total)",
+    "proficiencias": "Armas simples e marciais. Armaduras leves.",
+    "habilidades": [
+      {
+        "nivel": 1,
+        "nome": "Autoconfiança",
+        "descricao": "Quando sem armadura ou com armadura leve, soma modificador de Carisma na Classe de Armadura."
+      },
+      {
+        "nivel": 2,
+        "nome": "Evasão",
+        "descricao": "Evita dano de magias e efeitos de área com testes de Reflexos."
+      },
+      {
+        "nivel": 3,
+        "nome": "Presença Paralisante",
+        "descricao": "Adiciona Carisma na iniciativa e confunde inimigos em combate com provocações."
+      },
+      {
+        "nivel": 5,
+        "nome": "Golpe Audaz",
+        "descricao": "Aumenta a margem de ameaça de críticos com armas leves e ágeis."
+      }
+    ],
+    "descricao": "Espadachins galantes, piratas ousados e duelistas que contam com charme, agilidade e sorte para vencer combates com estilo.",
+    "livroFonte": "Manual Básico"
+  },
+  {
+    "id": "cavaleiro",
+    "nome": "Cavaleiro",
+    "tipo": "Basica",
+    "pvInicial": 20,
+    "pvPorNivel": 5,
+    "pmPorNivel": 0,
+    "periciasIniciais": "2 + mod. Inteligência",
+    "periciasDeClasse": [
+      "Adestrar Animais",
+      "Atletismo",
+      "Cavalgar",
+      "Conhecimento (nobreza)",
+      "Diplomacia",
+      "Iniciativa"
+    ],
+    "bba": "1 por nível (total)",
+    "proficiencias": "Armas simples e marciais, todas as armaduras e escudos.",
+    "habilidades": [
+      {
+        "nivel": 1,
+        "nome": "Código do Cavaleiro",
+        "descricao": "Deve ser Leal. Não ataca alvos caídos e aceita rendições de oponentes honrados."
+      },
+      {
+        "nivel": 1,
+        "nome": "Desafio do Cavaleiro",
+        "descricao": "Provoca um oponente específico forçando-o a atacá-lo sob pena de sofrer penalidades."
+      },
+      {
+        "nivel": 2,
+        "nome": "Combate Montado Aprimorado",
+        "descricao": "Recebe talentos de investida e combate sobre montaria."
+      },
+      {
+        "nivel": 4,
+        "nome": "Armadura Protetora",
+        "descricao": "Diminui penalidade de armadura e aumenta bônus de CA ao vestir armaduras pesadas."
+      }
+    ],
+    "descricao": "Guerreiros nobres devotados à proteção dos fracos e à liderança no campo de batalha em montarias imponentes.",
+    "livroFonte": "Manual do Combate"
+  },
+  {
+    "id": "lutador",
+    "nome": "Lutador",
+    "tipo": "Basica",
+    "pvInicial": 20,
+    "pvPorNivel": 5,
+    "pmPorNivel": 0,
+    "periciasIniciais": "4 + mod. Inteligência",
+    "periciasDeClasse": [
+      "Acrobacia",
+      "Atletismo",
+      "Enganação",
+      "Iniciativa",
+      "Intimidação",
+      "Percepção"
+    ],
+    "bba": "1 por nível (total)",
+    "proficiencias": "Armas simples. Armaduras leves.",
+    "habilidades": [
+      {
+        "nivel": 1,
+        "nome": "Briga",
+        "descricao": "Dano desarmado massivo baseado em Força (1d6 até 2d10), podendo desferir golpes rápidos."
+      },
+      {
+        "nivel": 1,
+        "nome": "Golpe Baixo",
+        "descricao": "Pode atordoar ou cegar oponentes com golpes ilegais de briga de rua."
+      },
+      {
+        "nivel": 2,
+        "nome": "Casca Grossa",
+        "descricao": "Soma modificador de Constituição na Classe de Armadura."
+      },
+      {
+        "nivel": 3,
+        "nome": "Chave de Braço",
+        "descricao": "+4 em testes de manobra de agarrar e imobilizar."
+      }
+    ],
+    "descricao": "Mestres do pugilismo, brigas de taverna e agarrões brutos. Diferente do monge, o lutador vence pela força bruta e jogo sujo.",
+    "livroFonte": "Manual do Combate"
+  },
+  {
+    "id": "abencoado",
+    "nome": "Abençoado",
+    "tipo": "Basica",
+    "pvInicial": 16,
+    "pvPorNivel": 4,
+    "pmPorNivel": 4,
+    "periciasIniciais": "2 + mod. Inteligência",
+    "periciasDeClasse": [
+      "Conhecimento (religião)",
+      "Cura",
+      "Diplomacia",
+      "Identificar Magia",
+      "Intimidação"
+    ],
+    "bba": "3/4 do nível",
+    "proficiencias": "Armas simples e arma da divindade. Armaduras leves e médias.",
+    "habilidades": [
+      {
+        "nivel": 1,
+        "nome": "Escolhido dos Deuses",
+        "descricao": "Nasceu com a centelha divina de um deus específico sem precisar estudar ou professar votos sacerdotais."
+      },
+      {
+        "nivel": 1,
+        "nome": "Magias Divinas Espontâneas",
+        "descricao": "Lança magias divinas sem preparar, baseadas em Carisma."
+      }
+    ],
+    "descricao": "O equivalente divino do feiticeiro: um indivíduo nascido abençoado diretamente por uma divindade do Panteão.",
+    "livroFonte": "Manual do Devoto"
+  },
+  {
+    "id": "samaritano",
+    "nome": "Samaritano",
+    "tipo": "Basica",
+    "pvInicial": 16,
+    "pvPorNivel": 4,
+    "pmPorNivel": 4,
+    "periciasIniciais": "4 + mod. Inteligência",
+    "periciasDeClasse": [
+      "Conhecimento (religião/natureza)",
+      "Cura",
+      "Diplomacia",
+      "Intuição",
+      "Percepção"
+    ],
+    "bba": "1/2 do nível",
+    "proficiencias": "Armas simples não-letais. Armaduras leves.",
+    "habilidades": [
+      {
+        "nivel": 1,
+        "nome": "Voto de Não-Violência",
+        "descricao": "Não causa dano letal a criaturas vivas."
+      },
+      {
+        "nivel": 1,
+        "nome": "Mestre da Cura",
+        "descricao": "Todas as suas magias de cura curam o valor máximo possível sem necessidade de rolagens de dados."
+      }
+    ],
+    "descricao": "Sacerdotes dedicados estritamente à cura de feridos e à preservação da vida sem jamais levantar armas letais.",
+    "livroFonte": "Manual do Devoto"
+  },
+  {
+    "id": "arqueiro_escravo",
+    "nome": "Arqueiro Escravo",
+    "tipo": "Prestigio",
+    "pvInicial": 16,
+    "pvPorNivel": 4,
+    "pmPorNivel": 0,
+    "bba": "1 por nível (total)",
+    "preRequisitos": "BBA +5, Foco em Arma (arco longo), Tiro Preciso, pertencer ou ter pertencido ao Império de Tauron.",
+    "proficiencias": "Armas marciais e arcos.",
+    "habilidades": [
+      {
+        "nivel": 1,
+        "nome": "Mente Cega",
+        "descricao": "Imunidade a encantamento e fascinação devido à doutrinação severa."
+      },
+      {
+        "nivel": 2,
+        "nome": "Chuva de Flechas",
+        "descricao": "Pode disparar contra uma área inteira saturando os inimigos com projéteis."
+      }
+    ],
+    "descricao": "Atiradores de elite disciplinados do exército táurico treinados para obedecer cegamente e massacrar formações inimigas à distância.",
+    "livroFonte": "Guerras Táuricas"
+  },
+  {
+    "id": "centuriao",
+    "nome": "Centurião",
+    "tipo": "Prestigio",
+    "pvInicial": 20,
+    "pvPorNivel": 6,
+    "pmPorNivel": 0,
+    "bba": "1 por nível (total)",
+    "preRequisitos": "BBA +5, Tendência Leal, treinado pelas legiões de Tapista.",
+    "proficiencias": "Armas marciais, todas as armaduras e escudos.",
+    "habilidades": [
+      {
+        "nivel": 1,
+        "nome": "Comando Militar",
+        "descricao": "Garante bônus táticos de ataque e CA a todos os aliados adjacentes que lutem em formação de falange."
+      },
+      {
+        "nivel": 3,
+        "nome": "Disciplina Táurica",
+        "descricao": "Rerola testes de Vontade contra medo e confusão."
+      }
+    ],
+    "descricao": "Oficiais comandantes de elite das legiões do Império de Tauron, líderes natos em combates de cerco e infantaria pesada.",
+    "livroFonte": "Guerras Táuricas"
+  },
+  {
+    "id": "amazona",
+    "nome": "Amazona",
+    "tipo": "Prestigio",
+    "pvInicial": 20,
+    "pvPorNivel": 5,
+    "pmPorNivel": 0,
+    "bba": "1 por nível (total)",
+    "preRequisitos": "Bônus Base de Ataque +5, sexo feminino, tendência não Leal, perícia Atletismo e Cavalgar.",
+    "proficiencias": "Armas marciais, armaduras leves e médias, escudos.",
+    "habilidades": [
+      {
+        "nivel": 1,
+        "nome": "Fúria das Amazonas",
+        "descricao": "Pode entrar em fúria em combate, recebendo bônus em jogadas de ataque e dano corpo a corpo."
+      },
+      {
+        "nivel": 2,
+        "nome": "Companheira Animal",
+        "descricao": "Recebe uma montaria companheira leal e destemida em batalha."
+      },
+      {
+        "nivel": 5,
+        "nome": "Dança das Lanças",
+        "descricao": "Habilidade letal ao combater montada ou com armas de haste."
+      }
+    ],
+    "descricao": "Guerreiras indômitas originárias das savanas e florestas, que rejeitam os padrões da civilização machista e combatem com velocidade feroz.",
+    "livroFonte": "Manual do Combate"
+  },
+  {
+    "id": "capitao_do_reinado",
+    "nome": "Capitão do Reinado",
+    "tipo": "Prestigio",
+    "pvInicial": 20,
+    "pvPorNivel": 5,
+    "pmPorNivel": 0,
+    "bba": "1 por nível (total)",
+    "preRequisitos": "BBA +5, treinado em Iniciativa e Liderança, tendência Leal e Ordeira.",
+    "proficiencias": "Todas as armas e armaduras simples e marciais, todos os escudos.",
+    "habilidades": [
+      {
+        "nivel": 1,
+        "nome": "Comando Inspirador",
+        "descricao": "Concede bônus em testes de perícia e jogadas de ataque a todos os aliados ao redor."
+      },
+      {
+        "nivel": 3,
+        "nome": "Ordens Táticas",
+        "descricao": "Permite que aliados ajam fora da iniciativa para manobras coordenadas."
+      },
+      {
+        "nivel": 5,
+        "nome": "Moral Inabalável",
+        "descricao": "Aliados próximos tornam-se imunes ao medo e efeitos mentais."
+      }
+    ],
+    "descricao": "Oficiais graduados do exército do Reinado treinados para manter formações táticas, guiar soldados na vitória e inspirar coragem indomável.",
+    "livroFonte": "Manual do Combate"
+  },
+  {
+    "id": "franco_atirador",
+    "nome": "Franco-Atirador",
+    "tipo": "Prestigio",
+    "pvInicial": 16,
+    "pvPorNivel": 4,
+    "pmPorNivel": 0,
+    "bba": "1 por nível (total)",
+    "preRequisitos": "BBA +5, Tiro Certeiro, Tiro Longo, Foco em Perícia (Percepção).",
+    "proficiencias": "Armas simples, marciais e armas de disparo de longo alcance.",
+    "habilidades": [
+      {
+        "nivel": 1,
+        "nome": "Mira Mortal",
+        "descricao": "Passa tempo mirando para infligir acertos críticos devastadores à distância máxima."
+      },
+      {
+        "nivel": 3,
+        "nome": "Disparo Oculto",
+        "descricao": "Atira sem revelar sua posição furtiva."
+      },
+      {
+        "nivel": 5,
+        "nome": "Tiro Penetrante",
+        "descricao": "Ignora parte da redução de dano ou cobertura do alvo."
+      }
+    ],
+    "descricao": "Mestres da balística e emboscada a longa distância que eliminam alvos prioritários antes mesmo do primeiro golpe corporal.",
+    "livroFonte": "Manual do Combate"
+  },
+  {
+    "id": "guerreiro_pobre",
+    "nome": "Guerreiro Pobre",
+    "tipo": "Prestigio",
+    "pvInicial": 24,
+    "pvPorNivel": 6,
+    "pmPorNivel": 0,
+    "bba": "1 por nível (total)",
+    "preRequisitos": "BBA +4, voto de pobreza voluntária, sem posse de itens mágicos valiosos.",
+    "proficiencias": "Armas simples e armas improvisadas.",
+    "habilidades": [
+      {
+        "nivel": 1,
+        "nome": "Dureza da Miséria",
+        "descricao": "Recebe bônus maciço na Classe de Armadura baseado na falta de armaduras pesadas e itens mágicos."
+      },
+      {
+        "nivel": 2,
+        "nome": "Arma do Destino",
+        "descricao": "Qualquer porrete ou arma comum empunhada se torna equivalente a uma arma mágica poderosa."
+      },
+      {
+        "nivel": 5,
+        "nome": "Espírito Puro",
+        "descricao": "Resistência extrema a magias, venenos e maldições."
+      }
+    ],
+    "descricao": "Combatentes ascéticos que abandonaram as riquezas mundanas e dependem apenas do próprio corpo e espírito calejado para vencer monstros terríveis.",
+    "livroFonte": "Manual do Combate"
+  },
+  {
+    "id": "gigante_furioso",
+    "nome": "Gigante Furioso",
+    "tipo": "Prestigio",
+    "pvInicial": 24,
+    "pvPorNivel": 6,
+    "pmPorNivel": 0,
+    "bba": "1 por nível (total)",
+    "preRequisitos": "BBA +6, Constituição 17, habilidade de fúria.",
+    "proficiencias": "Armas simples e marciais, armaduras leves e médias.",
+    "habilidades": [
+      {
+        "nivel": 1,
+        "nome": "Fúria dos Titãs",
+        "descricao": "Aumenta de categoria de tamanho efetiva durante a fúria, causando dano titânico."
+      },
+      {
+        "nivel": 3,
+        "nome": "Pancada Sísmica",
+        "descricao": "Golpes no chão que derrubam todos os oponentes adjacentes."
+      },
+      {
+        "nivel": 5,
+        "nome": "Colosso Incontrolável",
+        "descricao": "Ignora paralisia, atordoamento e efeitos que impeçam seu avanço avassalador."
+      }
+    ],
+    "descricao": "Guerreiros cuja fúria cresce tanto que seu próprio corpo parece agigantar-se fisicamente no calor do massacre.",
+    "livroFonte": "Manual do Combate"
+  },
+  {
+    "id": "mestre_bebado",
+    "nome": "Mestre Bêbado",
+    "tipo": "Prestigio",
+    "pvInicial": 20,
+    "pvPorNivel": 5,
+    "pmPorNivel": 0,
+    "bba": "3/4 por nível",
+    "preRequisitos": "BBA +4, Acrobacia 8 graduações, Tolerância, habilidade dano desarmado.",
+    "proficiencias": "Armas improvisadas e golpes desarmados.",
+    "habilidades": [
+      {
+        "nivel": 1,
+        "nome": "Garrafa de Combate",
+        "descricao": "Luta usando garrafas, canecas e bancos com a mesma precisão letal de armas mágicas."
+      },
+      {
+        "nivel": 2,
+        "nome": "Passo Tropeçante",
+        "descricao": "Esquivas imprevisíveis que confundem os atacantes e concedem CA adicional."
+      },
+      {
+        "nivel": 4,
+        "nome": "Sopro de Fogo Etílico",
+        "descricao": "Pode cuspir bebida inflamada sobre os oponentes."
+      }
+    ],
+    "descricao": "Monge ou lutador pouco ortodoxo que transforma a embriaguez em arte marcial letal, esquiva impossível e manobras inacreditáveis.",
+    "livroFonte": "Manual do Combate"
+  },
+  {
+    "id": "pequeno_campeao",
+    "nome": "Pequeno Campeão",
+    "tipo": "Prestigio",
+    "pvInicial": 20,
+    "pvPorNivel": 5,
+    "pmPorNivel": 0,
+    "bba": "1 por nível (total)",
+    "preRequisitos": "BBA +5, tamanho Pequeno ou menor, Ataque Poderoso.",
+    "proficiencias": "Todas as armas simples e marciais.",
+    "habilidades": [
+      {
+        "nivel": 1,
+        "nome": "Golias Deve Cair",
+        "descricao": "Recebe bônus cumulativos de ataque e dano contra oponentes de tamanho maior que o seu."
+      },
+      {
+        "nivel": 3,
+        "nome": "Por Baixo das Pernas",
+        "descricao": "Pode atravessar o espaço ocupado por inimigos maiores sem provocar ataques de oportunidade."
+      },
+      {
+        "nivel": 5,
+        "nome": "Derrubar Montanhas",
+        "descricao": "Manobras de derrubar e empurrar ignoram diferenças de tamanho desfavoráveis."
+      }
+    ],
+    "descricao": "Halflings, goblins e gnomos destemidos que se especializaram em derrubar e humilhar inimigos com o dobro ou triplo da sua estatura.",
+    "livroFonte": "Manual do Combate"
+  },
+  {
+    "id": "samurai_do_vulcao",
+    "nome": "Samurai do Vulcão",
+    "tipo": "Prestigio",
+    "pvInicial": 20,
+    "pvPorNivel": 5,
+    "pmPorNivel": 0,
+    "bba": "1 por nível (total)",
+    "preRequisitos": "BBA +5, habilidade Espadas Ancestrais, Foco em Arma (katana ou wakizashi), tendência Leal.",
+    "proficiencias": "Katana e armas de samurai.",
+    "habilidades": [
+      {
+        "nivel": 1,
+        "nome": "Lâmina Incandescente",
+        "descricao": "Imbui suas katanas com chamas vulcânicas causando dano de fogo adicional."
+      },
+      {
+        "nivel": 3,
+        "nome": "Cinzas Protetoras",
+        "descricao": "Nuvem de cinzas que obscurece a visão dos atacantes e confere camuflagem."
+      },
+      {
+        "nivel": 5,
+        "nome": "Erupção Cortante",
+        "descricao": "Ataques de corte que liberam labaredas explosivas em cone."
+      }
+    ],
+    "descricao": "Samurais de Tamu-ra que canalizam a fúria das lavas e das cinzas vulcânicas em sua disciplina de corte mortal.",
+    "livroFonte": "Manual do Combate"
+  },
+  {
+    "id": "saqueador_selvagem",
+    "nome": "Saqueador Selvagem",
+    "tipo": "Prestigio",
+    "pvInicial": 24,
+    "pvPorNivel": 6,
+    "pmPorNivel": 0,
+    "bba": "1 por nível (total)",
+    "preRequisitos": "BBA +5, Atletismo treinado, Iniciativa Aprimorada, tendência Caótica.",
+    "proficiencias": "Armas marciais, machados e armaduras leves/médias.",
+    "habilidades": [
+      {
+        "nivel": 1,
+        "nome": "Pilhar e Queimar",
+        "descricao": "Velocidade dobrada e bônus de dano devastador contra estruturas e defensores no primeiro turno de combate."
+      },
+      {
+        "nivel": 2,
+        "nome": "Grito de Guerra Bárbaro",
+        "descricao": "Aterroriza e desmoraliza pelotões inimigos inteiros."
+      },
+      {
+        "nivel": 4,
+        "nome": "Fúria do Saque",
+        "descricao": "Recupera vigor temporário ao derrotar alvos chave."
+      }
+    ],
+    "descricao": "Invasores e piratas marítimos ou bárbaros montanheses cujo modo de vida gira em torno de invadir fortalezas, quebrar portas e pilhar recursos.",
+    "livroFonte": "Manual do Combate"
+  },
+  {
+    "id": "soldado_veterano",
+    "nome": "Soldado Veterano",
+    "tipo": "Prestigio",
+    "pvInicial": 20,
+    "pvPorNivel": 5,
+    "pmPorNivel": 0,
+    "bba": "1 por nível (total)",
+    "preRequisitos": "BBA +5, Foco em Arma, experiência comprovada em campanhas de guerra.",
+    "proficiencias": "Todas as armas simples e marciais, todas as armaduras e escudos.",
+    "habilidades": [
+      {
+        "nivel": 1,
+        "nome": "Olhar de Campo de Batalha",
+        "descricao": "Detecta perigos, flancos vulneráveis e emboscadas antes dos outros combatentes."
+      },
+      {
+        "nivel": 2,
+        "nome": "Resistência da Trincheira",
+        "descricao": "Reduz o cansaço e dano de armas de corte e perfuração em combate prolongado."
+      },
+      {
+        "nivel": 5,
+        "nome": "Último Homem em Pé",
+        "descricao": "Continua lutando e atacando mesmo quando reduzido a 0 PV ou menos por várias rodadas."
+      }
+    ],
+    "descricao": "Guerreiro de infantaria calejado que sobreviveu a guerras sangrentas e conhece todos os macetes para manter-se vivo e letal onde outros caem.",
+    "livroFonte": "Manual do Combate"
+  },
+  {
+    "id": "cruzado",
+    "nome": "Cruzado",
+    "tipo": "Prestigio",
+    "pvInicial": 20,
+    "pvPorNivel": 5,
+    "pmPorNivel": 2,
+    "bba": "1 por nível (total)",
+    "preRequisitos": "Força 13, BBA +4, capacidade de conjurar magias divinas, devoção a divindade bélica (excluindo Lena, Marah, Sszzaas e Wynna).",
+    "proficiencias": "Armas marciais da divindade, armaduras pesadas e escudos.",
+    "habilidades": [
+      {
+        "nivel": 1,
+        "nome": "Golpe Divino Bélico",
+        "descricao": "Combina canalização de magia divina com o impacto devastador de sua arma sagrada."
+      },
+      {
+        "nivel": 3,
+        "nome": "Zelo Fanático",
+        "descricao": "Imunidade a intimidação, medo e confusão mental."
+      },
+      {
+        "nivel": 5,
+        "nome": "Fúria Santa",
+        "descricao": "Aumenta dano e margem de ameaça ao enfrentar inimigos da fé."
+      }
+    ],
+    "descricao": "Guerreiros sagrados e clérigos fanáticos dispostos a marchar até os confins de Arton e banhar o chão com o sangue dos infiéis.",
+    "livroFonte": "Manual do Devoto"
+  },
+  {
+    "id": "usurpador",
+    "nome": "Usurpador",
+    "tipo": "Prestigio",
+    "pvInicial": 16,
+    "pvPorNivel": 4,
+    "pmPorNivel": 3,
+    "bba": "3/4 por nível",
+    "preRequisitos": "Tendência não Bondosa, Conhecimento (religião) 8 graduações, não possuir devoção piedosa voluntária.",
+    "proficiencias": "Armas simples e armaduras leves.",
+    "habilidades": [
+      {
+        "nivel": 1,
+        "nome": "Roubo de Poder Divino",
+        "descricao": "Drena energia divina dos próprios deuses ou de seus clérigos sem prestar reverência ou oração."
+      },
+      {
+        "nivel": 3,
+        "nome": "Romper Sagrado",
+        "descricao": "Pode anular canalizações e auras consagradas de servos dos deuses."
+      },
+      {
+        "nivel": 5,
+        "nome": "Suserano Blasfemo",
+        "descricao": "Converte magias roubadas em poder destrutivo puro contra templos e clérigos."
+      }
+    ],
+    "descricao": "Heréticos e rebeldes metafísicos que aprenderam rituais arcanos e profanos para usurpar o poder dos deuses à força, sem rezar a ninguém.",
+    "livroFonte": "Manual do Devoto"
+  },
+  {
+    "id": "cacador_de_horrores",
+    "nome": "Caçador de Horrores",
+    "tipo": "Prestigio",
+    "pvInicial": 20,
+    "pvPorNivel": 5,
+    "pmPorNivel": 1,
+    "bba": "1 por nível (total)",
+    "preRequisitos": "Força, Destreza e Carisma 15, treinado em Sobrevivência, BBA +5, não cultuar Allihanna, Lena, Marah ou Tauron.",
+    "proficiencias": "Armas marciais, armas de disparo e armaduras médias.",
+    "habilidades": [
+      {
+        "nivel": 1,
+        "nome": "Inimigo Monstruoso",
+        "descricao": "Bônus avassalador em ataques e danos contra mortos-vivos, demônios e abominações lefeu."
+      },
+      {
+        "nivel": 3,
+        "nome": "Espírito Blindado",
+        "descricao": "Resistência a drenos de energia e dano de sanidade."
+      },
+      {
+        "nivel": 5,
+        "nome": "Execução Purificadora",
+        "descricao": "Impede a regeneração e ressurreição profana dos monstros caçados."
+      }
+    ],
+    "descricao": "Vingadores sagrados solitários que caçam nas sombras as maiores atrocidades de Arton, vivendo para exterminar aquilo que outros temem pronunciar.",
+    "livroFonte": "Manual do Devoto"
+  },
+  {
+    "id": "santo",
+    "nome": "Santo",
+    "tipo": "Prestigio",
+    "pvInicial": 20,
+    "pvPorNivel": 5,
+    "pmPorNivel": 3,
+    "bba": "3/4 por nível",
+    "preRequisitos": "Carisma 17, tendência Bondosa Pura, conduta imaculada, não cultuar Allihanna, Tanna-Toh ou Tauron.",
+    "proficiencias": "Armaduras leves e médias.",
+    "habilidades": [
+      {
+        "nivel": 1,
+        "nome": "Aura de Santidade",
+        "descricao": "Emana uma luz celestial constante que acalma feras, dissipa trevas e impõe penalidades em seres malignos."
+      },
+      {
+        "nivel": 3,
+        "nome": "Toque Milagroso",
+        "descricao": "Cura doenças, venenos, cegueira e ferimentos mortais apenas impondo as mãos."
+      },
+      {
+        "nivel": 5,
+        "nome": "Ascensão Celestial",
+        "descricao": "Recebe asas de luz, imunidade a veneno e petrificação e proteção sobrenatural permanente."
+      }
+    ],
+    "descricao": "A personificação viva da bondade cósmica e da bênção divina, cujo simples respirar espalha misericórdia, luz e purificação pelo mundo.",
+    "livroFonte": "Manual do Devoto"
+  }
+]

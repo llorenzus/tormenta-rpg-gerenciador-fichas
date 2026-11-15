@@ -1,0 +1,383 @@
+[
+  {
+    "id": "anao",
+    "nome": "Anão",
+    "modificadoresAtributos": "+4 Constituição, +2 Sabedoria, –2 Destreza",
+    "tamanho": "Médio",
+    "deslocamento": "6m",
+    "tracosRaciais": [
+      {
+        "nome": "Ajuste de Atributos",
+        "descricao": "+4 Constituição, +2 Sabedoria, –2 Destreza. Anões são resistentes e sábios, mas um tanto lentos."
+      },
+      {
+        "nome": "Deslocamento Estável",
+        "descricao": "Deslocamento 6m. Embora sejam seres Médios, anões têm pernas curtas e seu deslocamento é o mesmo de criaturas Pequenas. No entanto, o deslocamento de um anão jamais é reduzido por uso de armadura ou excesso de carga."
+      },
+      {
+        "nome": "Visão no Escuro",
+        "descricao": "Anões podem enxergar no escuro a até 18 metros, apenas em preto e branco. Um anão ignora camuflagem (incluindo camuflagem total) por escuridão."
+      },
+      {
+        "nome": "Conhecimento de Rochas",
+        "descricao": "+2 em testes de Percepção para notar pedras ou alvenaria suspeitas. Eles podem notar que uma parede de pedra é falsa, ou que o chão esconde uma armadilha, apenas passando perto."
+      },
+      {
+        "nome": "Resistência a Venenos e Magia",
+        "descricao": "+2 em testes de resistência contra venenos e magias."
+      },
+      {
+        "nome": "Tradição em Armas Anãs",
+        "descricao": "Anões sabem usar machados de batalha, martelos de guerra e machadinha, e tratam o machado táurico e o martelo trovejante como armas marciais."
+      },
+      {
+        "nome": "Inimizade com Gigantes e Trolls",
+        "descricao": "+4 na classe de armadura contra adversários de tamanho Grande ou maior."
+      }
+    ],
+    "descricao": "Povo recluso e próximo das montanhas e rochas, os anões habitam o reino subterrâneo de Doherimm. São gente simples: gostam de esculpir a rocha, trabalhar o metal e entalhar joias — além de uma boa briga e cerveja bem tirada! Não há criatura mais resistente ou difícil de matar que um anão.",
+    "livroFonte": "Manual Básico"
+  },
+  {
+    "id": "elfo",
+    "nome": "Elfo",
+    "modificadoresAtributos": "+4 Destreza, +2 Inteligência, –2 Constituição",
+    "tamanho": "Médio",
+    "deslocamento": "9m",
+    "tracosRaciais": [
+      {
+        "nome": "Ajuste de Atributos",
+        "descricao": "+4 Destreza, +2 Inteligência, –2 Constituição. Elfos são ágeis e inteligentes, mas frágeis."
+      },
+      {
+        "nome": "Visão na Penumbra",
+        "descricao": "Um elfo ignora camuflagem (mas não camuflagem total) por escuridão. Podem ver duas vezes mais longe que humanos em condições de pouca iluminação."
+      },
+      {
+        "nome": "Sentidos Élficos",
+        "descricao": "+2 em testes de Percepção e Identificar Magia."
+      },
+      {
+        "nome": "Tradição Élfica com Arcos e Lâminas",
+        "descricao": "Elfos sabem usar espadas curtas, espadas longas, arcos curtos e arcos longos (incluindo compostos)."
+      },
+      {
+        "nome": "Sangue Feérico",
+        "descricao": "Elfos são imunes a magias de sono e recebem +4 em testes de resistência contra encantamentos."
+      },
+      {
+        "nome": "Foco Mágico",
+        "descricao": "+2 em testes de resistência contra magias arcanas e +1 na CD para resistir às suas próprias magias arcanas."
+      }
+    ],
+    "descricao": "Uma das raças mais antigas criadas pelos deuses. Graciosos, sagazes e orgulhosos, os elfos sofrem pela destruição de sua terra natal, Lenórienn, vivendo como refugiados ou aventureiros em Arton.",
+    "livroFonte": "Manual Básico"
+  },
+  {
+    "id": "goblin",
+    "nome": "Goblin",
+    "modificadoresAtributos": "+4 Destreza, +2 Constituição, –2 Carisma",
+    "tamanho": "Pequeno",
+    "deslocamento": "9m",
+    "tracosRaciais": [
+      {
+        "nome": "Ajuste de Atributos",
+        "descricao": "+4 Destreza, +2 Constituição, –2 Carisma. Goblins são ágeis e duros na queda, mas desagradáveis."
+      },
+      {
+        "nome": "Tamanho Pequeno",
+        "descricao": "+1 na classe de armadura, +1 nas jogadas de ataque e +4 em testes de Furtividade, mas precisam usar armas menores."
+      },
+      {
+        "nome": "Deslocamento 9m",
+        "descricao": "Apesar de pequenos, goblins são rápidos como humanos."
+      },
+      {
+        "nome": "Visão no Escuro",
+        "descricao": "Goblins enxergam no escuro a até 18 metros em preto e branco."
+      },
+      {
+        "nome": "Engenhoso e Rato de Esgoto",
+        "descricao": "+4 em testes de Ladinagem e Ofício (qualquer um à escolha). Goblins também recebem +2 em testes de Fortitude contra doenças e venenos."
+      }
+    ],
+    "descricao": "Pequenos, espertos e desesperadamente adaptáveis. Goblins sobrevivem nos piores cantos de Arton, desde favelas humanas até os esgotos e acampamentos militares da Aliança Negra.",
+    "livroFonte": "Manual Básico"
+  },
+  {
+    "id": "halfling",
+    "nome": "Halfling",
+    "modificadoresAtributos": "+4 Destreza, +2 Carisma, –2 Força",
+    "tamanho": "Pequeno",
+    "deslocamento": "9m",
+    "tracosRaciais": [
+      {
+        "nome": "Ajuste de Atributos",
+        "descricao": "+4 Destreza, +2 Carisma, –2 Força. Halflings são ágeis e simpáticos, mas pequenos e fisicamente fracos."
+      },
+      {
+        "nome": "Tamanho Pequeno",
+        "descricao": "+1 na classe de armadura, +1 nas jogadas de ataque e +4 em testes de Furtividade."
+      },
+      {
+        "nome": "Sorte dos Halflings",
+        "descricao": "+1 em todos os testes de resistência."
+      },
+      {
+        "nome": "Talento com Atiradeiras",
+        "descricao": "+2 em testes de Acrobacia, Enganação e Furtividade. +1 nas jogadas de ataque com armas de arremesso e fundas."
+      },
+      {
+        "nome": "Coragem Halfling",
+        "descricao": "+2 em testes de Vontade contra medo (cumulativo com o bônus de Sorte dos Halflings)."
+      }
+    ],
+    "descricao": "Povo pacífico que ama boa comida, conforto e tranquilidade. Quando viajam pelo mundo, surpreendem seus companheiros com sua audácia, pontaria e sorte descomunal.",
+    "livroFonte": "Manual Básico"
+  },
+  {
+    "id": "humano",
+    "nome": "Humano",
+    "modificadoresAtributos": "+2 em duas habilidades à sua escolha",
+    "tamanho": "Médio",
+    "deslocamento": "9m",
+    "tracosRaciais": [
+      {
+        "nome": "Adaptabilidade",
+        "descricao": "+2 em duas habilidades à sua escolha (exceto uma mesma habilidade duas vezes)."
+      },
+      {
+        "nome": "Versatilidade e Aprendizado Rápido",
+        "descricao": "Humanos recebem 2 talentos adicionais à sua escolha no 1º nível."
+      },
+      {
+        "nome": "Perícias Extras",
+        "descricao": "Humanos recebem 2 perícias treinadas adicionais à sua escolha (não precisam ser perícias de classe)."
+      }
+    ],
+    "descricao": "Com inesgotável energia, determinação e ambição, os humanos dominam a maior parte de Arton. Variantes em crenças, culturas e estilos, são os mais adaptáveis de todos os povos.",
+    "livroFonte": "Manual Básico"
+  },
+  {
+    "id": "lefou",
+    "nome": "Lefou",
+    "modificadoresAtributos": "+2 em duas habilidades à escolha (exceto Carisma), –4 em Carisma contra não-lefou",
+    "tamanho": "Médio",
+    "deslocamento": "9m",
+    "tracosRaciais": [
+      {
+        "nome": "Ajuste de Atributos",
+        "descricao": "+2 em duas habilidades à escolha do jogador (exceto Carisma). Lefou sofrem –4 em Carisma ao lidar com pessoas normais."
+      },
+      {
+        "nome": "Tipo Monstro",
+        "descricao": "Um lefou é considerado um monstro para efeitos de magias e habilidades (não é afetado por magias que afetam apenas humanoides)."
+      },
+      {
+        "nome": "Visão no Escuro",
+        "descricao": "Enxergam no escuro a até 18 metros em preto e branco."
+      },
+      {
+        "nome": "Deformidade Aberrante",
+        "descricao": "Todo lefou começa com 2 talentos da Tormenta à sua escolha, sem custo e sem perder pontos de Carisma por eles."
+      },
+      {
+        "nome": "Afinidade com a Tormenta",
+        "descricao": "Lefou são imunes aos efeitos da tempestade vermelha e da loucura gerada pela Tormenta."
+      }
+    ],
+    "descricao": "Mestiços tocados pela corrupção alienígena da Tormenta. Nascidos em áreas próximas à tempestade rubra, possuem deformidades físicas (olhos vermelhos, carapaças, dentes serrilhados), mas também força e resiliência sobrenaturais.",
+    "livroFonte": "Manual Básico"
+  },
+  {
+    "id": "minotauro",
+    "nome": "Minotauro",
+    "modificadoresAtributos": "+4 Força, +2 Constituição, –2 Carisma",
+    "tamanho": "Médio",
+    "deslocamento": "9m",
+    "tracosRaciais": [
+      {
+        "nome": "Ajuste de Atributos",
+        "descricao": "+4 Força, +2 Constituição, –2 Carisma. Minotauros são fortes e imponentes, mas rudes e intimidados por sutilezas."
+      },
+      {
+        "nome": "Arma Natural de Chifres",
+        "descricao": "Minotauros possuem um ataque natural de chifres (1d6 perfuração). Podem atacar com chifres como ataque secundário com penalidade de –4."
+      },
+      {
+        "nome": "Couro Grosso",
+        "descricao": "+1 na Classe de Armadura por armadura natural."
+      },
+      {
+        "nome": "Faro",
+        "descricao": "Minotauros recebem +4 em testes de Sobrevivência para rastrear pelo cheiro e detectam inimigos a até 9 metros."
+      },
+      {
+        "nome": "Lógica Labiríntica",
+        "descricao": "Minotauros nunca se perdem em labirintos ou masmorras."
+      },
+      {
+        "nome": "Medo de Altura",
+        "descricao": "Se estiver adjacente a uma queda de 3m ou mais (como beira de abismo), fica abalado (–2 em testes)."
+      }
+    ],
+    "descricao": "Povo orgulhoso e guerreiro de Tauron, o Deus da Força. Conquistadores e disciplinados, valorizam a coragem, a lei e a supremacia física.",
+    "livroFonte": "Manual Básico"
+  },
+  {
+    "id": "qareen",
+    "nome": "Qareen",
+    "modificadoresAtributos": "+4 Carisma, +2 Inteligência, –2 Sabedoria",
+    "tamanho": "Médio",
+    "deslocamento": "9m",
+    "tracosRaciais": [
+      {
+        "nome": "Ajuste de Atributos",
+        "descricao": "+4 Carisma, +2 Inteligência, –2 Sabedoria. Qareen são deslumbrantes e astutos, mas inocentes e ingênuos."
+      },
+      {
+        "nome": "Desejos",
+        "descricao": "Se alguém formular um pedido na forma de um desejo (\"eu desejo que...\"), o qareen pode lançar uma magia conhecida sem gastar PMs uma vez por dia."
+      },
+      {
+        "nome": "Resistência Elemental",
+        "descricao": "Conforme a linhagem (água, ar, fogo, terra, etc.), recebe resistência 10 contra um tipo de energia."
+      },
+      {
+        "nome": "Magia Inata",
+        "descricao": "Conhecem 1 magia de nível 0 à sua escolha, podendo lançá-la sem limite de PMs."
+      },
+      {
+        "nome": "Pequenos Desejos",
+        "descricao": "Podem lançar a magia Prestidigitação à vontade."
+      }
+    ],
+    "descricao": "Descendentes de humanos com seres mágicos (gênios, fadas e ninfas). Carismáticos, emotivos e dotados de marcas luminosas na pele, os meio-gênios têm forte ligação com a deusa Wynna.",
+    "livroFonte": "Manual Básico"
+  },
+  {
+    "id": "gnomo",
+    "nome": "Gnomo",
+    "modificadoresAtributos": "+4 Inteligência, +2 Constituição, –2 Força",
+    "tamanho": "Pequeno",
+    "deslocamento": "6m",
+    "tracosRaciais": [
+      {
+        "nome": "Ajuste de Atributos",
+        "descricao": "+4 Inteligência, +2 Constituição, –2 Força. Gnomos são brilhantes e resistentes, mas franzinos."
+      },
+      {
+        "nome": "Tamanho Pequeno",
+        "descricao": "+1 na CA, +1 em ataques e +4 em Furtividade."
+      },
+      {
+        "nome": "Visão na Penumbra",
+        "descricao": "Enxergam o dobro da distância em iluminação reduzida."
+      },
+      {
+        "nome": "Aptidão Ilusionista e Alquímica",
+        "descricao": "+4 em testes de Intuição e Ofício (alquimia). Podem lançar globos de luz, som fantasma e prestidigitação."
+      },
+      {
+        "nome": "Falar com Animais",
+        "descricao": "Podem se comunicar livremente com pequenos animais da floresta."
+      }
+    ],
+    "descricao": "Extremamente raros em Arton, os gnomos são inventores geniais e mestres da ilusão. O mais célebre é Lorde Niebling, Conselheiro Imperial de Valkaria.",
+    "livroFonte": "Manual Básico"
+  },
+  {
+    "id": "meio_elfo",
+    "nome": "Meio-Elfo",
+    "modificadoresAtributos": "+2 Destreza, +2 em outra habilidade à escolha (exceto Constituição)",
+    "tamanho": "Médio",
+    "deslocamento": "9m",
+    "tracosRaciais": [
+      {
+        "nome": "Ajuste de Atributos",
+        "descricao": "+2 Destreza, +2 em outra habilidade à escolha do jogador (exceto Constituição)."
+      },
+      {
+        "nome": "Visão na Penumbra",
+        "descricao": "Enxergam no dobro da distância de humanos em baixa iluminação."
+      },
+      {
+        "nome": "Versatilidade Élfica",
+        "descricao": "1 talento bônus e 1 perícia treinada extra à escolha do jogador."
+      },
+      {
+        "nome": "Sensibilidade Arcana",
+        "descricao": "+2 em testes de Identificar Magia e Percepção, e +2 em Vontade contra encantamentos."
+      }
+    ],
+    "descricao": "Filhos da união entre humanos e elfos. Carregam a adaptabilidade humana unida à graça e intuição mágica dos elfos.",
+    "livroFonte": "Manual Básico"
+  },
+  {
+    "id": "meio_orc",
+    "nome": "Meio-Orc",
+    "modificadoresAtributos": "+2 Força, +2 em outra habilidade à escolha (exceto Inteligência e Carisma)",
+    "tamanho": "Médio",
+    "deslocamento": "9m",
+    "tracosRaciais": [
+      {
+        "nome": "Ajuste de Atributos",
+        "descricao": "+2 Força, +2 em outra habilidade à escolha (exceto Inteligência e Carisma)."
+      },
+      {
+        "nome": "Visão no Escuro",
+        "descricao": "Enxergam no escuro a até 18 metros em preto e branco."
+      },
+      {
+        "nome": "Duro de Matar",
+        "descricao": "Meio-orcs recebem o talento Duro de Matar gratuitamente."
+      },
+      {
+        "nome": "Presença Ameaçadora",
+        "descricao": "+4 em testes de Intimidação."
+      }
+    ],
+    "descricao": "Nascidos da fronteira entre o mundo humano e as tribos orcs. Fortes, rústicos e temidos, sobrevivem nas piores condições.",
+    "livroFonte": "Manual Básico"
+  },
+  {
+    "id": "sprite",
+    "nome": "Sprite",
+    "descricao": "Sprites parecem elfos diminutos com cerca de trinta centímetros de altura, orelhas longas e pontiagudas, olhos negros e asas translúcidas como as de um inseto. Curiosos, entusiastas e amantes da magia e da diversão.",
+    "modificadores": {
+      "forca": -4,
+      "destreza": 4,
+      "constituicao": -2,
+      "inteligencia": 0,
+      "sabedoria": 0,
+      "carisma": 2
+    },
+    "tamanho": "Minúsculo",
+    "deslocamento": 6,
+    "visao": "Normal",
+    "tracosRaciais": [
+      {
+        "nome": "Voo",
+        "descricao": "Sprites possuem asas de inseto e deslocamento de voo de 12m."
+      },
+      {
+        "nome": "Tamanho Minúsculo",
+        "descricao": "Recebe CA +2, bônus de ataque +2, bônus de +8 em testes de Furtividade, mas utiliza armas menores e possui capacidade de carga reduzida."
+      },
+      {
+        "nome": "Língua da Natureza",
+        "descricao": "Sprites podem se comunicar com animais livremente, como se estivessem constantemente sob efeito da magia Falar com Animais."
+      },
+      {
+        "nome": "Magias de Fada",
+        "descricao": "Um sprite com Carisma 10 ou mais pode lançar Globos de Luz, Prestidigitação e Som Fantasma livremente."
+      },
+      {
+        "nome": "Antítese da Tormenta",
+        "descricao": "Sprites são a antítese da Tormenta: em contato com corrupção lefeu simplesmente morrem, virando poeira brilhante e não podendo ser ressuscitados."
+      }
+    ],
+    "livro": "Manual do Arcano",
+    "pagina": 6
+  }
+]

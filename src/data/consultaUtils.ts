@@ -1,5 +1,15 @@
-import { gerarId, HabilidadeOuTalento, MagiaItem } from '../models/ficha';
+import {
+  ArmaItem,
+  ArmaduraEquipamento,
+  gerarId,
+  HabilidadeOuTalento,
+  ItemGeral,
+  MagiaItem,
+} from '../models/ficha';
+import { ClasseData, classes } from './classes';
+import { EquipamentoData, equipamentos, TipoEquipamento } from './equipamentos';
 import { MagiaData, magias } from './magias';
+import { RacaData, racas } from './racas';
 import { CategoriaTalento, TalentoData, talentos } from './talentos';
 
 export const normalizarTexto = (texto: string): string => {
@@ -73,6 +83,38 @@ export const converterMagiaParaItem = (magia: MagiaData): MagiaItem => {
   };
 };
 
+export const converterArmaParaItem = (equip: EquipamentoData): ArmaItem => {
+  return {
+    id: gerarId(),
+    nome: equip.nome,
+    bonusAtaque: '+0',
+    dano: equip.dano || '1d6',
+    critico: equip.critico || '20/x2',
+    distancia: equip.alcance && equip.alcance !== '—' ? equip.alcance : '',
+    tipoDano: equip.tipoDano || 'Corte',
+    usaDestreza: false,
+    outrosBonus: 0,
+  };
+};
+
+export const converterArmaduraParaItem = (equip: EquipamentoData): ArmaduraEquipamento => {
+  return {
+    id: gerarId(),
+    nome: equip.nome,
+    tipo: equip.tipo === 'Escudo' ? 'ESCUDO' : 'ARMADURA',
+    bonusCa: equip.bonusCa || 1,
+    equipada: true,
+  };
+};
+
+export const converterItemGeralParaItem = (equip: EquipamentoData): ItemGeral => {
+  return {
+    id: gerarId(),
+    nome: equip.nome,
+    quantidade: '1',
+  };
+};
+
 export const buscarTalentosSugeridos = (
   termo: string,
   categoria?: CategoriaTalento,
@@ -135,6 +177,42 @@ export const buscarMagiasSugeridas = (
   }
 
   return [...exatos, ...comecaCom, ...contem].slice(0, limite);
+};
+
+export const buscarRacasSugeridas = (termo: string, limite = 8): RacaData[] => {
+  const norm = normalizarTexto(termo);
+  if (!norm || norm.length < 2) return [];
+
+  return racas
+    .filter((r) => normalizarTexto(r.nome).includes(norm))
+    .slice(0, limite);
+};
+
+export const buscarClassesSugeridas = (termo: string, limite = 8): ClasseData[] => {
+  const norm = normalizarTexto(termo);
+  if (!norm || norm.length < 2) return [];
+
+  return classes
+    .filter((c) => normalizarTexto(c.nome).includes(norm))
+    .slice(0, limite);
+};
+
+export const buscarEquipamentosSugeridos = (
+  termo: string,
+  tipo?: TipoEquipamento,
+  limite = 8
+): EquipamentoData[] => {
+  const norm = normalizarTexto(termo);
+  if (!norm || norm.length < 2) return [];
+
+  let lista = equipamentos;
+  if (tipo) {
+    lista = lista.filter((e) => e.tipo === tipo);
+  }
+
+  return lista
+    .filter((e) => normalizarTexto(e.nome).includes(norm))
+    .slice(0, limite);
 };
 
 export interface FiltrosTalentos {
@@ -213,6 +291,49 @@ export const filtrarMagias = ({
   });
 };
 
+export const filtrarRacas = (termo = ''): RacaData[] => {
+  const normTermo = normalizarTexto(termo);
+  if (!normTermo) return racas;
+
+  return racas.filter((r) => {
+    const nomeNorm = normalizarTexto(r.nome);
+    const descNorm = normalizarTexto(r.descricao);
+    const traçosNorm = r.tracosRaciais.map((t) => normalizarTexto(t.nome + ' ' + t.descricao)).join(' ');
+    return nomeNorm.includes(normTermo) || descNorm.includes(normTermo) || traçosNorm.includes(normTermo);
+  });
+};
+
+export const filtrarClasses = (termo = '', tipo: 'Todas' | 'Basica' | 'Prestigio' = 'Todas'): ClasseData[] => {
+  const normTermo = normalizarTexto(termo);
+
+  return classes.filter((c) => {
+    if (tipo !== 'Todas' && c.tipo !== tipo) return false;
+    if (!normTermo) return true;
+
+    const nomeNorm = normalizarTexto(c.nome);
+    const descNorm = normalizarTexto(c.descricao);
+    const habsNorm = c.habilidades.map((h) => normalizarTexto(h.nome + ' ' + h.descricao)).join(' ');
+    return nomeNorm.includes(normTermo) || descNorm.includes(normTermo) || habsNorm.includes(normTermo);
+  });
+};
+
+export const filtrarEquipamentos = (
+  termo = '',
+  tipo: 'Todos' | TipoEquipamento = 'Todos'
+): EquipamentoData[] => {
+  const normTermo = normalizarTexto(termo);
+
+  return equipamentos.filter((e) => {
+    if (tipo !== 'Todos' && e.tipo !== tipo) return false;
+    if (!normTermo) return true;
+
+    const nomeNorm = normalizarTexto(e.nome);
+    const descNorm = normalizarTexto(e.descricao);
+    const catNorm = normalizarTexto(e.categoria);
+    return nomeNorm.includes(normTermo) || descNorm.includes(normTermo) || catNorm.includes(normTermo);
+  });
+};
+
 export const ESCOLAS_MAGIA = [
   'Todas',
   'Abjuração',
@@ -234,4 +355,12 @@ export const CATEGORIAS_TALENTO: Array<CategoriaTalento | 'Todas'> = [
   'Poderes Concedidos',
   'Regional',
   'Tormenta',
+];
+
+export const TIPOS_EQUIPAMENTO: Array<'Todos' | TipoEquipamento> = [
+  'Todos',
+  'Arma',
+  'Armadura',
+  'Escudo',
+  'Item Geral',
 ];
