@@ -11,14 +11,14 @@ import {
   obterMeioNivel,
 } from '../models/ficha';
 import { COLORS } from '../theme/colors';
-import { CampoInteiro, CampoTexto, SecaoHeader, StepperValor } from './CommonInput';
+import { CampoInteiro, SecaoHeader, StepperValor } from './CommonInput';
 
 interface Props {
   ficha: FichaPersonagem;
   onChange: (nova: FichaPersonagem) => void;
 }
 
-export const AbaDadosEAtributos: React.FC<Props> = ({ ficha, onChange }) => {
+export const AbaAtributos: React.FC<Props> = ({ ficha, onChange }) => {
   const meioNivel = obterMeioNivel(ficha.nivel);
   const modDes = calcularModificador(ficha.destreza);
   const modCon = calcularModificador(ficha.constituicao);
@@ -80,110 +80,11 @@ export const AbaDadosEAtributos: React.FC<Props> = ({ ficha, onChange }) => {
       contentContainerStyle={styles.content}
       keyboardShouldPersistTaps="handled"
     >
-      {/* 1. DADOS CADASTRAIS */}
+      {/* 1. ATRIBUTOS BÁSICOS E MODIFICADORES */}
       <View style={styles.card}>
         <SecaoHeader
-          titulo="1. Dados Cadastrais"
-          subtitulo="Informações pessoais do personagem"
-        />
-        <View style={styles.cardBody}>
-          <CampoTexto
-            label="Nome do Personagem"
-            value={ficha.nomePersonagem}
-            onChangeText={(v) => onChange({ ...ficha, nomePersonagem: v })}
-            placeholder="Ex: Sandro Galtran"
-          />
-
-          <View style={styles.row}>
-            <CampoTexto
-              label="Jogador"
-              value={ficha.jogador}
-              onChangeText={(v) => onChange({ ...ficha, jogador: v })}
-              style={styles.col}
-            />
-            <CampoTexto
-              label="Raça"
-              value={ficha.raca}
-              onChangeText={(v) => onChange({ ...ficha, raca: v })}
-              placeholder="Ex: Humano"
-              style={styles.col}
-            />
-          </View>
-
-          <View style={styles.row}>
-            <CampoTexto
-              label="Classe"
-              value={ficha.classe}
-              onChangeText={(v) => onChange({ ...ficha, classe: v })}
-              placeholder="Ex: Guerreiro"
-              style={styles.colWide}
-            />
-            <CampoInteiro
-              label="Nível"
-              valor={ficha.nivel}
-              onValorChange={(v) => onChange({ ...ficha, nivel: Math.max(1, v) })}
-              min={1}
-              max={40}
-              style={styles.colSmall}
-            />
-          </View>
-
-          <View style={styles.row}>
-            <CampoTexto
-              label="Tendência"
-              value={ficha.tendencia}
-              onChangeText={(v) => onChange({ ...ficha, tendencia: v })}
-              placeholder="Ex: Leal e Bondoso"
-              style={styles.col}
-            />
-            <CampoTexto
-              label="Divindade"
-              value={ficha.divindade}
-              onChangeText={(v) => onChange({ ...ficha, divindade: v })}
-              placeholder="Ex: Khalmyr"
-              style={styles.col}
-            />
-          </View>
-
-          <View style={styles.row}>
-            <CampoTexto
-              label="Sexo"
-              value={ficha.sexo}
-              onChangeText={(v) => onChange({ ...ficha, sexo: v })}
-              style={styles.col}
-            />
-            <CampoTexto
-              label="Idade"
-              value={ficha.idade}
-              onChangeText={(v) => onChange({ ...ficha, idade: v })}
-              style={styles.col}
-            />
-          </View>
-
-          <View style={styles.row}>
-            <CampoTexto
-              label="Tamanho"
-              value={ficha.tamanho}
-              onChangeText={(v) => onChange({ ...ficha, tamanho: v })}
-              placeholder="Ex: Médio"
-              style={styles.col}
-            />
-            <CampoTexto
-              label="Deslocamento"
-              value={ficha.deslocamento}
-              onChangeText={(v) => onChange({ ...ficha, deslocamento: v })}
-              placeholder="Ex: 9m"
-              style={styles.col}
-            />
-          </View>
-        </View>
-      </View>
-
-      {/* 2. ATRIBUTOS PRINCIPAIS E SEUS MODIFICADORES */}
-      <View style={styles.card}>
-        <SecaoHeader
-          titulo="2. Atributos Base"
-          subtitulo="Valores de atributos e modificadores"
+          titulo="Atributos Básicos"
+          subtitulo="Valores de atributos e seus respectivos modificadores"
         />
         <View style={styles.cardBody}>
           {ATRIBUTOS_LISTA.map((atrib, idx) => {
@@ -219,11 +120,11 @@ export const AbaDadosEAtributos: React.FC<Props> = ({ ficha, onChange }) => {
         </View>
       </View>
 
-      {/* 3. PV, PM, BBA, CA E RESISTÊNCIAS UNIFICADOS */}
+      {/* 2. PONTOS DE VIDA, MAGIA, BBA, CA E RESISTÊNCIAS */}
       <View style={styles.card}>
         <SecaoHeader
-          titulo="3. Outros Atributos e Resistências"
-          subtitulo="PV, PM, BBA, Classe de Armadura (CA) e Resistências"
+          titulo="Combate & Resistências"
+          subtitulo="PV, PM, BBA, Classe de Armadura (CA) e Testes de Resistência"
         />
         <View style={styles.cardBody}>
           <TouchableOpacity
@@ -283,7 +184,7 @@ export const AbaDadosEAtributos: React.FC<Props> = ({ ficha, onChange }) => {
             </View>
           </View>
 
-          {/* BBA e Nível */}
+          {/* BBA */}
           <View style={styles.row}>
             <CampoInteiro
               label="BBA (Bônus Base de Ataque)"
@@ -291,14 +192,6 @@ export const AbaDadosEAtributos: React.FC<Props> = ({ ficha, onChange }) => {
               onValorChange={(v) => onChange({ ...ficha, bba: v })}
               min={-20}
               max={99}
-              style={styles.col}
-            />
-            <CampoInteiro
-              label="Nível do Personagem"
-              valor={ficha.nivel}
-              onValorChange={(v) => onChange({ ...ficha, nivel: Math.max(1, v) })}
-              min={1}
-              max={40}
               style={styles.col}
             />
           </View>
@@ -685,3 +578,4 @@ const styles = StyleSheet.create({
     color: COLORS.white,
   },
 });
+
