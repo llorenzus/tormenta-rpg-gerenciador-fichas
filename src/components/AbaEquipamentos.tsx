@@ -174,24 +174,39 @@ export const AbaEquipamentos: React.FC<Props> = ({ ficha, onChange }) => {
           ) : (
             ficha.armas.map((arma) => {
               const bba = Number(ficha.bba) || 0;
-              const modAtrib = arma.usaDestreza
-                ? obterModAtributo(ficha, 'DES')
-                : obterModAtributo(ficha, 'FOR');
+              const modFor = obterModAtributo(ficha, 'FOR');
+              const modDes = obterModAtributo(ficha, 'DES');
+              const modAtrib = arma.usaDestreza ? modDes : modFor;
               const bonusTam = Number(ficha.caBonusTamanho) || 0;
               const outros = Number(arma.outrosBonus) || 0;
               const totalCalculado = bba + modAtrib + bonusTam + outros;
 
-              const alternarAtributo = () => {
-                const novoUsaDes = !arma.usaDestreza;
-                const novoTotal = calcularAtaqueArma(ficha, {
-                  ...arma,
-                  usaDestreza: novoUsaDes,
-                });
-                atualizarArma({
-                  ...arma,
-                  usaDestreza: novoUsaDes,
-                  bonusAtaque: formatarModificador(novoTotal),
-                });
+              const selecionarForca = () => {
+                if (arma.usaDestreza) {
+                  const novoTotal = calcularAtaqueArma(ficha, {
+                    ...arma,
+                    usaDestreza: false,
+                  });
+                  atualizarArma({
+                    ...arma,
+                    usaDestreza: false,
+                    bonusAtaque: formatarModificador(novoTotal),
+                  });
+                }
+              };
+
+              const selecionarDestreza = () => {
+                if (!arma.usaDestreza) {
+                  const novoTotal = calcularAtaqueArma(ficha, {
+                    ...arma,
+                    usaDestreza: true,
+                  });
+                  atualizarArma({
+                    ...arma,
+                    usaDestreza: true,
+                    bonusAtaque: formatarModificador(novoTotal),
+                  });
+                }
               };
 
               const atualizarOutrosBonus = (novoOutros: number) => {
@@ -225,56 +240,116 @@ export const AbaEquipamentos: React.FC<Props> = ({ ficha, onChange }) => {
                     </TouchableOpacity>
                   </View>
 
-                  {/* Checkbox de Atributo (Força vs Destreza) */}
-                  <TouchableOpacity
-                    style={[
-                      styles.checkAtributoWrap,
-                      arma.usaDestreza && styles.checkAtributoWrapActive,
-                    ]}
-                    onPress={alternarAtributo}
-                    activeOpacity={0.75}
-                  >
-                    <View
-                      style={[
-                        styles.checkboxBox,
-                        arma.usaDestreza && styles.checkboxBoxActive,
-                      ]}
-                    >
-                      {arma.usaDestreza ? (
-                        <Text style={styles.checkboxCheck}>✓</Text>
-                      ) : null}
-                    </View>
-                    <View style={styles.checkAtributoTextCol}>
-                      <Text style={styles.checkAtributoLabel}>
-                        {arma.usaDestreza
-                          ? 'Usar Destreza (Distância / Acuidade)'
-                          : 'Usar Força (Corpo-a-corpo padrão)'}
-                      </Text>
-                    </View>
-                    <View style={styles.badgeAtribBox}>
-                      <Text style={styles.badgeAtribText}>
-                        {arma.usaDestreza
-                          ? `DES (${formatarModificador(modAtrib)})`
-                          : `FOR (${formatarModificador(modAtrib)})`}
-                      </Text>
-                    </View>
-                  </TouchableOpacity>
+                  {/* Seletor Radio: Força vs Destreza */}
+                  <View style={styles.radioGroupWrap}>
+                    <Text style={styles.radioGroupLabel}>Atributo Chave do Ataque:</Text>
+                    <View style={styles.radioOptionsRow}>
+                      {/* Opção Força */}
+                      <TouchableOpacity
+                        style={[
+                          styles.radioOptionBtn,
+                          !arma.usaDestreza && styles.radioOptionBtnSelected,
+                        ]}
+                        onPress={selecionarForca}
+                        activeOpacity={0.8}
+                      >
+                        <View style={styles.radioCircleOuter}>
+                          {!arma.usaDestreza && <View style={styles.radioCircleInner} />}
+                        </View>
+                        <View style={styles.radioOptionContent}>
+                          <Text
+                            style={[
+                              styles.radioOptionTitle,
+                              !arma.usaDestreza && styles.radioOptionTitleSelected,
+                            ]}
+                          >
+                            Força (FOR)
+                          </Text>
+                          <Text style={styles.radioOptionSub}>Corpo a corpo padrão</Text>
+                        </View>
+                        <View
+                          style={[
+                            styles.radioOptionBadge,
+                            !arma.usaDestreza && styles.radioOptionBadgeSelected,
+                          ]}
+                        >
+                          <Text
+                            style={[
+                              styles.radioOptionBadgeText,
+                              !arma.usaDestreza && styles.radioOptionBadgeTextSelected,
+                            ]}
+                          >
+                            {formatarModificador(modFor)}
+                          </Text>
+                        </View>
+                      </TouchableOpacity>
 
-                  {/* Resumo do Acerto Calculado (BBA + Mod + Tam + Outros) */}
-                  <View style={styles.acertoResumoCard}>
-                    <View style={styles.acertoResumoHeader}>
-                      <Text style={styles.acertoResumoTitulo}>
-                        Acerto Calculado:
-                      </Text>
-                      <Text style={styles.acertoResumoValor}>
-                        {formatarModificador(totalCalculado)}
+                      {/* Opção Destreza */}
+                      <TouchableOpacity
+                        style={[
+                          styles.radioOptionBtn,
+                          arma.usaDestreza && styles.radioOptionBtnSelected,
+                        ]}
+                        onPress={selecionarDestreza}
+                        activeOpacity={0.8}
+                      >
+                        <View style={styles.radioCircleOuter}>
+                          {arma.usaDestreza && <View style={styles.radioCircleInner} />}
+                        </View>
+                        <View style={styles.radioOptionContent}>
+                          <Text
+                            style={[
+                              styles.radioOptionTitle,
+                              arma.usaDestreza && styles.radioOptionTitleSelected,
+                            ]}
+                          >
+                            Destreza (DES)
+                          </Text>
+                          <Text style={styles.radioOptionSub}>Distância / Acuidade</Text>
+                        </View>
+                        <View
+                          style={[
+                            styles.radioOptionBadge,
+                            arma.usaDestreza && styles.radioOptionBadgeSelected,
+                          ]}
+                        >
+                          <Text
+                            style={[
+                              styles.radioOptionBadgeText,
+                              arma.usaDestreza && styles.radioOptionBadgeTextSelected,
+                            ]}
+                          >
+                            {formatarModificador(modDes)}
+                          </Text>
+                        </View>
+                      </TouchableOpacity>
+                    </View>
+                  </View>
+
+                  {/* CARD EXALTADO DO ACERTO TOTAL DA ARMA */}
+                  <View style={styles.acertoExaltadoCard}>
+                    <View style={styles.acertoExaltadoTop}>
+                      <View style={styles.acertoExaltadoIconBadge}>
+                        <Text style={styles.acertoExaltadoIcon}>⚔️</Text>
+                      </View>
+                      <View style={styles.acertoExaltadoTituloCol}>
+                        <Text style={styles.acertoExaltadoSubtitulo}>BÔNUS FINAL DE ATAQUE NO D20</Text>
+                        <Text style={styles.acertoExaltadoTitulo}>ACERTO TOTAL</Text>
+                      </View>
+                      <View style={styles.acertoExaltadoValorBadge}>
+                        <Text style={styles.acertoExaltadoValor}>
+                          {formatarModificador(totalCalculado)}
+                        </Text>
+                      </View>
+                    </View>
+                    <View style={styles.acertoExaltadoFormulaBox}>
+                      <Text style={styles.acertoExaltadoFormula}>
+                        BBA ({formatarModificador(bba)}) + {arma.usaDestreza ? 'DES' : 'FOR'} ({formatarModificador(modAtrib)})
+                        {bonusTam !== 0 ? ` + Tamanho (${formatarModificador(bonusTam)})` : ''}
+                        {outros !== 0 ? ` + Outros (${formatarModificador(outros)})` : ''}
+                        {` = ${formatarModificador(totalCalculado)} no Ataque`}
                       </Text>
                     </View>
-                    <Text style={styles.acertoResumoFormula}>
-                      Mod {arma.usaDestreza ? 'DES' : 'FOR'} ({formatarModificador(modAtrib)}) + BBA ({formatarModificador(bba)})
-                      {bonusTam !== 0 ? ` + Tam (${formatarModificador(bonusTam)})` : ''}
-                      {` + Outros (${formatarModificador(outros)})`}
-                    </Text>
                   </View>
 
                   {/* Bônus de Ataque, Outros e Dano */}
@@ -727,89 +802,165 @@ const styles = StyleSheet.create({
     fontWeight: '600',
     color: COLORS.text,
   },
-  checkAtributoWrap: {
+  // Radio Buttons Força vs Destreza
+  radioGroupWrap: {
+    marginTop: 8,
+    marginBottom: 4,
+  },
+  radioGroupLabel: {
+    fontSize: 10.5,
+    fontWeight: 'bold',
+    color: COLORS.textSecondary,
+    marginBottom: 4,
+    textTransform: 'uppercase',
+  },
+  radioOptionsRow: {
+    flexDirection: 'row',
+    gap: 8,
+  },
+  radioOptionBtn: {
+    flex: 1,
     flexDirection: 'row',
     alignItems: 'center',
     backgroundColor: COLORS.surface,
     borderRadius: 8,
     paddingVertical: 8,
-    paddingHorizontal: 10,
-    marginTop: 8,
-    borderWidth: 1,
+    paddingHorizontal: 8,
+    borderWidth: 1.5,
     borderColor: COLORS.border,
+    gap: 6,
   },
-  checkAtributoWrapActive: {
-    backgroundColor: '#FFF8E7',
+  radioOptionBtnSelected: {
+    backgroundColor: '#FFF9ED',
     borderColor: COLORS.gold,
   },
-  checkboxBox: {
-    width: 22,
-    height: 22,
-    borderRadius: 5,
-    borderWidth: 1.5,
+  radioCircleOuter: {
+    width: 20,
+    height: 20,
+    borderRadius: 10,
+    borderWidth: 2,
     borderColor: COLORS.textSecondary,
-    backgroundColor: COLORS.surface,
-    justifyContent: 'center',
     alignItems: 'center',
-    marginRight: 8,
+    justifyContent: 'center',
+    backgroundColor: COLORS.surface,
   },
-  checkboxBoxActive: {
-    borderColor: COLORS.primaryDark,
+  radioCircleInner: {
+    width: 10,
+    height: 10,
+    borderRadius: 5,
     backgroundColor: COLORS.primary,
   },
-  checkboxCheck: {
-    color: COLORS.white,
-    fontWeight: 'bold',
-    fontSize: 13,
-  },
-  checkAtributoTextCol: {
+  radioOptionContent: {
     flex: 1,
   },
-  checkAtributoLabel: {
-    fontSize: 12,
-    fontWeight: '600',
-    color: COLORS.text,
-  },
-  badgeAtribBox: {
-    backgroundColor: COLORS.surfaceVariant,
-    paddingHorizontal: 8,
-    paddingVertical: 3,
-    borderRadius: 6,
-    borderWidth: 1,
-    borderColor: COLORS.border,
-  },
-  badgeAtribText: {
-    fontSize: 11,
-    fontWeight: 'bold',
-    color: COLORS.primary,
-  },
-  acertoResumoCard: {
-    backgroundColor: COLORS.surface,
-    borderRadius: 8,
-    padding: 8,
-    marginTop: 8,
-    borderWidth: 1,
-    borderColor: COLORS.border,
-  },
-  acertoResumoHeader: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-  },
-  acertoResumoTitulo: {
+  radioOptionTitle: {
     fontSize: 12,
     fontWeight: 'bold',
     color: COLORS.text,
   },
-  acertoResumoValor: {
-    fontSize: 15,
-    fontWeight: 'bold',
-    color: COLORS.primary,
+  radioOptionTitleSelected: {
+    color: COLORS.primaryDark,
   },
-  acertoResumoFormula: {
+  radioOptionSub: {
     fontSize: 10,
     color: COLORS.textSecondary,
-    marginTop: 2,
+  },
+  radioOptionBadge: {
+    backgroundColor: COLORS.surfaceVariant,
+    paddingHorizontal: 6,
+    paddingVertical: 2,
+    borderRadius: 4,
+    borderWidth: 1,
+    borderColor: COLORS.border,
+  },
+  radioOptionBadgeSelected: {
+    backgroundColor: COLORS.gold,
+    borderColor: COLORS.gold,
+  },
+  radioOptionBadgeText: {
+    fontSize: 11,
+    fontWeight: 'bold',
+    color: COLORS.textSecondary,
+  },
+  radioOptionBadgeTextSelected: {
+    color: '#3B2900',
+  },
+
+  // Acerto Exaltado Card
+  acertoExaltadoCard: {
+    backgroundColor: '#FFFDF5',
+    borderRadius: 10,
+    padding: 10,
+    marginTop: 8,
+    marginBottom: 6,
+    borderWidth: 2,
+    borderColor: COLORS.gold,
+    elevation: 2,
+    shadowColor: COLORS.gold,
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.15,
+    shadowRadius: 4,
+  },
+  acertoExaltadoTop: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    gap: 8,
+  },
+  acertoExaltadoIconBadge: {
+    width: 38,
+    height: 38,
+    borderRadius: 8,
+    backgroundColor: 'rgba(200, 157, 60, 0.2)',
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderWidth: 1,
+    borderColor: COLORS.gold,
+  },
+  acertoExaltadoIcon: {
+    fontSize: 20,
+  },
+  acertoExaltadoTituloCol: {
+    flex: 1,
+  },
+  acertoExaltadoSubtitulo: {
+    fontSize: 9.5,
+    fontWeight: 'bold',
+    color: '#8A6414',
+    letterSpacing: 0.5,
+  },
+  acertoExaltadoTitulo: {
+    fontSize: 15,
+    fontWeight: '900',
+    color: COLORS.primaryDark,
+    letterSpacing: 0.5,
+  },
+  acertoExaltadoValorBadge: {
+    backgroundColor: COLORS.primary,
+    paddingHorizontal: 14,
+    paddingVertical: 4,
+    borderRadius: 8,
+    borderWidth: 1.5,
+    borderColor: COLORS.gold,
+    minWidth: 64,
+    alignItems: 'center',
+  },
+  acertoExaltadoValor: {
+    fontSize: 22,
+    fontWeight: '900',
+    color: COLORS.white,
+  },
+  acertoExaltadoFormulaBox: {
+    marginTop: 8,
+    paddingTop: 6,
+    borderTopWidth: 1,
+    borderTopColor: 'rgba(200, 157, 60, 0.3)',
+  },
+  acertoExaltadoFormula: {
+    fontSize: 11,
+    fontWeight: '600',
+    color: '#654B0E',
+    textAlign: 'center',
   },
 });
 

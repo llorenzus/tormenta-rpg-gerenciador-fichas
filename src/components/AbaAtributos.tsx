@@ -40,10 +40,12 @@ export const AbaAtributos: React.FC<Props> = ({ ficha, onChange }) => {
       ...ficha,
       pvAtual: ficha.pvTotal,
       pmAtual: ficha.pmTotal,
+      peAtual: ficha.peTotal ?? 0,
+      pontosAcao: 1,
     });
     Alert.alert(
       'Descanso Longo',
-      'Todos os seus atributos atuais (PV e PM) foram recuperados aos valores máximos!'
+      'Todos os seus recursos atuais (PV, PM, PE e Pontos de Ação) foram restaurados aos valores padrão!'
     );
   };
 
@@ -182,6 +184,47 @@ export const AbaAtributos: React.FC<Props> = ({ ficha, onChange }) => {
                 style={styles.col}
               />
             </View>
+          </View>
+
+          {/* PE - PONTOS DE ENERGIA */}
+          <View style={styles.statusSubBox}>
+            <Text style={styles.statusGroupTitle}>PONTOS DE ENERGIA (PE)</Text>
+            <View style={styles.row}>
+              <CampoInteiro
+                label="PE Atuais"
+                valor={ficha.peAtual ?? 0}
+                onValorChange={(v) => onChange({ ...ficha, peAtual: v })}
+                min={0}
+                max={9999}
+                style={styles.col}
+              />
+              <CampoInteiro
+                label="PE Totais"
+                valor={ficha.peTotal ?? 0}
+                onValorChange={(v) => onChange({ ...ficha, peTotal: v })}
+                min={0}
+                max={9999}
+                style={styles.col}
+              />
+            </View>
+          </View>
+
+          {/* PONTOS DE AÇÃO (PA) */}
+          <View style={styles.statusSubBox}>
+            <Text style={styles.statusGroupTitle}>PONTOS DE AÇÃO (PA)</Text>
+            <View style={styles.row}>
+              <CampoInteiro
+                label="Pontos de Ação Disponíveis"
+                valor={ficha.pontosAcao ?? 1}
+                onValorChange={(v) => onChange({ ...ficha, pontosAcao: Math.max(0, v) })}
+                min={0}
+                max={99}
+                style={styles.col}
+              />
+            </View>
+            <Text style={styles.helperText}>
+              Inicia cada sessão com 1 PA. Permite dados extras no d20, bônus na CA, ação extra ou cura rápida.
+            </Text>
           </View>
 
           {/* BBA */}

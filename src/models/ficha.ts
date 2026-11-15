@@ -103,11 +103,14 @@ export interface FichaPersonagem {
   sabedoria: number;
   carisma: number;
 
-  // Status de Combate: PV, PM, BBA, CA e Resistências (campos manuais)
+  // Status de Combate: PV, PM, PE, Pontos de Ação, BBA, CA e Resistências (campos manuais)
   pvTotal: number;
   pvAtual: number;
   pmTotal: number;
   pmAtual: number;
+  pontosAcao?: number; // Pontos de Ação (PA)
+  peTotal?: number;    // Pontos de Energia Totais (PE)
+  peAtual?: number;    // Pontos de Energia Atuais (PE)
   bba: number;
   caBonusTamanho: number;
   caOutrosBonus: number;
@@ -336,6 +339,9 @@ export function criarNovaFichaPadrao(): FichaPersonagem {
     pvAtual: 10,
     pmTotal: 0,
     pmAtual: 0,
+    pontosAcao: 1,
+    peTotal: 0,
+    peAtual: 0,
     bba: 0,
     caBonusTamanho: 0,
     caOutrosBonus: 0,

@@ -131,6 +131,49 @@ export const AbaHabilidadesClasse: React.FC<Props> = ({ ficha, onChange }) => {
       contentContainerStyle={styles.content}
       keyboardShouldPersistTaps="handled"
     >
+      {/* BARRA DE RECURSOS: PONTOS DE ENERGIA (PE) E PONTOS DE AÇÃO (PA) */}
+      <View style={styles.cardRecursos}>
+        <View style={styles.recursoItem}>
+          <Text style={styles.recursoLabel}>Pontos de Energia (PE)</Text>
+          <View style={styles.recursoRow}>
+            <Text style={styles.recursoVal}>{ficha.peAtual ?? 0} / {ficha.peTotal ?? 0}</Text>
+            <TouchableOpacity
+              style={styles.btnRecursoDelta}
+              onPress={() => onChange({ ...ficha, peAtual: Math.max(0, (ficha.peAtual ?? 0) - 1) })}
+            >
+              <Text style={styles.btnRecursoDeltaText}>-1</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={styles.btnRecursoDelta}
+              onPress={() => onChange({ ...ficha, peAtual: (ficha.peAtual ?? 0) + 1 })}
+            >
+              <Text style={styles.btnRecursoDeltaText}>+1</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+
+        <View style={styles.recursoDivider} />
+
+        <View style={styles.recursoItem}>
+          <Text style={styles.recursoLabel}>Pontos de Ação (PA)</Text>
+          <View style={styles.recursoRow}>
+            <Text style={[styles.recursoVal, { color: COLORS.primary }]}>{ficha.pontosAcao ?? 1} PA</Text>
+            <TouchableOpacity
+              style={styles.btnRecursoDelta}
+              onPress={() => onChange({ ...ficha, pontosAcao: Math.max(0, (ficha.pontosAcao ?? 1) - 1) })}
+            >
+              <Text style={styles.btnRecursoDeltaText}>-1</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={styles.btnRecursoDelta}
+              onPress={() => onChange({ ...ficha, pontosAcao: (ficha.pontosAcao ?? 1) + 1 })}
+            >
+              <Text style={styles.btnRecursoDeltaText}>+1</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </View>
+
       {/* 1. HABILIDADES DE CLASSE & MANOBRAS */}
       <View style={styles.card}>
         <View style={styles.cardHeaderWithAction}>
@@ -308,6 +351,59 @@ const styles = StyleSheet.create({
     borderColor: COLORS.border,
     overflow: 'hidden',
   },
+  cardRecursos: {
+    backgroundColor: COLORS.surface,
+    borderRadius: 10,
+    padding: 12,
+    marginBottom: 14,
+    borderWidth: 1,
+    borderColor: COLORS.border,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-around',
+    flexWrap: 'wrap',
+    gap: 8,
+  },
+  recursoItem: {
+    alignItems: 'center',
+    minWidth: 140,
+  },
+  recursoLabel: {
+    fontSize: 11,
+    fontWeight: 'bold',
+    color: COLORS.textSecondary,
+    marginBottom: 4,
+    textTransform: 'uppercase',
+  },
+  recursoRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 6,
+  },
+  recursoVal: {
+    fontSize: 15,
+    fontWeight: 'bold',
+    color: '#1B609E',
+    marginRight: 4,
+  },
+  btnRecursoDelta: {
+    backgroundColor: COLORS.surfaceVariant,
+    paddingHorizontal: 8,
+    paddingVertical: 3,
+    borderRadius: 4,
+    borderWidth: 1,
+    borderColor: COLORS.border,
+  },
+  btnRecursoDeltaText: {
+    fontSize: 11,
+    fontWeight: 'bold',
+    color: COLORS.text,
+  },
+  recursoDivider: {
+    width: 1,
+    height: 32,
+    backgroundColor: COLORS.border,
+  },
   cardHeaderWithAction: {
     paddingHorizontal: 12,
     paddingVertical: 10,
@@ -400,3 +496,4 @@ const styles = StyleSheet.create({
     fontSize: 15,
   },
 });
+
