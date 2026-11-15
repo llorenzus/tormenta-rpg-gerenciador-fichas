@@ -30,15 +30,8 @@ interface Props {
 export const AbaHabilidadesClasse: React.FC<Props> = ({ ficha, onChange }) => {
   // Controle do Compêndio Modal
   const [compendioVisivel, setCompendioVisivel] = useState(false);
-  const [compendioAba, setCompendioAba] = useState<AbaCompendio>('classes');
 
   const abrirCompendioClasses = () => {
-    setCompendioAba('classes');
-    setCompendioVisivel(true);
-  };
-
-  const abrirCompendioManobras = () => {
-    setCompendioAba('manobras');
     setCompendioVisivel(true);
   };
 
@@ -73,16 +66,6 @@ export const AbaHabilidadesClasse: React.FC<Props> = ({ ficha, onChange }) => {
 
   const handleAplicarClasseCompendio = (classe: ClasseData) => {
     onChange(aplicarClasseNaFicha(ficha, classe));
-  };
-
-  const handleAdicionarManobraCompendio = (
-    manobra: PosturaData | GolpeMarcialData
-  ) => {
-    const nova = converterManobraParaItem(manobra);
-    onChange({
-      ...ficha,
-      habilidadesClasse: [...ficha.habilidadesClasse, nova],
-    });
   };
 
   return (
@@ -134,13 +117,13 @@ export const AbaHabilidadesClasse: React.FC<Props> = ({ ficha, onChange }) => {
         </View>
       </View>
 
-      {/* 1. HABILIDADES DE CLASSE & MANOBRAS */}
+      {/* 1. HABILIDADES DE CLASSE */}
       <View style={styles.card}>
         <View style={styles.cardHeaderWithAction}>
           <View style={styles.cardHeaderTitleCol}>
-            <Text style={styles.cardHeaderTitle}>Habilidades de Classe & Manobras</Text>
+            <Text style={styles.cardHeaderTitle}>Habilidades de Classe</Text>
             <Text style={styles.cardHeaderSubtitle}>
-              {ficha.classe ? `${ficha.classe} • ` : ''}Poderes de classe, posturas e golpes marciais
+              {ficha.classe ? `${ficha.classe} • ` : ''}Poderes e características concedidos pela sua classe
             </Text>
           </View>
           <View style={styles.headerButtonsRow}>
@@ -148,13 +131,7 @@ export const AbaHabilidadesClasse: React.FC<Props> = ({ ficha, onChange }) => {
               style={styles.btnCompendio}
               onPress={abrirCompendioClasses}
             >
-              <Text style={styles.btnCompendioText}>📖 Classes</Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={[styles.btnCompendio, { backgroundColor: '#1B609E' }]}
-              onPress={abrirCompendioManobras}
-            >
-              <Text style={[styles.btnCompendioText, { color: '#FFFFFF' }]}>⚔️ Manobras</Text>
+              <Text style={styles.btnCompendioText}>📖 Compêndio de Classes</Text>
             </TouchableOpacity>
             <TouchableOpacity
               style={styles.btnAdicionarHeader}
@@ -169,7 +146,7 @@ export const AbaHabilidadesClasse: React.FC<Props> = ({ ficha, onChange }) => {
           {ficha.habilidadesClasse.length === 0 ? (
             <View style={styles.emptyWrap}>
               <Text style={styles.emptyText}>
-                Nenhuma habilidade de classe ou manobra cadastrada. Toque em "📖 Classes" ou "⚔️ Manobras" para buscar no compêndio.
+                Nenhuma habilidade de classe cadastrada. Toque em "📖 Compêndio de Classes" para buscar e aplicar ou "+ Manual" para criar.
               </Text>
             </View>
           ) : (
@@ -177,7 +154,7 @@ export const AbaHabilidadesClasse: React.FC<Props> = ({ ficha, onChange }) => {
               <View key={item.id} style={styles.itemSubCard}>
                 <View style={styles.rowTop}>
                   <CampoTexto
-                    label="Nome da Habilidade ou Manobra"
+                    label="Nome da Habilidade de Classe"
                     value={item.nome}
                     onChangeText={(v) =>
                       atualizarHabilidade({ ...item, nome: v })
@@ -209,10 +186,9 @@ export const AbaHabilidadesClasse: React.FC<Props> = ({ ficha, onChange }) => {
       <CompendioModal
         visivel={compendioVisivel}
         onFechar={() => setCompendioVisivel(false)}
-        abaInicial={compendioAba}
+        abaInicial="classes"
         fichaAtual={ficha}
         onAplicarClasseAFicha={handleAplicarClasseCompendio}
-        onAdicionarManobraAFicha={handleAdicionarManobraCompendio}
       />
     </ScrollView>
   );

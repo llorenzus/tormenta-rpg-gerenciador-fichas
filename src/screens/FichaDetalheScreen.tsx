@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import {
   Alert,
   KeyboardAvoidingView,
@@ -11,15 +11,23 @@ import {
   useWindowDimensions,
   View,
 } from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { AbaAtributos } from '../components/AbaAtributos';
 import { AbaDadosCadastrais } from '../components/AbaDadosCadastrais';
 import { AbaEquipamentos } from '../components/AbaEquipamentos';
 import { AbaHabilidadesRaca } from '../components/AbaHabilidadesRaca';
 import { AbaHabilidadesClasse } from '../components/AbaHabilidadesClasse';
+import { AbaManobras } from '../components/AbaManobras';
 import { AbaTalentos } from '../components/AbaTalentos';
 import { AbaMagias } from '../components/AbaMagias';
 import { AbaPericias } from '../components/AbaPericias';
 import { CompendioModal } from '../components/CompendioModal';
+import {
+  ModalReordenarAbas,
+  AbaKey,
+  TODAS_AS_ABAS,
+  ORDEM_ABAS_PADRAO,
+} from '../components/ModalReordenarAbas';
 import {
   ClasseData,
   converterArmaParaItem,
@@ -52,16 +60,7 @@ interface Props {
   onVoltar: () => void;
 }
 
-const ABAS = [
-  'Dados Cadastrais',
-  'Atributos',
-  'Perícias',
-  'Habilidades de Raça',
-  'Habilidades de Classe',
-  'Talentos',
-  'Magias',
-  'Equipamentos',
-];
+const STORAGE_KEY_ORDEM_PREFERIDA = '@trpg_ordem_abas_preferida';
 
 export const FichaDetalheScreen: React.FC<Props> = ({
   ficha,
@@ -73,17 +72,74 @@ export const FichaDetalheScreen: React.FC<Props> = ({
   const { width } = useWindowDimensions();
   const isDesktop = width >= 850;
 
-  // Estado das abas
-  const [abaMobile, setAbaMobile] = useState(1); // Padrão: Atributos
-  const [abaEsquerda, setAbaEsquerda] = useState(1); // Padrão: Atributos
-  const [abaDireita, setAbaDireita] = useState(4); // Padrão: Habilidades de Classe
+  // Ordem reordenável das abas (com persistência na ficha e em preferência geral)
+  const [ordemAbas, setOrdemAbas] = useState<AbaKey[]>(() => {
+    if (Array.isArray(ficha.ordemAbas) && ficha.ordemAbas.length > 0) {
+      const salvas = ficha.ordemAbas.filter((k) => k in TODAS_AS_ABAS) as AbaKey[];
+      const faltantes = ORDEM_ABAS_PADRAO.filter((k) => !salvas.includes(k));
+      return [...salvas, ...faltantes];
+    }
+    return ORDEM_ABAS_PADRAO;
+  });
 
-  // Padrão inicial: 1 painel único (o usuário ativa split view se desejar)
+  // Tenta carregar preferência global caso a ficha não tenha ordem definida
+  useEffect(() => {
+    if (!ficha.ordemAbas || ficha.ordemAbas.length === 0) {
+      AsyncStorage.getItem(STORAGE_KEY_ORDEM_PREFERIDA)
+        .then((salva) => {
+          if (salva) {
+            try {
+              const parsed = JSON.parse(salva) as AbaKey[];
+              if (Array.isArray(parsed) && parsed.length > 0) {
+                const validas = parsed.filter((k) => k in TODAS_AS_ABAS);
+                const faltantes = ORDEM_ABAS_PADRAO.filter((k) => !validas.includes(k));
+                const completa = [...validas, ...faltantes];
+                setOrdemAbas(completa);
+                onChange({ ...ficha, ordemAbas: completa });
+              }
+            } catch {
+              // fallback silencioso
+            }
+          }
+        })
+        .catch(() => {});
+    }
+  }, []);
+
+  // Estado das abas selecionadas por Chave
+  const [abaMobile, setAbaMobile] = useState<AbaKey>('atributos');
+  const [abaEsquerda, setAbaEsquerda] = useState<AbaKey>('atributos');
+  const [abaDireita, setAbaDireita] = useState<AbaKey>('habilidades_classe');
+
+  // Drag & Drop HTML5 de abas
+  const [abaArrastando, setAbaArrastando] = useState<AbaKey | null>(null);
+  const [abaHoverAlvo, setAbaHoverAlvo] = useState<AbaKey | null>(null);
+  const [modalReordenarAberto, setModalReordenarAberto] = useState(false);
+
+  // Split View no Desktop
   const [splitAtivo, setSplitAtivo] = useState(false);
   const [splitRatio, setSplitRatio] = useState(0.5); // 50% / 50%
   const [isDragging, setIsDragging] = useState(false);
   const [containerWidth, setContainerWidth] = useState(1200);
   const [compendioGeralAberto, setCompendioGeralAberto] = useState(false);
+
+  const reordenarAbas = (deChave: AbaKey, paraChave: AbaKey) => {
+    if (deChave === paraChave) return;
+    const nova = [...ordemAbas];
+    const deIdx = nova.indexOf(deChave);
+    const paraIdx = nova.indexOf(paraChave);
+    if (deIdx !== -1 && paraIdx !== -1) {
+      nova.splice(deIdx, 1);
+      nova.splice(paraIdx, 0, deChave);
+      atualizarOrdemAbas(nova);
+    }
+  };
+
+  const atualizarOrdemAbas = (novaOrdem: AbaKey[]) => {
+    setOrdemAbas(novaOrdem);
+    onChange({ ...ficha, ordemAbas: novaOrdem });
+    AsyncStorage.setItem(STORAGE_KEY_ORDEM_PREFERIDA, JSON.stringify(novaOrdem)).catch(() => {});
+  };
 
   const handleAdicionarTalento = (talento: TalentoData) => {
     const novo = converterTalentoParaItem(talento);
@@ -93,6 +149,12 @@ export const FichaDetalheScreen: React.FC<Props> = ({
   const handleAdicionarMagia = (magia: MagiaData) => {
     const nova = converterMagiaParaItem(magia);
     onChange({ ...ficha, magias: [...ficha.magias, nova] });
+  };
+
+  const handleAdicionarManobra = (manobra: PosturaData | GolpeMarcialData) => {
+    const nova = converterManobraParaItem(manobra);
+    const manobrasAtuais = Array.isArray(ficha.manobras) ? ficha.manobras : [];
+    onChange({ ...ficha, manobras: [...manobrasAtuais, nova] });
   };
 
   const handleAplicarRaca = (raca: RacaData) => {
@@ -114,7 +176,6 @@ export const FichaDetalheScreen: React.FC<Props> = ({
     onChange(aplicarClasseNaFicha(ficha, classe));
   };
 
-
   const handleAdicionarEquipamento = (equip: EquipamentoData) => {
     if (equip.tipo === 'Arma') {
       const novaArma = converterArmaParaItem(equip);
@@ -128,30 +189,23 @@ export const FichaDetalheScreen: React.FC<Props> = ({
     }
   };
 
-  const handleAdicionarManobra = (manobra: PosturaData | GolpeMarcialData) => {
-    const nova = converterManobraParaItem(manobra);
-    onChange({ ...ficha, habilidadesClasse: [...ficha.habilidadesClasse, nova] });
-  };
-
-  const containerWidthRef = useRef(containerWidth);
-  containerWidthRef.current = containerWidth;
-  const splitRatioRef = useRef(splitRatio);
-  splitRatioRef.current = splitRatio;
-
   const caTotal = calcularCaTotal(ficha);
 
   const handleSalvarClick = async () => {
     const sucesso = await onSalvarManual();
     if (sucesso) {
-      Alert.alert('Ficha Salva', 'Todas as alterações foram salvas no seu aparelho.');
+      if (Platform.OS === 'web') {
+        window.alert('Ficha salva com sucesso!');
+      } else {
+        Alert.alert('Sucesso', 'Ficha salva com sucesso!');
+      }
     }
   };
 
-  // Alterna o Split View
+  // Alterna ativação da Split View
   const handleToggleSplit = () => {
     if (!splitAtivo) {
-      // Ao abrir o segundo painel, garante que ele não abra a mesma aba
-      const proximaDireita = abaEsquerda === 4 ? 1 : 4;
+      const proximaDireita = ordemAbas.find((k) => k !== abaEsquerda) || 'habilidades_classe';
       setAbaDireita(proximaDireita);
       setSplitAtivo(true);
     } else {
@@ -159,27 +213,30 @@ export const FichaDetalheScreen: React.FC<Props> = ({
     }
   };
 
-  // Seleção de aba no Painel 1 (com swap inteligente se já estiver no Painel 2)
-  const handleSelecionarAbaEsquerda = (idx: number) => {
-    if (idx === abaEsquerda) return;
-    if (splitAtivo && idx === abaDireita) {
-      // Swap: a aba anterior do Painel 1 vai para o Painel 2
+  // Seleção de aba no Painel 1 (com swap se já estiver no Painel 2)
+  const handleSelecionarAbaEsquerda = (chave: AbaKey) => {
+    if (chave === abaEsquerda) return;
+    if (splitAtivo && chave === abaDireita) {
       setAbaDireita(abaEsquerda);
     }
-    setAbaEsquerda(idx);
+    setAbaEsquerda(chave);
   };
 
-  // Seleção de aba no Painel 2 (com swap inteligente se já estiver no Painel 1)
-  const handleSelecionarAbaDireita = (idx: number) => {
-    if (idx === abaDireita) return;
-    if (splitAtivo && idx === abaEsquerda) {
-      // Swap: a aba anterior do Painel 2 vai para o Painel 1
+  // Seleção de aba no Painel 2 (com swap se já estiver no Painel 1)
+  const handleSelecionarAbaDireita = (chave: AbaKey) => {
+    if (chave === abaDireita) return;
+    if (splitAtivo && chave === abaEsquerda) {
       setAbaEsquerda(abaDireita);
     }
-    setAbaDireita(idx);
+    setAbaDireita(chave);
   };
 
-  // Dragging no Web / Electron via Mouse Events
+  // Dragging do Splitter no Web / Electron
+  const splitRatioRef = useRef(splitRatio);
+  splitRatioRef.current = splitRatio;
+  const containerWidthRef = useRef(containerWidth);
+  containerWidthRef.current = containerWidth;
+
   const handleMouseDown = (e: any) => {
     if (Platform.OS !== 'web') return;
     setIsDragging(true);
@@ -203,7 +260,7 @@ export const FichaDetalheScreen: React.FC<Props> = ({
     window.addEventListener('mouseup', onMouseUp);
   };
 
-  // Dragging no Touch / Mobile via PanResponder
+  // Dragging do Splitter no Touch / Mobile
   const panResponder = React.useMemo(
     () =>
       PanResponder.create({
@@ -221,6 +278,9 @@ export const FichaDetalheScreen: React.FC<Props> = ({
         onPanResponderRelease: () => {
           setIsDragging(false);
         },
+        onPanResponderTerminate: () => {
+          setIsDragging(false);
+        },
       }),
     []
   );
@@ -234,39 +294,40 @@ export const FichaDetalheScreen: React.FC<Props> = ({
     `PM ${ficha.pmAtual}/${ficha.pmTotal}`,
     `CA ${caTotal}`,
   ]
-
     .filter(Boolean)
     .join(' • ');
 
-  // Renderizador centralizado do conteúdo de qualquer aba
-  const renderConteudoAba = (abaIdx: number) => {
-    switch (abaIdx) {
-      case 0:
+  // Renderizador centralizado do conteúdo de qualquer aba por chave
+  const renderConteudoAba = (chave: AbaKey) => {
+    switch (chave) {
+      case 'dados_cadastrais':
         return <AbaDadosCadastrais ficha={ficha} onChange={onChange} />;
-      case 1:
+      case 'atributos':
         return <AbaAtributos ficha={ficha} onChange={onChange} />;
-      case 2:
+      case 'pericias':
         return <AbaPericias ficha={ficha} onChange={onChange} />;
-      case 3:
+      case 'habilidades_raca':
         return <AbaHabilidadesRaca ficha={ficha} onChange={onChange} />;
-      case 4:
+      case 'habilidades_classe':
         return <AbaHabilidadesClasse ficha={ficha} onChange={onChange} />;
-      case 5:
+      case 'manobras':
+        return <AbaManobras ficha={ficha} onChange={onChange} />;
+      case 'talentos':
         return <AbaTalentos ficha={ficha} onChange={onChange} />;
-      case 6:
+      case 'magias':
         return <AbaMagias ficha={ficha} onChange={onChange} />;
-      case 7:
+      case 'equipamentos':
         return <AbaEquipamentos ficha={ficha} onChange={onChange} />;
       default:
         return null;
     }
   };
 
-  // Barra de abas reutilizável por painel
+  // Barra de abas reutilizável com Drag & Drop e botão de Organizar
   const renderTabBar = (
-    abaSelecionada: number,
-    onSelecionar: (idx: number) => void,
-    outroPainelAba?: number,
+    abaSelecionada: AbaKey,
+    onSelecionar: (chave: AbaKey) => void,
+    outroPainelAba?: AbaKey,
     rotuloPainel?: string,
     onFecharPainel?: () => void
   ) => (
@@ -282,22 +343,68 @@ export const FichaDetalheScreen: React.FC<Props> = ({
           </View>
         )}
 
-        {ABAS.map((titulo, idx) => {
-          const selecionada = abaSelecionada === idx;
-          const abertaNoOutro = splitAtivo && outroPainelAba === idx;
+        {ordemAbas.map((chave) => {
+          const info = TODAS_AS_ABAS[chave];
+          if (!info) return null;
+          const selecionada = abaSelecionada === chave;
+          const abertaNoOutro = splitAtivo && outroPainelAba === chave;
+          const isDraggingThis = abaArrastando === chave;
+          const isHoverTarget = abaHoverAlvo === chave;
 
           return (
             <TouchableOpacity
-              key={titulo}
+              key={chave}
               style={[
                 styles.tabItem,
                 selecionada && styles.tabItemActive,
                 abertaNoOutro && styles.tabItemNoOutro,
+                isDraggingThis && styles.tabItemDragging,
+                isHoverTarget && styles.tabItemHoverTarget,
               ]}
-              onPress={() => onSelecionar(idx)}
+              onPress={() => onSelecionar(chave)}
               activeOpacity={0.7}
+              // @ts-ignore
+              draggable={true}
+              // @ts-ignore
+              onDragStart={(e) => {
+                setAbaArrastando(chave);
+                if (e?.dataTransfer) {
+                  e.dataTransfer.setData('text/plain', chave);
+                  e.dataTransfer.effectAllowed = 'move';
+                }
+              }}
+              // @ts-ignore
+              onDragOver={(e) => {
+                e?.preventDefault?.();
+                if (e?.dataTransfer) e.dataTransfer.dropEffect = 'move';
+              }}
+              // @ts-ignore
+              onDragEnter={() => {
+                if (abaArrastando && abaArrastando !== chave) {
+                  setAbaHoverAlvo(chave);
+                }
+              }}
+              // @ts-ignore
+              onDragLeave={() => {
+                if (abaHoverAlvo === chave) setAbaHoverAlvo(null);
+              }}
+              // @ts-ignore
+              onDrop={(e) => {
+                e?.preventDefault?.();
+                if (abaArrastando && abaArrastando !== chave) {
+                  reordenarAbas(abaArrastando, chave);
+                }
+                setAbaArrastando(null);
+                setAbaHoverAlvo(null);
+              }}
+              // @ts-ignore
+              onDragEnd={() => {
+                setAbaArrastando(null);
+                setAbaHoverAlvo(null);
+              }}
             >
               <View style={styles.tabItemContent}>
+                <Text style={styles.tabIcon}>{info.icone}</Text>
                 <Text
                   style={[
                     styles.tabText,
@@ -305,7 +412,7 @@ export const FichaDetalheScreen: React.FC<Props> = ({
                     abertaNoOutro && styles.tabTextNoOutro,
                   ]}
                 >
-                  {titulo}
+                  {info.titulo}
                 </Text>
                 {abertaNoOutro && (
                   <View style={styles.badgeOutroPainel}>
@@ -318,6 +425,15 @@ export const FichaDetalheScreen: React.FC<Props> = ({
             </TouchableOpacity>
           );
         })}
+
+        {/* Botão de Organizar Ordem das Abas */}
+        <TouchableOpacity
+          style={styles.btnOrganizarAbas}
+          onPress={() => setModalReordenarAberto(true)}
+          activeOpacity={0.7}
+        >
+          <Text style={styles.btnOrganizarAbasText}>⚙️ Ordem</Text>
+        </TouchableOpacity>
 
         {/* Botão de Fechar no Painel 2 */}
         {onFecharPainel && (
@@ -459,10 +575,19 @@ export const FichaDetalheScreen: React.FC<Props> = ({
         </View>
       )}
 
-      {/* Modal do Compêndio Geral */}
+      {/* Modal Reordenador de Abas */}
+      <ModalReordenarAbas
+        visivel={modalReordenarAberto}
+        ordemAtual={ordemAbas}
+        onFechar={() => setModalReordenarAberto(false)}
+        onSalvarOrdem={atualizarOrdemAbas}
+      />
+
+      {/* Compêndio Geral Aberto da Top Bar */}
       <CompendioModal
         visivel={compendioGeralAberto}
         onFechar={() => setCompendioGeralAberto(false)}
+        abaInicial="talentos"
         fichaAtual={ficha}
         onAdicionarTalentoAFicha={handleAdicionarTalento}
         onAdicionarMagiaAFicha={handleAdicionarMagia}
@@ -667,10 +792,12 @@ const styles = StyleSheet.create({
     color: COLORS.primary,
   },
   tabItem: {
-    paddingHorizontal: 13,
-    paddingVertical: 11,
+    paddingHorizontal: 12,
+    paddingVertical: 10,
     borderBottomWidth: 3,
     borderBottomColor: 'transparent',
+    cursor: 'grab' as any,
+    userSelect: 'none' as any,
   },
   tabItemActive: {
     borderBottomColor: COLORS.primary,
@@ -678,10 +805,20 @@ const styles = StyleSheet.create({
   tabItemNoOutro: {
     backgroundColor: 'rgba(200,157,60,0.08)',
   },
+  tabItemDragging: {
+    opacity: 0.4,
+  },
+  tabItemHoverTarget: {
+    backgroundColor: 'rgba(200,157,60,0.22)',
+    borderBottomColor: COLORS.gold,
+  },
   tabItemContent: {
     flexDirection: 'row',
     alignItems: 'center',
     gap: 4,
+  },
+  tabIcon: {
+    fontSize: 13,
   },
   tabText: {
     fontSize: 12.5,
@@ -705,6 +842,20 @@ const styles = StyleSheet.create({
     fontSize: 9.5,
     color: '#8A6414',
     fontWeight: 'bold',
+  },
+  btnOrganizarAbas: {
+    paddingHorizontal: 8,
+    paddingVertical: 5,
+    borderRadius: 6,
+    backgroundColor: 'rgba(0,0,0,0.05)',
+    marginLeft: 8,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  btnOrganizarAbasText: {
+    fontSize: 11,
+    fontWeight: 'bold',
+    color: COLORS.textSecondary,
   },
   btnFecharDivisao: {
     marginLeft: 10,

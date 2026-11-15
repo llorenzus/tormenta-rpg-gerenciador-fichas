@@ -7,6 +7,7 @@ import { Platform, Share } from 'react-native';
 import {
   FichaPersonagem,
   criarPericiasPadrao,
+  garantirPericiasPadrao,
   gerarId,
   obterClassesFicha,
   calcularNivelTotal,
@@ -52,10 +53,11 @@ export function normalizarFicha(ficha: FichaPersonagem): FichaPersonagem {
     vontadeOutros: Number.isFinite(ficha.vontadeOutros) ? ficha.vontadeOutros : 0,
     pericias:
       Array.isArray(ficha.pericias) && ficha.pericias.length > 0
-        ? ficha.pericias
+        ? garantirPericiasPadrao(ficha.pericias)
         : criarPericiasPadrao(),
     habilidadesRaca: Array.isArray(ficha.habilidadesRaca) ? ficha.habilidadesRaca : [],
     habilidadesClasse: Array.isArray(ficha.habilidadesClasse) ? ficha.habilidadesClasse : [],
+    manobras: Array.isArray(ficha.manobras) ? ficha.manobras : [],
     talentos: Array.isArray(ficha.talentos) ? ficha.talentos : [],
     magias: Array.isArray(ficha.magias) ? ficha.magias : [],
     armas: Array.isArray(ficha.armas)
@@ -68,6 +70,7 @@ export function normalizarFicha(ficha: FichaPersonagem): FichaPersonagem {
     armaduras: Array.isArray(ficha.armaduras) ? ficha.armaduras : [],
     itensGerais: Array.isArray(ficha.itensGerais) ? ficha.itensGerais : [],
     tibares: ficha.tibares || '',
+    ordemAbas: Array.isArray(ficha.ordemAbas) ? ficha.ordemAbas : undefined,
   };
 }
 

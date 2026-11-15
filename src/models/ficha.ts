@@ -121,9 +121,10 @@ export interface FichaPersonagem {
   // 3. Perícias
   pericias: PericiaItem[];
 
-  // 4. Habilidades de Raça, Classe, Talentos e Magias
+  // 4. Habilidades de Raça, Classe, Manobras, Talentos e Magias
   habilidadesRaca: HabilidadeOuTalento[];
   habilidadesClasse: HabilidadeOuTalento[];
+  manobras?: HabilidadeOuTalento[];
   talentos: HabilidadeOuTalento[];
   magias: MagiaItem[];
 
@@ -132,6 +133,9 @@ export interface FichaPersonagem {
   armaduras: ArmaduraEquipamento[];
   itensGerais: ItemGeral[];
   tibares: string;
+
+  // Ordem personalizada das abas da ficha
+  ordemAbas?: string[];
 }
 
 export function gerarId(): string {
@@ -262,7 +266,9 @@ export function criarPericiasPadrao(): PericiaItem[] {
     { nome: 'Iniciativa', atributoChave: 'DES' },
     { nome: 'Intimidação', atributoChave: 'CAR' },
     { nome: 'Intuição', atributoChave: 'SAB' },
+    { nome: 'Jogatina', atributoChave: 'CAR' },
     { nome: 'Ladinagem', atributoChave: 'DES', somenteTreinada: true },
+    { nome: 'Meditação', atributoChave: 'SAB', somenteTreinada: true },
     { nome: 'Obter Informação', atributoChave: 'CAR' },
     { nome: 'Ofício', atributoChave: 'INT' },
     { nome: 'Percepção', atributoChave: 'SAB' },
@@ -277,6 +283,32 @@ export function criarPericiasPadrao(): PericiaItem[] {
     treinada: false,
     outrosBonus: 0,
   }));
+}
+
+export function garantirPericiasPadrao(periciasAtuais: PericiaItem[]): PericiaItem[] {
+  if (!Array.isArray(periciasAtuais) || periciasAtuais.length === 0) {
+    return criarPericiasPadrao();
+  }
+
+  const padrao = criarPericiasPadrao();
+  const nomesExistentes = new Set(
+    periciasAtuais.map((p) => p.nome.trim().toLowerCase())
+  );
+
+  const novasAdicionadas = [...periciasAtuais];
+
+  padrao.forEach((itemPadrao) => {
+    const nomeNorm = itemPadrao.nome.trim().toLowerCase();
+    const jaExiste = Array.from(nomesExistentes).some(
+      (n) => n === nomeNorm || n.startsWith(`${nomeNorm} (`)
+    );
+    if (!jaExiste) {
+      novasAdicionadas.push(itemPadrao);
+      nomesExistentes.add(nomeNorm);
+    }
+  });
+
+  return novasAdicionadas;
 }
 
 export function existeFichaComMesmoNome(
@@ -351,6 +383,7 @@ export function criarNovaFichaPadrao(): FichaPersonagem {
     pericias: criarPericiasPadrao(),
     habilidadesRaca: [],
     habilidadesClasse: [],
+    manobras: [],
     talentos: [],
     magias: [],
     armas: [],
@@ -359,6 +392,10 @@ export function criarNovaFichaPadrao(): FichaPersonagem {
     tibares: '',
     classes: [{ id: gerarId(), nome: '', nivel: 1 }],
   };
+}
+
+export function obterManobrasFicha(ficha: FichaPersonagem): HabilidadeOuTalento[] {
+  return Array.isArray(ficha.manobras) ? ficha.manobras : [];
 }
 
 export function obterClassesFicha(ficha: FichaPersonagem): ClassePersonagem[] {

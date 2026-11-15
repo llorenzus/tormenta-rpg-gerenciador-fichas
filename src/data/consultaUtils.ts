@@ -439,13 +439,37 @@ export const filtrarManobras = (
   });
 };
 
+export const buscarManobrasSugeridas = (
+  termo: string,
+  tipo?: 'Postura' | 'Golpe Marcial',
+  limite = 6
+): Array<PosturaData | GolpeMarcialData> => {
+  return filtrarManobras(termo, tipo || 'Todas').slice(0, limite);
+};
+
+export const formatarDescricaoManobra = (
+  manobra: PosturaData | GolpeMarcialData
+): string => {
+  const partes: string[] = [];
+  if ('custo' in manobra && manobra.custo) {
+    partes.push(`Custo: ${manobra.custo}`);
+  }
+  if (manobra.efeito) {
+    partes.push(`Efeito: ${manobra.efeito}`);
+  }
+  if (manobra.descricao && manobra.descricao !== manobra.efeito) {
+    partes.push(manobra.descricao);
+  }
+  return partes.join('\n\n');
+};
+
 export const converterManobraParaItem = (
   manobra: PosturaData | GolpeMarcialData
 ): HabilidadeOuTalento => {
   return {
     id: gerarId(),
     nome: `${manobra.nome} [${manobra.tipo}]`,
-    descricao: manobra.descricao,
+    descricao: formatarDescricaoManobra(manobra),
   };
 };
 

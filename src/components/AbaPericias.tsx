@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   Modal,
   ScrollView,
@@ -14,6 +14,7 @@ import {
   calcularTotalPericia,
   FichaPersonagem,
   formatarModificador,
+  garantirPericiasPadrao,
   gerarId,
   obterModAtributo,
   PericiaItem,
@@ -86,6 +87,14 @@ export const AbaPericias: React.FC<Props> = ({ ficha, onChange }) => {
   const [tipoSelecionado, setTipoSelecionado] =
     useState<TipoPericiaComplementar>('Ofício');
   const [novoComplemento, setNovoComplemento] = useState('');
+
+  // Sincroniza perícias básicas novas (como Jogatina e Meditação) caso seja ficha legada
+  useEffect(() => {
+    const atualizadas = garantirPericiasPadrao(ficha.pericias);
+    if (atualizadas.length !== ficha.pericias.length) {
+      onChange({ ...ficha, pericias: atualizadas });
+    }
+  }, []);
 
   const alternarTreinada = (periciaId: string) => {
     const novaLista = ficha.pericias.map((p) =>

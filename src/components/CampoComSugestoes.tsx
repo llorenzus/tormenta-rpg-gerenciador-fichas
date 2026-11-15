@@ -9,18 +9,27 @@ import {
 import {
   buscarMagiasSugeridas,
   buscarTalentosSugeridos,
+  buscarManobrasSugeridas,
   MagiaData,
   TalentoData,
+  PosturaData,
+  GolpeMarcialData,
 } from '../data';
 import { COLORS } from '../theme/colors';
+
+export type ItemSugestaoCompendio =
+  | TalentoData
+  | MagiaData
+  | PosturaData
+  | GolpeMarcialData;
 
 interface Props {
   label: string;
   value: string;
   onChangeText: (text: string) => void;
-  tipo: 'talento' | 'magia';
+  tipo: 'talento' | 'magia' | 'manobra';
   nivelMagia?: number | null;
-  onSelecionarSugestao: (item: TalentoData | MagiaData) => void;
+  onSelecionarSugestao: (item: ItemSugestaoCompendio) => void;
   onAbrirCompendio?: () => void;
   placeholder?: string;
 }
@@ -43,12 +52,14 @@ export const CampoComSugestoes: React.FC<Props> = ({
 
     if (tipo === 'talento') {
       return buscarTalentosSugeridos(value, undefined, 6);
+    } else if (tipo === 'manobra') {
+      return buscarManobrasSugeridas(value, undefined, 6);
     } else {
       return buscarMagiasSugeridas(value, nivelMagia, 6);
     }
   }, [focado, value, tipo, nivelMagia]);
 
-  const handleEscolher = (item: TalentoData | MagiaData) => {
+  const handleEscolher = (item: ItemSugestaoCompendio) => {
     onSelecionarSugestao(item);
     setFocado(false);
   };
@@ -89,10 +100,25 @@ export const CampoComSugestoes: React.FC<Props> = ({
           <Text style={styles.sugestoesHeader}>
             {tipo === 'talento'
               ? 'Talentos encontrados na base (toque para preencher):'
+              : tipo === 'manobra'
+              ? 'Manobras / Posturas encontradas na base (toque para preencher):'
               : 'Magias encontradas na base (toque para preencher):'}
           </Text>
           {sugestoes.map((item) => {
-            const isTalento = 'categoria' in item;
+            let detalhe = '';
+            if ('categoria' in item) {
+              detalhe = item.categoria;
+            } else if ('escola' in item) {
+              const magia = item as MagiaData;
+              detalhe = `${magia.nivel === 0 ? 'Nível 0' : magia.nivel + 'º Nível'} • ${magia.escola}`;
+            } else if ('tipo' in item) {
+              const manobra = item as PosturaData | GolpeMarcialData;
+              detalhe =
+                'custo' in manobra && manobra.custo
+                  ? `${manobra.tipo} • Custo: ${manobra.custo}`
+                  : manobra.tipo;
+            }
+
             return (
               <TouchableOpacity
                 key={item.id}
@@ -101,11 +127,7 @@ export const CampoComSugestoes: React.FC<Props> = ({
               >
                 <View style={styles.sugestaoInfo}>
                   <Text style={styles.sugestaoNome}>{item.nome}</Text>
-                  <Text style={styles.sugestaoDetalhe}>
-                    {isTalento
-                      ? item.categoria
-                      : `${item.nivel === 0 ? 'Nível 0' : item.nivel + 'º Nível'} • ${item.escola}`}
-                  </Text>
+                  <Text style={styles.sugestaoDetalhe}>{detalhe}</Text>
                 </View>
                 <View style={styles.badgePreencher}>
                   <Text style={styles.badgePreencherText}>Preencher ➔</Text>
