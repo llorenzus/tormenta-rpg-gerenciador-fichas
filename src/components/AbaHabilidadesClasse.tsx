@@ -8,17 +8,7 @@ import {
 } from 'react-native';
 import {
   ClasseData,
-  converterArmaParaItem,
-  converterArmaduraParaItem,
-  converterItemGeralParaItem,
-  converterMagiaParaItem,
-  converterTalentoParaItem,
   converterManobraParaItem,
-  EquipamentoData,
-  formatarDescricaoTalento,
-  MagiaData,
-  RacaData,
-  TalentoData,
   PosturaData,
   GolpeMarcialData,
 } from '../data';
@@ -29,7 +19,6 @@ import {
   HabilidadeOuTalento,
 } from '../models/ficha';
 import { COLORS } from '../theme/colors';
-import { CampoComSugestoes } from './CampoComSugestoes';
 import { CampoTexto } from './CommonInput';
 import { AbaCompendio, CompendioModal } from './CompendioModal';
 
@@ -53,49 +42,32 @@ export const AbaHabilidadesClasse: React.FC<Props> = ({ ficha, onChange }) => {
     setCompendioVisivel(true);
   };
 
-  const abrirCompendioTalentos = () => {
-    setCompendioAba('talentos');
-    setCompendioVisivel(true);
-  };
-
-  // Funções de manipulação de itens da ficha
-  const adicionarItem = (campo: 'habilidadesClasse' | 'talentos') => {
+  // Funções de manipulação de itens de habilidades de classe
+  const adicionarHabilidade = () => {
     const novo: HabilidadeOuTalento = {
       id: gerarId(),
       nome: '',
       descricao: '',
     };
-    onChange({ ...ficha, [campo]: [...ficha[campo], novo] });
-  };
-
-  const atualizarItem = (
-    campo: 'habilidadesClasse' | 'talentos',
-    editado: HabilidadeOuTalento
-  ) => {
     onChange({
       ...ficha,
-      [campo]: ficha[campo].map((item) =>
+      habilidadesClasse: [...ficha.habilidadesClasse, novo],
+    });
+  };
+
+  const atualizarHabilidade = (editado: HabilidadeOuTalento) => {
+    onChange({
+      ...ficha,
+      habilidadesClasse: ficha.habilidadesClasse.map((item) =>
         item.id === editado.id ? editado : item
       ),
     });
   };
 
-  const removerItem = (
-    campo: 'habilidadesClasse' | 'talentos',
-    id: string
-  ) => {
+  const removerHabilidade = (id: string) => {
     onChange({
       ...ficha,
-      [campo]: ficha[campo].filter((item) => item.id !== id),
-    });
-  };
-
-  // Callbacks ao adicionar do Compêndio
-  const handleAdicionarTalentoCompendio = (talento: TalentoData) => {
-    const novo = converterTalentoParaItem(talento);
-    onChange({
-      ...ficha,
-      talentos: [...ficha.talentos, novo],
+      habilidadesClasse: ficha.habilidadesClasse.filter((item) => item.id !== id),
     });
   };
 
@@ -111,18 +83,6 @@ export const AbaHabilidadesClasse: React.FC<Props> = ({ ficha, onChange }) => {
       ...ficha,
       habilidadesClasse: [...ficha.habilidadesClasse, nova],
     });
-  };
-
-  const handlePreencherTalentoExistente = (
-    itemAntigo: HabilidadeOuTalento,
-    talento: TalentoData
-  ) => {
-    const atualizado: HabilidadeOuTalento = {
-      ...itemAntigo,
-      nome: talento.nome,
-      descricao: formatarDescricaoTalento(talento),
-    };
-    atualizarItem('talentos', atualizado);
   };
 
   return (
@@ -198,7 +158,7 @@ export const AbaHabilidadesClasse: React.FC<Props> = ({ ficha, onChange }) => {
             </TouchableOpacity>
             <TouchableOpacity
               style={styles.btnAdicionarHeader}
-              onPress={() => adicionarItem('habilidadesClasse')}
+              onPress={adicionarHabilidade}
             >
               <Text style={styles.btnAdicionarHeaderText}>+ Manual</Text>
             </TouchableOpacity>
@@ -220,13 +180,13 @@ export const AbaHabilidadesClasse: React.FC<Props> = ({ ficha, onChange }) => {
                     label="Nome da Habilidade ou Manobra"
                     value={item.nome}
                     onChangeText={(v) =>
-                      atualizarItem('habilidadesClasse', { ...item, nome: v })
+                      atualizarHabilidade({ ...item, nome: v })
                     }
                     style={styles.colFlex}
                   />
                   <TouchableOpacity
                     style={styles.btnRemove}
-                    onPress={() => removerItem('habilidadesClasse', item.id)}
+                    onPress={() => removerHabilidade(item.id)}
                   >
                     <Text style={styles.btnRemoveText}>✕</Text>
                   </TouchableOpacity>
@@ -235,79 +195,7 @@ export const AbaHabilidadesClasse: React.FC<Props> = ({ ficha, onChange }) => {
                   label="Descrição / Efeito Mecânico"
                   value={item.descricao}
                   onChangeText={(v) =>
-                    atualizarItem('habilidadesClasse', { ...item, descricao: v })
-                  }
-                  multiline
-                />
-              </View>
-            ))
-          )}
-        </View>
-      </View>
-
-      {/* 2. TALENTOS COM AUTOCOMPLETE E COMPÊNDIO */}
-      <View style={styles.card}>
-        <View style={styles.cardHeaderWithAction}>
-          <View style={styles.cardHeaderTitleCol}>
-            <Text style={styles.cardHeaderTitle}>Talentos</Text>
-            <Text style={styles.cardHeaderSubtitle}>
-              Combate, Destino, Magia, Perícia, Concedidos, Regionais ou Tormenta
-            </Text>
-          </View>
-          <View style={styles.headerButtonsRow}>
-            <TouchableOpacity
-              style={styles.btnCompendio}
-              onPress={abrirCompendioTalentos}
-            >
-              <Text style={styles.btnCompendioText}>📖 Talentos</Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={styles.btnAdicionarHeader}
-              onPress={() => adicionarItem('talentos')}
-            >
-              <Text style={styles.btnAdicionarHeaderText}>+ Manual</Text>
-            </TouchableOpacity>
-          </View>
-        </View>
-
-        <View style={styles.cardBody}>
-          {ficha.talentos.length === 0 ? (
-            <View style={styles.emptyWrap}>
-              <Text style={styles.emptyText}>
-                Nenhum talento cadastrado. Toque em "📖 Talentos" para escolher da lista ou "+ Manual" para criar.
-              </Text>
-            </View>
-          ) : (
-            ficha.talentos.map((item) => (
-              <View key={item.id} style={styles.itemSubCard}>
-                <View style={styles.rowTop}>
-                  <View style={styles.colFlex}>
-                    <CampoComSugestoes
-                      label="Nome do Talento"
-                      value={item.nome}
-                      onChangeText={(v) =>
-                        atualizarItem('talentos', { ...item, nome: v })
-                      }
-                      tipo="talento"
-                      placeholder="Ex: Ataque Poderoso, Foco em Arma..."
-                      onSelecionarSugestao={(t) =>
-                        handlePreencherTalentoExistente(item, t as TalentoData)
-                      }
-                      onAbrirCompendio={abrirCompendioTalentos}
-                    />
-                  </View>
-                  <TouchableOpacity
-                    style={styles.btnRemove}
-                    onPress={() => removerItem('talentos', item.id)}
-                  >
-                    <Text style={styles.btnRemoveText}>✕</Text>
-                  </TouchableOpacity>
-                </View>
-                <CampoTexto
-                  label="Descrição / Pré-requisitos / Benefício"
-                  value={item.descricao}
-                  onChangeText={(v) =>
-                    atualizarItem('talentos', { ...item, descricao: v })
+                    atualizarHabilidade({ ...item, descricao: v })
                   }
                   multiline
                 />
@@ -323,7 +211,6 @@ export const AbaHabilidadesClasse: React.FC<Props> = ({ ficha, onChange }) => {
         onFechar={() => setCompendioVisivel(false)}
         abaInicial={compendioAba}
         fichaAtual={ficha}
-        onAdicionarTalentoAFicha={handleAdicionarTalentoCompendio}
         onAplicarClasseAFicha={handleAplicarClasseCompendio}
         onAdicionarManobraAFicha={handleAdicionarManobraCompendio}
       />

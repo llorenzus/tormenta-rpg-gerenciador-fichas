@@ -16,6 +16,7 @@ import { AbaDadosCadastrais } from '../components/AbaDadosCadastrais';
 import { AbaEquipamentos } from '../components/AbaEquipamentos';
 import { AbaHabilidadesRaca } from '../components/AbaHabilidadesRaca';
 import { AbaHabilidadesClasse } from '../components/AbaHabilidadesClasse';
+import { AbaTalentos } from '../components/AbaTalentos';
 import { AbaMagias } from '../components/AbaMagias';
 import { AbaPericias } from '../components/AbaPericias';
 import { CompendioModal } from '../components/CompendioModal';
@@ -57,6 +58,7 @@ const ABAS = [
   'Perícias',
   'Habilidades de Raça',
   'Habilidades de Classe',
+  'Talentos',
   'Magias',
   'Equipamentos',
 ];
@@ -250,8 +252,10 @@ export const FichaDetalheScreen: React.FC<Props> = ({
       case 4:
         return <AbaHabilidadesClasse ficha={ficha} onChange={onChange} />;
       case 5:
-        return <AbaMagias ficha={ficha} onChange={onChange} />;
+        return <AbaTalentos ficha={ficha} onChange={onChange} />;
       case 6:
+        return <AbaMagias ficha={ficha} onChange={onChange} />;
+      case 7:
         return <AbaEquipamentos ficha={ficha} onChange={onChange} />;
       default:
         return null;

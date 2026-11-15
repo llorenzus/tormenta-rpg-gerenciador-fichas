@@ -158,11 +158,18 @@ export const AbaMagias: React.FC<Props> = ({ ficha, onChange }) => {
             return (
               <View key={nivel} style={styles.nivelMagiaBox}>
                 <View style={styles.nivelMagiaHeader}>
-                  <Text style={styles.nivelMagiaTitulo}>
-                    {nivel === 0
-                      ? 'Nível 0 (Truques / Preces)'
-                      : `${nivel}º Nível de Magia`}
-                  </Text>
+                  <View style={styles.nivelMagiaTituloRow}>
+                    <Text style={styles.nivelMagiaTitulo}>
+                      {nivel === 0
+                        ? 'Nível 0 (Truques / Preces)'
+                        : `${nivel}º Círculo de Magia`}
+                    </Text>
+                    <View style={styles.badgeCustoPmFixo}>
+                      <Text style={styles.badgeCustoPmFixoText}>
+                        {nivel === 0 ? '0 PM' : `${nivel} PM`}
+                      </Text>
+                    </View>
+                  </View>
                   <View style={styles.nivelMagiaActions}>
                     <TouchableOpacity
                       style={styles.btnBuscarNivel}
@@ -201,16 +208,6 @@ export const AbaMagias: React.FC<Props> = ({ ficha, onChange }) => {
                               handlePreencherMagiaExistente(magia, m as MagiaData)
                             }
                             onAbrirCompendio={() => abrirCompendioMagias(nivel)}
-                          />
-                        </View>
-                        <View style={styles.colPmMagia}>
-                          <CampoTexto
-                            label="Custo PM"
-                            value={magia.custoPm}
-                            onChangeText={(v) =>
-                              atualizarMagia({ ...magia, custoPm: v })
-                            }
-                            keyboardType="numeric"
                           />
                         </View>
                         <TouchableOpacity
@@ -402,10 +399,28 @@ const styles = StyleSheet.create({
     flexWrap: 'wrap',
     gap: 6,
   },
+  nivelMagiaTituloRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
+  },
   nivelMagiaTitulo: {
     fontSize: 14,
     fontWeight: 'bold',
     color: COLORS.primary,
+  },
+  badgeCustoPmFixo: {
+    backgroundColor: 'rgba(30,136,229,0.14)',
+    borderColor: '#1E88E5',
+    borderWidth: 1,
+    paddingHorizontal: 7,
+    paddingVertical: 2,
+    borderRadius: 12,
+  },
+  badgeCustoPmFixoText: {
+    color: '#1565C0',
+    fontSize: 11,
+    fontWeight: 'bold',
   },
   nivelMagiaActions: {
     flexDirection: 'row',
@@ -449,10 +464,7 @@ const styles = StyleSheet.create({
     gap: 8,
   },
   colNomeMagia: {
-    flex: 1.5,
-  },
-  colPmMagia: {
-    width: 75,
+    flex: 1,
   },
   btnRemove: {
     marginTop: 24,

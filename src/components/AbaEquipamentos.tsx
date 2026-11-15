@@ -352,19 +352,10 @@ export const AbaEquipamentos: React.FC<Props> = ({ ficha, onChange }) => {
                     </View>
                   </View>
 
-                  {/* Bônus de Ataque, Outros e Dano */}
+                  {/* Outros Bônus e Dano */}
                   <View style={styles.row}>
-                    <CampoTexto
-                      label="Bônus de Ataque"
-                      value={arma.bonusAtaque}
-                      onChangeText={(v) =>
-                        atualizarArma({ ...arma, bonusAtaque: v })
-                      }
-                      placeholder={formatarModificador(totalCalculado)}
-                      style={styles.col}
-                    />
                     <CampoInteiro
-                      label="Outros Bônus"
+                      label="Outros Bônus (Magia / Talentos)"
                       valor={Number(arma.outrosBonus) || 0}
                       onValorChange={atualizarOutrosBonus}
                       min={-99}
