@@ -8,7 +8,7 @@
     "ios": "expo start --ios",
     "web": "expo start --web",
     "export:web": "expo export -p web",
-    "electron": "electron electron/main.js",
+    "electron": "node electron/run.js",
     "build:windows": "expo export -p web && electron-builder --win --x64 --publish never"
   },
   "dependencies": {
