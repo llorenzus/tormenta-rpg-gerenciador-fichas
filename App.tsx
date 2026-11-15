@@ -11,15 +11,23 @@ import {
 import { CompendioModal } from './src/components/CompendioModal';
 import { ModalExportarFicha } from './src/components/ModalExportarFicha';
 import {
+  ClasseData,
+  converterArmaParaItem,
+  converterArmaduraParaItem,
+  converterItemGeralParaItem,
   converterMagiaParaItem,
   converterTalentoParaItem,
+  EquipamentoData,
   MagiaData,
+  RacaData,
   TalentoData,
 } from './src/data';
 import {
   criarNovaFichaPadrao,
   FichaPersonagem,
+  gerarId,
   gerarProximoNomePadrao,
+  HabilidadeOuTalento,
 } from './src/models/ficha';
 import { FichaDetalheScreen } from './src/screens/FichaDetalheScreen';
 import { ListaFichasScreen } from './src/screens/ListaFichasScreen';
@@ -236,8 +244,8 @@ export default function App() {
 
   const handleAdicionarItemParaFichaEspecifica = async (
     fichaId: string,
-    tipo: 'talento' | 'magia',
-    item: TalentoData | MagiaData
+    tipo: 'talento' | 'magia' | 'raca' | 'classe' | 'equipamento',
+    item: TalentoData | MagiaData | RacaData | ClasseData | EquipamentoData
   ) => {
     const alvo = fichas.find((f) => f.id === fichaId);
     if (!alvo) return;
@@ -249,12 +257,59 @@ export default function App() {
         ...alvo,
         talentos: [...alvo.talentos, novoTalento],
       };
-    } else {
+    } else if (tipo === 'magia') {
       const novaMagia = converterMagiaParaItem(item as MagiaData);
       fichaModificada = {
         ...alvo,
         magias: [...alvo.magias, novaMagia],
       };
+    } else if (tipo === 'raca') {
+      const raca = item as RacaData;
+      const novosTracos: HabilidadeOuTalento[] = raca.tracosRaciais.map((t) => ({
+        id: gerarId(),
+        nome: `${t.nome} (${raca.nome})`,
+        descricao: t.descricao,
+      }));
+      fichaModificada = {
+        ...alvo,
+        raca: raca.nome,
+        tamanho: raca.tamanho,
+        deslocamento: `${raca.deslocamento}m`,
+        habilidadesRaca: [...alvo.habilidadesRaca, ...novosTracos],
+      };
+    } else if (tipo === 'classe') {
+      const classe = item as ClasseData;
+      const novasHabs: HabilidadeOuTalento[] = classe.habilidades.map((h) => ({
+        id: gerarId(),
+        nome: `${h.nome} [Nív. ${h.nivel}]`,
+        descricao: h.descricao,
+      }));
+      fichaModificada = {
+        ...alvo,
+        classe: alvo.classe?.trim() ? `${alvo.classe} / ${classe.nome}` : classe.nome,
+        habilidadesClasse: [...alvo.habilidadesClasse, ...novasHabs],
+      };
+    } else {
+      const equip = item as EquipamentoData;
+      if (equip.tipo === 'Arma') {
+        const novaArma = converterArmaParaItem(equip);
+        fichaModificada = {
+          ...alvo,
+          armas: [...alvo.armas, novaArma],
+        };
+      } else if (equip.tipo === 'Armadura' || equip.tipo === 'Escudo') {
+        const novaArmadura = converterArmaduraParaItem(equip);
+        fichaModificada = {
+          ...alvo,
+          armaduras: [...alvo.armaduras, novaArmadura],
+        };
+      } else {
+        const novoItem = converterItemGeralParaItem(equip);
+        fichaModificada = {
+          ...alvo,
+          itensGerais: [...alvo.itensGerais, novoItem],
+        };
+      }
     }
 
     const listaAtualizada = await salvarFichaLocal(fichaModificada);
@@ -264,8 +319,8 @@ export default function App() {
     }
 
     Alert.alert(
-      'Adicionado com Sucesso!',
-      `"${item.nome}" foi registrado na ficha de "${alvo.nomePersonagem || 'Personagem'}".`
+      'Registrado com Sucesso!',
+      `"${item.nome}" foi aplicado à ficha de "${alvo.nomePersonagem || 'Personagem'}".`
     );
   };
 

@@ -11,6 +11,7 @@ export interface RacaData {
   modificadoresAtributos: string;
   tamanho: string;
   deslocamento: string;
+  visao?: string;
   tracosRaciais: TracoRacial[];
   descricao: string;
   livroFonte: string;
@@ -28,3 +29,4 @@ export const getRacaPorNome = (nome: string): RacaData | undefined => {
 };
 
 export default racas;
+

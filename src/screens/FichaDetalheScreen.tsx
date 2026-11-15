@@ -16,7 +16,25 @@ import { AbaDadosCadastrais } from '../components/AbaDadosCadastrais';
 import { AbaEquipamentos } from '../components/AbaEquipamentos';
 import { AbaHabilidadesEMagias } from '../components/AbaHabilidadesEMagias';
 import { AbaPericias } from '../components/AbaPericias';
-import { calcularCaTotal, FichaPersonagem } from '../models/ficha';
+import { CompendioModal } from '../components/CompendioModal';
+import {
+  ClasseData,
+  converterArmaParaItem,
+  converterArmaduraParaItem,
+  converterItemGeralParaItem,
+  converterMagiaParaItem,
+  converterTalentoParaItem,
+  EquipamentoData,
+  MagiaData,
+  RacaData,
+  TalentoData,
+} from '../data';
+import {
+  calcularCaTotal,
+  FichaPersonagem,
+  gerarId,
+  HabilidadeOuTalento,
+} from '../models/ficha';
 import { COLORS } from '../theme/colors';
 
 interface Props {
@@ -55,6 +73,58 @@ export const FichaDetalheScreen: React.FC<Props> = ({
   const [splitRatio, setSplitRatio] = useState(0.5); // 50% / 50%
   const [isDragging, setIsDragging] = useState(false);
   const [containerWidth, setContainerWidth] = useState(1200);
+  const [compendioGeralAberto, setCompendioGeralAberto] = useState(false);
+
+  const handleAdicionarTalento = (talento: TalentoData) => {
+    const novo = converterTalentoParaItem(talento);
+    onChange({ ...ficha, talentos: [...ficha.talentos, novo] });
+  };
+
+  const handleAdicionarMagia = (magia: MagiaData) => {
+    const nova = converterMagiaParaItem(magia);
+    onChange({ ...ficha, magias: [...ficha.magias, nova] });
+  };
+
+  const handleAplicarRaca = (raca: RacaData) => {
+    const novosTracos: HabilidadeOuTalento[] = raca.tracosRaciais.map((t) => ({
+      id: gerarId(),
+      nome: `${t.nome} (${raca.nome})`,
+      descricao: t.descricao,
+    }));
+    onChange({
+      ...ficha,
+      raca: raca.nome,
+      tamanho: raca.tamanho,
+      deslocamento: `${raca.deslocamento}m`,
+      habilidadesRaca: [...ficha.habilidadesRaca, ...novosTracos],
+    });
+  };
+
+  const handleAplicarClasse = (classe: ClasseData) => {
+    const novasHabs: HabilidadeOuTalento[] = classe.habilidades.map((h) => ({
+      id: gerarId(),
+      nome: `${h.nome} [Nív. ${h.nivel}]`,
+      descricao: h.descricao,
+    }));
+    onChange({
+      ...ficha,
+      classe: ficha.classe?.trim() ? `${ficha.classe} / ${classe.nome}` : classe.nome,
+      habilidadesClasse: [...ficha.habilidadesClasse, ...novasHabs],
+    });
+  };
+
+  const handleAdicionarEquipamento = (equip: EquipamentoData) => {
+    if (equip.tipo === 'Arma') {
+      const novaArma = converterArmaParaItem(equip);
+      onChange({ ...ficha, armas: [...ficha.armas, novaArma] });
+    } else if (equip.tipo === 'Armadura' || equip.tipo === 'Escudo') {
+      const novaArmadura = converterArmaduraParaItem(equip);
+      onChange({ ...ficha, armaduras: [...ficha.armaduras, novaArmadura] });
+    } else {
+      const novoItem = converterItemGeralParaItem(equip);
+      onChange({ ...ficha, itensGerais: [...ficha.itensGerais, novoItem] });
+    }
+  };
 
   const containerWidthRef = useRef(containerWidth);
   containerWidthRef.current = containerWidth;
@@ -273,6 +343,14 @@ export const FichaDetalheScreen: React.FC<Props> = ({
           </View>
 
           <View style={styles.topRightActions}>
+            <TouchableOpacity
+              style={styles.compendioTopBtn}
+              onPress={() => setCompendioGeralAberto(true)}
+              activeOpacity={0.8}
+            >
+              <Text style={styles.compendioTopBtnText}>📖 Compêndio</Text>
+            </TouchableOpacity>
+
             {/* Botão para Ativar/Desativar Split View no Desktop */}
             {isDesktop && (
               <TouchableOpacity
@@ -366,6 +444,18 @@ export const FichaDetalheScreen: React.FC<Props> = ({
           </View>
         </View>
       )}
+
+      {/* Modal do Compêndio Geral */}
+      <CompendioModal
+        visivel={compendioGeralAberto}
+        onFechar={() => setCompendioGeralAberto(false)}
+        fichaAtual={ficha}
+        onAdicionarTalentoAFicha={handleAdicionarTalento}
+        onAdicionarMagiaAFicha={handleAdicionarMagia}
+        onAplicarRacaAFicha={handleAplicarRaca}
+        onAplicarClasseAFicha={handleAplicarClasse}
+        onAdicionarEquipamentoAFicha={handleAdicionarEquipamento}
+      />
     </KeyboardAvoidingView>
   );
 };
@@ -424,6 +514,19 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     gap: 8,
+  },
+  compendioTopBtn: {
+    backgroundColor: 'rgba(255,255,255,0.18)',
+    borderWidth: 1,
+    borderColor: 'rgba(255,255,255,0.4)',
+    paddingHorizontal: 10,
+    paddingVertical: 6,
+    borderRadius: 6,
+  },
+  compendioTopBtnText: {
+    color: COLORS.white,
+    fontWeight: 'bold',
+    fontSize: 12,
   },
   splitBtn: {
     backgroundColor: 'rgba(200,157,60,0.25)',

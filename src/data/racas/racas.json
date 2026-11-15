@@ -344,16 +344,8 @@
     "id": "sprite",
     "nome": "Sprite",
     "descricao": "Sprites parecem elfos diminutos com cerca de trinta centímetros de altura, orelhas longas e pontiagudas, olhos negros e asas translúcidas como as de um inseto. Curiosos, entusiastas e amantes da magia e da diversão.",
-    "modificadores": {
-      "forca": -4,
-      "destreza": 4,
-      "constituicao": -2,
-      "inteligencia": 0,
-      "sabedoria": 0,
-      "carisma": 2
-    },
     "tamanho": "Minúsculo",
-    "deslocamento": 6,
+    "deslocamento": "6m (Voo 12m)",
     "visao": "Normal",
     "tracosRaciais": [
       {
@@ -377,7 +369,8 @@
         "descricao": "Sprites são a antítese da Tormenta: em contato com corrupção lefeu simplesmente morrem, virando poeira brilhante e não podendo ser ressuscitados."
       }
     ],
-    "livro": "Manual do Arcano",
-    "pagina": 6
+    "pagina": 6,
+    "modificadoresAtributos": "+4 Destreza, +2 Carisma, –4 Força, –2 Constituição",
+    "livroFonte": "Manual do Arcano"
   }
 ]

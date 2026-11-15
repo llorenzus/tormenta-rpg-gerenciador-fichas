@@ -13,25 +13,48 @@ import {
 import {
   CATEGORIAS_TALENTO,
   CategoriaTalento,
+  ClasseData,
+  classes,
+  converterArmaParaItem,
+  converterArmaduraParaItem,
+  converterItemGeralParaItem,
   converterMagiaParaItem,
   converterTalentoParaItem,
+  EquipamentoData,
+  equipamentos,
   ESCOLAS_MAGIA,
+  filtrarClasses,
+  filtrarEquipamentos,
   filtrarMagias,
+  filtrarRacas,
   filtrarTalentos,
   formatarDescricaoMagia,
   formatarDescricaoTalento,
   MagiaData,
   magias,
+  RacaData,
+  racas,
   TalentoData,
   talentos,
+  TipoEquipamento,
+  TIPOS_EQUIPAMENTO,
 } from '../data';
-import { FichaPersonagem } from '../models/ficha';
+import { FichaPersonagem, gerarId, HabilidadeOuTalento } from '../models/ficha';
 import { COLORS } from '../theme/colors';
+
+export type AbaCompendio = 'talentos' | 'magias' | 'racas' | 'classes' | 'equipamentos';
+
+export type ItemCompendio =
+  | { tipo: 'talento'; dado: TalentoData }
+  | { tipo: 'magia'; dado: MagiaData }
+  | { tipo: 'raca'; dado: RacaData }
+  | { tipo: 'classe'; dado: ClasseData }
+  | { tipo: 'equipamento'; dado: EquipamentoData };
 
 interface Props {
   visivel: boolean;
   onFechar: () => void;
-  abaInicial?: 'talentos' | 'magias';
+  abaInicial?: AbaCompendio;
   nivelFiltroInicial?: number | null;
   categoriaInicial?: CategoriaTalento | 'Todas';
 
@@ -39,13 +62,16 @@ interface Props {
   fichaAtual?: FichaPersonagem | null;
   onAdicionarTalentoAFicha?: (talento: TalentoData) => void;
   onAdicionarMagiaAFicha?: (magia: MagiaData) => void;
+  onAplicarRacaAFicha?: (raca: RacaData) => void;
+  onAplicarClasseAFicha?: (classe: ClasseData) => void;
+  onAdicionarEquipamentoAFicha?: (equip: EquipamentoData) => void;
 
   // Quando acionado da lista de fichas (selecionador de personagem):
   todasFichas?: FichaPersonagem[];
   onAdicionarItemParaFichaEspecifica?: (
     fichaId: string,
-    tipo: 'talento' | 'magia',
-    item: TalentoData | MagiaData
+    tipo: 'talento' | 'magia' | 'raca' | 'classe' | 'equipamento',
+    item: TalentoData | MagiaData | RacaData | ClasseData | EquipamentoData
   ) => void;
 }
 
@@ -58,10 +84,13 @@ export const CompendioModal: React.FC<Props> = ({
   fichaAtual,
   onAdicionarTalentoAFicha,
   onAdicionarMagiaAFicha,
+  onAplicarRacaAFicha,
+  onAplicarClasseAFicha,
+  onAdicionarEquipamentoAFicha,
   todasFichas = [],
   onAdicionarItemParaFichaEspecifica,
 }) => {
-  const [abaAtiva, setAbaAtiva] = useState<'talentos' | 'magias'>(abaInicial);
+  const [abaAtiva, setAbaAtiva] = useState<AbaCompendio>(abaInicial);
   const [busca, setBusca] = useState('');
 
   // Filtros de Talentos
@@ -71,17 +100,20 @@ export const CompendioModal: React.FC<Props> = ({
 
   // Filtros de Magias
   const [nivelSel, setNivelSel] = useState<number | null>(nivelFiltroInicial);
-  const [tipoSel, setTipoSel] = useState<'Todas' | 'Arcana' | 'Divina'>('Todas');
+  const [tipoMagiaSel, setTipoMagiaSel] = useState<'Todas' | 'Arcana' | 'Divina'>('Todas');
   const [escolaSel, setEscolaSel] = useState<string>('Todas');
+
+  // Filtros de Classes
+  const [tipoClasseSel, setTipoClasseSel] = useState<'Todas' | 'Basica' | 'Prestigio'>('Todas');
+
+  // Filtros de Equipamentos
+  const [tipoEquipSel, setTipoEquipSel] = useState<'Todos' | TipoEquipamento>('Todos');
 
   // Controle de cards expandidos
   const [expandidos, setExpandidos] = useState<Record<string, boolean>>({});
 
   // Modal para escolher personagem caso estejamos na tela geral
-  const [itemParaAdicionar, setItemParaAdicionar] = useState<{
-    tipo: 'talento' | 'magia';
-    dado: TalentoData | MagiaData;
-  } | null>(null);
+  const [itemParaAdicionar, setItemParaAdicionar] = useState<ItemCompendio | null>(null);
 
   // Atualiza estado ao abrir com valores iniciais se mudarem
   React.useEffect(() => {
@@ -107,25 +139,48 @@ export const CompendioModal: React.FC<Props> = ({
     return filtrarMagias({
       termo: busca,
       nivel: nivelSel,
-      tipo: tipoSel,
+      tipo: tipoMagiaSel,
       escola: escolaSel,
     });
-  }, [abaAtiva, busca, nivelSel, tipoSel, escolaSel]);
+  }, [abaAtiva, busca, nivelSel, tipoMagiaSel, escolaSel]);
+
+  const racasFiltradas = useMemo(() => {
+    if (abaAtiva !== 'racas') return [];
+    return filtrarRacas(busca);
+  }, [abaAtiva, busca]);
+
+  const classesFiltradas = useMemo(() => {
+    if (abaAtiva !== 'classes') return [];
+    return filtrarClasses(busca, tipoClasseSel);
+  }, [abaAtiva, busca, tipoClasseSel]);
+
+  const equipamentosFiltrados = useMemo(() => {
+    if (abaAtiva !== 'equipamentos') return [];
+    return filtrarEquipamentos(busca, tipoEquipSel);
+  }, [abaAtiva, busca, tipoEquipSel]);
 
   const handleCliqueAdicionar = (
-    tipo: 'talento' | 'magia',
-    item: TalentoData | MagiaData
+    tipo: 'talento' | 'magia' | 'raca' | 'classe' | 'equipamento',
+    item: TalentoData | MagiaData | RacaData | ClasseData | EquipamentoData
   ) => {
     if (fichaAtual) {
       if (tipo === 'talento' && onAdicionarTalentoAFicha) {
         onAdicionarTalentoAFicha(item as TalentoData);
       } else if (tipo === 'magia' && onAdicionarMagiaAFicha) {
         onAdicionarMagiaAFicha(item as MagiaData);
+      } else if (tipo === 'raca' && onAplicarRacaAFicha) {
+        onAplicarRacaAFicha(item as RacaData);
+      } else if (tipo === 'classe' && onAplicarClasseAFicha) {
+        onAplicarClasseAFicha(item as ClasseData);
+      } else if (tipo === 'equipamento' && onAdicionarEquipamentoAFicha) {
+        onAdicionarEquipamentoAFicha(item as EquipamentoData);
+      } else if (onAdicionarItemParaFichaEspecifica) {
+        onAdicionarItemParaFichaEspecifica(fichaAtual.id, tipo, item);
       }
     } else if (todasFichas.length === 1 && onAdicionarItemParaFichaEspecifica) {
       onAdicionarItemParaFichaEspecifica(todasFichas[0].id, tipo, item);
     } else if (todasFichas.length > 1) {
-      setItemParaAdicionar({ tipo, dado: item });
+      setItemParaAdicionar({ tipo, dado: item } as ItemCompendio);
     }
   };
 
@@ -141,16 +196,63 @@ export const CompendioModal: React.FC<Props> = ({
   };
 
   // Checa se o item já está na ficha atual
-  const estaNaListaFicha = (tipo: 'talento' | 'magia', nome: string): boolean => {
+  const estaNaListaFicha = (
+    tipo: 'talento' | 'magia' | 'raca' | 'classe' | 'equipamento',
+    nome: string
+  ): boolean => {
     if (!fichaAtual) return false;
+    const nomeNorm = nome.trim().toLowerCase();
+
     if (tipo === 'talento') {
       return fichaAtual.talentos.some(
-        (t) => t.nome.trim().toLowerCase() === nome.trim().toLowerCase()
+        (t) => t.nome.trim().toLowerCase() === nomeNorm
+      );
+    } else if (tipo === 'magia') {
+      return fichaAtual.magias.some(
+        (m) => m.nome.trim().toLowerCase() === nomeNorm
+      );
+    } else if (tipo === 'raca') {
+      return fichaAtual.raca?.trim().toLowerCase() === nomeNorm;
+    } else if (tipo === 'classe') {
+      return (
+        fichaAtual.classe?.trim().toLowerCase().includes(nomeNorm) || false
       );
     } else {
-      return fichaAtual.magias.some(
-        (m) => m.nome.trim().toLowerCase() === nome.trim().toLowerCase()
+      return (
+        fichaAtual.armas.some((a) => a.nome.trim().toLowerCase() === nomeNorm) ||
+        fichaAtual.armaduras.some((a) => a.nome.trim().toLowerCase() === nomeNorm) ||
+        fichaAtual.itensGerais.some((i) => i.nome.trim().toLowerCase() === nomeNorm)
       );
+    }
+  };
+
+  const obterPlaceholderBusca = () => {
+    switch (abaAtiva) {
+      case 'talentos':
+        return 'Buscar talento por nome, pré-requisito ou efeito...';
+      case 'magias':
+        return 'Buscar magia por nome, escola ou efeito...';
+      case 'racas':
+        return 'Buscar raça por nome, tamanho ou traço racial...';
+      case 'classes':
+        return 'Buscar classe por nome, pré-requisito ou habilidade...';
+      case 'equipamentos':
+        return 'Buscar equipamento por nome, dano, tipo ou descrição...';
+    }
+  };
+
+  const obterContadorTexto = () => {
+    switch (abaAtiva) {
+      case 'talentos':
+        return `${talentosFiltrados.length} talentos encontrados`;
+      case 'magias':
+        return `${magiasFiltradas.length} magias encontradas`;
+      case 'racas':
+        return `${racasFiltradas.length} raças encontradas`;
+      case 'classes':
+        return `${classesFiltradas.length} classes encontradas`;
+      case 'equipamentos':
+        return `${equipamentosFiltrados.length} equipamentos encontrados`;
     }
   };
 
@@ -164,492 +266,1078 @@ export const CompendioModal: React.FC<Props> = ({
       <SafeAreaView style={styles.container}>
         <View style={styles.innerContainer}>
           {/* Top Header */}
-        <View style={styles.header}>
-          <View style={styles.headerTitleCol}>
-            <Text style={styles.headerTitle}>Compêndio de Regras</Text>
-            <Text style={styles.headerSubtitle}>
-              {fichaAtual
-                ? `Adicionando à ficha: ${fichaAtual.nomePersonagem || 'Personagem'}`
-                : 'Consulta geral de Talentos e Magias'}
-            </Text>
-          </View>
-          <TouchableOpacity style={styles.btnFechar} onPress={onFechar}>
-            <Text style={styles.btnFecharText}>✕ Fechar</Text>
-          </TouchableOpacity>
-        </View>
-
-        {/* Abas Superiores (Talentos vs Magias) */}
-        <View style={styles.tabsRow}>
-          <TouchableOpacity
-            style={[
-              styles.tabBtn,
-              abaAtiva === 'talentos' && styles.tabBtnAtivo,
-            ]}
-            onPress={() => setAbaAtiva('talentos')}
-          >
-            <Text
-              style={[
-                styles.tabBtnText,
-                abaAtiva === 'talentos' && styles.tabBtnTextAtivo,
-              ]}
-            >
-              Talentos ({talentos.length})
-            </Text>
-          </TouchableOpacity>
-
-          <TouchableOpacity
-            style={[
-              styles.tabBtn,
-              abaAtiva === 'magias' && styles.tabBtnAtivo,
-            ]}
-            onPress={() => setAbaAtiva('magias')}
-          >
-            <Text
-              style={[
-                styles.tabBtnText,
-                abaAtiva === 'magias' && styles.tabBtnTextAtivo,
-              ]}
-            >
-              Magias ({magias.length})
-            </Text>
-          </TouchableOpacity>
-        </View>
-
-        {/* Barra de Busca */}
-        <View style={styles.buscaWrap}>
-          <TextInput
-            style={styles.buscaInput}
-            placeholder={
-              abaAtiva === 'talentos'
-                ? 'Buscar talento por nome, pré-requisito ou efeito...'
-                : 'Buscar magia por nome ou descrição...'
-            }
-            placeholderTextColor={COLORS.textSecondary}
-            value={busca}
-            onChangeText={setBusca}
-            autoCorrect={false}
-          />
-          {busca.length > 0 && (
-            <TouchableOpacity
-              style={styles.btnLimparBusca}
-              onPress={() => setBusca('')}
-            >
-              <Text style={styles.btnLimparBuscaText}>✕</Text>
+          <View style={styles.header}>
+            <View style={styles.headerTitleCol}>
+              <Text style={styles.headerTitle}>Compêndio de Regras</Text>
+              <Text style={styles.headerSubtitle}>
+                {fichaAtual
+                  ? `Adicionando à ficha: ${fichaAtual.nomePersonagem || 'Personagem'}`
+                  : 'Consulta de Talentos, Magias, Raças, Classes e Equipamentos'}
+              </Text>
+            </View>
+            <TouchableOpacity style={styles.btnFechar} onPress={onFechar}>
+              <Text style={styles.btnFecharText}>✕ Fechar</Text>
             </TouchableOpacity>
-          )}
-        </View>
+          </View>
 
-        {/* Barra de Filtros */}
-        <View style={styles.filtrosContainer}>
-          {abaAtiva === 'talentos' ? (
+          {/* Abas Superiores (Scroll horizontal para comportar todas) */}
+          <View style={styles.tabsWrapper}>
             <ScrollView
               horizontal
               showsHorizontalScrollIndicator={false}
-              contentContainerStyle={styles.chipsScroll}
+              contentContainerStyle={styles.tabsRow}
             >
-              {CATEGORIAS_TALENTO.map((cat) => (
-                <TouchableOpacity
-                  key={cat}
+              <TouchableOpacity
+                style={[styles.tabBtn, abaAtiva === 'talentos' && styles.tabBtnAtivo]}
+                onPress={() => setAbaAtiva('talentos')}
+              >
+                <Text
                   style={[
-                    styles.chip,
-                    categoriaSel === cat && styles.chipAtivo,
+                    styles.tabBtnText,
+                    abaAtiva === 'talentos' && styles.tabBtnTextAtivo,
                   ]}
-                  onPress={() => setCategoriaSel(cat)}
                 >
-                  <Text
-                    style={[
-                      styles.chipText,
-                      categoriaSel === cat && styles.chipTextAtivo,
-                    ]}
-                  >
-                    {cat}
-                  </Text>
-                </TouchableOpacity>
-              ))}
+                  Talentos ({talentos.length})
+                </Text>
+              </TouchableOpacity>
+
+              <TouchableOpacity
+                style={[styles.tabBtn, abaAtiva === 'magias' && styles.tabBtnAtivo]}
+                onPress={() => setAbaAtiva('magias')}
+              >
+                <Text
+                  style={[
+                    styles.tabBtnText,
+                    abaAtiva === 'magias' && styles.tabBtnTextAtivo,
+                  ]}
+                >
+                  Magias ({magias.length})
+                </Text>
+              </TouchableOpacity>
+
+              <TouchableOpacity
+                style={[styles.tabBtn, abaAtiva === 'racas' && styles.tabBtnAtivo]}
+                onPress={() => setAbaAtiva('racas')}
+              >
+                <Text
+                  style={[
+                    styles.tabBtnText,
+                    abaAtiva === 'racas' && styles.tabBtnTextAtivo,
+                  ]}
+                >
+                  Raças ({racas.length})
+                </Text>
+              </TouchableOpacity>
+
+              <TouchableOpacity
+                style={[styles.tabBtn, abaAtiva === 'classes' && styles.tabBtnAtivo]}
+                onPress={() => setAbaAtiva('classes')}
+              >
+                <Text
+                  style={[
+                    styles.tabBtnText,
+                    abaAtiva === 'classes' && styles.tabBtnTextAtivo,
+                  ]}
+                >
+                  Classes ({classes.length})
+                </Text>
+              </TouchableOpacity>
+
+              <TouchableOpacity
+                style={[
+                  styles.tabBtn,
+                  abaAtiva === 'equipamentos' && styles.tabBtnAtivo,
+                ]}
+                onPress={() => setAbaAtiva('equipamentos')}
+              >
+                <Text
+                  style={[
+                    styles.tabBtnText,
+                    abaAtiva === 'equipamentos' && styles.tabBtnTextAtivo,
+                  ]}
+                >
+                  Equipamentos ({equipamentos.length})
+                </Text>
+              </TouchableOpacity>
             </ScrollView>
-          ) : (
-            <View style={styles.magiaFiltrosCol}>
-              {/* Nível da Magia */}
+          </View>
+
+          {/* Barra de Busca */}
+          <View style={styles.buscaWrap}>
+            <TextInput
+              style={styles.buscaInput}
+              placeholder={obterPlaceholderBusca()}
+              placeholderTextColor={COLORS.textSecondary}
+              value={busca}
+              onChangeText={setBusca}
+              autoCorrect={false}
+            />
+            {busca.length > 0 && (
+              <TouchableOpacity
+                style={styles.btnLimparBusca}
+                onPress={() => setBusca('')}
+              >
+                <Text style={styles.btnLimparBuscaText}>✕</Text>
+              </TouchableOpacity>
+            )}
+          </View>
+
+          {/* Barra de Filtros Contextuais */}
+          {abaAtiva === 'talentos' && (
+            <View style={styles.filtrosContainer}>
               <ScrollView
                 horizontal
                 showsHorizontalScrollIndicator={false}
                 contentContainerStyle={styles.chipsScroll}
               >
-                <TouchableOpacity
-                  style={[styles.chip, nivelSel === null && styles.chipAtivo]}
-                  onPress={() => setNivelSel(null)}
-                >
-                  <Text
-                    style={[
-                      styles.chipText,
-                      nivelSel === null && styles.chipTextAtivo,
-                    ]}
-                  >
-                    Todos os Níveis
-                  </Text>
-                </TouchableOpacity>
-                {[0, 1, 2, 3, 4, 5, 6, 7, 8, 9].map((lvl) => (
+                {CATEGORIAS_TALENTO.map((cat) => (
                   <TouchableOpacity
-                    key={lvl}
-                    style={[styles.chip, nivelSel === lvl && styles.chipAtivo]}
-                    onPress={() => setNivelSel(lvl)}
+                    key={cat}
+                    style={[styles.chip, categoriaSel === cat && styles.chipAtivo]}
+                    onPress={() => setCategoriaSel(cat)}
                   >
                     <Text
                       style={[
                         styles.chipText,
-                        nivelSel === lvl && styles.chipTextAtivo,
+                        categoriaSel === cat && styles.chipTextAtivo,
                       ]}
                     >
-                      {lvl === 0 ? 'Nível 0' : `${lvl}º Nível`}
-                    </Text>
-                  </TouchableOpacity>
-                ))}
-              </ScrollView>
-
-              {/* Linha com Tipo e Escola */}
-              <ScrollView
-                horizontal
-                showsHorizontalScrollIndicator={false}
-                contentContainerStyle={[styles.chipsScroll, { marginTop: 6 }]}
-              >
-                {(['Todas', 'Arcana', 'Divina'] as const).map((tipo) => (
-                  <TouchableOpacity
-                    key={tipo}
-                    style={[styles.chip, tipoSel === tipo && styles.chipAtivo]}
-                    onPress={() => setTipoSel(tipo)}
-                  >
-                    <Text
-                      style={[
-                        styles.chipText,
-                        tipoSel === tipo && styles.chipTextAtivo,
-                      ]}
-                    >
-                      {tipo === 'Todas' ? 'Arcana / Divina' : tipo}
-                    </Text>
-                  </TouchableOpacity>
-                ))}
-
-                <View style={styles.divisorVertical} />
-
-                {ESCOLAS_MAGIA.map((esc) => (
-                  <TouchableOpacity
-                    key={esc}
-                    style={[styles.chip, escolaSel === esc && styles.chipAtivo]}
-                    onPress={() => setEscolaSel(esc)}
-                  >
-                    <Text
-                      style={[
-                        styles.chipText,
-                        escolaSel === esc && styles.chipTextAtivo,
-                      ]}
-                    >
-                      {esc}
+                      {cat}
                     </Text>
                   </TouchableOpacity>
                 ))}
               </ScrollView>
             </View>
           )}
-        </View>
 
-        {/* Contador de resultados */}
-        <View style={styles.contadorRow}>
-          <Text style={styles.contadorText}>
-            {abaAtiva === 'talentos'
-              ? `${talentosFiltrados.length} talentos encontrados`
-              : `${magiasFiltradas.length} magias encontradas`}
-          </Text>
-        </View>
-
-        {/* Lista de Resultados */}
-        {abaAtiva === 'talentos' ? (
-          <FlatList
-            data={talentosFiltrados}
-            keyExtractor={(item) => item.id}
-            contentContainerStyle={styles.listContent}
-            initialNumToRender={15}
-            maxToRenderPerBatch={20}
-            windowSize={10}
-            ListEmptyComponent={
-              <View style={styles.emptyWrap}>
-                <Text style={styles.emptyText}>
-                  Nenhum talento encontrado com os filtros selecionados.
-                </Text>
-              </View>
-            }
-            renderItem={({ item }) => {
-              const expandido = !!expandidos[item.id];
-              const jaPossui = estaNaListaFicha('talento', item.nome);
-              return (
-                <View style={styles.cardItem}>
+          {abaAtiva === 'magias' && (
+            <View style={styles.filtrosContainer}>
+              <View style={styles.magiaFiltrosCol}>
+                <ScrollView
+                  horizontal
+                  showsHorizontalScrollIndicator={false}
+                  contentContainerStyle={styles.chipsScroll}
+                >
                   <TouchableOpacity
-                    style={styles.cardItemHeader}
-                    onPress={() => alternarExpandido(item.id)}
-                    activeOpacity={0.7}
+                    style={[styles.chip, nivelSel === null && styles.chipAtivo]}
+                    onPress={() => setNivelSel(null)}
                   >
-                    <View style={styles.cardItemTitleCol}>
-                      <View style={styles.badgeRow}>
-                        <View style={styles.badgeCategoria}>
-                          <Text style={styles.badgeCategoriaText}>
-                            {item.categoria}
-                          </Text>
-                        </View>
-                        {jaPossui && (
-                          <View style={styles.badgePossui}>
-                            <Text style={styles.badgePossuiText}>✓ Na Ficha</Text>
-                          </View>
-                        )}
-                      </View>
-                      <Text style={styles.cardItemNome}>{item.nome}</Text>
-                      {item.preRequisitos && item.preRequisitos !== 'Nenhum.' && (
-                        <Text
-                          style={styles.cardItemPreReq}
-                          numberOfLines={expandido ? undefined : 1}
-                        >
-                          <Text style={styles.negrito}>Pré-requisitos: </Text>
-                          {item.preRequisitos}
-                        </Text>
-                      )}
-                    </View>
-
-                    <TouchableOpacity
+                    <Text
                       style={[
-                        styles.btnAdicionar,
-                        jaPossui && styles.btnAdicionarSecundario,
+                        styles.chipText,
+                        nivelSel === null && styles.chipTextAtivo,
                       ]}
-                      onPress={() => handleCliqueAdicionar('talento', item)}
                     >
-                      <Text style={styles.btnAdicionarText}>
-                        {fichaAtual ? '+ Adicionar' : '+ Personagem'}
-                      </Text>
-                    </TouchableOpacity>
+                      Todos os Níveis
+                    </Text>
                   </TouchableOpacity>
-
-                  {/* Prévia curta de benefício se recolhido */}
-                  {!expandido && (
+                  {[0, 1, 2, 3, 4, 5, 6, 7, 8, 9].map((lvl) => (
                     <TouchableOpacity
-                      onPress={() => alternarExpandido(item.id)}
-                      style={styles.previaContainer}
+                      key={lvl}
+                      style={[styles.chip, nivelSel === lvl && styles.chipAtivo]}
+                      onPress={() => setNivelSel(lvl)}
                     >
                       <Text
-                        style={styles.cardItemBeneficioPrevia}
-                        numberOfLines={2}
+                        style={[
+                          styles.chipText,
+                          nivelSel === lvl && styles.chipTextAtivo,
+                        ]}
                       >
-                        {item.beneficio}
-                      </Text>
-                      <Text style={styles.toqueMaisText}>Toque para ver detalhes ▼</Text>
-                    </TouchableOpacity>
-                  )}
-
-                  {/* Corpo Expandido */}
-                  {expandido && (
-                    <View style={styles.cardItemExpandido}>
-                      {item.descricao ? (
-                        <Text style={styles.cardItemDescricaoFlavor}>
-                          "{item.descricao}"
-                        </Text>
-                      ) : null}
-
-                      <View style={styles.beneficioBox}>
-                        <Text style={styles.beneficioLabel}>Benefício:</Text>
-                        <Text style={styles.beneficioTexto}>{item.beneficio}</Text>
-                      </View>
-
-                      <TouchableOpacity
-                        style={styles.btnRecolher}
-                        onPress={() => alternarExpandido(item.id)}
-                      >
-                        <Text style={styles.btnRecolherText}>Recolher ▲</Text>
-                      </TouchableOpacity>
-                    </View>
-                  )}
-                </View>
-              );
-            }}
-          />
-        ) : (
-          <FlatList
-            data={magiasFiltradas}
-            keyExtractor={(item) => item.id}
-            contentContainerStyle={styles.listContent}
-            initialNumToRender={15}
-            maxToRenderPerBatch={20}
-            windowSize={10}
-            ListEmptyComponent={
-              <View style={styles.emptyWrap}>
-                <Text style={styles.emptyText}>
-                  Nenhuma magia encontrada com os filtros selecionados.
-                </Text>
-              </View>
-            }
-            renderItem={({ item }) => {
-              const expandido = !!expandidos[item.id];
-              const jaPossui = estaNaListaFicha('magia', item.nome);
-              return (
-                <View style={styles.cardItem}>
-                  <TouchableOpacity
-                    style={styles.cardItemHeader}
-                    onPress={() => alternarExpandido(item.id)}
-                    activeOpacity={0.7}
-                  >
-                    <View style={styles.cardItemTitleCol}>
-                      <View style={styles.badgeRow}>
-                        <View style={styles.badgeNivel}>
-                          <Text style={styles.badgeNivelText}>
-                            {item.nivel === 0 ? 'Nível 0' : `${item.nivel}º Nível`}
-                          </Text>
-                        </View>
-                        <View style={styles.badgeEscola}>
-                          <Text style={styles.badgeEscolaText}>
-                            {item.escola}
-                          </Text>
-                        </View>
-                        <View style={styles.badgeTipo}>
-                          <Text style={styles.badgeTipoText}>{item.tipo}</Text>
-                        </View>
-                        {jaPossui && (
-                          <View style={styles.badgePossui}>
-                            <Text style={styles.badgePossuiText}>✓ No Grimório</Text>
-                          </View>
-                        )}
-                      </View>
-                      <Text style={styles.cardItemNome}>{item.nome}</Text>
-                      <Text
-                        style={styles.cardItemResumo}
-                        numberOfLines={expandido ? undefined : 1}
-                      >
-                        {item.tempoExecucao} • {item.alcance} • {item.duracao}
-                      </Text>
-                    </View>
-
-                    <TouchableOpacity
-                      style={[
-                        styles.btnAdicionar,
-                        jaPossui && styles.btnAdicionarSecundario,
-                      ]}
-                      onPress={() => handleCliqueAdicionar('magia', item)}
-                    >
-                      <Text style={styles.btnAdicionarText}>
-                        {fichaAtual ? '+ Adicionar' : '+ Personagem'}
-                      </Text>
-                    </TouchableOpacity>
-                  </TouchableOpacity>
-
-                  {/* Prévia se recolhido */}
-                  {!expandido && (
-                    <TouchableOpacity
-                      onPress={() => alternarExpandido(item.id)}
-                      style={styles.previaContainer}
-                    >
-                      <Text
-                        style={styles.cardItemBeneficioPrevia}
-                        numberOfLines={2}
-                      >
-                        {item.descricao}
-                      </Text>
-                      <Text style={styles.toqueMaisText}>Toque para ver detalhes ▼</Text>
-                    </TouchableOpacity>
-                  )}
-
-                  {/* Corpo Expandido da Magia */}
-                  {expandido && (
-                    <View style={styles.cardItemExpandido}>
-                      <View style={styles.magiaGridParametros}>
-                        <View style={styles.magiaParamItem}>
-                          <Text style={styles.paramLabel}>Tempo de Execução:</Text>
-                          <Text style={styles.paramVal}>{item.tempoExecucao}</Text>
-                        </View>
-                        <View style={styles.magiaParamItem}>
-                          <Text style={styles.paramLabel}>Alcance:</Text>
-                          <Text style={styles.paramVal}>{item.alcance}</Text>
-                        </View>
-                        {item.alvoAreaEfeito ? (
-                          <View style={styles.magiaParamItem}>
-                            <Text style={styles.paramLabel}>Alvo / Área / Efeito:</Text>
-                            <Text style={styles.paramVal}>{item.alvoAreaEfeito}</Text>
-                          </View>
-                        ) : null}
-                        <View style={styles.magiaParamItem}>
-                          <Text style={styles.paramLabel}>Duração:</Text>
-                          <Text style={styles.paramVal}>{item.duracao}</Text>
-                        </View>
-                        {item.resistencia ? (
-                          <View style={styles.magiaParamItem}>
-                            <Text style={styles.paramLabel}>Teste de Resistência:</Text>
-                            <Text style={styles.paramVal}>{item.resistencia}</Text>
-                          </View>
-                        ) : null}
-                        {item.componenteMaterial ? (
-                          <View style={styles.magiaParamItem}>
-                            <Text style={styles.paramLabel}>Componente Material:</Text>
-                            <Text style={styles.paramVal}>{item.componenteMaterial}</Text>
-                          </View>
-                        ) : null}
-                      </View>
-
-                      <View style={styles.beneficioBox}>
-                        <Text style={styles.beneficioLabel}>Efeito Mágico:</Text>
-                        <Text style={styles.beneficioTexto}>{item.descricao}</Text>
-                      </View>
-
-                      <TouchableOpacity
-                        style={styles.btnRecolher}
-                        onPress={() => alternarExpandido(item.id)}
-                      >
-                        <Text style={styles.btnRecolherText}>Recolher ▲</Text>
-                      </TouchableOpacity>
-                    </View>
-                  )}
-                </View>
-              );
-            }}
-          />
-        )}
-
-        {/* Modal de Escolha de Personagem (quando acionado fora da ficha) */}
-        {itemParaAdicionar && (
-          <Modal
-            transparent
-            animationType="fade"
-            visible={!!itemParaAdicionar}
-            onRequestClose={() => setItemParaAdicionar(null)}
-          >
-            <View style={styles.modalBackdrop}>
-              <View style={styles.dialogCard}>
-                <Text style={styles.dialogTitle}>
-                  Adicionar {itemParaAdicionar.tipo === 'talento' ? 'Talento' : 'Magia'}
-                </Text>
-                <Text style={styles.dialogSubtitle}>
-                  Selecione o personagem que irá registrar "{itemParaAdicionar.dado.nome}":
-                </Text>
-
-                <ScrollView style={styles.dialogScroll}>
-                  {todasFichas.map((f) => (
-                    <TouchableOpacity
-                      key={f.id}
-                      style={styles.dialogFichaItem}
-                      onPress={() => confirmarAdicaoParaFicha(f.id)}
-                    >
-                      <Text style={styles.dialogFichaNome}>
-                        {f.nomePersonagem || 'Personagem sem Nome'}
-                      </Text>
-                      <Text style={styles.dialogFichaDetalhes}>
-                        Nível {f.nivel} • {f.classe || 'Classe não definida'}
+                        {lvl === 0 ? 'Nível 0' : `${lvl}º Nível`}
                       </Text>
                     </TouchableOpacity>
                   ))}
                 </ScrollView>
 
-                <TouchableOpacity
-                  style={styles.dialogBtnCancelar}
-                  onPress={() => setItemParaAdicionar(null)}
+                <ScrollView
+                  horizontal
+                  showsHorizontalScrollIndicator={false}
+                  contentContainerStyle={[styles.chipsScroll, { marginTop: 6 }]}
                 >
-                  <Text style={styles.dialogBtnCancelarText}>Cancelar</Text>
-                </TouchableOpacity>
+                  {(['Todas', 'Arcana', 'Divina'] as const).map((tipo) => (
+                    <TouchableOpacity
+                      key={tipo}
+                      style={[
+                        styles.chip,
+                        tipoMagiaSel === tipo && styles.chipAtivo,
+                      ]}
+                      onPress={() => setTipoMagiaSel(tipo)}
+                    >
+                      <Text
+                        style={[
+                          styles.chipText,
+                          tipoMagiaSel === tipo && styles.chipTextAtivo,
+                        ]}
+                      >
+                        {tipo === 'Todas' ? 'Arcana / Divina' : tipo}
+                      </Text>
+                    </TouchableOpacity>
+                  ))}
+
+                  <View style={styles.divisorVertical} />
+
+                  {ESCOLAS_MAGIA.map((esc) => (
+                    <TouchableOpacity
+                      key={esc}
+                      style={[styles.chip, escolaSel === esc && styles.chipAtivo]}
+                      onPress={() => setEscolaSel(esc)}
+                    >
+                      <Text
+                        style={[
+                          styles.chipText,
+                          escolaSel === esc && styles.chipTextAtivo,
+                        ]}
+                      >
+                        {esc}
+                      </Text>
+                    </TouchableOpacity>
+                  ))}
+                </ScrollView>
               </View>
             </View>
-          </Modal>
-        )}
+          )}
+
+          {abaAtiva === 'classes' && (
+            <View style={styles.filtrosContainer}>
+              <ScrollView
+                horizontal
+                showsHorizontalScrollIndicator={false}
+                contentContainerStyle={styles.chipsScroll}
+              >
+                {(
+                  [
+                    { valor: 'Todas', rotulo: 'Todas as Classes' },
+                    { valor: 'Basica', rotulo: 'Classes Básicas' },
+                    { valor: 'Prestigio', rotulo: 'Classes de Prestígio' },
+                  ] as const
+                ).map((t) => (
+                  <TouchableOpacity
+                    key={t.valor}
+                    style={[
+                      styles.chip,
+                      tipoClasseSel === t.valor && styles.chipAtivo,
+                    ]}
+                    onPress={() => setTipoClasseSel(t.valor)}
+                  >
+                    <Text
+                      style={[
+                        styles.chipText,
+                        tipoClasseSel === t.valor && styles.chipTextAtivo,
+                      ]}
+                    >
+                      {t.rotulo}
+                    </Text>
+                  </TouchableOpacity>
+                ))}
+              </ScrollView>
+            </View>
+          )}
+
+          {abaAtiva === 'equipamentos' && (
+            <View style={styles.filtrosContainer}>
+              <ScrollView
+                horizontal
+                showsHorizontalScrollIndicator={false}
+                contentContainerStyle={styles.chipsScroll}
+              >
+                {TIPOS_EQUIPAMENTO.map((tipo) => (
+                  <TouchableOpacity
+                    key={tipo}
+                    style={[
+                      styles.chip,
+                      tipoEquipSel === tipo && styles.chipAtivo,
+                    ]}
+                    onPress={() => setTipoEquipSel(tipo)}
+                  >
+                    <Text
+                      style={[
+                        styles.chipText,
+                        tipoEquipSel === tipo && styles.chipTextAtivo,
+                      ]}
+                    >
+                      {tipo}
+                    </Text>
+                  </TouchableOpacity>
+                ))}
+              </ScrollView>
+            </View>
+          )}
+
+          {/* Contador de resultados */}
+          <View style={styles.contadorRow}>
+            <Text style={styles.contadorText}>{obterContadorTexto()}</Text>
+          </View>
+
+          {/* LISTA DE RESULTADOS POR ABA */}
+
+          {/* 1. ABA DE TALENTOS */}
+          {abaAtiva === 'talentos' && (
+            <FlatList
+              data={talentosFiltrados}
+              keyExtractor={(item) => item.id}
+              contentContainerStyle={styles.listContent}
+              initialNumToRender={15}
+              maxToRenderPerBatch={20}
+              windowSize={10}
+              ListEmptyComponent={
+                <View style={styles.emptyWrap}>
+                  <Text style={styles.emptyText}>
+                    Nenhum talento encontrado com os filtros selecionados.
+                  </Text>
+                </View>
+              }
+              renderItem={({ item }) => {
+                const expandido = !!expandidos[item.id];
+                const jaPossui = estaNaListaFicha('talento', item.nome);
+                return (
+                  <View style={styles.cardItem}>
+                    <TouchableOpacity
+                      style={styles.cardItemHeader}
+                      onPress={() => alternarExpandido(item.id)}
+                      activeOpacity={0.7}
+                    >
+                      <View style={styles.cardItemTitleCol}>
+                        <View style={styles.badgeRow}>
+                          <View style={styles.badgeCategoria}>
+                            <Text style={styles.badgeCategoriaText}>
+                              {item.categoria}
+                            </Text>
+                          </View>
+                          {jaPossui && (
+                            <View style={styles.badgePossui}>
+                              <Text style={styles.badgePossuiText}>✓ Na Ficha</Text>
+                            </View>
+                          )}
+                        </View>
+                        <Text style={styles.cardItemNome}>{item.nome}</Text>
+                        {item.preRequisitos &&
+                          item.preRequisitos !== 'Nenhum.' && (
+                            <Text
+                              style={styles.cardItemPreReq}
+                              numberOfLines={expandido ? undefined : 1}
+                            >
+                              <Text style={styles.negrito}>Pré-requisitos: </Text>
+                              {item.preRequisitos}
+                            </Text>
+                          )}
+                      </View>
+
+                      <TouchableOpacity
+                        style={[
+                          styles.btnAdicionar,
+                          jaPossui && styles.btnAdicionarSecundario,
+                        ]}
+                        onPress={() => handleCliqueAdicionar('talento', item)}
+                      >
+                        <Text style={styles.btnAdicionarText}>
+                          {fichaAtual ? '+ Adicionar' : '+ Personagem'}
+                        </Text>
+                      </TouchableOpacity>
+                    </TouchableOpacity>
+
+                    {!expandido && (
+                      <TouchableOpacity
+                        onPress={() => alternarExpandido(item.id)}
+                        style={styles.previaContainer}
+                      >
+                        <Text
+                          style={styles.cardItemBeneficioPrevia}
+                          numberOfLines={2}
+                        >
+                          {item.beneficio}
+                        </Text>
+                        <Text style={styles.toqueMaisText}>
+                          Toque para ver detalhes ▼
+                        </Text>
+                      </TouchableOpacity>
+                    )}
+
+                    {expandido && (
+                      <View style={styles.cardItemExpandido}>
+                        {item.descricao ? (
+                          <Text style={styles.cardItemDescricaoFlavor}>
+                            "{item.descricao}"
+                          </Text>
+                        ) : null}
+
+                        <View style={styles.beneficioBox}>
+                          <Text style={styles.beneficioLabel}>Benefício:</Text>
+                          <Text style={styles.beneficioTexto}>{item.beneficio}</Text>
+                        </View>
+
+                        <TouchableOpacity
+                          style={styles.btnRecolher}
+                          onPress={() => alternarExpandido(item.id)}
+                        >
+                          <Text style={styles.btnRecolherText}>Recolher ▲</Text>
+                        </TouchableOpacity>
+                      </View>
+                    )}
+                  </View>
+                );
+              }}
+            />
+          )}
+
+          {/* 2. ABA DE MAGIAS */}
+          {abaAtiva === 'magias' && (
+            <FlatList
+              data={magiasFiltradas}
+              keyExtractor={(item) => item.id}
+              contentContainerStyle={styles.listContent}
+              initialNumToRender={15}
+              maxToRenderPerBatch={20}
+              windowSize={10}
+              ListEmptyComponent={
+                <View style={styles.emptyWrap}>
+                  <Text style={styles.emptyText}>
+                    Nenhuma magia encontrada com os filtros selecionados.
+                  </Text>
+                </View>
+              }
+              renderItem={({ item }) => {
+                const expandido = !!expandidos[item.id];
+                const jaPossui = estaNaListaFicha('magia', item.nome);
+                return (
+                  <View style={styles.cardItem}>
+                    <TouchableOpacity
+                      style={styles.cardItemHeader}
+                      onPress={() => alternarExpandido(item.id)}
+                      activeOpacity={0.7}
+                    >
+                      <View style={styles.cardItemTitleCol}>
+                        <View style={styles.badgeRow}>
+                          <View style={styles.badgeNivel}>
+                            <Text style={styles.badgeNivelText}>
+                              {item.nivel === 0
+                                ? 'Nível 0'
+                                : `${item.nivel}º Nível`}
+                            </Text>
+                          </View>
+                          <View style={styles.badgeEscola}>
+                            <Text style={styles.badgeEscolaText}>
+                              {item.escola}
+                            </Text>
+                          </View>
+                          <View style={styles.badgeTipo}>
+                            <Text style={styles.badgeTipoText}>{item.tipo}</Text>
+                          </View>
+                          {jaPossui && (
+                            <View style={styles.badgePossui}>
+                              <Text style={styles.badgePossuiText}>
+                                ✓ No Grimório
+                              </Text>
+                            </View>
+                          )}
+                        </View>
+                        <Text style={styles.cardItemNome}>{item.nome}</Text>
+                        <Text
+                          style={styles.cardItemResumo}
+                          numberOfLines={expandido ? undefined : 1}
+                        >
+                          {item.tempoExecucao} • {item.alcance} • {item.duracao}
+                        </Text>
+                      </View>
+
+                      <TouchableOpacity
+                        style={[
+                          styles.btnAdicionar,
+                          jaPossui && styles.btnAdicionarSecundario,
+                        ]}
+                        onPress={() => handleCliqueAdicionar('magia', item)}
+                      >
+                        <Text style={styles.btnAdicionarText}>
+                          {fichaAtual ? '+ Adicionar' : '+ Personagem'}
+                        </Text>
+                      </TouchableOpacity>
+                    </TouchableOpacity>
+
+                    {!expandido && (
+                      <TouchableOpacity
+                        onPress={() => alternarExpandido(item.id)}
+                        style={styles.previaContainer}
+                      >
+                        <Text
+                          style={styles.cardItemBeneficioPrevia}
+                          numberOfLines={2}
+                        >
+                          {item.descricao}
+                        </Text>
+                        <Text style={styles.toqueMaisText}>
+                          Toque para ver detalhes ▼
+                        </Text>
+                      </TouchableOpacity>
+                    )}
+
+                    {expandido && (
+                      <View style={styles.cardItemExpandido}>
+                        <View style={styles.magiaGridParametros}>
+                          <View style={styles.magiaParamItem}>
+                            <Text style={styles.paramLabel}>Tempo de Execução:</Text>
+                            <Text style={styles.paramVal}>{item.tempoExecucao}</Text>
+                          </View>
+                          <View style={styles.magiaParamItem}>
+                            <Text style={styles.paramLabel}>Alcance:</Text>
+                            <Text style={styles.paramVal}>{item.alcance}</Text>
+                          </View>
+                          {item.alvoAreaEfeito ? (
+                            <View style={styles.magiaParamItem}>
+                              <Text style={styles.paramLabel}>
+                                Alvo / Área / Efeito:
+                              </Text>
+                              <Text style={styles.paramVal}>
+                                {item.alvoAreaEfeito}
+                              </Text>
+                            </View>
+                          ) : null}
+                          <View style={styles.magiaParamItem}>
+                            <Text style={styles.paramLabel}>Duração:</Text>
+                            <Text style={styles.paramVal}>{item.duracao}</Text>
+                          </View>
+                          {item.resistencia ? (
+                            <View style={styles.magiaParamItem}>
+                              <Text style={styles.paramLabel}>
+                                Teste de Resistência:
+                              </Text>
+                              <Text style={styles.paramVal}>{item.resistencia}</Text>
+                            </View>
+                          ) : null}
+                          {item.componenteMaterial ? (
+                            <View style={styles.magiaParamItem}>
+                              <Text style={styles.paramLabel}>
+                                Componente Material:
+                              </Text>
+                              <Text style={styles.paramVal}>
+                                {item.componenteMaterial}
+                              </Text>
+                            </View>
+                          ) : null}
+                        </View>
+
+                        <View style={styles.beneficioBox}>
+                          <Text style={styles.beneficioLabel}>Efeito Mágico:</Text>
+                          <Text style={styles.beneficioTexto}>{item.descricao}</Text>
+                        </View>
+
+                        <TouchableOpacity
+                          style={styles.btnRecolher}
+                          onPress={() => alternarExpandido(item.id)}
+                        >
+                          <Text style={styles.btnRecolherText}>Recolher ▲</Text>
+                        </TouchableOpacity>
+                      </View>
+                    )}
+                  </View>
+                );
+              }}
+            />
+          )}
+
+          {/* 3. ABA DE RAÇAS */}
+          {abaAtiva === 'racas' && (
+            <FlatList
+              data={racasFiltradas}
+              keyExtractor={(item) => item.id}
+              contentContainerStyle={styles.listContent}
+              initialNumToRender={12}
+              maxToRenderPerBatch={15}
+              windowSize={10}
+              ListEmptyComponent={
+                <View style={styles.emptyWrap}>
+                  <Text style={styles.emptyText}>
+                    Nenhuma raça encontrada com o termo buscado.
+                  </Text>
+                </View>
+              }
+              renderItem={({ item }) => {
+                const expandido = !!expandidos[item.id];
+                const jaPossui = estaNaListaFicha('raca', item.nome);
+
+                return (
+                  <View style={styles.cardItem}>
+                    <TouchableOpacity
+                      style={styles.cardItemHeader}
+                      onPress={() => alternarExpandido(item.id)}
+                      activeOpacity={0.7}
+                    >
+                      <View style={styles.cardItemTitleCol}>
+                        <View style={styles.badgeRow}>
+                          <View style={styles.badgeRaca}>
+                            <Text style={styles.badgeRacaText}>Raça</Text>
+                          </View>
+                          <View style={styles.badgeLivro}>
+                            <Text style={styles.badgeLivroText}>{item.livroFonte}</Text>
+                          </View>
+                          {jaPossui && (
+                            <View style={styles.badgePossui}>
+                              <Text style={styles.badgePossuiText}>✓ Raça Atual</Text>
+                            </View>
+                          )}
+                        </View>
+
+                        <Text style={styles.cardItemNome}>{item.nome}</Text>
+
+                        {/* Modificadores de Atributos */}
+                        <Text style={styles.cardItemPreReq}>
+                          <Text style={styles.negrito}>Atributos: </Text>
+                          {item.modificadoresAtributos}
+                        </Text>
+
+                        <Text style={styles.cardItemResumo}>
+                          Desl: {item.deslocamento} • Tamanho: {item.tamanho}
+                          {item.visao ? ` • Visão: ${item.visao}` : ''}
+                        </Text>
+                      </View>
+
+                      <TouchableOpacity
+                        style={[
+                          styles.btnAdicionar,
+                          jaPossui && styles.btnAdicionarSecundario,
+                        ]}
+                        onPress={() => handleCliqueAdicionar('raca', item)}
+                      >
+                        <Text style={styles.btnAdicionarText}>
+                          {fichaAtual ? '+ Aplicar' : '+ Personagem'}
+                        </Text>
+                      </TouchableOpacity>
+                    </TouchableOpacity>
+
+                    {!expandido && (
+                      <TouchableOpacity
+                        onPress={() => alternarExpandido(item.id)}
+                        style={styles.previaContainer}
+                      >
+                        <Text
+                          style={styles.cardItemBeneficioPrevia}
+                          numberOfLines={2}
+                        >
+                          {item.descricao}
+                        </Text>
+                        <Text style={styles.toqueMaisText}>
+                          Ver traços raciais ({item.tracosRaciais.length}) ▼
+                        </Text>
+                      </TouchableOpacity>
+                    )}
+
+                    {expandido && (
+                      <View style={styles.cardItemExpandido}>
+                        <Text style={styles.cardItemDescricaoFlavor}>
+                          "{item.descricao}"
+                        </Text>
+
+                        <Text style={styles.secaoTituloInterno}>
+                          Traços Raciais:
+                        </Text>
+                        {item.tracosRaciais.map((traco, idx) => (
+                          <View key={idx} style={styles.subItemBox}>
+                            <Text style={styles.subItemTitulo}>
+                              • {traco.nome}
+                            </Text>
+                            <Text style={styles.subItemDescricao}>
+                              {traco.descricao}
+                            </Text>
+                          </View>
+                        ))}
+
+                        <TouchableOpacity
+                          style={styles.btnRecolher}
+                          onPress={() => alternarExpandido(item.id)}
+                        >
+                          <Text style={styles.btnRecolherText}>Recolher ▲</Text>
+                        </TouchableOpacity>
+                      </View>
+                    )}
+                  </View>
+                );
+              }}
+            />
+          )}
+
+          {/* 4. ABA DE CLASSES */}
+          {abaAtiva === 'classes' && (
+            <FlatList
+              data={classesFiltradas}
+              keyExtractor={(item) => item.id}
+              contentContainerStyle={styles.listContent}
+              initialNumToRender={15}
+              maxToRenderPerBatch={20}
+              windowSize={10}
+              ListEmptyComponent={
+                <View style={styles.emptyWrap}>
+                  <Text style={styles.emptyText}>
+                    Nenhuma classe encontrada com os filtros selecionados.
+                  </Text>
+                </View>
+              }
+              renderItem={({ item }) => {
+                const expandido = !!expandidos[item.id];
+                const jaPossui = estaNaListaFicha('classe', item.nome);
+                const ehPrestigio = item.tipo === 'Prestigio';
+
+                return (
+                  <View style={styles.cardItem}>
+                    <TouchableOpacity
+                      style={styles.cardItemHeader}
+                      onPress={() => alternarExpandido(item.id)}
+                      activeOpacity={0.7}
+                    >
+                      <View style={styles.cardItemTitleCol}>
+                        <View style={styles.badgeRow}>
+                          <View
+                            style={
+                              ehPrestigio
+                                ? styles.badgePrestigio
+                                : styles.badgeClasseBasica
+                            }
+                          >
+                            <Text
+                              style={
+                                ehPrestigio
+                                  ? styles.badgePrestigioText
+                                  : styles.badgeClasseBasicaText
+                              }
+                            >
+                              {ehPrestigio ? 'Prestígio' : 'Classe Básica'}
+                            </Text>
+                          </View>
+                          <View style={styles.badgeLivro}>
+                            <Text style={styles.badgeLivroText}>
+                              {item.livroFonte}
+                            </Text>
+                          </View>
+                          {jaPossui && (
+                            <View style={styles.badgePossui}>
+                              <Text style={styles.badgePossuiText}>
+                                ✓ Classe Atual
+                              </Text>
+                            </View>
+                          )}
+                        </View>
+
+                        <Text style={styles.cardItemNome}>{item.nome}</Text>
+
+                        <Text style={styles.cardItemResumo}>
+                          PV Inicial: {item.pvInicial} (+{item.pvPorNivel}/nv) •
+                          PM: +{item.pmPorNivel}/nv • BBA: {item.bba}
+                        </Text>
+
+                        {item.preRequisitos && (
+                          <Text
+                            style={styles.cardItemPreReq}
+                            numberOfLines={expandido ? undefined : 1}
+                          >
+                            <Text style={styles.negrito}>Pré-requisitos: </Text>
+                            {item.preRequisitos}
+                          </Text>
+                        )}
+                      </View>
+
+                      <TouchableOpacity
+                        style={[
+                          styles.btnAdicionar,
+                          jaPossui && styles.btnAdicionarSecundario,
+                        ]}
+                        onPress={() => handleCliqueAdicionar('classe', item)}
+                      >
+                        <Text style={styles.btnAdicionarText}>
+                          {fichaAtual ? '+ Escolher' : '+ Personagem'}
+                        </Text>
+                      </TouchableOpacity>
+                    </TouchableOpacity>
+
+                    {!expandido && (
+                      <TouchableOpacity
+                        onPress={() => alternarExpandido(item.id)}
+                        style={styles.previaContainer}
+                      >
+                        <Text
+                          style={styles.cardItemBeneficioPrevia}
+                          numberOfLines={2}
+                        >
+                          {item.descricao}
+                        </Text>
+                        <Text style={styles.toqueMaisText}>
+                          Ver habilidades ({item.habilidades.length}) ▼
+                        </Text>
+                      </TouchableOpacity>
+                    )}
+
+                    {expandido && (
+                      <View style={styles.cardItemExpandido}>
+                        <Text style={styles.cardItemDescricaoFlavor}>
+                          "{item.descricao}"
+                        </Text>
+
+                        {item.proficiencias ? (
+                          <View style={styles.proficienciasBox}>
+                            <Text style={styles.beneficioLabel}>
+                              Proficiências:
+                            </Text>
+                            <Text style={styles.beneficioTexto}>
+                              {item.proficiencias}
+                            </Text>
+                          </View>
+                        ) : null}
+
+                        <Text style={styles.secaoTituloInterno}>
+                          Habilidades de Classe:
+                        </Text>
+                        {item.habilidades.map((hab, idx) => (
+                          <View key={idx} style={styles.subItemBox}>
+                            <Text style={styles.subItemTitulo}>
+                              • [Nível {hab.nivel}] {hab.nome}
+                            </Text>
+                            <Text style={styles.subItemDescricao}>
+                              {hab.descricao}
+                            </Text>
+                          </View>
+                        ))}
+
+                        <TouchableOpacity
+                          style={styles.btnRecolher}
+                          onPress={() => alternarExpandido(item.id)}
+                        >
+                          <Text style={styles.btnRecolherText}>Recolher ▲</Text>
+                        </TouchableOpacity>
+                      </View>
+                    )}
+                  </View>
+                );
+              }}
+            />
+          )}
+
+          {/* 5. ABA DE EQUIPAMENTOS */}
+          {abaAtiva === 'equipamentos' && (
+            <FlatList
+              data={equipamentosFiltrados}
+              keyExtractor={(item) => item.id}
+              contentContainerStyle={styles.listContent}
+              initialNumToRender={15}
+              maxToRenderPerBatch={20}
+              windowSize={10}
+              ListEmptyComponent={
+                <View style={styles.emptyWrap}>
+                  <Text style={styles.emptyText}>
+                    Nenhum equipamento encontrado com os filtros selecionados.
+                  </Text>
+                </View>
+              }
+              renderItem={({ item }) => {
+                const expandido = !!expandidos[item.id];
+                const jaPossui = estaNaListaFicha('equipamento', item.nome);
+
+                return (
+                  <View style={styles.cardItem}>
+                    <TouchableOpacity
+                      style={styles.cardItemHeader}
+                      onPress={() => alternarExpandido(item.id)}
+                      activeOpacity={0.7}
+                    >
+                      <View style={styles.cardItemTitleCol}>
+                        <View style={styles.badgeRow}>
+                          <View style={styles.badgeEquipTipo}>
+                            <Text style={styles.badgeEquipTipoText}>
+                              {item.tipo}
+                            </Text>
+                          </View>
+                          <View style={styles.badgeCategoria}>
+                            <Text style={styles.badgeCategoriaText}>
+                              {item.categoria}
+                            </Text>
+                          </View>
+                          <View style={styles.badgeLivro}>
+                            <Text style={styles.badgeLivroText}>
+                              {item.livroFonte}
+                            </Text>
+                          </View>
+                          {jaPossui && (
+                            <View style={styles.badgePossui}>
+                              <Text style={styles.badgePossuiText}>✓ No Inventário</Text>
+                            </View>
+                          )}
+                        </View>
+
+                        <Text style={styles.cardItemNome}>{item.nome}</Text>
+
+                        {/* Estatísticas resumidas de acordo com o tipo */}
+                        {item.tipo === 'Arma' && (
+                          <Text style={styles.cardItemResumo}>
+                            Dano: <Text style={styles.negrito}>{item.dano}</Text>{' '}
+                            ({item.tipoDano}) • Crítico:{' '}
+                            <Text style={styles.negrito}>{item.critico}</Text>
+                            {item.alcance && item.alcance !== '—'
+                              ? ` • Alcance: ${item.alcance}`
+                              : ' • Corpo a corpo'}
+                          </Text>
+                        )}
+
+                        {(item.tipo === 'Armadura' || item.tipo === 'Escudo') && (
+                          <Text style={styles.cardItemResumo}>
+                            CA: <Text style={styles.negrito}>+{item.bonusCa}</Text>
+                            {item.destrezaMaxima !== undefined && item.destrezaMaxima !== null
+                              ? ` • Des Máx: +${item.destrezaMaxima}`
+                              : ''}
+                            {item.penalidadeArmadura
+                              ? ` • Penalidade: ${item.penalidadeArmadura}`
+                              : ' • Sem penalidade'}
+                          </Text>
+                        )}
+
+                        {item.tipo === 'Item Geral' && (
+                          <Text style={styles.cardItemResumo}>
+                            Preço: {item.preco || '—'} • Peso: {item.peso || '—'}
+                          </Text>
+                        )}
+                      </View>
+
+                      <TouchableOpacity
+                        style={[
+                          styles.btnAdicionar,
+                          jaPossui && styles.btnAdicionarSecundario,
+                        ]}
+                        onPress={() => handleCliqueAdicionar('equipamento', item)}
+                      >
+                        <Text style={styles.btnAdicionarText}>
+                          {fichaAtual ? '+ Adicionar' : '+ Personagem'}
+                        </Text>
+                      </TouchableOpacity>
+                    </TouchableOpacity>
+
+                    {!expandido && (
+                      <TouchableOpacity
+                        onPress={() => alternarExpandido(item.id)}
+                        style={styles.previaContainer}
+                      >
+                        <Text
+                          style={styles.cardItemBeneficioPrevia}
+                          numberOfLines={2}
+                        >
+                          {item.descricao ||
+                            `Preço: ${item.preco} • Peso: ${item.peso}`}
+                        </Text>
+                        <Text style={styles.toqueMaisText}>
+                          Toque para ver detalhes ▼
+                        </Text>
+                      </TouchableOpacity>
+                    )}
+
+                    {expandido && (
+                      <View style={styles.cardItemExpandido}>
+                        <View style={styles.equipGridParametros}>
+                          <View style={styles.magiaParamItem}>
+                            <Text style={styles.paramLabel}>Preço:</Text>
+                            <Text style={styles.paramVal}>{item.preco || '—'}</Text>
+                          </View>
+                          <View style={styles.magiaParamItem}>
+                            <Text style={styles.paramLabel}>Peso:</Text>
+                            <Text style={styles.paramVal}>{item.peso || '—'}</Text>
+                          </View>
+                          {item.dano ? (
+                            <View style={styles.magiaParamItem}>
+                              <Text style={styles.paramLabel}>Dano:</Text>
+                              <Text style={styles.paramVal}>
+                                {item.dano} ({item.tipoDano})
+                              </Text>
+                            </View>
+                          ) : null}
+                          {item.critico ? (
+                            <View style={styles.magiaParamItem}>
+                              <Text style={styles.paramLabel}>Crítico:</Text>
+                              <Text style={styles.paramVal}>{item.critico}</Text>
+                            </View>
+                          ) : null}
+                          {item.bonusCa !== undefined ? (
+                            <View style={styles.magiaParamItem}>
+                              <Text style={styles.paramLabel}>Bônus na CA:</Text>
+                              <Text style={styles.paramVal}>+{item.bonusCa}</Text>
+                            </View>
+                          ) : null}
+                          {item.destrezaMaxima !== undefined && item.destrezaMaxima !== null ? (
+                            <View style={styles.magiaParamItem}>
+                              <Text style={styles.paramLabel}>Destreza Máxima:</Text>
+                              <Text style={styles.paramVal}>
+                                +{item.destrezaMaxima}
+                              </Text>
+                            </View>
+                          ) : null}
+                          {item.penalidadeArmadura !== undefined && item.penalidadeArmadura !== null ? (
+                            <View style={styles.magiaParamItem}>
+                              <Text style={styles.paramLabel}>Penalidade:</Text>
+                              <Text style={styles.paramVal}>
+                                {item.penalidadeArmadura}
+                              </Text>
+                            </View>
+                          ) : null}
+                        </View>
+
+                        {item.descricao ? (
+                          <View style={styles.beneficioBox}>
+                            <Text style={styles.beneficioLabel}>Descrição:</Text>
+                            <Text style={styles.beneficioTexto}>
+                              {item.descricao}
+                            </Text>
+                          </View>
+                        ) : null}
+
+                        <TouchableOpacity
+                          style={styles.btnRecolher}
+                          onPress={() => alternarExpandido(item.id)}
+                        >
+                          <Text style={styles.btnRecolherText}>Recolher ▲</Text>
+                        </TouchableOpacity>
+                      </View>
+                    )}
+                  </View>
+                );
+              }}
+            />
+          )}
+
+          {/* Modal de Escolha de Personagem (quando acionado fora da ficha) */}
+          {itemParaAdicionar && (
+            <Modal
+              transparent
+              animationType="fade"
+              visible={!!itemParaAdicionar}
+              onRequestClose={() => setItemParaAdicionar(null)}
+            >
+              <View style={styles.modalBackdrop}>
+                <View style={styles.dialogCard}>
+                  <Text style={styles.dialogTitle}>
+                    Adicionar ao Personagem
+                  </Text>
+                  <Text style={styles.dialogSubtitle}>
+                    Selecione o personagem para registrar "{itemParaAdicionar.dado.nome}":
+                  </Text>
+
+                  <ScrollView style={styles.dialogScroll}>
+                    {todasFichas.map((f) => (
+                      <TouchableOpacity
+                        key={f.id}
+                        style={styles.dialogFichaItem}
+                        onPress={() => confirmarAdicaoParaFicha(f.id)}
+                      >
+                        <Text style={styles.dialogFichaNome}>
+                          {f.nomePersonagem || 'Personagem sem Nome'}
+                        </Text>
+                        <Text style={styles.dialogFichaDetalhes}>
+                          Nível {f.nivel} • {f.classe || 'Classe não definida'}
+                        </Text>
+                      </TouchableOpacity>
+                    ))}
+                  </ScrollView>
+
+                  <TouchableOpacity
+                    style={styles.dialogBtnCancelar}
+                    onPress={() => setItemParaAdicionar(null)}
+                  >
+                    <Text style={styles.dialogBtnCancelarText}>Cancelar</Text>
+                  </TouchableOpacity>
+                </View>
+              </View>
+            </Modal>
+          )}
         </View>
       </SafeAreaView>
     </Modal>
@@ -702,14 +1390,19 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     fontSize: 13,
   },
+  tabsWrapper: {
+    backgroundColor: COLORS.surfaceVariant,
+    borderBottomWidth: 1,
+    borderBottomColor: COLORS.border,
+  },
   tabsRow: {
     flexDirection: 'row',
-    backgroundColor: COLORS.surfaceVariant,
     padding: 6,
     gap: 8,
+    alignItems: 'center',
   },
   tabBtn: {
-    flex: 1,
+    paddingHorizontal: 14,
     paddingVertical: 8,
     alignItems: 'center',
     borderRadius: 6,
@@ -718,7 +1411,7 @@ const styles = StyleSheet.create({
     backgroundColor: COLORS.primary,
   },
   tabBtnText: {
-    fontSize: 14,
+    fontSize: 13,
     fontWeight: 'bold',
     color: COLORS.textSecondary,
   },
@@ -877,6 +1570,60 @@ const styles = StyleSheet.create({
     fontSize: 11,
     textTransform: 'capitalize',
   },
+  badgeRaca: {
+    backgroundColor: 'rgba(139,30,30,0.15)',
+    paddingHorizontal: 8,
+    paddingVertical: 2,
+    borderRadius: 4,
+  },
+  badgeRacaText: {
+    color: COLORS.primaryDark,
+    fontWeight: 'bold',
+    fontSize: 11,
+  },
+  badgeClasseBasica: {
+    backgroundColor: 'rgba(25,118,210,0.15)',
+    paddingHorizontal: 8,
+    paddingVertical: 2,
+    borderRadius: 4,
+  },
+  badgeClasseBasicaText: {
+    color: '#1565C0',
+    fontWeight: 'bold',
+    fontSize: 11,
+  },
+  badgePrestigio: {
+    backgroundColor: 'rgba(123,31,162,0.15)',
+    paddingHorizontal: 8,
+    paddingVertical: 2,
+    borderRadius: 4,
+  },
+  badgePrestigioText: {
+    color: '#6A1B9A',
+    fontWeight: 'bold',
+    fontSize: 11,
+  },
+  badgeEquipTipo: {
+    backgroundColor: 'rgba(46,125,50,0.15)',
+    paddingHorizontal: 8,
+    paddingVertical: 2,
+    borderRadius: 4,
+  },
+  badgeEquipTipoText: {
+    color: '#2E7D32',
+    fontWeight: 'bold',
+    fontSize: 11,
+  },
+  badgeLivro: {
+    backgroundColor: COLORS.surfaceVariant,
+    paddingHorizontal: 6,
+    paddingVertical: 2,
+    borderRadius: 4,
+  },
+  badgeLivroText: {
+    color: COLORS.textSecondary,
+    fontSize: 11,
+  },
   badgePossui: {
     backgroundColor: 'rgba(46,107,62,0.15)',
     paddingHorizontal: 8,
@@ -897,13 +1644,35 @@ const styles = StyleSheet.create({
   cardItemPreReq: {
     fontSize: 12,
     color: COLORS.textSecondary,
+    marginTop: 2,
   },
   cardItemResumo: {
     fontSize: 12,
     color: COLORS.textSecondary,
+    marginTop: 2,
   },
   negrito: {
     fontWeight: 'bold',
+    color: COLORS.text,
+  },
+  atributosRow: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    gap: 6,
+    marginVertical: 4,
+  },
+  attrTag: {
+    fontSize: 11,
+    color: COLORS.textSecondary,
+    backgroundColor: COLORS.surfaceVariant,
+    paddingHorizontal: 6,
+    paddingVertical: 2,
+    borderRadius: 4,
+    fontWeight: '600',
+  },
+  attrTagVal: {
+    fontWeight: 'bold',
+    color: COLORS.primary,
   },
   btnAdicionar: {
     backgroundColor: COLORS.primary,
@@ -938,7 +1707,7 @@ const styles = StyleSheet.create({
   },
   cardItemExpandido: {
     padding: 12,
-    paddingTop: 4,
+    paddingTop: 8,
     borderTopWidth: 1,
     borderTopColor: COLORS.border,
     backgroundColor: COLORS.surfaceVariant,
@@ -968,7 +1737,49 @@ const styles = StyleSheet.create({
     color: COLORS.text,
     lineHeight: 18,
   },
+  proficienciasBox: {
+    backgroundColor: COLORS.surface,
+    padding: 8,
+    borderRadius: 6,
+    borderWidth: 1,
+    borderColor: COLORS.border,
+    marginBottom: 8,
+  },
+  secaoTituloInterno: {
+    fontSize: 13,
+    fontWeight: 'bold',
+    color: COLORS.primaryDark,
+    marginBottom: 6,
+  },
+  subItemBox: {
+    backgroundColor: COLORS.surface,
+    padding: 8,
+    borderRadius: 6,
+    borderWidth: 1,
+    borderColor: COLORS.border,
+    marginBottom: 6,
+  },
+  subItemTitulo: {
+    fontSize: 12,
+    fontWeight: 'bold',
+    color: COLORS.text,
+    marginBottom: 2,
+  },
+  subItemDescricao: {
+    fontSize: 12,
+    color: COLORS.textSecondary,
+    lineHeight: 16,
+  },
   magiaGridParametros: {
+    backgroundColor: COLORS.surface,
+    padding: 10,
+    borderRadius: 6,
+    borderWidth: 1,
+    borderColor: COLORS.border,
+    marginBottom: 8,
+    gap: 4,
+  },
+  equipGridParametros: {
     backgroundColor: COLORS.surface,
     padding: 10,
     borderRadius: 6,
@@ -994,8 +1805,9 @@ const styles = StyleSheet.create({
   },
   btnRecolher: {
     alignSelf: 'center',
-    paddingVertical: 4,
+    paddingVertical: 6,
     paddingHorizontal: 16,
+    marginTop: 4,
   },
   btnRecolherText: {
     fontSize: 12,

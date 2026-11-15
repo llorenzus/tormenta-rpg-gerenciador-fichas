@@ -50,3 +50,4 @@ export const getItensGerais = (): EquipamentoData[] => {
 };
 
 export default equipamentos;
+

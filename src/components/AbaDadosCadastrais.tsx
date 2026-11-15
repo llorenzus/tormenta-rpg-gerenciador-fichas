@@ -1,8 +1,10 @@
-import React from 'react';
-import { ScrollView, StyleSheet, View } from 'react-native';
-import { FichaPersonagem } from '../models/ficha';
+import React, { useState } from 'react';
+import { ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { ClasseData, RacaData } from '../data';
+import { FichaPersonagem, gerarId, HabilidadeOuTalento } from '../models/ficha';
 import { COLORS } from '../theme/colors';
 import { CampoInteiro, CampoTexto, SecaoHeader } from './CommonInput';
+import { AbaCompendio, CompendioModal } from './CompendioModal';
 
 interface Props {
   ficha: FichaPersonagem;
@@ -10,6 +12,41 @@ interface Props {
 }
 
 export const AbaDadosCadastrais: React.FC<Props> = ({ ficha, onChange }) => {
+  const [compendioVisivel, setCompendioVisivel] = useState(false);
+  const [compendioAba, setCompendioAba] = useState<AbaCompendio>('racas');
+
+  const abrirCompendio = (aba: AbaCompendio) => {
+    setCompendioAba(aba);
+    setCompendioVisivel(true);
+  };
+
+  const handleAplicarRaca = (raca: RacaData) => {
+    const novosTracos: HabilidadeOuTalento[] = raca.tracosRaciais.map((t) => ({
+      id: gerarId(),
+      nome: `${t.nome} (${raca.nome})`,
+      descricao: t.descricao,
+    }));
+    onChange({
+      ...ficha,
+      raca: raca.nome,
+      tamanho: raca.tamanho,
+      deslocamento: `${raca.deslocamento}m`,
+      habilidadesRaca: [...ficha.habilidadesRaca, ...novosTracos],
+    });
+  };
+
+  const handleAplicarClasse = (classe: ClasseData) => {
+    const novasHabs: HabilidadeOuTalento[] = classe.habilidades.map((h) => ({
+      id: gerarId(),
+      nome: `${h.nome} [Nív. ${h.nivel}]`,
+      descricao: h.descricao,
+    }));
+    onChange({
+      ...ficha,
+      classe: ficha.classe?.trim() ? `${ficha.classe} / ${classe.nome}` : classe.nome,
+      habilidadesClasse: [...ficha.habilidadesClasse, ...novasHabs],
+    });
+  };
   return (
     <ScrollView
       style={styles.container}
@@ -37,23 +74,43 @@ export const AbaDadosCadastrais: React.FC<Props> = ({ ficha, onChange }) => {
               placeholder="Ex: Seu Nome"
               style={styles.col}
             />
-            <CampoTexto
-              label="Raça"
-              value={ficha.raca}
-              onChangeText={(v) => onChange({ ...ficha, raca: v })}
-              placeholder="Ex: Humano"
-              style={styles.col}
-            />
+            <View style={styles.col}>
+              <View style={styles.labelWithActionRow}>
+                <Text style={styles.fieldLabel}>Raça</Text>
+                <TouchableOpacity
+                  style={styles.btnMiniCompendio}
+                  onPress={() => abrirCompendio('racas')}
+                >
+                  <Text style={styles.btnMiniCompendioText}>📖 Compêndio</Text>
+                </TouchableOpacity>
+              </View>
+              <CampoTexto
+                label=""
+                value={ficha.raca}
+                onChangeText={(v) => onChange({ ...ficha, raca: v })}
+                placeholder="Ex: Humano"
+              />
+            </View>
           </View>
 
           <View style={styles.row}>
-            <CampoTexto
-              label="Classe"
-              value={ficha.classe}
-              onChangeText={(v) => onChange({ ...ficha, classe: v })}
-              placeholder="Ex: Guerreiro"
-              style={styles.colWide}
-            />
+            <View style={styles.colWide}>
+              <View style={styles.labelWithActionRow}>
+                <Text style={styles.fieldLabel}>Classe</Text>
+                <TouchableOpacity
+                  style={styles.btnMiniCompendio}
+                  onPress={() => abrirCompendio('classes')}
+                >
+                  <Text style={styles.btnMiniCompendioText}>📖 Compêndio</Text>
+                </TouchableOpacity>
+              </View>
+              <CampoTexto
+                label=""
+                value={ficha.classe}
+                onChangeText={(v) => onChange({ ...ficha, classe: v })}
+                placeholder="Ex: Guerreiro"
+              />
+            </View>
             <CampoInteiro
               label="Nível"
               valor={ficha.nivel}
@@ -116,6 +173,16 @@ export const AbaDadosCadastrais: React.FC<Props> = ({ ficha, onChange }) => {
           </View>
         </View>
       </View>
+
+      {/* Modal do Compêndio */}
+      <CompendioModal
+        visivel={compendioVisivel}
+        onFechar={() => setCompendioVisivel(false)}
+        abaInicial={compendioAba}
+        fichaAtual={ficha}
+        onAplicarRacaAFicha={handleAplicarRaca}
+        onAplicarClasseAFicha={handleAplicarClasse}
+      />
     </ScrollView>
   );
 };
@@ -156,6 +223,29 @@ const styles = StyleSheet.create({
   },
   colSmall: {
     flex: 0.8,
+  },
+  labelWithActionRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    marginBottom: 4,
+  },
+  fieldLabel: {
+    fontSize: 12,
+    fontWeight: '600',
+    color: COLORS.textSecondary,
+    textTransform: 'uppercase',
+  },
+  btnMiniCompendio: {
+    paddingHorizontal: 6,
+    paddingVertical: 2,
+    borderRadius: 4,
+    backgroundColor: 'rgba(139,30,30,0.1)',
+  },
+  btnMiniCompendioText: {
+    fontSize: 11,
+    fontWeight: 'bold',
+    color: COLORS.primary,
   },
 });
 

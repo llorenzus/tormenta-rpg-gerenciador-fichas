@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
   ScrollView,
   StyleSheet,
@@ -6,6 +6,12 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
+import {
+  converterArmaParaItem,
+  converterArmaduraParaItem,
+  converterItemGeralParaItem,
+  EquipamentoData,
+} from '../data';
 import {
   ArmaItem,
   ArmaduraEquipamento,
@@ -21,6 +27,7 @@ import {
 } from '../models/ficha';
 import { COLORS } from '../theme/colors';
 import { CampoInteiro, CampoTexto, SecaoHeader } from './CommonInput';
+import { CompendioModal } from './CompendioModal';
 
 interface Props {
   ficha: FichaPersonagem;
@@ -28,6 +35,21 @@ interface Props {
 }
 
 export const AbaEquipamentos: React.FC<Props> = ({ ficha, onChange }) => {
+  const [compendioAberto, setCompendioAberto] = useState(false);
+
+  const handleAdicionarEquipamentoCompendio = (equip: EquipamentoData) => {
+    if (equip.tipo === 'Arma') {
+      const novaArma = converterArmaParaItem(equip);
+      onChange({ ...ficha, armas: [...ficha.armas, novaArma] });
+    } else if (equip.tipo === 'Armadura' || equip.tipo === 'Escudo') {
+      const novaArmadura = converterArmaduraParaItem(equip);
+      onChange({ ...ficha, armaduras: [...ficha.armaduras, novaArmadura] });
+    } else {
+      const novoItem = converterItemGeralParaItem(equip);
+      onChange({ ...ficha, itensGerais: [...ficha.itensGerais, novoItem] });
+    }
+  };
+
   const adicionarArma = () => {
     const nova: ArmaItem = {
       id: gerarId(),
@@ -119,6 +141,23 @@ export const AbaEquipamentos: React.FC<Props> = ({ ficha, onChange }) => {
       contentContainerStyle={styles.content}
       keyboardShouldPersistTaps="handled"
     >
+      {/* Banner de Atalho para o Compêndio de Equipamentos */}
+      <View style={styles.compendioBanner}>
+        <View style={styles.compendioBannerTextCol}>
+          <Text style={styles.compendioBannerTitle}>Compêndio de Equipamentos</Text>
+          <Text style={styles.compendioBannerSubtitle}>
+            Consulte armas, armaduras, escudos e itens oficiais dos livros
+          </Text>
+        </View>
+        <TouchableOpacity
+          style={styles.btnCompendioEquip}
+          onPress={() => setCompendioAberto(true)}
+          activeOpacity={0.8}
+        >
+          <Text style={styles.btnCompendioEquipText}>📖 Buscar Itens</Text>
+        </TouchableOpacity>
+      </View>
+
       {/* 1. ARMAS */}
       <View style={styles.card}>
         <SecaoHeader
@@ -477,6 +516,15 @@ export const AbaEquipamentos: React.FC<Props> = ({ ficha, onChange }) => {
           ))}
         </View>
       </View>
+
+      {/* Modal do Compêndio */}
+      <CompendioModal
+        visivel={compendioAberto}
+        onFechar={() => setCompendioAberto(false)}
+        abaInicial="equipamentos"
+        fichaAtual={ficha}
+        onAdicionarEquipamentoAFicha={handleAdicionarEquipamentoCompendio}
+      />
     </ScrollView>
   );
 };
@@ -492,6 +540,42 @@ const styles = StyleSheet.create({
     maxWidth: 960,
     width: '100%',
     alignSelf: 'center',
+  },
+  compendioBanner: {
+    backgroundColor: COLORS.surface,
+    borderRadius: 10,
+    borderWidth: 1,
+    borderColor: COLORS.border,
+    padding: 12,
+    marginBottom: 16,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    gap: 8,
+  },
+  compendioBannerTextCol: {
+    flex: 1,
+  },
+  compendioBannerTitle: {
+    fontSize: 15,
+    fontWeight: 'bold',
+    color: COLORS.primary,
+  },
+  compendioBannerSubtitle: {
+    fontSize: 12,
+    color: COLORS.textSecondary,
+    marginTop: 2,
+  },
+  btnCompendioEquip: {
+    backgroundColor: COLORS.primary,
+    paddingHorizontal: 12,
+    paddingVertical: 8,
+    borderRadius: 6,
+  },
+  btnCompendioEquipText: {
+    color: COLORS.white,
+    fontWeight: 'bold',
+    fontSize: 12,
   },
   card: {
     backgroundColor: COLORS.surface,

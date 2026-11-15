@@ -39,3 +39,4 @@ export const getClassesPorTipo = (tipo: 'Basica' | 'Prestigio'): ClasseData[] =>
 };
 
 export default classes;
+

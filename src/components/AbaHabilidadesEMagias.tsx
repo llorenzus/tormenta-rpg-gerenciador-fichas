@@ -7,11 +7,17 @@ import {
   View,
 } from 'react-native';
 import {
+  ClasseData,
+  converterArmaParaItem,
+  converterArmaduraParaItem,
+  converterItemGeralParaItem,
   converterMagiaParaItem,
   converterTalentoParaItem,
+  EquipamentoData,
   formatarDescricaoMagia,
   formatarDescricaoTalento,
   MagiaData,
+  RacaData,
   TalentoData,
 } from '../data';
 import {
@@ -23,7 +29,7 @@ import {
 import { COLORS } from '../theme/colors';
 import { CampoComSugestoes } from './CampoComSugestoes';
 import { CampoTexto, SecaoHeader } from './CommonInput';
-import { CompendioModal } from './CompendioModal';
+import { AbaCompendio, CompendioModal } from './CompendioModal';
 
 interface Props {
   ficha: FichaPersonagem;
@@ -35,8 +41,20 @@ const NIVEIS_MAGIA = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
 export const AbaHabilidadesEMagias: React.FC<Props> = ({ ficha, onChange }) => {
   // Controle do Compêndio Modal
   const [compendioVisivel, setCompendioVisivel] = useState(false);
-  const [compendioAba, setCompendioAba] = useState<'talentos' | 'magias'>('talentos');
+  const [compendioAba, setCompendioAba] = useState<AbaCompendio>('talentos');
   const [compendioNivelFiltro, setCompendioNivelFiltro] = useState<number | null>(null);
+
+  const abrirCompendioRacas = () => {
+    setCompendioAba('racas');
+    setCompendioNivelFiltro(null);
+    setCompendioVisivel(true);
+  };
+
+  const abrirCompendioClasses = () => {
+    setCompendioAba('classes');
+    setCompendioNivelFiltro(null);
+    setCompendioVisivel(true);
+  };
 
   const abrirCompendioTalentos = () => {
     setCompendioAba('talentos');
@@ -129,6 +147,59 @@ export const AbaHabilidadesEMagias: React.FC<Props> = ({ ficha, onChange }) => {
     });
   };
 
+  // Callback ao aplicar raça vinda do Compêndio
+  const handleAplicarRacaCompendio = (raca: RacaData) => {
+    const novosTracos: HabilidadeOuTalento[] = raca.tracosRaciais.map((t) => ({
+      id: gerarId(),
+      nome: `${t.nome} (${raca.nome})`,
+      descricao: t.descricao,
+    }));
+    onChange({
+      ...ficha,
+      raca: raca.nome,
+      tamanho: raca.tamanho,
+      deslocamento: `${raca.deslocamento}m`,
+      habilidadesRaca: [...ficha.habilidadesRaca, ...novosTracos],
+    });
+  };
+
+  // Callback ao aplicar classe vinda do Compêndio
+  const handleAplicarClasseCompendio = (classe: ClasseData) => {
+    const novasHabs: HabilidadeOuTalento[] = classe.habilidades.map((h) => ({
+      id: gerarId(),
+      nome: `${h.nome} [Nív. ${h.nivel}]`,
+      descricao: h.descricao,
+    }));
+    onChange({
+      ...ficha,
+      classe: ficha.classe?.trim() ? `${ficha.classe} / ${classe.nome}` : classe.nome,
+      habilidadesClasse: [...ficha.habilidadesClasse, ...novasHabs],
+    });
+  };
+
+  // Callback ao adicionar equipamento vindo do Compêndio
+  const handleAdicionarEquipamentoCompendio = (equip: EquipamentoData) => {
+    if (equip.tipo === 'Arma') {
+      const novaArma = converterArmaParaItem(equip);
+      onChange({
+        ...ficha,
+        armas: [...ficha.armas, novaArma],
+      });
+    } else if (equip.tipo === 'Armadura' || equip.tipo === 'Escudo') {
+      const novaArmadura = converterArmaduraParaItem(equip);
+      onChange({
+        ...ficha,
+        armaduras: [...ficha.armaduras, novaArmadura],
+      });
+    } else {
+      const novoItem = converterItemGeralParaItem(equip);
+      onChange({
+        ...ficha,
+        itensGerais: [...ficha.itensGerais, novoItem],
+      });
+    }
+  };
+
   // Callback de preenchimento automático em um item específico de talento
   const handlePreencherTalentoExistente = (
     itemAntigo: HabilidadeOuTalento,
@@ -169,6 +240,7 @@ export const AbaHabilidadesEMagias: React.FC<Props> = ({ ficha, onChange }) => {
         subtitulo="Traços e habilidades raciais do personagem"
         placeholderNome="Nome da Habilidade Racial"
         itens={ficha.habilidadesRaca}
+        onCompendio={abrirCompendioRacas}
         onAdicionar={() => adicionarItem('habilidadesRaca')}
         onAtualizar={(item) => atualizarItem('habilidadesRaca', item)}
         onRemover={(id) => removerItem('habilidadesRaca', id)}
@@ -180,6 +252,7 @@ export const AbaHabilidadesEMagias: React.FC<Props> = ({ ficha, onChange }) => {
         subtitulo="Poderes e características de classe"
         placeholderNome="Nome da Habilidade de Classe"
         itens={ficha.habilidadesClasse}
+        onCompendio={abrirCompendioClasses}
         onAdicionar={() => adicionarItem('habilidadesClasse')}
         onAtualizar={(item) => atualizarItem('habilidadesClasse', item)}
         onRemover={(id) => removerItem('habilidadesClasse', id)}
@@ -368,6 +441,9 @@ export const AbaHabilidadesEMagias: React.FC<Props> = ({ ficha, onChange }) => {
         fichaAtual={ficha}
         onAdicionarTalentoAFicha={handleAdicionarTalentoCompendio}
         onAdicionarMagiaAFicha={handleAdicionarMagiaCompendio}
+        onAplicarRacaAFicha={handleAplicarRacaCompendio}
+        onAplicarClasseAFicha={handleAplicarClasseCompendio}
+        onAdicionarEquipamentoAFicha={handleAdicionarEquipamentoCompendio}
       />
     </ScrollView>
   );
@@ -378,6 +454,7 @@ interface BlocoHabilidadesSimplesProps {
   subtitulo: string;
   placeholderNome: string;
   itens: HabilidadeOuTalento[];
+  onCompendio?: () => void;
   onAdicionar: () => void;
   onAtualizar: (item: HabilidadeOuTalento) => void;
   onRemover: (id: string) => void;
@@ -388,18 +465,35 @@ const BlocoHabilidadesSimples: React.FC<BlocoHabilidadesSimplesProps> = ({
   subtitulo,
   placeholderNome,
   itens,
+  onCompendio,
   onAdicionar,
   onAtualizar,
   onRemover,
 }) => {
   return (
     <View style={styles.card}>
-      <SecaoHeader
-        titulo={titulo}
-        subtitulo={subtitulo}
-        acaoTexto="Adicionar"
-        onAcaoPress={onAdicionar}
-      />
+      <View style={styles.cardHeaderWithAction}>
+        <View style={styles.cardHeaderTitleCol}>
+          <Text style={styles.cardHeaderTitle}>{titulo}</Text>
+          <Text style={styles.cardHeaderSubtitle}>{subtitulo}</Text>
+        </View>
+        <View style={styles.headerButtonsRow}>
+          {onCompendio && (
+            <TouchableOpacity
+              style={styles.btnCompendio}
+              onPress={onCompendio}
+            >
+              <Text style={styles.btnCompendioText}>📖 Compêndio</Text>
+            </TouchableOpacity>
+          )}
+          <TouchableOpacity
+            style={styles.btnAdicionarHeader}
+            onPress={onAdicionar}
+          >
+            <Text style={styles.btnAdicionarHeaderText}>+ Manual</Text>
+          </TouchableOpacity>
+        </View>
+      </View>
       <View style={styles.cardBody}>
         {itens.length === 0 ? (
           <Text style={styles.emptyText}>
