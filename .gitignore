@@ -12,4 +12,5 @@ web-build/
 .DS_Store
 apk_gerado/
 fontes_tormenta/
+*.log
 
