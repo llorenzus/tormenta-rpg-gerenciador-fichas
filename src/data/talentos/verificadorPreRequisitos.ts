@@ -1,5 +1,6 @@
 import { FichaPersonagem } from '../../models/ficha';
-import { TalentoData, talentos } from './index';
+import talentosRaw from './talentos.json';
+import type { TalentoData } from './index';
 
 // Cache dos nomes limpos dos talentos para busca rápida
 interface TalentoRef {
@@ -8,19 +9,24 @@ interface TalentoRef {
   talento: TalentoData;
 }
 
-const TALENTOS_REF: TalentoRef[] = talentos.map((t) => {
-  const nomeLimpo = t.nome.replace(/\s*\[.*?\]/g, '').trim().toLowerCase();
-  return {
-    nomeOriginal: t.nome,
-    nomeBusca: nomeLimpo,
-    talento: t,
-  };
-});
+let _talentosRefOrdenados: TalentoRef[] | null = null;
 
-// Ordenados por tamanho descrescente para casamento mais específico primeiro (ex: "Tiro Certeiro Preciso" antes de "Tiro Certeiro")
-const TALENTOS_REF_ORDENADOS = [...TALENTOS_REF].sort(
-  (a, b) => b.nomeBusca.length - a.nomeBusca.length
-);
+function getTalentosRefOrdenados(): TalentoRef[] {
+  if (!_talentosRefOrdenados) {
+    const lista = (talentosRaw as unknown as TalentoData[]).map((t) => {
+      const nomeLimpo = t.nome.replace(/\s*\[.*?\]/g, '').trim().toLowerCase();
+      return {
+        nomeOriginal: t.nome,
+        nomeBusca: nomeLimpo,
+        talento: t,
+      };
+    });
+    _talentosRefOrdenados = lista.sort(
+      (a, b) => b.nomeBusca.length - a.nomeBusca.length
+    );
+  }
+  return _talentosRefOrdenados;
+}
 
 /**
  * Identifica talentos que são citados como pré-requisito no texto
@@ -37,7 +43,7 @@ export function identificarTalentosCitadosEmPreRequisitos(
   const encontrados: TalentoData[] = [];
   const nomesJaAdicionados = new Set<string>();
 
-  for (const ref of TALENTOS_REF_ORDENADOS) {
+  for (const ref of getTalentosRefOrdenados()) {
     if (ref.talento.id === talentoAtualId) continue;
 
     // Evita falsos positivos com palavras curtas genéricas
