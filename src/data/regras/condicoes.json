@@ -1,0 +1,184 @@
+[
+  {
+    "id": "abalado",
+    "nome": "Abalado",
+    "tipo": "Condição",
+    "descricao": "com medo de algo. O personagem sofre –2 em jogadas de ataque e testes de habilidade, perícia e resistência. Se o personagem ficar abalado novamente, em vez disso fica apavorado.",
+    "livroFonte": "Manual Básico"
+  },
+  {
+    "id": "agarrado",
+    "nome": "Agarrado",
+    "tipo": "Condição",
+    "descricao": "preso em combate corpo-a-corpo. O personagem sofre –2 nas jogadas de ataque, só pode atacar com armas leves, fica desprevenido e não pode se mover.",
+    "livroFonte": "Manual Básico"
+  },
+  {
+    "id": "apavorado",
+    "nome": "Apavorado",
+    "tipo": "Condição",
+    "descricao": "com muito medo de algo. O personagem tenta fugir da fonte de seu medo da melhor maneira possível. Se não conseguir poderá lutar, mas com as penalidades de estar abalado.",
+    "livroFonte": "Manual Básico"
+  },
+  {
+    "id": "atordoado",
+    "nome": "Atordoado",
+    "tipo": "Condição",
+    "descricao": "incapaz de agir e desprevenido.",
+    "livroFonte": "Manual Básico"
+  },
+  {
+    "id": "caido",
+    "nome": "Caído",
+    "tipo": "Condição",
+    "descricao": "deitado no chão. O personagem sofre –4 nas jogadas de ataque corpo-a-corpo e move-se com metade do seu deslocamento. Seus oponentes recebem +4 nas jogadas de ataque corpo-a-corpo, mas sofrem –4 nas jogadas de ataque à distância.",
+    "livroFonte": "Manual Básico"
+  },
+  {
+    "id": "cego",
+    "nome": "Cego",
+    "tipo": "Condição",
+    "descricao": "incapaz de enxergar. O personagem tem 50% de chance de errar qualquer ataque, fica desprevenido e sofre –4 na CA (para um total de –8), move-se com metade do seu deslocamento e sofre –4 em testes de perícia baseadas em Força ou Destreza.",
+    "livroFonte": "Manual Básico"
+  },
+  {
+    "id": "confuso",
+    "nome": "Confuso",
+    "tipo": "Condição",
+    "descricao": "com o discernimento afetado por um efeito. Role 1d6 a cada turno para definir sua ação: 1) Foge do Conjurador. 2-3) Não faz nada (fica balbuciando incoerentemente). 4-5) Ataca a criatura mais próxima. 6) Age normalmente.",
+    "livroFonte": "Manual Básico"
+  },
+  {
+    "id": "dano_de_habilidade",
+    "nome": "Dano de Habilidade",
+    "tipo": "Condição",
+    "descricao": "o personagem perdeu temporariamente 1 ou mais pontos em um ou mais valores de habilidades. Pontos de habilidades perdidos voltam à taxa de 1 por dia, ou de acordo com o efeito que diminuiu o valor. Um personagem com Força ou Destreza 0 cai paralisado. Um personagem com Inteligência, Sabedoria ou Carisma 0 cai inconsciente. Um personagem com Constituição 0 morre.",
+    "livroFonte": "Manual Básico"
+  },
+  {
+    "id": "desprevenido",
+    "nome": "Desprevenido",
+    "tipo": "Condição",
+    "descricao": "com a guarda baixa. O personagem sofre –4 na classe de armadura.",
+    "livroFonte": "Manual Básico"
+  },
+  {
+    "id": "enjoado",
+    "nome": "Enjoado",
+    "tipo": "Condição",
+    "descricao": "passando mal por qualquer motivo. O personagem só pode realizar uma ação padrão ou de movimento (não ambas) por rodada.",
+    "livroFonte": "Manual Básico"
+  },
+  {
+    "id": "enredado",
+    "nome": "Enredado",
+    "tipo": "Condição",
+    "descricao": "com o movimento prejudicado. O personagem sofre –2 nas jogadas de ataque, –4 na Destreza, move-se com metade do seu deslocamento e não pode correr ou fazer investidas.",
+    "livroFonte": "Manual Básico"
+  },
+  {
+    "id": "exausto",
+    "nome": "Exausto",
+    "tipo": "Condição",
+    "descricao": "muito cansado. O personagem sofre –6 na Força e Destreza, move-se à metade do seu deslocamento e não pode correr ou fazer investidas. Se o personagem ficar fatigado ou exausto novamente, cai inconsciente.",
+    "livroFonte": "Manual Básico"
+  },
+  {
+    "id": "fascinado",
+    "nome": "Fascinado",
+    "tipo": "Condição",
+    "descricao": "com a atenção presa em alguma coisa. O personagem fica parado, sem fazer nada exceto observar aquilo que lhe fascinou, e sofre –4 nos testes de Percepção. Qualquer ameaça óbvia anula este efeito. Um personagem pode gastar uma ação padrão para sacudir um personagem fascinado e anular este efeito.",
+    "livroFonte": "Manual Básico"
+  },
+  {
+    "id": "fatigado",
+    "nome": "Fatigado",
+    "tipo": "Condição",
+    "descricao": "cansado. O personagem sofre –2 na Força e Destreza e não pode correr ou fazer investidas. Se o personagem ficar fatigado novamente, fica exausto.",
+    "livroFonte": "Manual Básico"
+  },
+  {
+    "id": "inconsciente",
+    "nome": "Inconsciente",
+    "tipo": "Condição",
+    "descricao": "indefeso e incapaz agir.",
+    "livroFonte": "Manual Básico"
+  },
+  {
+    "id": "incorporeo",
+    "nome": "Incorpóreo",
+    "tipo": "Condição",
+    "descricao": "sem corpo físico. O personagem é imune a ataques, exceto mágicos, e mesmo esses têm 50% de chance de falha. Pode atravessar objetos sólidos (exceto efeitos de essência); assim, seus ataques ignoram bônus na CA por armaduras, escudos e armadura natural.",
+    "livroFonte": "Manual Básico"
+  },
+  {
+    "id": "indefeso",
+    "nome": "Indefeso",
+    "tipo": "Condição",
+    "descricao": "amarrado, inconsciente ou paralisado. Um personagem indefeso tem CA 5 + seu modificador de tamanho, e pode sofrer golpes de misericórdia.",
+    "livroFonte": "Manual Básico"
+  },
+  {
+    "id": "invisivel",
+    "nome": "Invisível",
+    "tipo": "Condição",
+    "descricao": "não pode ser visto. O personagem recebe camuflagem total, e contra seus ataques todas as criaturas ficam desprevenidas. Certos efeitos, como faro, anulam a invisibilidade.",
+    "livroFonte": "Manual Básico"
+  },
+  {
+    "id": "lento",
+    "nome": "Lento",
+    "tipo": "Condição",
+    "descricao": "o personagem só pode realizar uma ação padrão ou de movimento (não ambas) por rodada. Além disso, sofre –1 nas jogadas de ataque, na CA e nos testes de Reflexo, e move-se à metade do seu deslocamento.",
+    "livroFonte": "Manual Básico"
+  },
+  {
+    "id": "niveis_negativos",
+    "nome": "Níveis Negativos",
+    "tipo": "Condição",
+    "descricao": "Cada nível negativo impõe uma penalidade de -1 em testes de habilidades, Perícias, Resistências, jogadas de ataque e remove a magia mais alta ou pontos de magia equivalente a magia de mais alto nível. Níveis Negativos que durem tempo suficiente podem se tornar níveis permanentes, o personagem fica na metade do XP necessário para o nível que antes pertencia (ou o anterior a depender da quantidade de níveis permanentes). Um personagem que atinja nível 0 morre, desmaia ou se torna plebeu.",
+    "livroFonte": "Manual Básico"
+  },
+  {
+    "id": "ofuscado",
+    "nome": "Ofuscado",
+    "tipo": "Condição",
+    "descricao": "com a visão prejudicada. O personagem sofre –1 nas jogadas de ataq habe.",
+    "livroFonte": "Manual Básico"
+  },
+  {
+    "id": "paralisado",
+    "nome": "Paralisado",
+    "tipo": "Condição",
+    "descricao": "indefeso e incapaz de se mover. O personagem fica com valores efetivos de Força e Destreza de 0, mas pode realizar ações puramente mentais. A CA de um personagem incapaz de se mover é 5 + seu modificador de tamanho (a mesma de um objeto inanimado).",
+    "livroFonte": "Manual Básico"
+  },
+  {
+    "id": "pasmo",
+    "nome": "Pasmo",
+    "tipo": "Condição",
+    "descricao": "incapaz de agir (mas pode se defender normalmente).",
+    "livroFonte": "Manual Básico"
+  },
+  {
+    "id": "sangrando",
+    "nome": "Sangrando",
+    "tipo": "Condição",
+    "descricao": "com um ferimento aberto. No início de cada turno, o personagem deve fazer um teste de Constituição (CD 15). Se for bem-sucedido, estabiliza. Se falhar, sofre 1d4 pontos de dano e continua sangrando.",
+    "livroFonte": "Manual Básico"
+  },
+  {
+    "id": "surdo",
+    "nome": "Surdo",
+    "tipo": "Condição",
+    "descricao": "incapaz de ouvir. O personagem sofre –4 nos testes de Iniciativa e Percepção. Além disso, precisa fazer um teste de Vontade para lançar qualquer magia (CD 10 + o nível da magia). Uma magia afetada pelo talento Magia Silenciosa não sofre essa limitação.",
+    "livroFonte": "Manual Básico"
+  },
+  {
+    "id": "surpreendido",
+    "nome": "Surpreendido",
+    "tipo": "Condição",
+    "descricao": "que não está ciente de seus inimigos. O personagem não pode agir e fica desprevenido durante a primeira rodada do combate.",
+    "livroFonte": "Manual Básico"
+  }
+]

@@ -70,6 +70,12 @@ export interface ItemGeral {
   quantidade: string;
 }
 
+export interface ClassePersonagem {
+  id: string;
+  nome: string;
+  nivel: number;
+}
+
 export interface FichaPersonagem {
   id: string;
   atualizadoEm: number;
@@ -78,9 +84,11 @@ export interface FichaPersonagem {
   nomePersonagem: string;
   jogador: string;
   raca: string;
-  classe: string;
-  nivel: number;
+  classe: string; // Resumo textual (ex: "Samurai 3 / Mago 4")
+  nivel: number;  // Nível total do personagem (soma de todas as classes)
+  classes?: ClassePersonagem[]; // Lista detalhada de classes e níveis
   tendencia: string;
+
   sexo: string;
   idade: string;
   divindade: string;
@@ -343,6 +351,120 @@ export function criarNovaFichaPadrao(): FichaPersonagem {
     armaduras: [],
     itensGerais: [],
     tibares: '',
+    classes: [{ id: gerarId(), nome: '', nivel: 1 }],
   };
 }
+
+export function obterClassesFicha(ficha: FichaPersonagem): ClassePersonagem[] {
+  if (Array.isArray(ficha.classes) && ficha.classes.length > 0) {
+    return ficha.classes.map((c) => ({
+      id: c.id || gerarId(),
+      nome: c.nome || '',
+      nivel: Math.max(1, Number(c.nivel) || 1),
+    }));
+  }
+  const texto = ficha.classe?.trim() || '';
+  if (!texto) {
+    return [{ id: gerarId(), nome: '', nivel: Math.max(1, Number(ficha.nivel) || 1) }];
+  }
+  const partes = texto.split('/').map((p) => p.trim()).filter(Boolean);
+  if (partes.length > 1) {
+    return partes.map((p) => {
+      const match = p.match(/^(.+?)\s*(?:\(?[Nn][íi]v\.?\s*)?(\d+)\)?$/);
+      if (match) {
+        return {
+          id: gerarId(),
+          nome: match[1].trim(),
+          nivel: Math.max(1, parseInt(match[2], 10) || 1),
+        };
+      }
+      return { id: gerarId(), nome: p, nivel: 1 };
+    });
+  }
+  return [{ id: gerarId(), nome: texto, nivel: Math.max(1, Number(ficha.nivel) || 1) }];
+}
+
+export function formatarResumoClasses(classes: ClassePersonagem[]): string {
+  const validas = classes.filter((c) => c.nome.trim());
+  if (validas.length === 0) return '';
+  return validas.map((c) => `${c.nome.trim()} ${c.nivel}`).join(' / ');
+}
+
+export function calcularNivelTotal(classes: ClassePersonagem[]): number {
+  if (!classes || classes.length === 0) return 1;
+  const total = classes.reduce((acc, c) => acc + (Math.max(1, Number(c.nivel) || 1)), 0);
+  return Math.max(1, total);
+}
+
+export function atualizarClassesFicha(
+  ficha: FichaPersonagem,
+  novasClasses: ClassePersonagem[]
+): FichaPersonagem {
+  const classesNormalizadas = novasClasses.map((c) => ({
+    ...c,
+    nivel: Math.max(1, Number(c.nivel) || 1),
+  }));
+  const nivelTotal = calcularNivelTotal(classesNormalizadas);
+  const resumo = formatarResumoClasses(classesNormalizadas);
+  return {
+    ...ficha,
+    classes: classesNormalizadas,
+    nivel: nivelTotal,
+    classe: resumo || ficha.classe,
+  };
+}
+
+export function aplicarClasseNaFicha(
+  ficha: FichaPersonagem,
+  classe: { nome: string; habilidades?: Array<{ nivel?: number; nome: string; descricao: string }> }
+): FichaPersonagem {
+  const classesAtuais = obterClassesFicha(ficha);
+  let novasClasses = [...classesAtuais];
+  const indexExistente = novasClasses.findIndex(
+    (c) => c.nome.trim().toLowerCase() === classe.nome.trim().toLowerCase()
+  );
+
+  let nivelAlvo = 1;
+  if (indexExistente >= 0) {
+    nivelAlvo = novasClasses[indexExistente].nivel + 1;
+    novasClasses[indexExistente] = {
+      ...novasClasses[indexExistente],
+      nivel: nivelAlvo,
+    };
+  } else if (novasClasses.length === 1 && !novasClasses[0].nome.trim()) {
+    novasClasses[0] = {
+      ...novasClasses[0],
+      nome: classe.nome,
+      nivel: 1,
+    };
+    nivelAlvo = 1;
+  } else {
+    novasClasses.push({
+      id: gerarId(),
+      nome: classe.nome,
+      nivel: 1,
+    });
+    nivelAlvo = 1;
+  }
+
+  const novasHabs: HabilidadeOuTalento[] = (classe.habilidades || [])
+    .filter((h) => (Number(h.nivel) || 1) <= nivelAlvo)
+    .map((h) => ({
+      id: gerarId(),
+      nome: `${h.nome} [${classe.nome} ${h.nivel || 1}]`,
+      descricao: h.descricao,
+    }));
+
+  const nomesExistentes = new Set(ficha.habilidadesClasse.map((h) => h.nome));
+  const habsFiltradas = novasHabs.filter((h) => !nomesExistentes.has(h.nome));
+
+  const fichaComClasses = atualizarClassesFicha(ficha, novasClasses);
+  return {
+    ...fichaComClasses,
+    habilidadesClasse: [...fichaComClasses.habilidadesClasse, ...habsFiltradas],
+  };
+}
+
+
+
 

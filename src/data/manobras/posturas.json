@@ -1,0 +1,138 @@
+[
+  {
+    "id": "abraco_da_montanha",
+    "nome": "Abraço da Montanha",
+    "tipo": "Postura",
+    "efeito": "Você recebe um bônus de +2 nas jogadas de ataque, mas sofre uma penalidade de –2 na classe de armadura.",
+    "descricao": "Utilizada por bárbaros das Montanhas Sanguinárias, esta postura envolve lutar com os braços bem abertos. Ajuda a atingir os inimigos, mas expõe o lutador a ataques.\n\nEfeito: Você recebe um bônus de +2 nas jogadas de ataque, mas sofre uma penalidade de –2 na classe de armadura.",
+    "livroFonte": "Manual do Combate"
+  },
+  {
+    "id": "aposta_de_hyninn",
+    "nome": "Aposta de Hyninn",
+    "tipo": "Postura",
+    "efeito": "Você recebe +3 na CA. Porém, quando for atingido por um ataque à distância ou corpo-a-corpo, cai no chão e não pode usar nenhuma postura por duas rodadas.",
+    "descricao": "Esta postura descarta quase totalmente o equilíbrio — o lutador fica sobre um pé só, fazendo micagens e movimentando-se para distrair os oponentes.\n\nEfeito: Você recebe +3 na CA. Porém, quando for atingido por um ataque à distância ou corpo-a-corpo, cai no chão e não pode usar nenhuma postura por duas rodadas.",
+    "livroFonte": "Manual do Combate"
+  },
+  {
+    "id": "base_heroica",
+    "nome": "Base Heroica",
+    "tipo": "Postura",
+    "efeito": "No início da sua rodada, role 1d4. Com um resultado 4, você recupera 1 ponto heroico. Esta postura só pode ser usada um número de rodadas por dia igual ao seu nível.",
+    "descricao": "Ensinada pelo Protetorado do Reino, esta postura coloca o lutador em evidência no campo de batalha, chamando a atenção dos inimigos e distraindo-os de seus aliados. É chamativa, mas põe o personagem em posição para realizar grandes feitos. \n\nEfeito: No início da sua rodada, role 1d4. Com um resultado 4, você recupera 1 ponto heroico. Esta postura só pode ser usada um número de rodadas por dia igual ao seu nível.",
+    "livroFonte": "Manual do Combate"
+  },
+  {
+    "id": "base_do_guarda",
+    "nome": "Base do Guarda",
+    "tipo": "Postura",
+    "efeito": "Você recebe um bônus de +1 na classe de armadura.",
+    "descricao": "Postura treinada por guardas de grandes cidades, como Valkaria e Vectora (guardas de aldeias e vilas normalmente não têm acesso a este tipo de treinamento). Valoriza a defesa.\n\nEfeito: Você recebe um bônus de +1 na classe de armadura.",
+    "livroFonte": "Manual do Combate"
+  },
+  {
+    "id": "base_selvagem",
+    "nome": "Base Selvagem",
+    "tipo": "Postura",
+    "efeito": "Sempre que você atacar com armas naturais (garras, presas, chifres, cauda...) contra um oponente que tenha lhe causado dano na rodada anterior, você recebe +2 nas jogadas de dano.",
+    "descricao": "Existem inúmeras variações desta postura. Todas imitam alguma fera. O lutador fica curvado, simulando os movimentos da criatura e canalizando sua ferocidade.\n\nEfeito: Sempre que você atacar com armas naturais (garras, presas, chifres, cauda...) contra um oponente que tenha lhe causado dano na rodada anterior, você recebe +2 nas jogadas de dano.",
+    "livroFonte": "Manual do Combate"
+  },
+  {
+    "id": "base_do_soldado",
+    "nome": "Base do Soldado",
+    "tipo": "Postura",
+    "efeito": "Você recebe um bônus de +1 nas jogadas de ataque.",
+    "descricao": "Postura ensinada no Exército do Reinado. Envolve manter a perna da frente fl exionada, o que permite ataques rápidos. Apesar de eficaz, é uma postura simples, menosprezada por guerreiros veteranos.\n\nEfeito: Você recebe um bônus de +1 nas jogadas de ataque.",
+    "livroFonte": "Manual do Combate"
+  },
+  {
+    "id": "equilibrio_de_khalmyr",
+    "nome": "Equilíbrio de Khalmyr",
+    "tipo": "Postura",
+    "efeito": "Uma vez por rodada, você pode “escolher 10” numa jogada de ataque. Você deve usar este efeito antes de fazer a rolagem.",
+    "descricao": "Você mantém seu corpo ereto, com as pernas paralelas e os braços frente ao peito. Esta postura fornece grande controle sobre movimentos, mas impede ataques ousados.\n\nEfeito: Uma vez por rodada, você pode “escolher 10” numa jogada de ataque. Você deve usar este efeito antes de fazer a rolagem.",
+    "livroFonte": "Manual do Combate"
+  },
+  {
+    "id": "espirito_tenaz",
+    "nome": "Espírito Tenaz",
+    "tipo": "Postura",
+    "efeito": "Você recebe cura acelerada igual ao seu bônus de Constituição (mínimo 1). Esta postura só um número de rodadas por dia igual ao seu nível.",
+    "descricao": "Esta postura envolve poupar membros feridos (por exemplo, se uma perna está machucada, você coloca o peso do corpo sobre a outra) e fazer movimentos controlados para recuperar fôlego.\n\nEfeito: Você recebe cura acelerada igual ao seu bônus de Constituição (mínimo 1). Esta postura só um número de rodadas por dia igual ao seu nível.",
+    "livroFonte": "Manual do Combate"
+  },
+  {
+    "id": "gambito_de_tauron",
+    "nome": "Gambito de Tauron",
+    "tipo": "Postura",
+    "efeito": "No início da sua rodada, role 1d4.Com um resultado 4, você recupera 2 pontos de energia.",
+    "descricao": "Esta postura, desenvolvida pelos pugilistas de Tapista, envolve pequenos saltos e movimento constante, no qual o lutador não caminha, mas “desliza”. Pode dar chance de realizar golpes inesperados.\n\nEfeito: No início da sua rodada, role 1d4.Com um resultado 4, você recupera 2 pontos de energia.",
+    "livroFonte": "Manual do Combate"
+  },
+  {
+    "id": "guarda_de_ferro",
+    "nome": "Guarda de Ferro",
+    "tipo": "Postura",
+    "efeito": "qualquer oponente adjacente sofre uma penalidade de –4 nas jogadas de ataque contra seus aliados (mas não contra você).",
+    "descricao": "Esta postura fecha todas as saídas do adversário, impedindo-o de atacar outras pessoas.\n\nEfeito: qualquer oponente adjacente sofre uma penalidade de –4 nas jogadas de ataque contra seus aliados (mas não contra você).",
+    "livroFonte": "Manual do Combate"
+  },
+  {
+    "id": "halito_gelido",
+    "nome": "Hálito Gélido",
+    "tipo": "Postura",
+    "efeito": "seus ataques corpo-a-corpo causam ponto de dano de frio (ou +1d6 contra criaturas vulneráveis ao frio).",
+    "descricao": "Treinada apenas nas Montanhas Uivantes, esta postura envolve uma série de respirações e movimentos que invocam o frio da deusa menor Beluhga.\n\nEfeito: seus ataques corpo-a-corpo causam ponto de dano de frio (ou +1d6 contra criaturas vulneráveis ao frio).",
+    "livroFonte": "Manual do Combate"
+  },
+  {
+    "id": "musculos_de_pedra",
+    "nome": "Músculos de Pedra",
+    "tipo": "Postura",
+    "efeito": "você recebe redução de dano 1.",
+    "descricao": "Esta postura envolve contrair os músculos para absorver o impacto de ataques.\n\nEfeito: você recebe redução de dano 1.",
+    "livroFonte": "Manual do Combate"
+  },
+  {
+    "id": "passo_do_touro",
+    "nome": "Passo do Touro",
+    "tipo": "Postura",
+    "efeito": "você recebe um bônus de +1 nas jogadas de ataque e classe de armadura, mas diminui seu deslocamento em 3m.",
+    "descricao": "Desenvolvida pelas legiões do Império de Tauron, esta postura valoriza passos lentos mas resolutos, que aos poucos vão dominando o espaço do inimigo.\n\nEfeito: você recebe um bônus de +1 nas jogadas de ataque e classe de armadura, mas diminui seu deslocamento em 3m.",
+    "livroFonte": "Manual do Combate"
+  },
+  {
+    "id": "pata_do_leopardo",
+    "nome": "Pata do Leopardo",
+    "tipo": "Postura",
+    "efeito": "você recebe um bônus de +2 nas jogadas de ataque, mas sofre uma penalidade de –2 nos testes de resistência.",
+    "descricao": "Desenvolvida por soldados de elite de Yuden, esta postura envolve lutar com o corpo flexionado, sempre pronto para o bote. Contudo, o foco no ataque prejudica movimentos defensivos.\n\nEfeito: você recebe um bônus de +2 nas jogadas de ataque, mas sofre uma penalidade de –2 nos testes de resistência.",
+    "livroFonte": "Manual do Combate"
+  },
+  {
+    "id": "pirueta_de_nimb",
+    "nome": "Pirueta de Nimb",
+    "tipo": "Postura",
+    "efeito": "você pode rolar outra vez uma jogada de ataque recém realizada. Você deve aceitar a segunda rolagem, mesmo 'que seja pior que a primeira. Você só pode usar o benefício 'desta postura uma vez por combate contra cada oponente.",
+    "descricao": "Caracterizada por não ter uma base fi xa, a pirueta de Nimb envolve balançar o corpo de maneira frenética e imprevisível. Com um giro inesperado, mesmo um movimento descoordenado pode virar um ataque letal! Ou não. Infelizmente, é muito difícil que um adversário caia duas vezes neste truque.\n\nEfeito: você pode rolar outra vez uma jogada de ataque recém realizada. Você deve aceitar a segunda rolagem, mesmo 'que seja pior que a primeira. Você só pode usar o benefício 'desta postura uma vez por combate contra cada oponente.",
+    "livroFonte": "Manual do Combate"
+  },
+  {
+    "id": "placidez_de_marah",
+    "nome": "Placidez de Marah",
+    "tipo": "Postura",
+    "efeito": "Nas rodadas em que não realizar nenhum ataque, você recebe um bônus de +4 em testes de Vontade.",
+    "descricao": "Desenvolvida por devotos da Deusa da Paz, esta postura 'envolve exercícios respiratórios e concentração. Enquanto o 'lutador se mantiver conectado com os dogmas de Marah, sua 'mente é fortalecida.\n\nEfeito: Nas rodadas em que não realizar nenhum ataque, você recebe um bônus de +4 em testes de Vontade.",
+    "livroFonte": "Manual do Combate"
+  },
+  {
+    "id": "rancor_de_keenn",
+    "nome": "Rancor de Keenn",
+    "tipo": "Postura",
+    "efeito": "Efeito: Sempre que você errar dois ou mais ataques em sequência, recupera 1 ponto de energia por ataque errado. Por exemplo, ao errar o segundo ataque em sequência, recupera 2 pontos de energia. Se, na rodada seguinte, errar de novo, recupera mais 1 ponto, e assim por diante. Além disso, sempre que você for atingido por um acerto crítico, recupera 2 pontos de energia.",
+    "descricao": "Tanto uma base física quanto um condicionamento 'mental durante a luta, esta postura canaliza a frustração do 'personagem em ímpeto matador.\n\nEfeito: Efeito: Sempre que você errar dois ou mais ataques em sequência, recupera 1 ponto de energia por ataque errado. Por exemplo, ao errar o segundo ataque em sequência, recupera 2 pontos de energia. Se, na rodada seguinte, errar de novo, recupera mais 1 ponto, e assim por diante. Além disso, sempre que você for atingido por um acerto crítico, recupera 2 pontos de energia.",
+    "livroFonte": "Manual do Combate"
+  }
+]

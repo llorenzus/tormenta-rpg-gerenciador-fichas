@@ -1,0 +1,56 @@
+[
+  {
+    "id": "pa_regras_gerais",
+    "nome": "Pontos de Ação (Visão Geral e Obtenção)",
+    "tipo": "Pontos de Ação",
+    "subtipo": "Regra Básica",
+    "descricao": "Sorte, talento, determinação ou pura teimosia — aventureiros têm algo que os diferencia das outras pessoas, permitindo que realizem proezas incríveis sob as mais difíceis circunstâncias. Em Tormenta RPG, este algo são pontos de ação. O gasto de um ponto de ação pode ser a diferença entre o sucesso e a falha.",
+    "detalhes": "• Cada sessão de jogo começa com 1 ponto de ação por personagem (não acumulam para a sessão seguinte).\n• Como ganhar mais:\n  - Heroísmo: Atos verdadeiramente altruístas e arriscados (proteger um amigo sendo atingido em seu lugar, salvar reféns, render-se para poupar inocentes).\n  - Interpretação: Diálogos inspirados que animem a mesa ou descrições cinematográficas fantásticas.\n  - Intervenção do Mestre: Quando o mestre altera/torce as regras a favor dos vilões (fuga automática de vilão, falha automática em armadilha para mover a trama, NPCs usando pontos de ação).\n• Regra de gasto: É uma reação (não consome tempo). Limite de 1 ponto de ação por benefício a cada rodada.",
+    "livroFonte": "Manual Tormenta RPG / Módulo Básico"
+  },
+  {
+    "id": "pa_dado_extra",
+    "nome": "Ponto de Ação: Adicionar Dado Extra",
+    "tipo": "Pontos de Ação",
+    "subtipo": "Uso de Ponto de Ação",
+    "descricao": "Adiciona um dado bônus a qualquer jogada de ataque, teste de perícia ou teste de resistência.",
+    "detalhes": "Você deve declarar o uso do ponto de ação após rolar o d20, mas antes de o mestre anunciar se você foi bem-sucedido ou não.\n\nEscala por Nível:\n• 1º ao 4º nível: +1d4 no teste\n• 5º ao 8º nível: +1d6 no teste\n• 9º ao 12º nível: +1d8 no teste\n• 13º ao 16º nível: +1d10 no teste\n• 17º ao 20º nível: +1d12 no teste",
+    "livroFonte": "Manual Tormenta RPG / Módulo Básico"
+  },
+  {
+    "id": "pa_bonus_ca",
+    "nome": "Ponto de Ação: Bônus na Classe de Armadura",
+    "tipo": "Pontos de Ação",
+    "subtipo": "Uso de Ponto de Ação",
+    "descricao": "Adiciona um dado bônus à sua Classe de Armadura (CA) até o início do seu próximo turno.",
+    "detalhes": "Pode ser ativado imediatamente quando for atacado como uma reação.\n\nEscala por Nível:\n• 1º ao 4º nível: +1d4 na CA\n• 5º ao 8º nível: +1d6 na CA\n• 9º ao 12º nível: +1d8 na CA\n• 13º ao 16º nível: +1d10 na CA\n• 17º ao 20º nível: +1d12 na CA",
+    "livroFonte": "Manual Tormenta RPG / Módulo Básico"
+  },
+  {
+    "id": "pa_segundo_teste",
+    "nome": "Ponto de Ação: Segundo Teste de Resistência",
+    "tipo": "Pontos de Ação",
+    "subtipo": "Uso de Ponto de Ação",
+    "descricao": "Permite realizar uma segunda tentativa de teste de resistência contra um efeito contínuo ou prejudicial que esteja afetando o herói.",
+    "detalhes": "Válido contra efeitos contínuos como a magia Dominar Pessoa, venenos ou paralisias. Não pode ser usado para efeitos instantâneos (como Bola de Fogo), embora você possa usar o ponto de ação para somar um dado extra na rolagem inicial.",
+    "livroFonte": "Manual Tormenta RPG / Módulo Básico"
+  },
+  {
+    "id": "pa_acao_adicional",
+    "nome": "Ponto de Ação: Ação Adicional na Rodada",
+    "tipo": "Pontos de Ação",
+    "subtipo": "Uso de Ponto de Ação",
+    "descricao": "Permite realizar imediatamente uma ação padrão ou uma ação de movimento adicional na mesma rodada.",
+    "detalhes": "Permite combinações extraordinárias na mesma rodada, como:\n• Uma ação completa + uma ação padrão adicional;\n• Uma ação padrão + duas ações de movimento;\n• Duas ações padrão na mesma rodada.",
+    "livroFonte": "Manual Tormenta RPG / Módulo Básico"
+  },
+  {
+    "id": "pa_recuperar_pv",
+    "nome": "Ponto de Ação: Recuperar Pontos de Vida (PV)",
+    "tipo": "Pontos de Ação",
+    "subtipo": "Uso de Ponto de Ação",
+    "descricao": "Permite recuperar Pontos de Vida instantaneamente através da pura determinação heroica.",
+    "detalhes": "A quantidade de PV restaurada depende diretamente do nível do personagem:\n• 1º ao 4º nível: Recupera 1d8+1 PV\n• 5º ao 8º nível: Recupera 2d8+3 PV\n• 9º ao 12º nível: Recupera 3d8+5 PV\n• 13º ao 16º nível: Recupera 4d8+7 PV\n• 17º ao 20º nível: Recupera 5d8+9 PV",
+    "livroFonte": "Manual Tormenta RPG / Módulo Básico"
+  }
+]

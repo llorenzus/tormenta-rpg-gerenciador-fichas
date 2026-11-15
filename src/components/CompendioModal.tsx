@@ -20,6 +20,7 @@ import {
   converterItemGeralParaItem,
   converterMagiaParaItem,
   converterTalentoParaItem,
+  converterManobraParaItem,
   EquipamentoData,
   equipamentos,
   ESCOLAS_MAGIA,
@@ -28,6 +29,9 @@ import {
   filtrarMagias,
   filtrarRacas,
   filtrarTalentos,
+  filtrarCondicoes,
+  filtrarManobras,
+  filtrarRegras,
   formatarDescricaoMagia,
   formatarDescricaoTalento,
   MagiaData,
@@ -38,18 +42,36 @@ import {
   talentos,
   TipoEquipamento,
   TIPOS_EQUIPAMENTO,
+  TIPOS_REGRA,
+  TipoRegraFiltro,
+  condicoes,
+  todasRegras,
+  posturas,
+  golpesMarciais,
+  CondicaoData,
+  RegraData,
+  PosturaData,
+  GolpeMarcialData,
 } from '../data';
 import { FichaPersonagem, gerarId, HabilidadeOuTalento } from '../models/ficha';
 import { COLORS } from '../theme/colors';
 
-export type AbaCompendio = 'talentos' | 'magias' | 'racas' | 'classes' | 'equipamentos';
+export type AbaCompendio =
+  | 'talentos'
+  | 'magias'
+  | 'racas'
+  | 'classes'
+  | 'equipamentos'
+  | 'manobras'
+  | 'regras';
 
 export type ItemCompendio =
   | { tipo: 'talento'; dado: TalentoData }
   | { tipo: 'magia'; dado: MagiaData }
   | { tipo: 'raca'; dado: RacaData }
   | { tipo: 'classe'; dado: ClasseData }
-  | { tipo: 'equipamento'; dado: EquipamentoData };
+  | { tipo: 'equipamento'; dado: EquipamentoData }
+  | { tipo: 'manobra'; dado: PosturaData | GolpeMarcialData };
 
 interface Props {
   visivel: boolean;
@@ -65,13 +87,14 @@ interface Props {
   onAplicarRacaAFicha?: (raca: RacaData) => void;
   onAplicarClasseAFicha?: (classe: ClasseData) => void;
   onAdicionarEquipamentoAFicha?: (equip: EquipamentoData) => void;
+  onAdicionarManobraAFicha?: (manobra: PosturaData | GolpeMarcialData) => void;
 
   // Quando acionado da lista de fichas (selecionador de personagem):
   todasFichas?: FichaPersonagem[];
   onAdicionarItemParaFichaEspecifica?: (
     fichaId: string,
-    tipo: 'talento' | 'magia' | 'raca' | 'classe' | 'equipamento',
-    item: TalentoData | MagiaData | RacaData | ClasseData | EquipamentoData
+    tipo: 'talento' | 'magia' | 'raca' | 'classe' | 'equipamento' | 'manobra',
+    item: TalentoData | MagiaData | RacaData | ClasseData | EquipamentoData | PosturaData | GolpeMarcialData
   ) => void;
 }
 
@@ -87,6 +110,7 @@ export const CompendioModal: React.FC<Props> = ({
   onAplicarRacaAFicha,
   onAplicarClasseAFicha,
   onAdicionarEquipamentoAFicha,
+  onAdicionarManobraAFicha,
   todasFichas = [],
   onAdicionarItemParaFichaEspecifica,
 }) => {
@@ -108,6 +132,12 @@ export const CompendioModal: React.FC<Props> = ({
 
   // Filtros de Equipamentos
   const [tipoEquipSel, setTipoEquipSel] = useState<'Todos' | TipoEquipamento>('Todos');
+
+  // Filtros de Manobras (Posturas e Golpes)
+  const [tipoManobraSel, setTipoManobraSel] = useState<'Todas' | 'Postura' | 'Golpe Marcial'>('Todas');
+
+  // Filtros de Regras (Condições, Pontos de Ação, Armas Mágicas)
+  const [tipoRegraSel, setTipoRegraSel] = useState<TipoRegraFiltro>('Todas');
 
   // Controle de cards expandidos
   const [expandidos, setExpandidos] = useState<Record<string, boolean>>({});
@@ -159,9 +189,19 @@ export const CompendioModal: React.FC<Props> = ({
     return filtrarEquipamentos(busca, tipoEquipSel);
   }, [abaAtiva, busca, tipoEquipSel]);
 
+  const manobrasFiltradas = useMemo(() => {
+    if (abaAtiva !== 'manobras') return [];
+    return filtrarManobras(busca, tipoManobraSel);
+  }, [abaAtiva, busca, tipoManobraSel]);
+
+  const regrasFiltradas = useMemo(() => {
+    if (abaAtiva !== 'regras') return [];
+    return filtrarRegras(busca, tipoRegraSel);
+  }, [abaAtiva, busca, tipoRegraSel]);
+
   const handleCliqueAdicionar = (
-    tipo: 'talento' | 'magia' | 'raca' | 'classe' | 'equipamento',
-    item: TalentoData | MagiaData | RacaData | ClasseData | EquipamentoData
+    tipo: 'talento' | 'magia' | 'raca' | 'classe' | 'equipamento' | 'manobra',
+    item: TalentoData | MagiaData | RacaData | ClasseData | EquipamentoData | PosturaData | GolpeMarcialData
   ) => {
     if (fichaAtual) {
       if (tipo === 'talento' && onAdicionarTalentoAFicha) {
@@ -174,6 +214,8 @@ export const CompendioModal: React.FC<Props> = ({
         onAplicarClasseAFicha(item as ClasseData);
       } else if (tipo === 'equipamento' && onAdicionarEquipamentoAFicha) {
         onAdicionarEquipamentoAFicha(item as EquipamentoData);
+      } else if (tipo === 'manobra' && onAdicionarManobraAFicha) {
+        onAdicionarManobraAFicha(item as PosturaData | GolpeMarcialData);
       } else if (onAdicionarItemParaFichaEspecifica) {
         onAdicionarItemParaFichaEspecifica(fichaAtual.id, tipo, item);
       }
@@ -197,7 +239,7 @@ export const CompendioModal: React.FC<Props> = ({
 
   // Checa se o item já está na ficha atual
   const estaNaListaFicha = (
-    tipo: 'talento' | 'magia' | 'raca' | 'classe' | 'equipamento',
+    tipo: 'talento' | 'magia' | 'raca' | 'classe' | 'equipamento' | 'manobra',
     nome: string
   ): boolean => {
     if (!fichaAtual) return false;
@@ -216,6 +258,11 @@ export const CompendioModal: React.FC<Props> = ({
     } else if (tipo === 'classe') {
       return (
         fichaAtual.classe?.trim().toLowerCase().includes(nomeNorm) || false
+      );
+    } else if (tipo === 'manobra') {
+      return (
+        fichaAtual.habilidadesClasse.some((h) => h.nome.trim().toLowerCase().includes(nomeNorm)) ||
+        fichaAtual.talentos.some((t) => t.nome.trim().toLowerCase().includes(nomeNorm))
       );
     } else {
       return (
@@ -238,6 +285,10 @@ export const CompendioModal: React.FC<Props> = ({
         return 'Buscar classe por nome, pré-requisito ou habilidade...';
       case 'equipamentos':
         return 'Buscar equipamento por nome, dano, tipo ou descrição...';
+      case 'manobras':
+        return 'Buscar manobra, postura ou golpe marcial...';
+      case 'regras':
+        return 'Buscar regra, condição, ponto de ação ou poder de arma...';
     }
   };
 
@@ -253,6 +304,10 @@ export const CompendioModal: React.FC<Props> = ({
         return `${classesFiltradas.length} classes encontradas`;
       case 'equipamentos':
         return `${equipamentosFiltrados.length} equipamentos encontrados`;
+      case 'manobras':
+        return `${manobrasFiltradas.length} manobras encontradas`;
+      case 'regras':
+        return `${regrasFiltradas.length} regras encontradas`;
     }
   };
 
@@ -357,6 +412,40 @@ export const CompendioModal: React.FC<Props> = ({
                   ]}
                 >
                   Equipamentos ({equipamentos.length})
+                </Text>
+              </TouchableOpacity>
+
+              <TouchableOpacity
+                style={[
+                  styles.tabBtn,
+                  abaAtiva === 'manobras' && styles.tabBtnAtivo,
+                ]}
+                onPress={() => setAbaAtiva('manobras')}
+              >
+                <Text
+                  style={[
+                    styles.tabBtnText,
+                    abaAtiva === 'manobras' && styles.tabBtnTextAtivo,
+                  ]}
+                >
+                  Manobras ({posturas.length + golpesMarciais.length})
+                </Text>
+              </TouchableOpacity>
+
+              <TouchableOpacity
+                style={[
+                  styles.tabBtn,
+                  abaAtiva === 'regras' && styles.tabBtnAtivo,
+                ]}
+                onPress={() => setAbaAtiva('regras')}
+              >
+                <Text
+                  style={[
+                    styles.tabBtnText,
+                    abaAtiva === 'regras' && styles.tabBtnTextAtivo,
+                  ]}
+                >
+                  Regras ({todasRegras.length})
                 </Text>
               </TouchableOpacity>
             </ScrollView>
@@ -553,6 +642,72 @@ export const CompendioModal: React.FC<Props> = ({
                       style={[
                         styles.chipText,
                         tipoEquipSel === tipo && styles.chipTextAtivo,
+                      ]}
+                    >
+                      {tipo}
+                    </Text>
+                  </TouchableOpacity>
+                ))}
+              </ScrollView>
+            </View>
+          )}
+
+          {abaAtiva === 'manobras' && (
+            <View style={styles.filtrosContainer}>
+              <ScrollView
+                horizontal
+                showsHorizontalScrollIndicator={false}
+                contentContainerStyle={styles.chipsScroll}
+              >
+                {(
+                  [
+                    { valor: 'Todas', rotulo: 'Todas as Manobras' },
+                    { valor: 'Postura', rotulo: 'Posturas' },
+                    { valor: 'Golpe Marcial', rotulo: 'Golpes Marciais' },
+                  ] as const
+                ).map((t) => (
+                  <TouchableOpacity
+                    key={t.valor}
+                    style={[
+                      styles.chip,
+                      tipoManobraSel === t.valor && styles.chipAtivo,
+                    ]}
+                    onPress={() => setTipoManobraSel(t.valor)}
+                  >
+                    <Text
+                      style={[
+                        styles.chipText,
+                        tipoManobraSel === t.valor && styles.chipTextAtivo,
+                      ]}
+                    >
+                      {t.rotulo}
+                    </Text>
+                  </TouchableOpacity>
+                ))}
+              </ScrollView>
+            </View>
+          )}
+
+          {abaAtiva === 'regras' && (
+            <View style={styles.filtrosContainer}>
+              <ScrollView
+                horizontal
+                showsHorizontalScrollIndicator={false}
+                contentContainerStyle={styles.chipsScroll}
+              >
+                {TIPOS_REGRA.map((tipo) => (
+                  <TouchableOpacity
+                    key={tipo}
+                    style={[
+                      styles.chip,
+                      tipoRegraSel === tipo && styles.chipAtivo,
+                    ]}
+                    onPress={() => setTipoRegraSel(tipo)}
+                  >
+                    <Text
+                      style={[
+                        styles.chipText,
+                        tipoRegraSel === tipo && styles.chipTextAtivo,
                       ]}
                     >
                       {tipo}
@@ -1277,6 +1432,275 @@ export const CompendioModal: React.FC<Props> = ({
                             <Text style={styles.beneficioTexto}>
                               {item.descricao}
                             </Text>
+                          </View>
+                        ) : null}
+
+                        <TouchableOpacity
+                          style={styles.btnRecolher}
+                          onPress={() => alternarExpandido(item.id)}
+                        >
+                          <Text style={styles.btnRecolherText}>Recolher ▲</Text>
+                        </TouchableOpacity>
+                      </View>
+                    )}
+                  </View>
+                );
+              }}
+            />
+          )}
+
+          {/* 6. ABA DE MANOBRAS (POSTURAS E GOLPES) */}
+          {abaAtiva === 'manobras' && (
+            <FlatList
+              data={manobrasFiltradas}
+              keyExtractor={(item) => item.id}
+              contentContainerStyle={styles.listContent}
+              initialNumToRender={15}
+              maxToRenderPerBatch={20}
+              windowSize={10}
+              ListEmptyComponent={
+                <View style={styles.emptyWrap}>
+                  <Text style={styles.emptyText}>
+                    Nenhuma postura ou golpe encontrado com os filtros atuais.
+                  </Text>
+                </View>
+              }
+              renderItem={({ item }) => {
+                const expandido = !!expandidos[item.id];
+                const jaPossui = estaNaListaFicha('manobra', item.nome);
+                const ehGolpe = item.tipo === 'Golpe Marcial';
+                const golpe = ehGolpe ? (item as GolpeMarcialData) : null;
+
+                return (
+                  <View style={styles.cardItem}>
+                    <TouchableOpacity
+                      style={styles.cardItemHeader}
+                      onPress={() => alternarExpandido(item.id)}
+                      activeOpacity={0.7}
+                    >
+                      <View style={styles.cardItemTitleCol}>
+                        <View style={styles.badgeRow}>
+                          <View
+                            style={[
+                              styles.badgeCategoria,
+                              ehGolpe
+                                ? { backgroundColor: 'rgba(200, 100, 30, 0.15)' }
+                                : { backgroundColor: 'rgba(30, 100, 180, 0.15)' },
+                            ]}
+                          >
+                            <Text
+                              style={[
+                                styles.badgeCategoriaText,
+                                ehGolpe ? { color: '#B25010' } : { color: '#1B609E' },
+                              ]}
+                            >
+                              {item.tipo}
+                            </Text>
+                          </View>
+                          {golpe && golpe.custo ? (
+                            <View style={styles.badgeEscola}>
+                              <Text style={styles.badgeEscolaText}>
+                                Custo: {golpe.custo}
+                              </Text>
+                            </View>
+                          ) : null}
+                          {item.livroFonte ? (
+                            <View style={styles.badgeTipo}>
+                              <Text style={styles.badgeTipoText}>{item.livroFonte}</Text>
+                            </View>
+                          ) : null}
+                          {jaPossui ? (
+                            <View style={styles.badgePossui}>
+                              <Text style={styles.badgePossuiText}>Já na ficha</Text>
+                            </View>
+                          ) : null}
+                        </View>
+                        <Text style={styles.cardItemNome}>{item.nome}</Text>
+                      </View>
+
+                      {(fichaAtual || todasFichas.length > 0) && (
+                        <TouchableOpacity
+                          style={[
+                            styles.btnAdicionar,
+                            jaPossui && styles.btnAdicionarSecundario,
+                          ]}
+                          onPress={() => handleCliqueAdicionar('manobra', item)}
+                          disabled={jaPossui}
+                        >
+                          <Text style={styles.btnAdicionarText}>
+                            {jaPossui ? '✓ Na Ficha' : '+ À Ficha'}
+                          </Text>
+                        </TouchableOpacity>
+                      )}
+                    </TouchableOpacity>
+
+                    {/* Prévia quando recolhido */}
+                    {!expandido && (
+                      <TouchableOpacity
+                        style={styles.previaContainer}
+                        onPress={() => alternarExpandido(item.id)}
+                        activeOpacity={0.7}
+                      >
+                        <Text
+                          style={styles.cardItemBeneficioPrevia}
+                          numberOfLines={2}
+                        >
+                          {item.efeito || item.descricao}
+                        </Text>
+                        <Text style={styles.toqueMaisText}>Toque para ver mais ▼</Text>
+                      </TouchableOpacity>
+                    )}
+
+                    {/* Detalhes completos quando expandido */}
+                    {expandido && (
+                      <View style={styles.cardItemExpandido}>
+                        {golpe && golpe.custo ? (
+                          <View style={styles.equipGridParametros}>
+                            <View style={styles.magiaParamItem}>
+                              <Text style={styles.paramLabel}>Custo de Energia:</Text>
+                              <Text style={styles.paramVal}>{golpe.custo}</Text>
+                            </View>
+                          </View>
+                        ) : null}
+
+                        {item.efeito ? (
+                          <View style={styles.beneficioBox}>
+                            <Text style={styles.beneficioLabel}>Efeito Mecânico:</Text>
+                            <Text style={styles.beneficioTexto}>{item.efeito}</Text>
+                          </View>
+                        ) : null}
+
+                        {item.descricao ? (
+                          <View style={styles.beneficioBox}>
+                            <Text style={styles.beneficioLabel}>Descrição Detalhada:</Text>
+                            <Text style={styles.beneficioTexto}>{item.descricao}</Text>
+                          </View>
+                        ) : null}
+
+                        <TouchableOpacity
+                          style={styles.btnRecolher}
+                          onPress={() => alternarExpandido(item.id)}
+                        >
+                          <Text style={styles.btnRecolherText}>Recolher ▲</Text>
+                        </TouchableOpacity>
+                      </View>
+                    )}
+                  </View>
+                );
+              }}
+            />
+          )}
+
+          {/* 7. ABA DE REGRAS (CONDIÇÕES, PONTOS DE AÇÃO E ARMAS MÁGICAS) */}
+          {abaAtiva === 'regras' && (
+            <FlatList
+              data={regrasFiltradas}
+              keyExtractor={(item) => item.id}
+              contentContainerStyle={styles.listContent}
+              initialNumToRender={15}
+              maxToRenderPerBatch={20}
+              windowSize={10}
+              ListEmptyComponent={
+                <View style={styles.emptyWrap}>
+                  <Text style={styles.emptyText}>
+                    Nenhuma regra encontrada com os filtros selecionados.
+                  </Text>
+                </View>
+              }
+              renderItem={({ item }) => {
+                const expandido = !!expandidos[item.id];
+                const ehCondicao = item.tipo === 'Condição';
+                const ehPontoAcao = item.tipo === 'Pontos de Ação';
+                const ehArmaMagica = item.tipo === 'Armas Mágicas';
+
+                return (
+                  <View style={styles.cardItem}>
+                    <TouchableOpacity
+                      style={styles.cardItemHeader}
+                      onPress={() => alternarExpandido(item.id)}
+                      activeOpacity={0.7}
+                    >
+                      <View style={styles.cardItemTitleCol}>
+                        <View style={styles.badgeRow}>
+                          <View
+                            style={[
+                              styles.badgeCategoria,
+                              ehCondicao && { backgroundColor: 'rgba(180, 30, 30, 0.15)' },
+                              ehPontoAcao && { backgroundColor: 'rgba(25, 118, 210, 0.15)' },
+                              ehArmaMagica && { backgroundColor: 'rgba(123, 31, 162, 0.15)' },
+                            ]}
+                          >
+                            <Text
+                              style={[
+                                styles.badgeCategoriaText,
+                                ehCondicao && { color: COLORS.danger },
+                                ehPontoAcao && { color: '#1565C0' },
+                                ehArmaMagica && { color: '#6A1B9A' },
+                              ]}
+                            >
+                              {item.tipo}
+                            </Text>
+                          </View>
+
+                          {item.subtipo ? (
+                            <View style={styles.badgeTipo}>
+                              <Text style={styles.badgeTipoText}>{item.subtipo}</Text>
+                            </View>
+                          ) : null}
+
+                          {item.bonusEquivalente ? (
+                            <View style={styles.badgeEscola}>
+                              <Text style={styles.badgeEscolaText}>
+                                Bônus {item.bonusEquivalente}
+                              </Text>
+                            </View>
+                          ) : null}
+
+                          {item.preco ? (
+                            <View style={styles.badgePossui}>
+                              <Text style={styles.badgePossuiText}>{item.preco}</Text>
+                            </View>
+                          ) : null}
+
+                          {item.livroFonte ? (
+                            <View style={styles.badgeTipo}>
+                              <Text style={styles.badgeTipoText}>{item.livroFonte}</Text>
+                            </View>
+                          ) : null}
+                        </View>
+                        <Text style={styles.cardItemNome}>{item.nome}</Text>
+                      </View>
+                    </TouchableOpacity>
+
+                    {/* Prévia quando recolhido */}
+                    {!expandido && (
+                      <TouchableOpacity
+                        style={styles.previaContainer}
+                        onPress={() => alternarExpandido(item.id)}
+                        activeOpacity={0.7}
+                      >
+                        <Text
+                          style={styles.cardItemBeneficioPrevia}
+                          numberOfLines={2}
+                        >
+                          {item.descricao}
+                        </Text>
+                        <Text style={styles.toqueMaisText}>Toque para ver mais ▼</Text>
+                      </TouchableOpacity>
+                    )}
+
+                    {/* Detalhes completos quando expandido */}
+                    {expandido && (
+                      <View style={styles.cardItemExpandido}>
+                        <View style={styles.beneficioBox}>
+                          <Text style={styles.beneficioLabel}>Descrição:</Text>
+                          <Text style={styles.beneficioTexto}>{item.descricao}</Text>
+                        </View>
+
+                        {item.detalhes ? (
+                          <View style={styles.beneficioBox}>
+                            <Text style={styles.beneficioLabel}>Regras e Efeitos Mecânicos:</Text>
+                            <Text style={styles.beneficioTexto}>{item.detalhes}</Text>
                           </View>
                         ) : null}
 

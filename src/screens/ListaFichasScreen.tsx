@@ -1,10 +1,13 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
   Alert,
   FlatList,
+  Modal,
+  Platform,
   StyleSheet,
   Text,
   TouchableOpacity,
+  TouchableWithoutFeedback,
   useWindowDimensions,
   View,
 } from 'react-native';
@@ -38,21 +41,19 @@ export const ListaFichasScreen: React.FC<Props> = ({
   const isDesktop = width >= 800;
   const numColumns = width >= 1200 ? 3 : width >= 800 ? 2 : 1;
 
+  const [fichaParaExcluir, setFichaParaExcluir] = useState<FichaPersonagem | null>(null);
+
   const confirmarExclusao = (ficha: FichaPersonagem) => {
-    const nome = ficha.nomePersonagem?.trim() || 'Sem Nome';
-    Alert.alert(
-      'Excluir Ficha?',
-      `Deseja realmente excluir a ficha de "${nome}" do seu aparelho?`,
-      [
-        { text: 'Cancelar', style: 'cancel' },
-        {
-          text: 'Excluir',
-          style: 'destructive',
-          onPress: () => onExcluirFicha(ficha.id),
-        },
-      ]
-    );
+    setFichaParaExcluir(ficha);
   };
+
+  const handleExecutarExclusao = () => {
+    if (fichaParaExcluir) {
+      onExcluirFicha(fichaParaExcluir.id);
+      setFichaParaExcluir(null);
+    }
+  };
+
 
   return (
     <View style={styles.container}>
@@ -228,9 +229,61 @@ export const ListaFichasScreen: React.FC<Props> = ({
           }}
         />
       )}
+
+      {/* Modal de Confirmação de Exclusão (100% compatível com Web, Electron e Mobile) */}
+      <Modal
+        visible={!!fichaParaExcluir}
+        transparent
+        animationType="fade"
+        onRequestClose={() => setFichaParaExcluir(null)}
+      >
+        <TouchableWithoutFeedback onPress={() => setFichaParaExcluir(null)}>
+          <View style={styles.modalOverlay}>
+            <TouchableWithoutFeedback>
+              <View style={styles.modalCard}>
+                <View style={styles.modalHeader}>
+                  <Text style={styles.modalTitulo}>Excluir Personagem?</Text>
+                </View>
+
+                <View style={styles.modalBody}>
+                  <Text style={styles.modalTexto}>
+                    Tem certeza de que deseja excluir a ficha de{' '}
+                    <Text style={styles.modalNomeDestaque}>
+                      "{fichaParaExcluir?.nomePersonagem?.trim() || 'Sem Nome'}"
+                    </Text>
+                    ?
+                  </Text>
+                  <Text style={styles.modalAviso}>
+                    ⚠️ Esta ação removerá a ficha deste aparelho e não poderá ser desfeita.
+                  </Text>
+
+                  <View style={styles.modalAcoesRow}>
+                    <TouchableOpacity
+                      style={styles.btnModalCancelar}
+                      onPress={() => setFichaParaExcluir(null)}
+                      activeOpacity={0.8}
+                    >
+                      <Text style={styles.btnModalCancelarText}>Cancelar</Text>
+                    </TouchableOpacity>
+
+                    <TouchableOpacity
+                      style={styles.btnModalExcluir}
+                      onPress={handleExecutarExclusao}
+                      activeOpacity={0.8}
+                    >
+                      <Text style={styles.btnModalExcluirText}>Sim, Excluir</Text>
+                    </TouchableOpacity>
+                  </View>
+                </View>
+              </View>
+            </TouchableWithoutFeedback>
+          </View>
+        </TouchableWithoutFeedback>
+      </Modal>
     </View>
   );
 };
+
 
 const styles = StyleSheet.create({
   container: {
@@ -560,4 +613,95 @@ const styles = StyleSheet.create({
     color: COLORS.gold,
     fontWeight: 'bold',
   },
+  modalOverlay: {
+    flex: 1,
+    backgroundColor: 'rgba(0, 0, 0, 0.65)',
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: 20,
+  },
+  modalCard: {
+    backgroundColor: '#FAF6EE',
+    borderRadius: 12,
+    maxWidth: 440,
+    width: '100%',
+    borderWidth: 2,
+    borderColor: '#C43030',
+    overflow: 'hidden',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.3,
+    shadowRadius: 8,
+    elevation: 8,
+  },
+  modalHeader: {
+    backgroundColor: '#8B1E1E',
+    paddingVertical: 14,
+    paddingHorizontal: 16,
+    borderBottomWidth: 1,
+    borderBottomColor: '#6B1414',
+  },
+  modalTitulo: {
+    fontSize: 17,
+    fontWeight: 'bold',
+    color: '#FFFFFF',
+    textAlign: 'center',
+    letterSpacing: 0.5,
+  },
+  modalBody: {
+    padding: 18,
+  },
+  modalTexto: {
+    fontSize: 15,
+    color: '#2C2416',
+    lineHeight: 22,
+    textAlign: 'center',
+    marginBottom: 10,
+  },
+  modalNomeDestaque: {
+    fontWeight: 'bold',
+    color: '#8B1E1E',
+  },
+  modalAviso: {
+    fontSize: 12,
+    color: '#886B3E',
+    textAlign: 'center',
+    marginBottom: 20,
+    fontStyle: 'italic',
+  },
+  modalAcoesRow: {
+    flexDirection: 'row',
+    gap: 12,
+  },
+  btnModalCancelar: {
+    flex: 1,
+    backgroundColor: '#EFE7D8',
+    borderWidth: 1,
+    borderColor: '#D4C4A8',
+    paddingVertical: 11,
+    borderRadius: 8,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  btnModalCancelarText: {
+    fontSize: 14,
+    fontWeight: 'bold',
+    color: '#5C4A28',
+  },
+  btnModalExcluir: {
+    flex: 1,
+    backgroundColor: '#B3261E',
+    paddingVertical: 11,
+    borderRadius: 8,
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderWidth: 1,
+    borderColor: '#8C1D18',
+  },
+  btnModalExcluirText: {
+    fontSize: 14,
+    fontWeight: 'bold',
+    color: '#FFFFFF',
+  },
 });
+

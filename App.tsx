@@ -17,12 +17,16 @@ import {
   converterItemGeralParaItem,
   converterMagiaParaItem,
   converterTalentoParaItem,
+  converterManobraParaItem,
   EquipamentoData,
   MagiaData,
   RacaData,
   TalentoData,
+  PosturaData,
+  GolpeMarcialData,
 } from './src/data';
 import {
+  aplicarClasseNaFicha,
   criarNovaFichaPadrao,
   FichaPersonagem,
   gerarId,
@@ -244,8 +248,8 @@ export default function App() {
 
   const handleAdicionarItemParaFichaEspecifica = async (
     fichaId: string,
-    tipo: 'talento' | 'magia' | 'raca' | 'classe' | 'equipamento',
-    item: TalentoData | MagiaData | RacaData | ClasseData | EquipamentoData
+    tipo: 'talento' | 'magia' | 'raca' | 'classe' | 'equipamento' | 'manobra',
+    item: TalentoData | MagiaData | RacaData | ClasseData | EquipamentoData | PosturaData | GolpeMarcialData
   ) => {
     const alvo = fichas.find((f) => f.id === fichaId);
     if (!alvo) return;
@@ -279,17 +283,16 @@ export default function App() {
       };
     } else if (tipo === 'classe') {
       const classe = item as ClasseData;
-      const novasHabs: HabilidadeOuTalento[] = classe.habilidades.map((h) => ({
-        id: gerarId(),
-        nome: `${h.nome} [Nív. ${h.nivel}]`,
-        descricao: h.descricao,
-      }));
+      fichaModificada = aplicarClasseNaFicha(alvo, classe);
+    } else if (tipo === 'manobra') {
+      const manobra = item as PosturaData | GolpeMarcialData;
+      const novaManobra = converterManobraParaItem(manobra);
       fichaModificada = {
         ...alvo,
-        classe: alvo.classe?.trim() ? `${alvo.classe} / ${classe.nome}` : classe.nome,
-        habilidadesClasse: [...alvo.habilidadesClasse, ...novasHabs],
+        habilidadesClasse: [...alvo.habilidadesClasse, novaManobra],
       };
     } else {
+
       const equip = item as EquipamentoData;
       if (equip.tipo === 'Arma') {
         const novaArma = converterArmaParaItem(equip);

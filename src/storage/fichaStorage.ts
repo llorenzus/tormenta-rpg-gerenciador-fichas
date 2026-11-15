@@ -8,6 +8,9 @@ import {
   FichaPersonagem,
   criarPericiasPadrao,
   gerarId,
+  obterClassesFicha,
+  calcularNivelTotal,
+  formatarResumoClasses,
 } from '../models/ficha';
 import { gerarHtmlFichaPdf } from './fichaPdfGenerator';
 
@@ -21,10 +24,17 @@ export interface EnvelopeExportacaoFicha {
 }
 
 export function normalizarFicha(ficha: FichaPersonagem): FichaPersonagem {
+  const classesNormalizadas = obterClassesFicha(ficha);
+  const nivelCalculado = calcularNivelTotal(classesNormalizadas);
+  const resumoClasse = formatarResumoClasses(classesNormalizadas);
+
   return {
     ...ficha,
-    nivel: Math.max(1, Number(ficha.nivel) || 1),
+    classes: classesNormalizadas,
+    nivel: nivelCalculado > 0 ? nivelCalculado : Math.max(1, Number(ficha.nivel) || 1),
+    classe: resumoClasse || ficha.classe || '',
     forca: Number.isFinite(ficha.forca) ? ficha.forca : 10,
+
     destreza: Number.isFinite(ficha.destreza) ? ficha.destreza : 10,
     constituicao: Number.isFinite(ficha.constituicao) ? ficha.constituicao : 10,
     inteligencia: Number.isFinite(ficha.inteligencia) ? ficha.inteligencia : 10,

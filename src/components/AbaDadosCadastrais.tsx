@@ -1,9 +1,18 @@
 import React, { useState } from 'react';
 import { ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { ClasseData, RacaData } from '../data';
-import { FichaPersonagem, gerarId, HabilidadeOuTalento } from '../models/ficha';
+import {
+  aplicarClasseNaFicha,
+  atualizarClassesFicha,
+  calcularNivelTotal,
+  ClassePersonagem,
+  FichaPersonagem,
+  gerarId,
+  HabilidadeOuTalento,
+  obterClassesFicha,
+} from '../models/ficha';
 import { COLORS } from '../theme/colors';
-import { CampoInteiro, CampoTexto, SecaoHeader } from './CommonInput';
+import { CampoTexto, SecaoHeader } from './CommonInput';
 import { AbaCompendio, CompendioModal } from './CompendioModal';
 
 interface Props {
@@ -14,6 +23,9 @@ interface Props {
 export const AbaDadosCadastrais: React.FC<Props> = ({ ficha, onChange }) => {
   const [compendioVisivel, setCompendioVisivel] = useState(false);
   const [compendioAba, setCompendioAba] = useState<AbaCompendio>('racas');
+
+  const classesAtuais = obterClassesFicha(ficha);
+  const nivelTotal = calcularNivelTotal(classesAtuais);
 
   const abrirCompendio = (aba: AbaCompendio) => {
     setCompendioAba(aba);
@@ -36,17 +48,43 @@ export const AbaDadosCadastrais: React.FC<Props> = ({ ficha, onChange }) => {
   };
 
   const handleAplicarClasse = (classe: ClasseData) => {
-    const novasHabs: HabilidadeOuTalento[] = classe.habilidades.map((h) => ({
-      id: gerarId(),
-      nome: `${h.nome} [Nív. ${h.nivel}]`,
-      descricao: h.descricao,
-    }));
-    onChange({
-      ...ficha,
-      classe: ficha.classe?.trim() ? `${ficha.classe} / ${classe.nome}` : classe.nome,
-      habilidadesClasse: [...ficha.habilidadesClasse, ...novasHabs],
-    });
+    onChange(aplicarClasseNaFicha(ficha, classe));
   };
+
+
+  const handleAlterarNomeClasse = (index: number, novoNome: string) => {
+    const novas = [...classesAtuais];
+    novas[index] = { ...novas[index], nome: novoNome };
+    onChange(atualizarClassesFicha(ficha, novas));
+  };
+
+  const handleAlterarNivelClasse = (index: number, delta: number) => {
+    const novas = [...classesAtuais];
+    const atual = novas[index].nivel || 1;
+    const novoNivel = Math.max(1, Math.min(20, atual + delta));
+    novas[index] = { ...novas[index], nivel: novoNivel };
+    onChange(atualizarClassesFicha(ficha, novas));
+  };
+
+  const handleAdicionarNovaClasse = () => {
+    const novas: ClassePersonagem[] = [
+      ...classesAtuais,
+      { id: gerarId(), nome: '', nivel: 1 },
+    ];
+    onChange(atualizarClassesFicha(ficha, novas));
+  };
+
+  const handleRemoverClasse = (index: number) => {
+    if (classesAtuais.length <= 1) {
+      // Deixa a única classe vazia com nível 1
+      const reset: ClassePersonagem[] = [{ id: gerarId(), nome: '', nivel: 1 }];
+      onChange(atualizarClassesFicha(ficha, reset));
+      return;
+    }
+    const novas = classesAtuais.filter((_, i) => i !== index);
+    onChange(atualizarClassesFicha(ficha, novas));
+  };
+
   return (
     <ScrollView
       style={styles.container}
@@ -93,32 +131,97 @@ export const AbaDadosCadastrais: React.FC<Props> = ({ ficha, onChange }) => {
             </View>
           </View>
 
-          <View style={styles.row}>
-            <View style={styles.colWide}>
-              <View style={styles.labelWithActionRow}>
-                <Text style={styles.fieldLabel}>Classe</Text>
-                <TouchableOpacity
-                  style={styles.btnMiniCompendio}
-                  onPress={() => abrirCompendio('classes')}
-                >
-                  <Text style={styles.btnMiniCompendioText}>📖 Compêndio</Text>
-                </TouchableOpacity>
+          {/* ======================================================== */}
+          {/* SEÇÃO MULTICLASSE ORGANIZADA COM NÍVEIS INDIVIDUAIS E TOTAL */}
+          {/* ======================================================== */}
+          <View style={styles.multiclasseContainer}>
+            <View style={styles.multiclasseHeader}>
+              <View>
+                <Text style={styles.multiclasseTitulo}>Classes & Níveis</Text>
+                <Text style={styles.multiclasseSubtitulo}>
+                  Adicione e gerencie classes para progressão individual e multiclasse
+                </Text>
               </View>
-              <CampoTexto
-                label=""
-                value={ficha.classe}
-                onChangeText={(v) => onChange({ ...ficha, classe: v })}
-                placeholder="Ex: Guerreiro"
-              />
+              <View style={styles.badgeNivelTotal}>
+                <Text style={styles.badgeNivelTotalLabel}>NÍVEL TOTAL</Text>
+                <Text style={styles.badgeNivelTotalValor}>{nivelTotal}</Text>
+              </View>
             </View>
-            <CampoInteiro
-              label="Nível"
-              valor={ficha.nivel}
-              onValorChange={(v) => onChange({ ...ficha, nivel: Math.max(1, v) })}
-              min={1}
-              max={40}
-              style={styles.colSmall}
-            />
+
+            {classesAtuais.map((item, index) => (
+              <View key={item.id || index} style={styles.classeItemRow}>
+                <View style={styles.classeNomeWrap}>
+                  <Text style={styles.classeItemLabel}>
+                    {classesAtuais.length > 1 ? `Classe ${index + 1}` : 'Classe Principal'}
+                  </Text>
+                  <CampoTexto
+                    label=""
+                    value={item.nome}
+                    onChangeText={(text) => handleAlterarNomeClasse(index, text)}
+                    placeholder="Ex: Samurai, Mago, Guerreiro..."
+                  />
+                </View>
+
+                {/* Seletor do nível desta classe */}
+                <View style={styles.classeNivelWrap}>
+                  <Text style={styles.classeItemLabel}>Nível da Classe</Text>
+                  <View style={styles.seletorNivelRow}>
+                    <TouchableOpacity
+                      style={[styles.btnNivel, item.nivel <= 1 && styles.btnNivelDisabled]}
+                      onPress={() => handleAlterarNivelClasse(index, -1)}
+                      disabled={item.nivel <= 1}
+                      activeOpacity={0.7}
+                    >
+                      <Text style={styles.btnNivelText}>–</Text>
+                    </TouchableOpacity>
+
+                    <View style={styles.boxNivelValor}>
+                      <Text style={styles.nivelValorNumero}>{item.nivel}</Text>
+                    </View>
+
+                    <TouchableOpacity
+                      style={[styles.btnNivel, item.nivel >= 20 && styles.btnNivelDisabled]}
+                      onPress={() => handleAlterarNivelClasse(index, +1)}
+                      disabled={item.nivel >= 20}
+                      activeOpacity={0.7}
+                    >
+                      <Text style={styles.btnNivelText}>+</Text>
+                    </TouchableOpacity>
+                  </View>
+                </View>
+
+                {/* Botão de remover classe */}
+                {classesAtuais.length > 1 && (
+                  <TouchableOpacity
+                    style={styles.btnRemoverClasse}
+                    onPress={() => handleRemoverClasse(index)}
+                    accessibilityLabel="Remover Classe"
+                  >
+                    <Text style={styles.btnRemoverClasseText}>✕</Text>
+                  </TouchableOpacity>
+                )}
+
+              </View>
+            ))}
+
+            {/* Ações de Classes */}
+            <View style={styles.acoesClassesRow}>
+              <TouchableOpacity
+                style={styles.btnAdicionarClasse}
+                onPress={handleAdicionarNovaClasse}
+                activeOpacity={0.8}
+              >
+                <Text style={styles.btnAdicionarClasseText}>+ Nova Classe (Multiclasse)</Text>
+              </TouchableOpacity>
+
+              <TouchableOpacity
+                style={styles.btnCompendioClasses}
+                onPress={() => abrirCompendio('classes')}
+                activeOpacity={0.8}
+              >
+                <Text style={styles.btnCompendioClassesText}>📖 Buscar no Compêndio</Text>
+              </TouchableOpacity>
+            </View>
           </View>
 
           <View style={styles.row}>
@@ -218,12 +321,6 @@ const styles = StyleSheet.create({
   col: {
     flex: 1,
   },
-  colWide: {
-    flex: 1.6,
-  },
-  colSmall: {
-    flex: 0.8,
-  },
   labelWithActionRow: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -247,5 +344,169 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     color: COLORS.primary,
   },
+
+  // Estilos da Seção Multiclasse
+  multiclasseContainer: {
+    marginVertical: 12,
+    padding: 12,
+    backgroundColor: '#FAF7F0',
+    borderRadius: 8,
+    borderWidth: 1,
+    borderColor: '#E2D5C3',
+  },
+  multiclasseHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: 10,
+    paddingBottom: 8,
+    borderBottomWidth: 1,
+    borderBottomColor: '#E8DEC8',
+  },
+  multiclasseTitulo: {
+    fontSize: 14,
+    fontWeight: 'bold',
+    color: COLORS.primaryDark,
+    textTransform: 'uppercase',
+    letterSpacing: 0.5,
+  },
+  multiclasseSubtitulo: {
+    fontSize: 11,
+    color: COLORS.textSecondary,
+    marginTop: 2,
+  },
+  badgeNivelTotal: {
+    backgroundColor: COLORS.primary,
+    paddingHorizontal: 12,
+    paddingVertical: 4,
+    borderRadius: 8,
+    alignItems: 'center',
+    justifyContent: 'center',
+    minWidth: 80,
+  },
+  badgeNivelTotalLabel: {
+    fontSize: 9,
+    fontWeight: 'bold',
+    color: '#FFE2A0',
+    letterSpacing: 0.5,
+  },
+  badgeNivelTotalValor: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    color: '#FFFFFF',
+    lineHeight: 24,
+  },
+  classeItemRow: {
+    flexDirection: 'row',
+    alignItems: 'flex-end',
+    backgroundColor: '#FFFFFF',
+    padding: 10,
+    borderRadius: 6,
+    borderWidth: 1,
+    borderColor: '#EADFC9',
+    marginBottom: 8,
+    gap: 12,
+  },
+  classeNomeWrap: {
+    flex: 1,
+  },
+  classeNivelWrap: {
+    width: 130,
+  },
+  classeItemLabel: {
+    fontSize: 11,
+    fontWeight: '600',
+    color: COLORS.textSecondary,
+    marginBottom: 4,
+    textTransform: 'uppercase',
+  },
+  seletorNivelRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    height: 40,
+    borderWidth: 1,
+    borderColor: COLORS.border,
+    borderRadius: 6,
+    overflow: 'hidden',
+    backgroundColor: '#FDFBF7',
+  },
+  btnNivel: {
+    width: 36,
+    height: '100%',
+    backgroundColor: '#EFE6D5',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  btnNivelDisabled: {
+    opacity: 0.35,
+  },
+  btnNivelText: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    color: COLORS.primaryDark,
+  },
+  boxNivelValor: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  nivelValorNumero: {
+    fontSize: 15,
+    fontWeight: 'bold',
+    color: COLORS.text,
+  },
+  btnRemoverClasse: {
+    width: 36,
+    height: 40,
+    backgroundColor: '#FBE8E8',
+    borderRadius: 6,
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderWidth: 1,
+    borderColor: '#F0C2C2',
+  },
+  btnRemoverClasseText: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    color: '#B3261E',
+  },
+  acoesClassesRow: {
+    flexDirection: 'row',
+    gap: 10,
+    marginTop: 4,
+  },
+  btnAdicionarClasse: {
+    flex: 1,
+    backgroundColor: '#F3EBDD',
+    borderWidth: 1,
+    borderColor: '#D4C3A3',
+    borderStyle: 'dashed',
+    paddingVertical: 8,
+    paddingHorizontal: 12,
+    borderRadius: 6,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  btnAdicionarClasseText: {
+    fontSize: 12,
+    fontWeight: '600',
+    color: COLORS.primaryDark,
+  },
+  btnCompendioClasses: {
+    backgroundColor: 'rgba(139,30,30,0.08)',
+    borderWidth: 1,
+    borderColor: 'rgba(139,30,30,0.25)',
+    paddingVertical: 8,
+    paddingHorizontal: 12,
+    borderRadius: 6,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  btnCompendioClassesText: {
+    fontSize: 12,
+    fontWeight: 'bold',
+    color: COLORS.primary,
+  },
 });
+
 

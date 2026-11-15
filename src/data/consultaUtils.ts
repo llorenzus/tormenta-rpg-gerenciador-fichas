@@ -11,6 +11,8 @@ import { EquipamentoData, equipamentos, TipoEquipamento } from './equipamentos';
 import { MagiaData, magias } from './magias';
 import { RacaData, racas } from './racas';
 import { CategoriaTalento, TalentoData, talentos } from './talentos';
+import { CondicaoData, condicoes, RegraData, todasRegras } from './regras';
+import { GolpeMarcialData, golpesMarciais, PosturaData, posturas } from './manobras';
 
 export const normalizarTexto = (texto: string): string => {
   if (!texto) return '';
@@ -364,3 +366,86 @@ export const TIPOS_EQUIPAMENTO: Array<'Todos' | TipoEquipamento> = [
   'Escudo',
   'Item Geral',
 ];
+
+export const TIPOS_REGRA = [
+  'Todas',
+  'Condições',
+  'Pontos de Ação',
+  'Armas Mágicas',
+] as const;
+
+export type TipoRegraFiltro = (typeof TIPOS_REGRA)[number];
+
+export const filtrarRegras = (
+  termo = '',
+  categoria: TipoRegraFiltro = 'Todas'
+): RegraData[] => {
+  const normTermo = normalizarTexto(termo);
+
+  return todasRegras.filter((r) => {
+    if (categoria === 'Condições' && r.tipo !== 'Condição') return false;
+    if (categoria === 'Pontos de Ação' && r.tipo !== 'Pontos de Ação') return false;
+    if (categoria === 'Armas Mágicas' && r.tipo !== 'Armas Mágicas') return false;
+
+    if (!normTermo) return true;
+
+    const nomeNorm = normalizarTexto(r.nome);
+    const descNorm = normalizarTexto(r.descricao);
+    const detNorm = r.detalhes ? normalizarTexto(r.detalhes) : '';
+    const subNorm = r.subtipo ? normalizarTexto(r.subtipo) : '';
+
+    return (
+      nomeNorm.includes(normTermo) ||
+      descNorm.includes(normTermo) ||
+      detNorm.includes(normTermo) ||
+      subNorm.includes(normTermo)
+    );
+  });
+};
+
+export const filtrarCondicoes = (termo = ''): CondicaoData[] => {
+  const normTermo = normalizarTexto(termo);
+  if (!normTermo) return condicoes;
+
+  return condicoes.filter((c) => {
+    const nomeNorm = normalizarTexto(c.nome);
+    const descNorm = normalizarTexto(c.descricao);
+    return nomeNorm.includes(normTermo) || descNorm.includes(normTermo);
+  });
+};
+
+export const filtrarManobras = (
+  termo = '',
+  tipo: 'Todas' | 'Postura' | 'Golpe Marcial' = 'Todas'
+): Array<PosturaData | GolpeMarcialData> => {
+  const normTermo = normalizarTexto(termo);
+  const todasManobras: Array<PosturaData | GolpeMarcialData> = [
+    ...posturas,
+    ...golpesMarciais,
+  ];
+
+  return todasManobras.filter((m) => {
+    if (tipo !== 'Todas' && m.tipo !== tipo) return false;
+    if (!normTermo) return true;
+
+    const nomeNorm = normalizarTexto(m.nome);
+    const descNorm = normalizarTexto(m.descricao);
+    const efeitoNorm = normalizarTexto(m.efeito);
+    return (
+      nomeNorm.includes(normTermo) ||
+      descNorm.includes(normTermo) ||
+      efeitoNorm.includes(normTermo)
+    );
+  });
+};
+
+export const converterManobraParaItem = (
+  manobra: PosturaData | GolpeMarcialData
+): HabilidadeOuTalento => {
+  return {
+    id: gerarId(),
+    nome: `${manobra.nome} [${manobra.tipo}]`,
+    descricao: manobra.descricao,
+  };
+};
+

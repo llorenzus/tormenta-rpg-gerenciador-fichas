@@ -14,7 +14,9 @@ import {
 import { AbaAtributos } from '../components/AbaAtributos';
 import { AbaDadosCadastrais } from '../components/AbaDadosCadastrais';
 import { AbaEquipamentos } from '../components/AbaEquipamentos';
-import { AbaHabilidadesEMagias } from '../components/AbaHabilidadesEMagias';
+import { AbaHabilidadesRaca } from '../components/AbaHabilidadesRaca';
+import { AbaHabilidadesClasse } from '../components/AbaHabilidadesClasse';
+import { AbaMagias } from '../components/AbaMagias';
 import { AbaPericias } from '../components/AbaPericias';
 import { CompendioModal } from '../components/CompendioModal';
 import {
@@ -24,12 +26,16 @@ import {
   converterItemGeralParaItem,
   converterMagiaParaItem,
   converterTalentoParaItem,
+  converterManobraParaItem,
   EquipamentoData,
   MagiaData,
   RacaData,
   TalentoData,
+  PosturaData,
+  GolpeMarcialData,
 } from '../data';
 import {
+  aplicarClasseNaFicha,
   calcularCaTotal,
   FichaPersonagem,
   gerarId,
@@ -49,7 +55,9 @@ const ABAS = [
   'Dados Cadastrais',
   'Atributos',
   'Perícias',
-  'Habilidades / Magias',
+  'Habilidades de Raça',
+  'Habilidades de Classe',
+  'Magias',
   'Equipamentos',
 ];
 
@@ -66,7 +74,7 @@ export const FichaDetalheScreen: React.FC<Props> = ({
   // Estado das abas
   const [abaMobile, setAbaMobile] = useState(1); // Padrão: Atributos
   const [abaEsquerda, setAbaEsquerda] = useState(1); // Padrão: Atributos
-  const [abaDireita, setAbaDireita] = useState(3); // Padrão: Habilidades / Magias
+  const [abaDireita, setAbaDireita] = useState(4); // Padrão: Habilidades de Classe
 
   // Padrão inicial: 1 painel único (o usuário ativa split view se desejar)
   const [splitAtivo, setSplitAtivo] = useState(false);
@@ -101,17 +109,9 @@ export const FichaDetalheScreen: React.FC<Props> = ({
   };
 
   const handleAplicarClasse = (classe: ClasseData) => {
-    const novasHabs: HabilidadeOuTalento[] = classe.habilidades.map((h) => ({
-      id: gerarId(),
-      nome: `${h.nome} [Nív. ${h.nivel}]`,
-      descricao: h.descricao,
-    }));
-    onChange({
-      ...ficha,
-      classe: ficha.classe?.trim() ? `${ficha.classe} / ${classe.nome}` : classe.nome,
-      habilidadesClasse: [...ficha.habilidadesClasse, ...novasHabs],
-    });
+    onChange(aplicarClasseNaFicha(ficha, classe));
   };
+
 
   const handleAdicionarEquipamento = (equip: EquipamentoData) => {
     if (equip.tipo === 'Arma') {
@@ -124,6 +124,11 @@ export const FichaDetalheScreen: React.FC<Props> = ({
       const novoItem = converterItemGeralParaItem(equip);
       onChange({ ...ficha, itensGerais: [...ficha.itensGerais, novoItem] });
     }
+  };
+
+  const handleAdicionarManobra = (manobra: PosturaData | GolpeMarcialData) => {
+    const nova = converterManobraParaItem(manobra);
+    onChange({ ...ficha, habilidadesClasse: [...ficha.habilidadesClasse, nova] });
   };
 
   const containerWidthRef = useRef(containerWidth);
@@ -144,7 +149,7 @@ export const FichaDetalheScreen: React.FC<Props> = ({
   const handleToggleSplit = () => {
     if (!splitAtivo) {
       // Ao abrir o segundo painel, garante que ele não abra a mesma aba
-      const proximaDireita = abaEsquerda === 3 ? 1 : 3;
+      const proximaDireita = abaEsquerda === 4 ? 1 : 4;
       setAbaDireita(proximaDireita);
       setSplitAtivo(true);
     } else {
@@ -221,12 +226,13 @@ export const FichaDetalheScreen: React.FC<Props> = ({
   const subtituloDesktop = [
     ficha.raca?.trim(),
     ficha.classe?.trim(),
-    `Nível ${ficha.nivel}`,
+    `Nível Total: ${ficha.nivel}`,
     ficha.jogador?.trim() && `Jogador: ${ficha.jogador.trim()}`,
     `PV ${ficha.pvAtual}/${ficha.pvTotal}`,
     `PM ${ficha.pmAtual}/${ficha.pmTotal}`,
     `CA ${caTotal}`,
   ]
+
     .filter(Boolean)
     .join(' • ');
 
@@ -240,8 +246,12 @@ export const FichaDetalheScreen: React.FC<Props> = ({
       case 2:
         return <AbaPericias ficha={ficha} onChange={onChange} />;
       case 3:
-        return <AbaHabilidadesEMagias ficha={ficha} onChange={onChange} />;
+        return <AbaHabilidadesRaca ficha={ficha} onChange={onChange} />;
       case 4:
+        return <AbaHabilidadesClasse ficha={ficha} onChange={onChange} />;
+      case 5:
+        return <AbaMagias ficha={ficha} onChange={onChange} />;
+      case 6:
         return <AbaEquipamentos ficha={ficha} onChange={onChange} />;
       default:
         return null;
@@ -455,6 +465,7 @@ export const FichaDetalheScreen: React.FC<Props> = ({
         onAplicarRacaAFicha={handleAplicarRaca}
         onAplicarClasseAFicha={handleAplicarClasse}
         onAdicionarEquipamentoAFicha={handleAdicionarEquipamento}
+        onAdicionarManobraAFicha={handleAdicionarManobra}
       />
     </KeyboardAvoidingView>
   );

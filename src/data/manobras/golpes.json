@@ -1,0 +1,317 @@
+[
+  {
+    "id": "anzol",
+    "nome": "Anzol",
+    "tipo": "Golpe Marcial",
+    "custo": "1 ponto de energia.",
+    "efeito": "você só pode usar o anzol se estiver agarrando seu oponente. Faça um teste de manobra oposto. Se você for bem-sucedido, seu oponente sofre –4 nas jogadas de ataque (incluindo testes de manobra) por um minuto.",
+    "descricao": "O “anzol” consiste em colocar um dedo dentro da boca do adversário e puxar a bochecha dele, causando grande dor.\n\nCusto: 1 ponto de energia.\n\nEfeito: você só pode usar o anzol se estiver agarrando seu oponente. Faça um teste de manobra oposto. Se você for bem-sucedido, seu oponente sofre –4 nas jogadas de ataque (incluindo testes de manobra) por um minuto.",
+    "livroFonte": "Manual do Combate"
+  },
+  {
+    "id": "aparar_ataque_corpo_a_corpo",
+    "nome": "Aparar Ataque Corpo-a-Corpo",
+    "tipo": "Golpe Marcial",
+    "custo": "1 ponto de energia.",
+    "efeito": "use este golpe como uma reação quando um oponente acerta um ataque corpo-a-corpo em você. Faça uma jogada de ataque. Se o resultado da sua jogada for maior que o do oponente, você evita o ataque.",
+    "descricao": "Você usa sua arma para aparar um ataque corpo-a-corpo.\n\nCusto: 1 ponto de energia.\n\nEfeito: use este golpe como uma reação quando um oponente acerta um ataque corpo-a-corpo em você. Faça uma jogada de ataque. Se o resultado da sua jogada for maior que o do oponente, você evita o ataque.",
+    "livroFonte": "Manual do Combate"
+  },
+  {
+    "id": "aparar_ataque_a_distancia",
+    "nome": "Aparar Ataque à Distância",
+    "tipo": "Golpe Marcial",
+    "custo": "1 ponto de energia.",
+    "efeito": "use este golpe como uma reação quando um oponente acerta um ataque à distância em você. Faça uma jogada de ataque. Se o resultado da sua jogada for maior que o do oponente, você evita o ataque.",
+    "descricao": "Você usa sua arma para aparar um ataque à distância.\n\nCusto: 1 ponto de energia.\n\nEfeito: use este golpe como uma reação quando um oponente acerta um ataque à distância em você. Faça uma jogada de ataque. Se o resultado da sua jogada for maior que o do oponente, você evita o ataque.",
+    "livroFonte": "Manual do Combate"
+  },
+  {
+    "id": "arremesso_desesperado",
+    "nome": "Arremesso Desesperado",
+    "tipo": "Golpe Marcial",
+    "custo": "2 pontos de energia.",
+    "efeito": "qualquer arma de corpo-a-corpo que você esteja usando pode ser usada como uma arma de arremesso, com incremento de distância de 3m, até o fi m da rodada.",
+    "descricao": "Você é capaz de arremessar um machado de duas mãos, ou um florete!\n\nCusto: 2 pontos de energia.\n\nEfeito: qualquer arma de corpo-a-corpo que você esteja usando pode ser usada como uma arma de arremesso, com incremento de distância de 3m, até o fi m da rodada.",
+    "livroFonte": "Manual do Combate"
+  },
+  {
+    "id": "ataque_em_arco",
+    "nome": "Ataque em Arco",
+    "tipo": "Golpe Marcial",
+    "custo": "2 pontos de energia.",
+    "efeito": "escolha até três criaturas adjacentes entre si e a você. Faça um ataque e compare o resultado com a CA de cada uma delas. Para cada criatura que você acertar, role o dano normalmente.",
+    "descricao": "Você faz um golpe que varre um grande ângulo, atingindo mais de um oponente.\n\nCusto: 2 pontos de energia.\n\nEfeito: escolha até três criaturas adjacentes entre si e a você. Faça um ataque e compare o resultado com a CA de cada uma delas. Para cada criatura que você acertar, role o dano normalmente.",
+    "livroFonte": "Manual do Combate"
+  },
+  {
+    "id": "ataque_pesado",
+    "nome": "Ataque Pesado",
+    "tipo": "Golpe Marcial",
+    "custo": "1 ponto de energia.",
+    "efeito": "faça um ataque com uma arma de duas mãos. Se você acertar, causa dano extra de acordo com seu tamanho — 1d4 pontos de dano extras para tamanho Pequeno ou menor; 1d6 para tamanho Médio; 1d8 para tamanho Grande; 2d6 para tamanho Enorme ou maior.",
+    "descricao": "Você aproveita o tamanho de sua arma para colocar todo o seu peso sobre o golpe.\n\nCusto: 1 ponto de energia.\n\nEfeito: faça um ataque com uma arma de duas mãos. Se você acertar, causa dano extra de acordo com seu tamanho — 1d4 pontos de dano extras para tamanho Pequeno ou menor; 1d6 para tamanho Médio; 1d8 para tamanho Grande; 2d6 para tamanho Enorme ou maior.",
+    "livroFonte": "Manual do Combate"
+  },
+  {
+    "id": "batida_destruidora",
+    "nome": "Batida Destruidora",
+    "tipo": "Golpe Marcial",
+    "custo": "2 pontos de energia.",
+    "efeito": "faça um ataque com uma arma de duas mãos. Se você acertar e causar dano, e o oponente estiver usando armadura, ele sofre uma penalidade de –2 na CA. A penalidade desaparece quando a armadura for consertada. Isto demora uma hora e exige um teste de Ofício (metalurgia) contra CD 15.",
+    "descricao": "O impacto de seu ataque é tão grande que danifica a armadura de seu oponente.\n\nCusto: 2 pontos de energia.\n\nEfeito: faça um ataque com uma arma de duas mãos. Se você acertar e causar dano, e o oponente estiver usando armadura, ele sofre uma penalidade de –2 na CA. A penalidade desaparece quando a armadura for consertada. Isto demora uma hora e exige um teste de Ofício (metalurgia) contra CD 15.",
+    "livroFonte": "Manual do Combate"
+  },
+  {
+    "id": "bloqueio_com_escudo",
+    "nome": "Bloqueio com Escudo",
+    "tipo": "Golpe Marcial",
+    "custo": "1 ponto de energia.",
+    "efeito": "use este golpe como uma reação quando um oponente acerta um ataque em você. Faça uma jogada de ataque com o escudo. Se o resultado da sua jogada for maior que o do oponente, você evita o ataque.",
+    "descricao": "Você usa o escudo para bloquear um ataque ativamente.\n\nCusto: 1 ponto de energia.\n\nEfeito: use este golpe como uma reação quando um oponente acerta um ataque em você. Faça uma jogada de ataque com o escudo. Se o resultado da sua jogada for maior que o do oponente, você evita o ataque.",
+    "livroFonte": "Manual do Combate"
+  },
+  {
+    "id": "cabecada",
+    "nome": "Cabeçada",
+    "tipo": "Golpe Marcial",
+    "custo": "2 pontos de energia.",
+    "efeito": "faça um ataque desarmado. Seu oponente é considerado desprevenido contra este ataque.",
+    "descricao": "Em vez de atacar com os punhos, você bate com a cabeça, surpreendendo o adversário.\n\nCusto: 2 pontos de energia.\n\nEfeito: faça um ataque desarmado. Seu oponente é considerado desprevenido contra este ataque.",
+    "livroFonte": "Manual do Combate"
+  },
+  {
+    "id": "corte_com_escudo",
+    "nome": "Corte com Escudo",
+    "tipo": "Golpe Marcial",
+    "custo": "1 ponto de energia.",
+    "efeito": "faça um ataque com um escudo com um bônus de +2 na jogada de dano e tipo corte.",
+    "descricao": "Você ergue o escudo e ataca com sua borda.\n\nCusto: 1 ponto de energia.\n\nEfeito: faça um ataque com um escudo com um bônus de +2 na jogada de dano e tipo corte.",
+    "livroFonte": "Manual do Combate"
+  },
+  {
+    "id": "dedo_no_olho",
+    "nome": "Dedo no Olho",
+    "tipo": "Golpe Marcial",
+    "custo": "2 pontos de energia.",
+    "efeito": "faça um ataque desarmado. Se você acertar, causa dano normal. Além disso, seu oponente fica cego de um olho (–2 nas jogadas de ataque e CA). Com um segundo golpe desses, o oponente fica cego. Em qualquer caso, a cegueira dura até o fim do combate, ou até o oponente receber uma magia de cura.",
+    "descricao": "O nome já diz tudo. Este golpe é tão mal visto que é proibido até mesmo em algumas arenas clandestinas!\n\nCusto: 2 pontos de energia.\n\nEfeito: faça um ataque desarmado. Se você acertar, causa dano normal. Além disso, seu oponente fica cego de um olho (–2 nas jogadas de ataque e CA). Com um segundo golpe desses, o oponente fica cego. Em qualquer caso, a cegueira dura até o fim do combate, ou até o oponente receber uma magia de cura.",
+    "livroFonte": "Manual do Combate"
+  },
+  {
+    "id": "degolar",
+    "nome": "Degolar",
+    "tipo": "Golpe Marcial",
+    "custo": "3 pontos de energia.",
+    "efeito": "faça um ataque com um bônus de +1 na margem de ameaça e um bônus de +1 no multiplicador de crítico. Por exemplo, um ataque com uma espada longa, normalmente 19-20/x2, torna-se 18-20/x3.",
+    "descricao": "Você mira o pescoço do oponente. Este é um golpe difícil, que exige muito esforço — mas que pode acabar com a luta de uma vez só.\n\nCusto: 3 pontos de energia.\n\nEfeito: faça um ataque com um bônus de +1 na margem de ameaça e um bônus de +1 no multiplicador de crítico. Por exemplo, um ataque com uma espada longa, normalmente 19-20/x2, torna-se 18-20/x3.",
+    "livroFonte": "Manual do Combate"
+  },
+  {
+    "id": "estocada_no_abdome",
+    "nome": "Estocada no Abdome",
+    "tipo": "Golpe Marcial",
+    "custo": "2 pontos de energia.",
+    "efeito": "faça um ataque com uma arma de perfuração. Se você acertar, além do dano normal, causa 1 ponto de dano de Constituição.",
+    "descricao": "Este golpe cruel causa ferimentos letais.\n\nCusto: 2 pontos de energia.\n\nEfeito: faça um ataque com uma arma de perfuração. Se você acertar, além do dano normal, causa 1 ponto de dano de Constituição.",
+    "livroFonte": "Manual do Combate"
+  },
+  {
+    "id": "estocada_penetrante",
+    "nome": "Estocada Penetrante",
+    "tipo": "Golpe Marcial",
+    "custo": "1 ponto de energia.",
+    "efeito": "faça um ataque com uma arma de perfuração. Se você acertar, ignora até 5 pontos de redução de dano (mesmo que a RD não possa ser ignorada por nenhum tipo de material).",
+    "descricao": "Este golpe direto tem como objetivo atravessar as defesas de seu oponente.\n\nCusto: 1 ponto de energia.\n\nEfeito: faça um ataque com uma arma de perfuração. Se você acertar, ignora até 5 pontos de redução de dano (mesmo que a RD não possa ser ignorada por nenhum tipo de material).",
+    "livroFonte": "Manual do Combate"
+  },
+  {
+    "id": "ferir_a_perna",
+    "nome": "Ferir a Perna",
+    "tipo": "Golpe Marcial",
+    "custo": "1 ponto de energia.",
+    "efeito": "faça um ataque. Se você acertar e causar dano, o oponente deve ser bem-sucedido num teste de Fortitude (CD 10 + metade do seu nível + mod. For) ou terá seu deslocamento reduzido à metade por um minuto.",
+    "descricao": "Este golpe mira a perna de seu oponente, reduzindo sua velocidade.\n\nCusto: 1 ponto de energia.\n\nEfeito: faça um ataque. Se você acertar e causar dano, o oponente deve ser bem-sucedido num teste de Fortitude (CD 10 + metade do seu nível + mod. For) ou terá seu deslocamento reduzido à metade por um minuto.",
+    "livroFonte": "Manual do Combate"
+  },
+  {
+    "id": "ferir_o_braco",
+    "nome": "Ferir o Braço",
+    "tipo": "Golpe Marcial",
+    "custo": "1 ponto de energia.",
+    "efeito": "faça um ataque. Se você acertar e causar dano, o oponente deve ser bem-sucedido num teste de Fortitude (CD 10 + metade do seu nível + mod. For) ou sofrerá uma penalidade de –2 nas jogadas de ataque por um minuto. O efeito de múltiplos golpes não é cumulativo.",
+    "descricao": "Este golpe mira o braço de seu oponente, para reduzir sua capacidade de luta.\n\nCusto: 1 ponto de energia.\n\nEfeito: faça um ataque. Se você acertar e causar dano, o oponente deve ser bem-sucedido num teste de Fortitude (CD 10 + metade do seu nível + mod. For) ou sofrerá uma penalidade de –2 nas jogadas de ataque por um minuto. O efeito de múltiplos golpes não é cumulativo.",
+    "livroFonte": "Manual do Combate"
+  },
+  {
+    "id": "folego_concentrado",
+    "nome": "Fôlego Concentrado",
+    "tipo": "Golpe Marcial",
+    "custo": "1 ponto de energia.",
+    "efeito": "gaste uma ação completa. Você recupera um nível de fadiga (fi ca fatigado se estava exausto, fi ca sem fadiga se estava fatigado) ou medo (fica abalado se estava apavorado, fica sem medo se estava abalado) adquirido no combate.",
+    "descricao": "Você para por alguns segundos para recuperar o fôlego e a calma.\n\nCusto: 1 ponto de energia.\n\nEfeito: gaste uma ação completa. Você recupera um nível de fadiga (fi ca fatigado se estava exausto, fi ca sem fadiga se estava fatigado) ou medo (fica abalado se estava apavorado, fica sem medo se estava abalado) adquirido no combate.",
+    "livroFonte": "Manual do Combate"
+  },
+  {
+    "id": "furo_no_bucho",
+    "nome": "Furo no Bucho",
+    "tipo": "Golpe Marcial",
+    "custo": "3 pontos de energia.",
+    "efeito": "faça um ataque com uma arma de perfuração. Se você acertar, além do dano normal, causa 2 pontos de dano de Força e Destreza.",
+    "descricao": "Uma estocada ou tiro na barriga é uma das formas mais cruéis de se dar cabo de um inimigo.\n\nCusto: 3 pontos de energia.\n\nEfeito: faça um ataque com uma arma de perfuração. Se você acertar, além do dano normal, causa 2 pontos de dano de Força e Destreza.",
+    "livroFonte": "Manual do Combate"
+  },
+  {
+    "id": "golpe_baixo",
+    "nome": "Golpe Baixo",
+    "tipo": "Golpe Marcial",
+    "custo": "1 ponto de energia.",
+    "efeito": "faça um ataque contra um humanoide. Se você acertar e causar dano, o oponente fi cará enjoado (só pode realizar uma ação padrão ou de movimento por rodada) durante 1d3 rodadas.",
+    "descricao": "Você mira as “partes sensíveis” de seu oponente, causando grande dor e impedindo-o de fazer muitas ações. Um golpe muito popular — e nem um pouco honrado...\n\nCusto: 1 ponto de energia.\n\nEfeito: faça um ataque contra um humanoide. Se você acertar e causar dano, o oponente fi cará enjoado (só pode realizar uma ação padrão ou de movimento por rodada) durante 1d3 rodadas.",
+    "livroFonte": "Manual do Combate"
+  },
+  {
+    "id": "golpe_duplo",
+    "nome": "Golpe Duplo",
+    "tipo": "Golpe Marcial",
+    "custo": "1 ponto de energia.",
+    "efeito": "para usar este golpe você deve estar lutando com duas armas. Faça uma jogada de ataque com o melhor bônus de ataque e um bônus adicional de +4 (mas ainda sofrendo a penalidade por lutar com duas armas). Se você acertar, causa o dano das duas armas somado.",
+    "descricao": "Você faz um ataque com duas armas ao mesmo tempo.\n\nCusto: 1 ponto de energia.\n\nEfeito: para usar este golpe você deve estar lutando com duas armas. Faça uma jogada de ataque com o melhor bônus de ataque e um bônus adicional de +4 (mas ainda sofrendo a penalidade por lutar com duas armas). Se você acertar, causa o dano das duas armas somado.",
+    "livroFonte": "Manual do Combate"
+  },
+  {
+    "id": "golpe_em_v",
+    "nome": "Golpe em V",
+    "tipo": "Golpe Marcial",
+    "custo": "2 pontos de energia.",
+    "efeito": "faça um ataque com uma arma de corte. Se você acertar, o dano da arma aumenta em um dado (por exemplo, uma espada longa causa 2d8 pontos de dano, enquanto que uma espada bastarda causa 2d10).",
+    "descricao": "Você faz um golpe rápido de cima para baixo, e então um golpe rápido de baixo para cima.\n\nCusto: 2 pontos de energia.\n\nEfeito: faça um ataque com uma arma de corte. Se você acertar, o dano da arma aumenta em um dado (por exemplo, uma espada longa causa 2d8 pontos de dano, enquanto que uma espada bastarda causa 2d10).",
+    "livroFonte": "Manual do Combate"
+  },
+  {
+    "id": "lacerar",
+    "nome": "Lacerar",
+    "tipo": "Golpe Marcial",
+    "custo": "1 ponto de energia.",
+    "efeito": "faça um ataque com uma arma de corte. Se você acertar e causar dano, o oponente fica sangrando. Deve fazer um teste de Constituição contra CD 15 no início de cada turno; se for bem-sucedido, estabiliza-se. Se falhar, sofre 1d4 pontos de dano e continua sangrando.",
+    "descricao": "Você faz um corte largo, causando grande sangramento.\n\nCusto: 1 ponto de energia.\n\nEfeito: faça um ataque com uma arma de corte. Se você acertar e causar dano, o oponente fica sangrando. Deve fazer um teste de Constituição contra CD 15 no início de cada turno; se for bem-sucedido, estabiliza-se. Se falhar, sofre 1d4 pontos de dano e continua sangrando.",
+    "livroFonte": "Manual do Combate"
+  },
+  {
+    "id": "pancada_com_escudo",
+    "nome": "Pancada com Escudo",
+    "tipo": "Golpe Marcial",
+    "custo": "1 ponto de energia.",
+    "efeito": "faça um ataque com um escudo. Se você acertar e causar dano, o oponente deve ser bem-sucedido num teste de Fortitude (CD 10 + metade do seu nível + mod. For) ou fi cará atordoado por uma rodada.",
+    "descricao": "Você bate com o escudo no rosto do oponente, deixando-o atordoado por alguns instantes.\n\nCusto: 1 ponto de energia.\n\nEfeito: faça um ataque com um escudo. Se você acertar e causar dano, o oponente deve ser bem-sucedido num teste de Fortitude (CD 10 + metade do seu nível + mod. For) ou fi cará atordoado por uma rodada.",
+    "livroFonte": "Manual do Combate"
+  },
+  {
+    "id": "pancada_com_pomo",
+    "nome": "Pancada com Pomo",
+    "tipo": "Golpe Marcial",
+    "custo": "1 ponto de energia.",
+    "efeito": "faça um ataque com uma arma de duas mãos. Se você acertar, causa dano igual ao de uma adaga para seu tamanho (1d4 para um personagem Médio), e derruba o oponente.",
+    "descricao": "Você gira a arma e bate com o pomo, usando seu peso para\n\nCusto: 1 ponto de energia.\n\nEfeito: faça um ataque com uma arma de duas mãos. Se você acertar, causa dano igual ao de uma adaga para seu tamanho (1d4 para um personagem Médio), e derruba o oponente.",
+    "livroFonte": "Manual do Combate"
+  },
+  {
+    "id": "pancada_na_cabeca",
+    "nome": "Pancada na Cabeça",
+    "tipo": "Golpe Marcial",
+    "custo": "3 pontos de energia.",
+    "efeito": "faça um ataque com uma arma de esmagamento, sofrendo uma penalidade de –8 em sua jogada de ataque. Se acertar, seu oponente deve fazer um teste de Fortitude contra CD 10 + metade do seu nível + mod. For. Em caso de falha, ele desmaia. Criaturas imunes a acertos críticos são imunes ao efeito deste golpe.",
+    "descricao": "Você mira a cabeça de seu oponente. Com sorte, pode\n\nCusto: 3 pontos de energia.\n\nEfeito: faça um ataque com uma arma de esmagamento, sofrendo uma penalidade de –8 em sua jogada de ataque. Se acertar, seu oponente deve fazer um teste de Fortitude contra CD 10 + metade do seu nível + mod. For. Em caso de falha, ele desmaia. Criaturas imunes a acertos críticos são imunes ao efeito deste golpe.",
+    "livroFonte": "Manual do Combate"
+  },
+  {
+    "id": "pancada_pesada",
+    "nome": "Pancada Pesada",
+    "tipo": "Golpe Marcial",
+    "custo": "1 ponto de energia.",
+    "efeito": "faça um ataque com uma arma de duas mãos. Se você acertar, além de causar o dano normal, empurra seu oponente 3m em uma direção à sua escolha.",
+    "descricao": "Você bate com força e peso, de forma a empurrar seu inimigo.\n\nCusto: 1 ponto de energia.\n\nEfeito: faça um ataque com uma arma de duas mãos. Se você acertar, além de causar o dano normal, empurra seu oponente 3m em uma direção à sua escolha.",
+    "livroFonte": "Manual do Combate"
+  },
+  {
+    "id": "quebrar_osso",
+    "nome": "Quebrar Osso",
+    "tipo": "Golpe Marcial",
+    "custo": "1 ponto de energia",
+    "efeito": "",
+    "descricao": "",
+    "livroFonte": "Manual do Combate"
+  },
+  {
+    "id": "custo",
+    "nome": "Custo:",
+    "tipo": "Golpe Marcial",
+    "custo": "2 pontos de energia.",
+    "efeito": "faça um ataque com uma arma de esmagamento. Se você acertar e causar dano, o oponente deve fazer um teste de Fortitude (CD 10 + metade do seu nível + mod. For). Se ele falhar, sofre uma penalidade de –2 nas jogadas de ataque e na CA por um minuto.",
+    "descricao": "Você bate com força em um osso de seu oponente, tentando fraturá-lo.\n\nCusto: 2 pontos de energia.\n\nEfeito: faça um ataque com uma arma de esmagamento. Se você acertar e causar dano, o oponente deve fazer um teste de Fortitude (CD 10 + metade do seu nível + mod. For). Se ele falhar, sofre uma penalidade de –2 nas jogadas de ataque e na CA por um minuto.",
+    "livroFonte": "Manual do Combate"
+  },
+  {
+    "id": "custo",
+    "nome": "Custo:",
+    "tipo": "Golpe Marcial",
+    "custo": "2 pontos de energia.",
+    "efeito": "use este golpe como uma reação quando um oponente acerta um ataque corpo-a-corpo em você. Faça uma jogada de ataque. Se o resultado da sua jogada for maior que o do oponente, você evita o ataque e pode fazer um ataque contra o oponente como uma ação livre.",
+    "descricao": "Você defende um golpe e, com o mesmo movimento,\n\nCusto: 2 pontos de energia.\n\nEfeito: use este golpe como uma reação quando um oponente acerta um ataque corpo-a-corpo em você. Faça uma jogada de ataque. Se o resultado da sua jogada for maior que o do oponente, você evita o ataque e pode fazer um ataque contra o oponente como uma ação livre.",
+    "livroFonte": "Manual do Combate"
+  },
+  {
+    "id": "sobrepujar",
+    "nome": "Sobrepujar",
+    "tipo": "Golpe Marcial",
+    "custo": "1 ponto de energia.",
+    "efeito": "faça um ataque com um escudo. Se acertar, causa dano normal e faz outro ataque. Se acertar o segundo ataque, derruba o oponente no chão.",
+    "descricao": "Você dá um golpe rápido com o escudo, e então coloca seu peso sobre ele, para derrubar seu oponente.\n\nCusto: 1 ponto de energia.\n\nEfeito: faça um ataque com um escudo. Se acertar, causa dano normal e faz outro ataque. Se acertar o segundo ataque, derruba o oponente no chão.",
+    "livroFonte": "Manual do Combate"
+  },
+  {
+    "id": "soco_cruzado",
+    "nome": "Soco Cruzado",
+    "tipo": "Golpe Marcial",
+    "custo": "1 ponto de energia.",
+    "efeito": "faça um ataque desarmado com um bônus de +2 na jogada de dano.",
+    "descricao": "Este soco em curva mira o lado do rosto do adversário, 'sendo muito potente.\n\nCusto: 1 ponto de energia.\n\nEfeito: faça um ataque desarmado com um bônus de +2 na jogada de dano.",
+    "livroFonte": "Manual do Combate"
+  },
+  {
+    "id": "soco_direto",
+    "nome": "Soco Direto",
+    "tipo": "Golpe Marcial",
+    "custo": "1 ponto de energia.",
+    "efeito": "faça um ataque desarmado com um bônus de +2 na jogada de ataque.",
+    "descricao": "Você projeta o braço num soco rápido e reto.\n\nCusto: 1 ponto de energia.\n\nEfeito: faça um ataque desarmado com um bônus de +2 na jogada de ataque.",
+    "livroFonte": "Manual do Combate"
+  },
+  {
+    "id": "tudo_ou_nada",
+    "nome": "Tudo ou Nada",
+    "tipo": "Golpe Marcial",
+    "custo": "3 pontos de energia.",
+    "efeito": "faça uma investida com um bônus de +4 em ataque e dano. Após o ataque, você fi ca fatigado.",
+    "descricao": "Você dá tudo de si em um ataque para destruir seu oponente.\n\nCusto: 3 pontos de energia.\n\nEfeito: faça uma investida com um bônus de +4 em ataque e dano. Após o ataque, você fi ca fatigado.",
+    "livroFonte": "Manual do Combate"
+  },
+  {
+    "id": "voadora",
+    "nome": "Voadora",
+    "tipo": "Golpe Marcial",
+    "custo": "1 ponto de energia.",
+    "efeito": "faça uma investida com um ataque desarmado. Se você acertar, seu ataque causa dano dobrado. Se errar, você cai no chão.",
+    "descricao": "Você corre, pula e chuta seu adversário, colocando todo o seu peso no impacto. Um golpe arriscado, mas poderoso.\n\nCusto: 1 ponto de energia.\n\nEfeito: faça uma investida com um ataque desarmado. Se você acertar, seu ataque causa dano dobrado. Se errar, você cai no chão.",
+    "livroFonte": "Manual do Combate"
+  },
+  {
+    "id": "voadora_dupla",
+    "nome": "Voadora Dupla",
+    "tipo": "Golpe Marcial",
+    "custo": "2 pontos de energia.",
+    "efeito": "faça uma investida com um ataque desarmado. Se você acertar, seu ataque causa dano dobrado e tanto você quanto seu oponente caem no chão. Se errar, você cai no chão.",
+    "descricao": "Você corre, pula e chuta seu adversário com os dois pés, colocando todo o seu peso no impacto. Um golpe dramático e poderoso.\n\nCusto: 2 pontos de energia.\n\nEfeito: faça uma investida com um ataque desarmado. Se você acertar, seu ataque causa dano dobrado e tanto você quanto seu oponente caem no chão. Se errar, você cai no chão.",
+    "livroFonte": "Manual do Combate"
+  }
+]
