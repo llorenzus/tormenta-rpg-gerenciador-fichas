@@ -1,6 +1,7 @@
 import condicoesRaw from './condicoes.json';
 import pontosAcaoRaw from './pontos_acao.json';
 import armasMagicasRaw from './armas_magicas.json';
+import criacaoItensMagicosRaw from './criacao_itens_magicos.json';
 
 export interface CondicaoData {
   id: string;
@@ -25,6 +26,7 @@ export interface RegraData {
 export const condicoes: CondicaoData[] = condicoesRaw as CondicaoData[];
 export const pontosAcao: RegraData[] = pontosAcaoRaw as RegraData[];
 export const armasMagicas: RegraData[] = armasMagicasRaw as RegraData[];
+export const criacaoItensMagicos: RegraData[] = criacaoItensMagicosRaw as RegraData[];
 
 export const todasRegras: RegraData[] = [
   ...condicoes.map((c) => ({
@@ -37,6 +39,7 @@ export const todasRegras: RegraData[] = [
   })),
   ...pontosAcao,
   ...armasMagicas,
+  ...criacaoItensMagicos,
 ];
 
 export const getCondicaoPorId = (id: string): CondicaoData | undefined => {

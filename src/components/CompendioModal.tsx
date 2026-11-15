@@ -40,6 +40,8 @@ import {
   racas,
   TalentoData,
   talentos,
+  identificarTalentosCitadosEmPreRequisitos,
+  verificarPreRequisitosCumpridos,
   TipoEquipamento,
   TIPOS_EQUIPAMENTO,
   TIPOS_REGRA,
@@ -121,6 +123,8 @@ export const CompendioModal: React.FC<Props> = ({
   const [categoriaSel, setCategoriaSel] = useState<CategoriaTalento | 'Todas'>(
     categoriaInicial
   );
+  const [apenasRequisitosCumpridos, setApenasRequisitosCumpridos] = useState(false);
+  const [talentoDetalheModal, setTalentoDetalheModal] = useState<TalentoData | null>(null);
 
   // Filtros de Magias
   const [nivelSel, setNivelSel] = useState<number | null>(nivelFiltroInicial);
@@ -161,8 +165,12 @@ export const CompendioModal: React.FC<Props> = ({
   // Listas filtradas
   const talentosFiltrados = useMemo(() => {
     if (abaAtiva !== 'talentos') return [];
-    return filtrarTalentos({ termo: busca, categoria: categoriaSel });
-  }, [abaAtiva, busca, categoriaSel]);
+    let lista = filtrarTalentos({ termo: busca, categoria: categoriaSel });
+    if (apenasRequisitosCumpridos && fichaAtual) {
+      lista = lista.filter((t) => verificarPreRequisitosCumpridos(fichaAtual, t).cumpre);
+    }
+    return lista;
+  }, [abaAtiva, busca, categoriaSel, apenasRequisitosCumpridos, fichaAtual]);
 
   const magiasFiltradas = useMemo(() => {
     if (abaAtiva !== 'magias') return [];
@@ -496,6 +504,31 @@ export const CompendioModal: React.FC<Props> = ({
                   </TouchableOpacity>
                 ))}
               </ScrollView>
+
+              {/* Filtro inteligente de Pré-requisitos cumpridos pelo personagem atual */}
+              {fichaAtual && (
+                <View style={styles.filtroPersonagemRow}>
+                  <TouchableOpacity
+                    style={[
+                      styles.btnFiltroPreReq,
+                      apenasRequisitosCumpridos && styles.btnFiltroPreReqAtivo,
+                    ]}
+                    onPress={() => setApenasRequisitosCumpridos(!apenasRequisitosCumpridos)}
+                    activeOpacity={0.8}
+                  >
+                    <Text
+                      style={[
+                        styles.btnFiltroPreReqText,
+                        apenasRequisitosCumpridos && styles.btnFiltroPreReqTextAtivo,
+                      ]}
+                    >
+                      {apenasRequisitosCumpridos
+                        ? `🎯 Mostrando apenas talentos disponíveis para ${fichaAtual.nomePersonagem?.trim() || 'meu personagem'}`
+                        : `🎯 Filtrar apenas talentos disponíveis para ${fichaAtual.nomePersonagem?.trim() || 'meu personagem'}`}
+                    </Text>
+                  </TouchableOpacity>
+                </View>
+              )}
             </View>
           )}
 
@@ -744,6 +777,9 @@ export const CompendioModal: React.FC<Props> = ({
               renderItem={({ item }) => {
                 const expandido = !!expandidos[item.id];
                 const jaPossui = estaNaListaFicha('talento', item.nome);
+                const talentosCitados = identificarTalentosCitadosEmPreRequisitos(item.preRequisitos, item.id);
+                const reqStatus = fichaAtual ? verificarPreRequisitosCumpridos(fichaAtual, item) : null;
+
                 return (
                   <View style={styles.cardItem}>
                     <TouchableOpacity
@@ -763,6 +799,29 @@ export const CompendioModal: React.FC<Props> = ({
                               <Text style={styles.badgePossuiText}>✓ Na Ficha</Text>
                             </View>
                           )}
+                          {reqStatus && !jaPossui && (
+                            <View
+                              style={[
+                                styles.badgeReqStatus,
+                                reqStatus.cumpre
+                                  ? styles.badgeReqCumpre
+                                  : styles.badgeReqPendente,
+                              ]}
+                            >
+                              <Text
+                                style={[
+                                  styles.badgeReqStatusText,
+                                  reqStatus.cumpre
+                                    ? styles.badgeReqCumpreText
+                                    : styles.badgeReqPendenteText,
+                                ]}
+                              >
+                                {reqStatus.cumpre
+                                  ? '✓ Requisitos Atendidos'
+                                  : '⚠️ Requisitos Pendentes'}
+                              </Text>
+                            </View>
+                          )}
                         </View>
                         <Text style={styles.cardItemNome}>{item.nome}</Text>
                         {item.preRequisitos &&
@@ -775,6 +834,23 @@ export const CompendioModal: React.FC<Props> = ({
                               {item.preRequisitos}
                             </Text>
                           )}
+
+                        {/* Chips clicáveis para ver os talentos que são pré-requisito */}
+                        {talentosCitados.length > 0 && (
+                          <View style={styles.chipsPreReqRow}>
+                            <Text style={styles.chipsPreReqLabel}>Ver talento exigido:</Text>
+                            {talentosCitados.map((tCitado) => (
+                              <TouchableOpacity
+                                key={tCitado.id}
+                                style={styles.chipPreReqBtn}
+                                onPress={() => setTalentoDetalheModal(tCitado)}
+                                activeOpacity={0.7}
+                              >
+                                <Text style={styles.chipPreReqBtnText}>🔗 {tCitado.nome}</Text>
+                              </TouchableOpacity>
+                            ))}
+                          </View>
+                        )}
                       </View>
 
                       <TouchableOpacity
@@ -809,6 +885,15 @@ export const CompendioModal: React.FC<Props> = ({
 
                     {expandido && (
                       <View style={styles.cardItemExpandido}>
+                        {reqStatus && !reqStatus.cumpre && reqStatus.pendencias.length > 0 && (
+                          <View style={styles.pendenciasBox}>
+                            <Text style={styles.pendenciasTitulo}>⚠️ Pendências para seu personagem:</Text>
+                            {reqStatus.pendencias.map((pend, pIdx) => (
+                              <Text key={pIdx} style={styles.pendenciaItem}>• {pend}</Text>
+                            ))}
+                          </View>
+                        )}
+
                         {item.descricao ? (
                           <Text style={styles.cardItemDescricaoFlavor}>
                             "{item.descricao}"
@@ -1762,6 +1847,110 @@ export const CompendioModal: React.FC<Props> = ({
               </View>
             </Modal>
           )}
+
+          {/* Modal para Visualizar Detalhes do Talento Pré-requisito Clicado */}
+          {talentoDetalheModal && (
+            <Modal
+              transparent
+              animationType="fade"
+              visible={!!talentoDetalheModal}
+              onRequestClose={() => setTalentoDetalheModal(null)}
+            >
+              <View style={styles.modalBackdrop}>
+                <View style={styles.talentoDetalheDialog}>
+                  <View style={styles.talentoDetalheHeader}>
+                    <View style={styles.talentoDetalheHeaderCol}>
+                      <View style={styles.badgeRow}>
+                        <View style={styles.badgeCategoria}>
+                          <Text style={styles.badgeCategoriaText}>
+                            {talentoDetalheModal.categoria}
+                          </Text>
+                        </View>
+                        {estaNaListaFicha('talento', talentoDetalheModal.nome) && (
+                          <View style={styles.badgePossui}>
+                            <Text style={styles.badgePossuiText}>✓ Na Ficha</Text>
+                          </View>
+                        )}
+                      </View>
+                      <Text style={styles.talentoDetalheTitulo}>{talentoDetalheModal.nome}</Text>
+                    </View>
+                    <TouchableOpacity
+                      style={styles.btnFecharDetalhe}
+                      onPress={() => setTalentoDetalheModal(null)}
+                    >
+                      <Text style={styles.btnFecharDetalheText}>✕</Text>
+                    </TouchableOpacity>
+                  </View>
+
+                  <ScrollView style={styles.talentoDetalheScroll}>
+                    {talentoDetalheModal.preRequisitos && talentoDetalheModal.preRequisitos !== 'Nenhum.' && (
+                      <View style={styles.talentoDetalheSecao}>
+                        <Text style={styles.talentoDetalheSecaoLabel}>Pré-requisitos:</Text>
+                        <Text style={styles.talentoDetalhePreReqText}>{talentoDetalheModal.preRequisitos}</Text>
+                        {(() => {
+                          const outrosCitados = identificarTalentosCitadosEmPreRequisitos(
+                            talentoDetalheModal.preRequisitos,
+                            talentoDetalheModal.id
+                          );
+                          if (outrosCitados.length === 0) return null;
+                          return (
+                            <View style={styles.chipsPreReqRow}>
+                              <Text style={styles.chipsPreReqLabel}>Ver talento exigido:</Text>
+                              {outrosCitados.map((outro) => (
+                                <TouchableOpacity
+                                  key={outro.id}
+                                  style={styles.chipPreReqBtn}
+                                  onPress={() => setTalentoDetalheModal(outro)}
+                                  activeOpacity={0.7}
+                                >
+                                  <Text style={styles.chipPreReqBtnText}>🔗 {outro.nome}</Text>
+                                </TouchableOpacity>
+                              ))}
+                            </View>
+                          );
+                        })()}
+                      </View>
+                    )}
+
+                    <View style={styles.talentoDetalheSecao}>
+                      <Text style={styles.talentoDetalheSecaoLabel}>Benefício:</Text>
+                      <Text style={styles.talentoDetalheBeneficioText}>{talentoDetalheModal.beneficio}</Text>
+                    </View>
+
+                    {talentoDetalheModal.descricao ? (
+                      <View style={styles.talentoDetalheSecao}>
+                        <Text style={styles.cardItemDescricaoFlavor}>"{talentoDetalheModal.descricao}"</Text>
+                      </View>
+                    ) : null}
+                  </ScrollView>
+
+                  <View style={styles.talentoDetalheFooter}>
+                    <TouchableOpacity
+                      style={styles.dialogBtnCancelar}
+                      onPress={() => setTalentoDetalheModal(null)}
+                    >
+                      <Text style={styles.dialogBtnCancelarText}>Fechar</Text>
+                    </TouchableOpacity>
+
+                    <TouchableOpacity
+                      style={[
+                        styles.btnAdicionar,
+                        estaNaListaFicha('talento', talentoDetalheModal.nome) && styles.btnAdicionarSecundario,
+                      ]}
+                      onPress={() => {
+                        handleCliqueAdicionar('talento', talentoDetalheModal);
+                        setTalentoDetalheModal(null);
+                      }}
+                    >
+                      <Text style={styles.btnAdicionarText}>
+                        {fichaAtual ? '+ Adicionar à Ficha' : '+ Personagem'}
+                      </Text>
+                    </TouchableOpacity>
+                  </View>
+                </View>
+              </View>
+            </Modal>
+          )}
         </View>
       </SafeAreaView>
     </Modal>
@@ -2307,5 +2496,172 @@ const styles = StyleSheet.create({
     color: COLORS.primary,
     fontWeight: 'bold',
     fontSize: 14,
+  },
+  filtroPersonagemRow: {
+    paddingHorizontal: 8,
+    paddingTop: 6,
+  },
+  btnFiltroPreReq: {
+    backgroundColor: 'rgba(200,157,60,0.12)',
+    borderColor: COLORS.gold,
+    borderWidth: 1,
+    paddingHorizontal: 12,
+    paddingVertical: 7,
+    borderRadius: 8,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  btnFiltroPreReqAtivo: {
+    backgroundColor: COLORS.gold,
+    borderColor: '#8A6414',
+  },
+  btnFiltroPreReqText: {
+    fontSize: 12,
+    fontWeight: 'bold',
+    color: '#8A6414',
+  },
+  btnFiltroPreReqTextAtivo: {
+    color: '#1F1A17',
+  },
+  badgeReqStatus: {
+    paddingHorizontal: 6,
+    paddingVertical: 2,
+    borderRadius: 4,
+  },
+  badgeReqCumpre: {
+    backgroundColor: 'rgba(46,125,50,0.15)',
+  },
+  badgeReqPendente: {
+    backgroundColor: 'rgba(211,47,47,0.12)',
+  },
+  badgeReqStatusText: {
+    fontSize: 10,
+    fontWeight: 'bold',
+  },
+  badgeReqCumpreText: {
+    color: '#2E7D32',
+  },
+  badgeReqPendenteText: {
+    color: '#C62828',
+  },
+  chipsPreReqRow: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    alignItems: 'center',
+    gap: 6,
+    marginTop: 6,
+  },
+  chipsPreReqLabel: {
+    fontSize: 11,
+    color: COLORS.textSecondary,
+    fontStyle: 'italic',
+  },
+  chipPreReqBtn: {
+    backgroundColor: 'rgba(30,136,229,0.14)',
+    borderColor: '#1E88E5',
+    borderWidth: 1,
+    paddingHorizontal: 8,
+    paddingVertical: 3,
+    borderRadius: 12,
+  },
+  chipPreReqBtnText: {
+    fontSize: 11,
+    fontWeight: 'bold',
+    color: '#1565C0',
+  },
+  pendenciasBox: {
+    backgroundColor: 'rgba(211,47,47,0.08)',
+    borderRadius: 6,
+    padding: 8,
+    marginBottom: 8,
+    borderLeftWidth: 3,
+    borderLeftColor: '#C62828',
+  },
+  pendenciasTitulo: {
+    fontSize: 11.5,
+    fontWeight: 'bold',
+    color: '#C62828',
+    marginBottom: 4,
+  },
+  pendenciaItem: {
+    fontSize: 11,
+    color: '#B71C1C',
+    marginLeft: 4,
+    lineHeight: 16,
+  },
+  talentoDetalheDialog: {
+    width: '92%',
+    maxWidth: 580,
+    maxHeight: '85%',
+    backgroundColor: COLORS.surface,
+    borderRadius: 12,
+    borderWidth: 1,
+    borderColor: COLORS.border,
+    padding: 16,
+  },
+  talentoDetalheHeader: {
+    flexDirection: 'row',
+    alignItems: 'flex-start',
+    justifyContent: 'space-between',
+    borderBottomWidth: 1,
+    borderBottomColor: COLORS.border,
+    paddingBottom: 10,
+    marginBottom: 10,
+    gap: 8,
+  },
+  talentoDetalheHeaderCol: {
+    flex: 1,
+  },
+  talentoDetalheTitulo: {
+    fontSize: 17,
+    fontWeight: 'bold',
+    color: COLORS.primary,
+    marginTop: 4,
+  },
+  btnFecharDetalhe: {
+    width: 30,
+    height: 30,
+    borderRadius: 15,
+    backgroundColor: 'rgba(0,0,0,0.06)',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  btnFecharDetalheText: {
+    fontSize: 15,
+    fontWeight: 'bold',
+    color: COLORS.textSecondary,
+  },
+  talentoDetalheScroll: {
+    maxHeight: 360,
+    marginBottom: 12,
+  },
+  talentoDetalheSecao: {
+    marginBottom: 10,
+  },
+  talentoDetalheSecaoLabel: {
+    fontSize: 12,
+    fontWeight: 'bold',
+    color: COLORS.textSecondary,
+    marginBottom: 2,
+    textTransform: 'uppercase',
+  },
+  talentoDetalhePreReqText: {
+    fontSize: 13,
+    color: COLORS.text,
+    lineHeight: 18,
+  },
+  talentoDetalheBeneficioText: {
+    fontSize: 13,
+    color: COLORS.text,
+    lineHeight: 19,
+  },
+  talentoDetalheFooter: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'flex-end',
+    gap: 10,
+    borderTopWidth: 1,
+    borderTopColor: COLORS.border,
+    paddingTop: 10,
   },
 });

@@ -13,6 +13,7 @@ import {
 } from '../data';
 import { FichaPersonagem, gerarId, MagiaItem } from '../models/ficha';
 import { COLORS } from '../theme/colors';
+import { BarraDeProgressoRecurso } from './BarraDeProgressoRecurso';
 import { CampoComSugestoes } from './CampoComSugestoes';
 import { CampoTexto } from './CommonInput';
 import { CompendioModal } from './CompendioModal';
@@ -96,7 +97,7 @@ export const AbaMagias: React.FC<Props> = ({ ficha, onChange }) => {
       {/* 1. PAINEL DE CONTROLE DE PONTOS DE MAGIA (PM) */}
       <View style={styles.cardPm}>
         <View style={styles.pmInfoCol}>
-          <Text style={styles.pmLabel}>Pontos de Magia (PM)</Text>
+          <Text style={styles.pmLabel}>✨ Pontos de Magia (PM)</Text>
           <View style={styles.pmValoresRow}>
             <Text style={styles.pmAtualText}>{ficha.pmAtual ?? 0}</Text>
             <Text style={styles.pmDivisorText}>/</Text>
@@ -130,6 +131,16 @@ export const AbaMagias: React.FC<Props> = ({ ficha, onChange }) => {
           >
             <Text style={styles.btnPmText}>+5</Text>
           </TouchableOpacity>
+        </View>
+
+        <View style={{ width: '100%', marginTop: 8 }}>
+          <BarraDeProgressoRecurso
+            atual={ficha.pmAtual ?? 0}
+            max={ficha.pmTotal ?? 0}
+            cor="#1565C0"
+            corFundo="rgba(21,101,192,0.14)"
+            unidade="PM"
+          />
         </View>
       </View>
 

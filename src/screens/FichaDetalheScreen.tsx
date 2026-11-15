@@ -358,50 +358,9 @@ export const FichaDetalheScreen: React.FC<Props> = ({
                 styles.tabItem,
                 selecionada && styles.tabItemActive,
                 abertaNoOutro && styles.tabItemNoOutro,
-                isDraggingThis && styles.tabItemDragging,
-                isHoverTarget && styles.tabItemHoverTarget,
               ]}
               onPress={() => onSelecionar(chave)}
               activeOpacity={0.7}
-              // @ts-ignore
-              draggable={true}
-              // @ts-ignore
-              onDragStart={(e) => {
-                setAbaArrastando(chave);
-                if (e?.dataTransfer) {
-                  e.dataTransfer.setData('text/plain', chave);
-                  e.dataTransfer.effectAllowed = 'move';
-                }
-              }}
-              // @ts-ignore
-              onDragOver={(e) => {
-                e?.preventDefault?.();
-                if (e?.dataTransfer) e.dataTransfer.dropEffect = 'move';
-              }}
-              // @ts-ignore
-              onDragEnter={() => {
-                if (abaArrastando && abaArrastando !== chave) {
-                  setAbaHoverAlvo(chave);
-                }
-              }}
-              // @ts-ignore
-              onDragLeave={() => {
-                if (abaHoverAlvo === chave) setAbaHoverAlvo(null);
-              }}
-              // @ts-ignore
-              onDrop={(e) => {
-                e?.preventDefault?.();
-                if (abaArrastando && abaArrastando !== chave) {
-                  reordenarAbas(abaArrastando, chave);
-                }
-                setAbaArrastando(null);
-                setAbaHoverAlvo(null);
-              }}
-              // @ts-ignore
-              onDragEnd={() => {
-                setAbaArrastando(null);
-                setAbaHoverAlvo(null);
-              }}
             >
               <View style={styles.tabItemContent}>
                 <Text style={styles.tabIcon}>{info.icone}</Text>
@@ -796,8 +755,7 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
     borderBottomWidth: 3,
     borderBottomColor: 'transparent',
-    cursor: 'grab' as any,
-    userSelect: 'none' as any,
+    cursor: 'default' as any,
   },
   tabItemActive: {
     borderBottomColor: COLORS.primary,

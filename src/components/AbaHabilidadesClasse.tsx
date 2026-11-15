@@ -19,6 +19,7 @@ import {
   HabilidadeOuTalento,
 } from '../models/ficha';
 import { COLORS } from '../theme/colors';
+import { BarraDeProgressoRecurso } from './BarraDeProgressoRecurso';
 import { CampoTexto } from './CommonInput';
 import { AbaCompendio, CompendioModal } from './CompendioModal';
 
@@ -77,9 +78,9 @@ export const AbaHabilidadesClasse: React.FC<Props> = ({ ficha, onChange }) => {
       {/* BARRA DE RECURSOS: PONTOS DE ENERGIA (PE) E PONTOS DE AÇÃO (PA) */}
       <View style={styles.cardRecursos}>
         <View style={styles.recursoItem}>
-          <Text style={styles.recursoLabel}>Pontos de Energia (PE)</Text>
+          <Text style={[styles.recursoLabel, { color: '#D87A00' }]}>⚡ Pontos de Energia (PE)</Text>
           <View style={styles.recursoRow}>
-            <Text style={styles.recursoVal}>{ficha.peAtual ?? 0} / {ficha.peTotal ?? 0}</Text>
+            <Text style={[styles.recursoVal, { color: '#D87A00' }]}>{ficha.peAtual ?? 0} / {ficha.peTotal ?? 0}</Text>
             <TouchableOpacity
               style={styles.btnRecursoDelta}
               onPress={() => onChange({ ...ficha, peAtual: Math.max(0, (ficha.peAtual ?? 0) - 1) })}
@@ -93,6 +94,13 @@ export const AbaHabilidadesClasse: React.FC<Props> = ({ ficha, onChange }) => {
               <Text style={styles.btnRecursoDeltaText}>+1</Text>
             </TouchableOpacity>
           </View>
+          <BarraDeProgressoRecurso
+            atual={ficha.peAtual ?? 0}
+            max={ficha.peTotal ?? 0}
+            cor="#E69500"
+            corFundo="rgba(230,149,0,0.15)"
+            mostrarTexto={false}
+          />
         </View>
 
         <View style={styles.recursoDivider} />

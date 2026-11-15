@@ -38,4 +38,6 @@ export const getTalentoPorId = (id: string): TalentoData | undefined => {
   return talentos.find((t) => t.id === id);
 };
 
+export * from './verificadorPreRequisitos';
+
 export default talentos;

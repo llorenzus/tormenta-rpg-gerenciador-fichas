@@ -486,5 +486,85 @@
     "descricao": "Espada longa +2 sinistra que anseia por sugar as vidas de seus alvos.",
     "detalhes": "Possui 9 cargas no total. Ao desferir um acerto crítico, o usuário pode drenar uma carga para forçar a criatura a passar em Fortitude (CD 20) ou sua alma é consumida, morrendo na hora.",
     "livroFonte": "Tormenta RPG / TSRD"
+  },
+  {
+    "id": "poder_dolorosa",
+    "nome": "Dolorosa",
+    "tipo": "Armas Mágicas",
+    "subtipo": "Poder Especial de Arma Corpo a Corpo",
+    "bonusEquivalente": "+1 de bônus",
+    "descricao": "A arma possui serrilhas cruéis ou ganchos místicos que causam ferimentos profundos e hemorragias persistentes.",
+    "detalhes": "Ao acertar um ataque com esta arma, o alvo sofre 1d4 de dano de sangramento contínuo no início de cada um de seus turnos. O sangramento cessa com um teste de Cura CD 15 ou qualquer efeito de magia de cura.",
+    "livroFonte": "Manual do Arcano"
+  },
+  {
+    "id": "poder_drenante",
+    "nome": "Drenante",
+    "tipo": "Armas Mágicas",
+    "subtipo": "Poder Especial de Arma Corpo a Corpo",
+    "bonusEquivalente": "+2 de bônus",
+    "descricao": "A arma ressoa com energias de drenagem espiritual que sugam a energia vital e mística de seus oponentes.",
+    "detalhes": "Ao confirmar um acerto crítico contra uma criatura com capacidade mágica, a arma drena 1 Ponto de Mana (PM) do alvo e transfere imediatamente para a reserva de mana do usuário (não pode ultrapassar o máximo normal do usuário).",
+    "livroFonte": "Manual do Arcano"
+  },
+  {
+    "id": "poder_impaciente",
+    "nome": "Impaciente",
+    "tipo": "Armas Mágicas",
+    "subtipo": "Poder Especial de Arma",
+    "bonusEquivalente": "+1 de bônus",
+    "descricao": "A arma pulsa com agilidade sobrenatural e anseia pelo combate antes mesmo de qualquer outro combatente reagir.",
+    "detalhes": "Enquanto a arma estiver na bainha ou empunhada, o portador recebe um bônus de +2 em jogadas de Iniciativa e pode sacar ou embainhar a arma como uma ação livre imediata.",
+    "livroFonte": "Manual do Arcano"
+  },
+  {
+    "id": "poder_primitiva",
+    "nome": "Primitiva",
+    "tipo": "Armas Mágicas",
+    "subtipo": "Poder Especial de Arma Corpo a Corpo",
+    "bonusEquivalente": "+1 de bônus",
+    "descricao": "Feita com ossos afiados, dentes de feras e ligada aos espíritos da selvageria pura de Arton.",
+    "detalhes": "Causa +2 pontos de dano adicionais. Se o usuário estiver em estado de Fúria (ou sob efeitos similares de ferocidade), o bônus de dano aumenta para +4.",
+    "livroFonte": "Manual do Arcano"
+  },
+  {
+    "id": "poder_celebre",
+    "nome": "Célebre",
+    "tipo": "Armas Mágicas",
+    "subtipo": "Poder Especial de Arma ou Escudo",
+    "bonusEquivalente": "+2 de bônus",
+    "descricao": "Item gravado com brasões faustosos e auras de magnetismo pessoal que realçam a presença do portador.",
+    "detalhes": "Concede ao portador bônus de +2 em todos os testes baseados em Carisma (como Diplomacia, Atuação e Enganação) e aumenta a CD de todas as suas magias de Encantamento ou Ilusão em +1.",
+    "livroFonte": "Manual do Arcano"
+  },
+  {
+    "id": "poder_perseveranca",
+    "nome": "Perseverança",
+    "tipo": "Armas Mágicas",
+    "subtipo": "Poder Especial de Armadura ou Escudo",
+    "bonusEquivalente": "+1 de bônus",
+    "descricao": "A armadura ou escudo irradia uma barreira protetora constante contra feitiços hostis.",
+    "detalhes": "O usuário recebe um bônus de +2 em todos os testes de resistência contra magias e habilidades similares a magia.",
+    "livroFonte": "Manual do Arcano"
+  },
+  {
+    "id": "poder_portal",
+    "nome": "Portal",
+    "tipo": "Armas Mágicas",
+    "subtipo": "Poder Especial de Arma ou Escudo",
+    "bonusEquivalente": "+3 de bônus",
+    "descricao": "Permite dobrar o espaço físico ao redor da lâmina ou do escudo para saltar através de fendas dimensionais.",
+    "detalhes": "Uma vez por dia como uma ação de movimento, o usuário pode se teletransportar instantaneamente para qualquer espaço visível a até 9 metros, sem provocar ataques de oportunidade.",
+    "livroFonte": "Manual do Arcano"
+  },
+  {
+    "id": "poder_tufao",
+    "nome": "Tufão",
+    "tipo": "Armas Mágicas",
+    "subtipo": "Poder Especial de Arma Corpo a Corpo",
+    "bonusEquivalente": "+2 de bônus",
+    "descricao": "A arma é envolvida por um vórtice contínuo de ar pressurizado que uiva durante os golpes.",
+    "detalhes": "Ao confirmar um acerto crítico, uma rajada de vento com força ciclônica é liberada: todos os oponentes adjacentes ao alvo original devem ser bem-sucedidos em um teste de Fortitude (CD 10 + metade do nível do portador + mod. Força) ou serão derrubados.",
+    "livroFonte": "Manual do Arcano"
   }
 ]

@@ -11,6 +11,7 @@ import {
   obterMeioNivel,
 } from '../models/ficha';
 import { COLORS } from '../theme/colors';
+import { BarraDeProgressoRecurso } from './BarraDeProgressoRecurso';
 import { CampoInteiro, SecaoHeader, StepperValor } from './CommonInput';
 
 interface Props {
@@ -140,9 +141,21 @@ export const AbaAtributos: React.FC<Props> = ({ ficha, onChange }) => {
             </Text>
           </TouchableOpacity>
 
-          {/* PV */}
-          <View style={styles.statusSubBox}>
-            <Text style={styles.statusGroupTitle}>PONTOS DE VIDA (PV)</Text>
+          {/* PV - Vermelho */}
+          <View style={[styles.statusSubBox, styles.statusSubBoxPv]}>
+            <View style={styles.statusHeaderRow}>
+              <Text style={[styles.statusGroupTitle, styles.statusTitlePv]}>❤️ PONTOS DE VIDA (PV)</Text>
+              <Text style={[styles.statusValDestaque, { color: '#C62828' }]}>
+                {ficha.pvAtual} / {ficha.pvTotal}
+              </Text>
+            </View>
+            <BarraDeProgressoRecurso
+              atual={ficha.pvAtual}
+              max={ficha.pvTotal}
+              cor="#C62828"
+              corFundo="rgba(198,40,40,0.12)"
+              unidade="PV"
+            />
             <View style={styles.row}>
               <CampoInteiro
                 label="PV Atuais"
@@ -163,9 +176,21 @@ export const AbaAtributos: React.FC<Props> = ({ ficha, onChange }) => {
             </View>
           </View>
 
-          {/* PM */}
-          <View style={styles.statusSubBox}>
-            <Text style={styles.statusGroupTitle}>PONTOS DE MAGIA (PM)</Text>
+          {/* PM - Azul */}
+          <View style={[styles.statusSubBox, styles.statusSubBoxPm]}>
+            <View style={styles.statusHeaderRow}>
+              <Text style={[styles.statusGroupTitle, styles.statusTitlePm]}>✨ PONTOS DE MAGIA (PM)</Text>
+              <Text style={[styles.statusValDestaque, { color: '#1565C0' }]}>
+                {ficha.pmAtual} / {ficha.pmTotal}
+              </Text>
+            </View>
+            <BarraDeProgressoRecurso
+              atual={ficha.pmAtual}
+              max={ficha.pmTotal}
+              cor="#1565C0"
+              corFundo="rgba(21,101,192,0.12)"
+              unidade="PM"
+            />
             <View style={styles.row}>
               <CampoInteiro
                 label="PM Atuais"
@@ -186,9 +211,21 @@ export const AbaAtributos: React.FC<Props> = ({ ficha, onChange }) => {
             </View>
           </View>
 
-          {/* PE - PONTOS DE ENERGIA */}
-          <View style={styles.statusSubBox}>
-            <Text style={styles.statusGroupTitle}>PONTOS DE ENERGIA (PE)</Text>
+          {/* PE - Amarelo */}
+          <View style={[styles.statusSubBox, styles.statusSubBoxPe]}>
+            <View style={styles.statusHeaderRow}>
+              <Text style={[styles.statusGroupTitle, styles.statusTitlePe]}>⚡ PONTOS DE ENERGIA (PE)</Text>
+              <Text style={[styles.statusValDestaque, { color: '#E69500' }]}>
+                {ficha.peAtual ?? 0} / {ficha.peTotal ?? 0}
+              </Text>
+            </View>
+            <BarraDeProgressoRecurso
+              atual={ficha.peAtual ?? 0}
+              max={ficha.peTotal ?? 0}
+              cor="#E69500"
+              corFundo="rgba(230,149,0,0.14)"
+              unidade="PE"
+            />
             <View style={styles.row}>
               <CampoInteiro
                 label="PE Atuais"
@@ -448,6 +485,47 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     padding: 10,
     marginBottom: 10,
+    borderWidth: 1,
+    borderColor: COLORS.border,
+  },
+  statusSubBoxPv: {
+    borderLeftWidth: 4,
+    borderLeftColor: '#C62828',
+    backgroundColor: 'rgba(198,40,40,0.04)',
+  },
+  statusSubBoxPm: {
+    borderLeftWidth: 4,
+    borderLeftColor: '#1565C0',
+    backgroundColor: 'rgba(21,101,192,0.04)',
+  },
+  statusSubBoxPe: {
+    borderLeftWidth: 4,
+    borderLeftColor: '#E69500',
+    backgroundColor: 'rgba(230,149,0,0.05)',
+  },
+  statusHeaderRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    marginBottom: 4,
+  },
+  statusGroupTitle: {
+    fontSize: 12,
+    fontWeight: 'bold',
+    color: COLORS.primary,
+  },
+  statusTitlePv: {
+    color: '#C62828',
+  },
+  statusTitlePm: {
+    color: '#1565C0',
+  },
+  statusTitlePe: {
+    color: '#D87A00',
+  },
+  statusValDestaque: {
+    fontSize: 13,
+    fontWeight: 'bold',
   },
   btnDescansoLongo: {
     backgroundColor: COLORS.primary,
@@ -469,12 +547,6 @@ const styles = StyleSheet.create({
     color: 'rgba(255,255,255,0.85)',
     fontSize: 11,
     marginTop: 2,
-  },
-  statusGroupTitle: {
-    fontSize: 12,
-    fontWeight: 'bold',
-    color: COLORS.primary,
-    marginBottom: 4,
   },
   helperText: {
     fontSize: 12,

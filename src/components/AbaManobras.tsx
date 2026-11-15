@@ -19,6 +19,7 @@ import {
   obterManobrasFicha,
 } from '../models/ficha';
 import { COLORS } from '../theme/colors';
+import { BarraDeProgressoRecurso } from './BarraDeProgressoRecurso';
 import { CampoComSugestoes, ItemSugestaoCompendio } from './CampoComSugestoes';
 import { CampoTexto } from './CommonInput';
 import { CompendioModal } from './CompendioModal';
@@ -99,10 +100,10 @@ export const AbaManobras: React.FC<Props> = ({ ficha, onChange }) => {
       contentContainerStyle={styles.content}
       keyboardShouldPersistTaps="handled"
     >
-      {/* 1. PAINEL DE CONTROLE DE PONTOS DE ENERGIA (PE) */}
+      {/* 1. PAINEL DE CONTROLE DE PONTOS DE ENERGIA (PE) - Amarelo */}
       <View style={styles.cardPe}>
         <View style={styles.peInfoCol}>
-          <Text style={styles.peLabel}>Pontos de Energia (PE)</Text>
+          <Text style={styles.peLabel}>⚡ Pontos de Energia (PE)</Text>
           <Text style={styles.peSub}>Utilizados para executar golpes marciais e posturas</Text>
           <View style={styles.peValoresRow}>
             <Text style={styles.peAtualText}>{ficha.peAtual ?? 0}</Text>
@@ -141,6 +142,16 @@ export const AbaManobras: React.FC<Props> = ({ ficha, onChange }) => {
           >
             <Text style={styles.btnPeText}>+2</Text>
           </TouchableOpacity>
+        </View>
+
+        <View style={{ width: '100%', marginTop: 8 }}>
+          <BarraDeProgressoRecurso
+            atual={ficha.peAtual ?? 0}
+            max={ficha.peTotal ?? 0}
+            cor="#E69500"
+            corFundo="rgba(230,149,0,0.15)"
+            unidade="PE"
+          />
         </View>
       </View>
 
@@ -255,8 +266,8 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     padding: 14,
     marginBottom: 16,
-    borderWidth: 1,
-    borderColor: '#1976D2',
+    borderWidth: 1.5,
+    borderColor: '#E69500',
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
@@ -270,7 +281,7 @@ const styles = StyleSheet.create({
   peLabel: {
     fontSize: 14,
     fontWeight: 'bold',
-    color: '#1565C0',
+    color: '#D87A00',
   },
   peSub: {
     fontSize: 11,
@@ -286,7 +297,7 @@ const styles = StyleSheet.create({
   peAtualText: {
     fontSize: 26,
     fontWeight: 'bold',
-    color: '#1565C0',
+    color: '#D87A00',
   },
   peDivisorText: {
     fontSize: 20,
