@@ -65,11 +65,12 @@ export const AbaAtributos: React.FC<Props> = ({ ficha, onChange }) => {
         fortitude: 0,
         reflexos: 0,
         vontade: 0,
+        ca: 0,
         pvTemporario: 0,
       },
     });
     Alert.alert(
-      'Descanso Pleno',
+      'Resetar Atributos',
       'Todos os seus recursos atuais (PV, PM, PE e Pontos de Ação) foram restaurados aos valores padrão e todos os buffs temporários foram zerados!'
     );
   };
@@ -207,14 +208,18 @@ export const AbaAtributos: React.FC<Props> = ({ ficha, onChange }) => {
         />
         <View style={styles.cardBody}>
           <TouchableOpacity
-            style={styles.btnDescansoPleno}
+            style={styles.btnResetarAtributos}
             onPress={handleDescansoPleno}
-            activeOpacity={0.85}
+            activeOpacity={0.8}
+            accessibilityLabel="Resetar Atributos"
           >
-            <Text style={styles.btnDescansoPlenoText}>Descanso Pleno</Text>
-            <Text style={styles.btnDescansoPlenoSub}>
-              Recuperar PV, PM e PE atuais para os valores máximos
-            </Text>
+            <Text style={styles.btnResetarAtributosIcon}>🔄</Text>
+            <View style={styles.btnResetarAtributosTextCol}>
+              <Text style={styles.btnResetarAtributosText}>Resetar Atributos</Text>
+              <Text style={styles.btnResetarAtributosSub}>
+                Restaura PV, PM, PE, PA e zera buffs temporários
+              </Text>
+            </View>
           </TouchableOpacity>
 
           {/* PV - Vermelho */}
@@ -402,6 +407,14 @@ export const AbaAtributos: React.FC<Props> = ({ ficha, onChange }) => {
               <Text style={styles.caPillLabel}>Escudo</Text>
               <Text style={styles.caPillValue}>+{bonusEscudo}</Text>
             </View>
+            {buffs.ca !== 0 && (
+              <View style={[styles.caPill, styles.caPillBuff]}>
+                <Text style={[styles.caPillLabel, { color: '#2E6B3E' }]}>Buff CA</Text>
+                <Text style={[styles.caPillValue, { color: '#2E6B3E', fontWeight: 'bold' }]}>
+                  {formatarModificador(buffs.ca)}
+                </Text>
+              </View>
+            )}
           </View>
 
           <View style={styles.row}>
@@ -624,26 +637,45 @@ const styles = StyleSheet.create({
     fontSize: 13,
     fontWeight: 'bold',
   },
-  btnDescansoPleno: {
-    backgroundColor: COLORS.primary,
+  btnResetarAtributos: {
+    backgroundColor: '#FDFBF7',
     borderWidth: 1.5,
     borderColor: COLORS.gold,
     borderRadius: 8,
     paddingVertical: 10,
     paddingHorizontal: 14,
     marginBottom: 12,
+    flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
+    gap: 10,
+    elevation: 2,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 1.5 },
+    shadowOpacity: 0.12,
+    shadowRadius: 3,
   },
-  btnDescansoPlenoText: {
-    color: COLORS.white,
-    fontSize: 15,
+  btnResetarAtributosIcon: {
+    fontSize: 20,
+  },
+  btnResetarAtributosTextCol: {
+    alignItems: 'center',
+  },
+  btnResetarAtributosText: {
+    color: COLORS.primaryDark,
+    fontSize: 14,
     fontWeight: 'bold',
+    letterSpacing: 0.5,
+    textTransform: 'uppercase',
   },
-  btnDescansoPlenoSub: {
-    color: 'rgba(255,255,255,0.85)',
+  btnResetarAtributosSub: {
+    color: COLORS.textSecondary,
     fontSize: 11,
-    marginTop: 2,
+    marginTop: 1,
+  },
+  caPillBuff: {
+    backgroundColor: 'rgba(46, 107, 62, 0.12)',
+    borderColor: '#2E6B3E',
   },
   helperText: {
     fontSize: 12,

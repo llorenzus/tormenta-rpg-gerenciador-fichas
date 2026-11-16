@@ -10,6 +10,7 @@ import {
   View,
 } from 'react-native';
 import {
+  calcularCaTotal,
   calcularModificador,
   calcularResistencia,
   FichaPersonagem,
@@ -189,7 +190,43 @@ export const ModalBuffsTemporarios: React.FC<Props> = ({
                   </View>
                 </View>
 
-                {/* 3. PONTOS DE VIDA (PV) TEMPORÁRIOS */}
+                {/* 3. CLASSE DE ARMADURA (CA) */}
+                <View style={styles.secaoBox}>
+                  <Text style={styles.secaoTitulo}>🛡️ CLASSE DE ARMADURA (CA) TEMPORÁRIA</Text>
+                  <Text style={styles.secaoDesc}>
+                    Bônus temporários que afetam sua defesa (ex: Armadura Arcana, Escudo da Fé, bônus de cobertura ou esquiva).
+                  </Text>
+
+                  <View style={styles.itemRow}>
+                    <View style={styles.itemLabelCol}>
+                      <Text style={styles.itemSigla}>CA</Text>
+                      <Text style={styles.itemNome}>Bônus Temporário</Text>
+                      <Text style={styles.itemBaseText}>
+                        Sem buff: {calcularCaTotal({ ...ficha, buffsTemporarios: { ...buffs, ca: 0 } })}
+                      </Text>
+                    </View>
+
+                    <View style={styles.stepperCol}>
+                      <StepperValor
+                        valor={buffs.ca}
+                        onValorChange={(v) => atualizarBuff('ca', v)}
+                        min={-20}
+                        max={50}
+                      />
+                    </View>
+
+                    <View style={[styles.totalCol, buffs.ca !== 0 && styles.totalColAtivo]}>
+                      <Text style={styles.totalLabel}>
+                        {buffs.ca !== 0 ? `${formatarModificador(buffs.ca)} temp` : 'Sem bônus'}
+                      </Text>
+                      <Text style={styles.totalValor}>
+                        CA Total: {calcularCaTotal(ficha)}
+                      </Text>
+                    </View>
+                  </View>
+                </View>
+
+                {/* 4. PONTOS DE VIDA (PV) TEMPORÁRIOS */}
                 <View style={[styles.secaoBox, styles.secaoBoxPv]}>
                   <Text style={[styles.secaoTitulo, { color: '#C62828' }]}>
                     ❤️ PONTOS DE VIDA (PV) TEMPORÁRIOS
@@ -290,12 +327,13 @@ const styles = StyleSheet.create({
     backgroundColor: 'rgba(0, 0, 0, 0.72)',
     justifyContent: 'center',
     alignItems: 'center',
-    padding: 16,
+    padding: Platform.OS === 'web' ? 16 : 8,
   },
   modalCard: {
     width: '100%',
     maxWidth: 620,
-    maxHeight: '90%',
+    height: Platform.OS === 'web' ? 'auto' : '88%',
+    maxHeight: '92%',
     backgroundColor: COLORS.surface,
     borderRadius: 12,
     borderWidth: 1.5,
@@ -306,6 +344,7 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.35,
     shadowRadius: 10,
     overflow: 'hidden',
+    flexDirection: 'column',
   },
   header: {
     flexDirection: 'row',

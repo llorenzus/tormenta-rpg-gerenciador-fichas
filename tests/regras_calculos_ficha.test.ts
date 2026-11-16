@@ -245,25 +245,26 @@ describe('Regras do Tormenta RPG - Cálculos e Modificadores', () => {
     assert.strictEqual(obterModAtributo(ficha, 'DES'), 2);
     assert.strictEqual(calcularResistencia(ficha, 'fortitude'), 4); // 2 (meio nív) + 2 (CON) + 0
 
-    // Aplicar buffs temporários: +4 Força (ex: Força do Touro), +2 Destreza, +3 Fortitude e +15 PV temp
+    // Aplicar buffs temporários: +4 Força (ex: Força do Touro), +2 Destreza, +3 Fortitude, +4 CA e +15 PV temp
     ficha.buffsTemporarios = {
       forca: 4,
       destreza: 2,
       fortitude: 3,
+      ca: 4,
       pvTemporario: 15,
     };
 
     assert.strictEqual(temBuffsAtivos(ficha), true);
-    assert.strictEqual(contarBuffsAtivos(ficha), 4);
+    assert.strictEqual(contarBuffsAtivos(ficha), 5);
 
     // Força agora é 20 => Mod +5
     assert.strictEqual(obterModAtributo(ficha, 'FOR'), 5);
     // Destreza agora é 16 => Mod +3
     assert.strictEqual(obterModAtributo(ficha, 'DES'), 3);
 
-    // CA deve refletir o mod de DES aumentado
-    // CA = 10 + 2 (1/2 nív) + 3 (DES buffado) = 15
-    assert.strictEqual(calcularCaTotal(ficha), 15);
+    // CA deve refletir o mod de DES aumentado (+3) e o buff de CA (+4)
+    // CA = 10 + 2 (1/2 nív) + 3 (DES buffado) + 4 (CA buff temp) = 19
+    assert.strictEqual(calcularCaTotal(ficha), 19);
 
     // Ataque com arma de Força deve refletir mod FOR (+5)
     const espada: ArmaItem = {

@@ -297,7 +297,8 @@ const styles = StyleSheet.create({
   modalCard: {
     width: '100%',
     maxWidth: 620,
-    maxHeight: '88%',
+    height: Platform.OS === 'web' ? 'auto' : '88%',
+    maxHeight: '92%',
     backgroundColor: COLORS.surface,
     borderRadius: 12,
     borderWidth: 1.5,
@@ -308,6 +309,7 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.35,
     shadowRadius: 10,
     overflow: 'hidden',
+    flexDirection: 'column',
   },
   header: {
     flexDirection: 'row',

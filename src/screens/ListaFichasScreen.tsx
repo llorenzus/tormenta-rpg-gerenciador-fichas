@@ -90,24 +90,19 @@ export const ListaFichasScreen: React.FC<Props> = ({
 
             <TouchableOpacity
               style={[styles.btnAction, isDesktop ? styles.btnCompendioDesktop : styles.btnCompendioMobile]}
-              onPress={onAbrirCompendio}
+              onPress={() => {
+                if (isDesktop && Platform.OS === 'web') {
+                  abrirCompendioEmJanelaSeparada();
+                } else {
+                  onAbrirCompendio();
+                }
+              }}
               activeOpacity={0.8}
             >
               <Text style={[styles.btnText, isDesktop ? styles.btnTextCompendioDesktop : styles.btnTextCompendioMobile]}>
                 {isDesktop ? '📖 Compêndio' : '📖 Regras'}
               </Text>
             </TouchableOpacity>
-
-            {isDesktop && Platform.OS === 'web' && (
-              <TouchableOpacity
-                style={[styles.btnAction, styles.btnJanelaSeparadaAction]}
-                onPress={abrirCompendioEmJanelaSeparada}
-                activeOpacity={0.8}
-                accessibilityLabel="Abrir Compêndio em Janela Separada"
-              >
-                <Text style={styles.btnJanelaSeparadaActionText}>🗗 Janela</Text>
-              </TouchableOpacity>
-            )}
 
             <TouchableOpacity
               style={[styles.btnAction, isDesktop ? styles.btnImportarDesktop : styles.btnImportarMobile]}

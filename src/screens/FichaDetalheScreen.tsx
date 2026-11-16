@@ -103,7 +103,7 @@ export const FichaDetalheScreen: React.FC<Props> = ({
             }
           }
         })
-        .catch(() => {});
+        .catch(() => { });
     }
   }, []);
 
@@ -135,7 +135,7 @@ export const FichaDetalheScreen: React.FC<Props> = ({
   const atualizarOrdemAbas = (novaOrdem: AbaKey[]) => {
     setOrdemAbas(novaOrdem);
     onChange({ ...ficha, ordemAbas: novaOrdem });
-    AsyncStorage.setItem(STORAGE_KEY_ORDEM_PREFERIDA, JSON.stringify(novaOrdem)).catch(() => {});
+    AsyncStorage.setItem(STORAGE_KEY_ORDEM_PREFERIDA, JSON.stringify(novaOrdem)).catch(() => { });
   };
 
   const handleAdicionarTalento = (talento: TalentoData) => {
@@ -449,24 +449,19 @@ export const FichaDetalheScreen: React.FC<Props> = ({
           <View style={styles.topRightActions}>
             <TouchableOpacity
               style={styles.compendioTopBtn}
-              onPress={() => setCompendioGeralAberto(true)}
+              onPress={() => {
+                if (isDesktop && Platform.OS === 'web') {
+                  abrirCompendioEmJanelaSeparada();
+                } else {
+                  setCompendioGeralAberto(true);
+                }
+              }}
               activeOpacity={0.8}
             >
               <Text style={styles.compendioTopBtnText}>
                 {isDesktop ? '📖 Compêndio' : '📖'}
               </Text>
             </TouchableOpacity>
-
-            {isDesktop && Platform.OS === 'web' && (
-              <TouchableOpacity
-                style={styles.compendioJanelaSeparadaBtn}
-                onPress={abrirCompendioEmJanelaSeparada}
-                activeOpacity={0.8}
-                accessibilityLabel="Abrir Compêndio em Janela Separada"
-              >
-                <Text style={styles.compendioJanelaSeparadaBtnText}>🗗 Janela</Text>
-              </TouchableOpacity>
-            )}
 
             {/* Botão para Ativar/Desativar Split View no Desktop */}
             {isDesktop && (

@@ -179,6 +179,7 @@ export interface BuffsTemporarios {
   fortitude?: number;
   reflexos?: number;
   vontade?: number;
+  ca?: number;
   pvTemporario?: number;
 }
 
@@ -194,6 +195,7 @@ export function obterBuffsTemporarios(ficha: FichaPersonagem): Required<BuffsTem
     fortitude: Number(b.fortitude) || 0,
     reflexos: Number(b.reflexos) || 0,
     vontade: Number(b.vontade) || 0,
+    ca: Number(b.ca) || 0,
     pvTemporario: Number(b.pvTemporario) || 0,
   };
 }
@@ -210,6 +212,7 @@ export function temBuffsAtivos(ficha: FichaPersonagem): boolean {
     b.fortitude !== 0 ||
     b.reflexos !== 0 ||
     b.vontade !== 0 ||
+    b.ca !== 0 ||
     b.pvTemporario !== 0
   );
 }
@@ -226,6 +229,7 @@ export function contarBuffsAtivos(ficha: FichaPersonagem): number {
   if (b.fortitude !== 0) count++;
   if (b.reflexos !== 0) count++;
   if (b.vontade !== 0) count++;
+  if (b.ca !== 0) count++;
   if (b.pvTemporario !== 0) count++;
   return count;
 }
@@ -243,6 +247,7 @@ export function zerarBuffsTemporarios(ficha: FichaPersonagem): FichaPersonagem {
       fortitude: 0,
       reflexos: 0,
       vontade: 0,
+      ca: 0,
       pvTemporario: 0,
     },
   };
@@ -345,7 +350,8 @@ export function calcularCaTotal(ficha: FichaPersonagem): number {
   const escudo = obterBonusEscudoEquipado(ficha);
   const tamanho = Number(ficha.caBonusTamanho) || 0;
   const outros = Number(ficha.caOutrosBonus) || 0;
-  return 10 + meioNivel + modDes + armadura + escudo + tamanho + outros;
+  const buffs = obterBuffsTemporarios(ficha);
+  return 10 + meioNivel + modDes + armadura + escudo + tamanho + outros + buffs.ca;
 }
 
 /**

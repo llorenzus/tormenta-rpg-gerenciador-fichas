@@ -45,7 +45,7 @@ export const ModalSobre: React.FC<Props> = ({ visivel, onFechar }) => {
                 </View>
 
                 <Text style={styles.creditsText}>
-                  Desenvolvido e produzido por Lucas Lorenzi (llorenzus)
+                  Desenvolvido e produzido por Lorenzo Rech Tochetto
                 </Text>
                 <Text style={styles.infoText}>
                   Criado para auxiliar jogadores e mestres na gestão prática de fichas e consulta rápida de regras durante sessões de RPG de mesa.

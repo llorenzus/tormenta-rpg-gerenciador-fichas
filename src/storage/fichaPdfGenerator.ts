@@ -2,13 +2,25 @@ import {
   calcularAtaqueArma,
   calcularCaTotal,
   calcularModificador,
+  calcularNivelTotal,
   calcularResistencia,
   FichaPersonagem,
   formatarModificador,
+  formatarResumoClasses,
+  obterClassesFicha,
   obterModAtributo,
 } from '../models/ficha';
 
 export function gerarHtmlFichaPdf(ficha: FichaPersonagem): string {
+  const listaClasses = obterClassesFicha(ficha);
+  const nivelTotal = calcularNivelTotal(listaClasses) || Number(ficha.nivel) || 1;
+  const resumoClasses = formatarResumoClasses(listaClasses) || ficha.classe || 'Aventureiro';
+  const detalheClasses =
+    listaClasses
+      .filter((c) => c.nome.trim())
+      .map((c) => `${c.nome.trim()} (Nível ${c.nivel})`)
+      .join(', ') || resumoClasses;
+
   const caTotal = calcularCaTotal(ficha);
   const modFor = formatarModificador(obterModAtributo(ficha, 'FOR'));
   const modDes = formatarModificador(obterModAtributo(ficha, 'DES'));
@@ -21,7 +33,7 @@ export function gerarHtmlFichaPdf(ficha: FichaPersonagem): string {
   const reflTotal = calcularResistencia(ficha, 'reflexos');
   const vontTotal = calcularResistencia(ficha, 'vontade');
 
-  const meioNivel = Math.floor((ficha.nivel || 1) / 2);
+  const meioNivel = Math.floor((nivelTotal || 1) / 2);
 
   // Renderizar armas
   const armasHtml =
@@ -408,12 +420,14 @@ export function gerarHtmlFichaPdf(ficha: FichaPersonagem): string {
         </div>
         <div style="text-align:right;">
           <div style="font-size:16px; font-weight:bold; color:#8B1E1E;">${ficha.nomePersonagem || 'Personagem'}</div>
-          <div style="font-size:11px; color:#555;">Nível ${ficha.nivel} • ${ficha.raca || '-'} • ${ficha.classe || '-'}</div>
+          <div style="font-size:11px; color:#555;">Nível Total: ${nivelTotal} • ${ficha.raca || '-'}</div>
+          <div style="font-size:11px; font-weight:600; color:#8B1E1E;">${detalheClasses}</div>
         </div>
       </div>
 
       <!-- Dados Gerais -->
       <div class="dados-gerais-grid">
+        <div class="dado-item" style="grid-column: span 2;"><span class="dado-label">Classes & Níveis</span><span class="dado-valor" style="font-weight:bold; color:#8B1E1E;">${detalheClasses} (Nível Total: ${nivelTotal})</span></div>
         <div class="dado-item"><span class="dado-label">Jogador</span><span class="dado-valor">${ficha.jogador || '-'}</span></div>
         <div class="dado-item"><span class="dado-label">Tendência</span><span class="dado-valor">${ficha.tendencia || '-'}</span></div>
         <div class="dado-item"><span class="dado-label">Divindade</span><span class="dado-valor">${ficha.divindade || '-'}</span></div>

@@ -16,7 +16,7 @@ export const TelaInicialScreen: React.FC<Props> = ({ onIniciar }) => {
         <Text style={styles.title}>TORMENTA RPG</Text>
         <Text style={styles.subtitle}>Gerenciador de Fichas de Personagem</Text>
         <View style={styles.authorBadge}>
-          <Text style={styles.authorText}>Desenvolvido e produzido por Lucas Lorenzi (llorenzus)</Text>
+          <Text style={styles.authorText}>Desenvolvido e produzido por Lorenzo Rech Tochetto</Text>
         </View>
       </View>
 
