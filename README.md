@@ -1,33 +1,43 @@
-# Fichas Tormenta RPG (React Native + Expo Go)
+# TRPG Gerenciador de Fichas (React Native + Expo Go + Electron)
 
-Aplicativo para gerenciamento local de fichas de personagem do sistema **Tormenta RPG**, desenvolvido em **React Native + Expo (TypeScript)** para rodar diretamente no celular (via **APK** ou **Expo Go**).
+Aplicativo para gerenciamento completo de fichas de personagem do sistema **Tormenta RPG (TRPG)**, desenvolvido em **React Native + Expo (TypeScript)** com suporte multiplataforma para **Android** (via APK ou Expo Go) e **Windows Desktop** (via Electron).
 
-> **Sobre o Projeto:** Este é um **projeto pessoal** criado para administrar as fichas de RPG das mesas em que jogo. Por esse motivo, nem todas as regras ou cálculos estão estritamente de acordo com o manual oficial, sendo adaptados para a forma pessoal e regras da casa (*homebrew*) com que jogamos.
+Repositório: [https://github.com/llorenzus/tormenta-rpg-gerenciador-fichas](https://github.com/llorenzus/tormenta-rpg-gerenciador-fichas)
 
-## Como Rodar no Seu Celular com Expo Go
+## Funcionalidades Principais
 
-1. Instale o aplicativo **Expo Go** no seu celular (Google Play Store ou App Store).
-2. Certifique-se de ter o **Node.js** instalado no seu computador.
-3. No terminal, dentro desta pasta (`ficha_tormenta_android`), instale as dependências:
+- **Ficha Completa de Personagem**:
+  1. **📋 Dados Cadastrais**: Nome, Jogador, Raça, Multiclasse dinâmica com Nível Total, Tendência, Divindade, Tamanho e Deslocamento.
+  2. **🛡️ Atributos & Combate**: Força, Destreza, Constituição, Inteligência, Sabedoria e Carisma com cálculo automático de modificadores; PV, PM, Pontos de Ação (PA), PE, BBA, CA detalhada e Testes de Resistência (Fortitude, Reflexos, Vontade). Botão de **Descanso Pleno**.
+  3. **🎯 Perícias**: Lista completa oficial das 21 perícias do Tormenta RPG com cálculo automático de graduações, modificadores e complementos (*Ofício, Conhecimento, Atuação*).
+  4. **🧬 Habilidades de Raça**: Traços e habilidades raciais importáveis direto do Compêndio.
+  5. **📜 Habilidades de Classe**: Poderes e características com cálculo de níveis e pré-requisitos.
+  6. **⚔️ Manobras de Combate**: Posturas e Golpes Marciais com gerenciamento de Pontos de Energia (PE).
+  7. **⭐ Talentos**: Busca de centenas de talentos oficiais com verificador inteligente de pré-requisitos (atributos, BBA, classes, perícias e talentos anteriores).
+  8. **✨ Magias**: Grimório organizado por **Níveis de Magia (0 ao 9º nível)** com custo em Pontos de Magia (PM).
+  9. **🎒 Equipamentos**: Armas com cálculo dinâmico de Acerto Total, armaduras e escudos com aplicação na CA, itens gerais e **Tibares (TO, TP, TC)**.
+- **📖 Compêndio Integrado**: Consulta e aplicação em um clique de Raças, Classes, Talentos, Magias, Manobras e Equipamentos de todos os manuais oficiais do Tormenta RPG.
+- **⚙️ Organização de Abas**: Reordenação livre da sequência das abas na ficha com persistência local.
+- **📄 Exportação PDF e JSON**: Compartilhamento, backup e impressão direta da ficha em PDF estilizado.
+
+## Como Executar
+
+### No Celular com Expo Go (Android / iOS)
+1. Instale o **Expo Go** no celular.
+2. No terminal do projeto:
    ```bash
    npm install
-   npx expo install @react-native-async-storage/async-storage expo-status-bar
-   ```
-4. Inicie o servidor do Expo:
-   ```bash
    npx expo start
    ```
-   *(Se o seu celular e o PC estiverem em redes diferentes ou o QR Code não conectar via Wi-Fi local, use `npx expo start --tunnel`)*
-5. Abra o **Expo Go** no seu celular e escaneie o **QR Code** exibido no terminal!
+3. Escaneie o **QR Code** no terminal com o aplicativo Expo Go!
 
-## Estrutura do Projeto
-
-- [App.tsx](file:///c:/Users/lorenzo.tochetto/Projetos/ficha_tormenta_android/App.tsx) — Gerenciamento de navegação entre a lista de fichas e a ficha aberta, com salvamento automático local.
-- [src/models/ficha.ts](file:///c:/Users/lorenzo.tochetto/Projetos/ficha_tormenta_android/src/models/ficha.ts) — Modelos de dados, lista das 19 perícias oficiais e cálculos automáticos de Modificadores de Atributo, CA e Perícias.
-- [src/storage/fichaStorage.ts](file:///c:/Users/lorenzo.tochetto/Projetos/ficha_tormenta_android/src/storage/fichaStorage.ts) — Persistência 100% local no dispositivo via `AsyncStorage`.
-- [src/screens/ListaFichasScreen.tsx](file:///c:/Users/lorenzo.tochetto/Projetos/ficha_tormenta_android/src/screens/ListaFichasScreen.tsx) — Tela inicial com todas as fichas salvas no aparelho.
-- [src/screens/FichaDetalheScreen.tsx](file:///c:/Users/lorenzo.tochetto/Projetos/ficha_tormenta_android/src/screens/FichaDetalheScreen.tsx) — Container da ficha com barra superior de resumo (`Nível`, `PV`, `PM`, `CA`) e as 4 abas na sequência pedida:
-  1. [src/components/AbaDadosEAtributos.tsx](file:///c:/Users/lorenzo.tochetto/Projetos/ficha_tormenta_android/src/components/AbaDadosEAtributos.tsx) — Dados Cadastrais → Atributos Principais (`FOR`, `DES`, `CON`, `INT`, `SAB`, `CAR`) com modificadores ao lado → `PV`, `PM`, `BBA`, `Nível` → `CA` (`10 + 1/2 nível + mod_des + armadura + escudo + tamanho + outros`).
-  2. [src/components/AbaPericias.tsx](file:///c:/Users/lorenzo.tochetto/Projetos/ficha_tormenta_android/src/components/AbaPericias.tsx) — Lista de todas as perícias com checkbox de **Treinado** e campo manual de **Outros Bônus**, calculando automaticamente `Graduação + Mod. de Habilidade + Outros` (sem penalidade de armadura).
-  3. [src/components/AbaHabilidadesEMagias.tsx](file:///c:/Users/lorenzo.tochetto/Projetos/ficha_tormenta_android/src/components/AbaHabilidadesEMagias.tsx) — Habilidades de Raça, Habilidades de Classe, Talentos e Magias divididas por nível (`0º ao 9º nível`).
-  4. [src/components/AbaEquipamentos.tsx](file:///c:/Users/lorenzo.tochetto/Projetos/ficha_tormenta_android/src/components/AbaEquipamentos.tsx) — Armas, Armaduras/Escudos equipados (cujos bônus alimentam automaticamente o cálculo da CA) e Mochila/Tibares.
+### No Computador (Desktop Windows)
+- Para rodar em modo desenvolvimento:
+  ```bash
+  npm run electron
+  ```
+- Para compilar o executável `.exe` (portátil e instalador):
+  ```bash
+  npm run build:windows
+  ```
+  Os executáveis serão gerados na pasta `dist-electron/`.
