@@ -14,5 +14,8 @@ apk_gerado/
 fontes_tormenta/
 *.log
 scratch/
+scripts/
+.gemini/
+.agent/
 assets/expo_qr.png
 
