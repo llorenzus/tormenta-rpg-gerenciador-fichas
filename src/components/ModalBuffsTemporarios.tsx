@@ -118,29 +118,36 @@ export const ModalBuffsTemporarios: React.FC<Props> = ({
                       const mod = calcularModificador(total);
 
                       return (
-                        <View key={item.chave} style={styles.itemRow}>
-                          <View style={styles.itemLabelCol}>
-                            <Text style={styles.itemSigla}>{item.sigla}</Text>
-                            <Text style={styles.itemNome}>{item.nome}</Text>
-                            <Text style={styles.itemBaseText}>Base: {base}</Text>
+                        <View key={item.chave} style={styles.itemCard}>
+                          <View style={styles.itemTopRow}>
+                            <View style={styles.itemIdent}>
+                              <Text style={styles.itemSigla}>{item.sigla}</Text>
+                              <View style={styles.itemNomeCol}>
+                                <Text style={styles.itemNome}>{item.nome}</Text>
+                                <Text style={styles.itemBaseText}>Base: {base}</Text>
+                              </View>
+                            </View>
+
+                            <View style={[styles.totalCol, bonus !== 0 && styles.totalColAtivo]}>
+                              {bonus !== 0 && (
+                                <Text style={styles.totalLabel}>
+                                  {formatarModificador(bonus)} temp
+                                </Text>
+                              )}
+                              <Text style={styles.totalValor}>
+                                Total: {total} ({formatarModificador(mod)})
+                              </Text>
+                            </View>
                           </View>
 
-                          <View style={styles.stepperCol}>
+                          <View style={styles.itemBottomRow}>
+                            <Text style={styles.stepperDescLabel}>Bônus Temporário:</Text>
                             <StepperValor
                               valor={bonus}
                               onValorChange={(v) => atualizarBuff(item.chave, v)}
                               min={-20}
                               max={30}
                             />
-                          </View>
-
-                          <View style={[styles.totalCol, bonus !== 0 && styles.totalColAtivo]}>
-                            <Text style={styles.totalLabel}>
-                              {bonus !== 0 ? `${formatarModificador(bonus)} temp` : 'Sem buff'}
-                            </Text>
-                            <Text style={styles.totalValor}>
-                              Total: {total} ({formatarModificador(mod)})
-                            </Text>
                           </View>
                         </View>
                       );
@@ -161,28 +168,35 @@ export const ModalBuffsTemporarios: React.FC<Props> = ({
                       const total = calcularResistencia(ficha, item.tipo);
 
                       return (
-                        <View key={item.chave} style={styles.itemRow}>
-                          <View style={styles.itemLabelCol}>
-                            <Text style={styles.itemSigla}>{item.nome}</Text>
-                            <Text style={styles.itemBaseText}>Resistência</Text>
+                        <View key={item.chave} style={styles.itemCard}>
+                          <View style={styles.itemTopRow}>
+                            <View style={styles.itemIdent}>
+                              <Text style={styles.itemSigla}>{item.nome}</Text>
+                              <View style={styles.itemNomeCol}>
+                                <Text style={styles.itemBaseText}>Resistência</Text>
+                              </View>
+                            </View>
+
+                            <View style={[styles.totalCol, bonus !== 0 && styles.totalColAtivo]}>
+                              {bonus !== 0 && (
+                                <Text style={styles.totalLabel}>
+                                  {formatarModificador(bonus)} temp
+                                </Text>
+                              )}
+                              <Text style={styles.totalValor}>
+                                Total: {formatarModificador(total)}
+                              </Text>
+                            </View>
                           </View>
 
-                          <View style={styles.stepperCol}>
+                          <View style={styles.itemBottomRow}>
+                            <Text style={styles.stepperDescLabel}>Bônus Temporário:</Text>
                             <StepperValor
                               valor={bonus}
                               onValorChange={(v) => atualizarBuff(item.chave, v)}
                               min={-20}
                               max={30}
                             />
-                          </View>
-
-                          <View style={[styles.totalCol, bonus !== 0 && styles.totalColAtivo]}>
-                            <Text style={styles.totalLabel}>
-                              {bonus !== 0 ? `${formatarModificador(bonus)} temp` : 'Sem bônus'}
-                            </Text>
-                            <Text style={styles.totalValor}>
-                              Total: {formatarModificador(total)}
-                            </Text>
                           </View>
                         </View>
                       );
@@ -197,31 +211,38 @@ export const ModalBuffsTemporarios: React.FC<Props> = ({
                     Bônus temporários que afetam sua defesa (ex: Armadura Arcana, Escudo da Fé, bônus de cobertura ou esquiva).
                   </Text>
 
-                  <View style={styles.itemRow}>
-                    <View style={styles.itemLabelCol}>
-                      <Text style={styles.itemSigla}>CA</Text>
-                      <Text style={styles.itemNome}>Bônus Temporário</Text>
-                      <Text style={styles.itemBaseText}>
-                        Sem buff: {calcularCaTotal({ ...ficha, buffsTemporarios: { ...buffs, ca: 0 } })}
-                      </Text>
+                  <View style={styles.itemCard}>
+                    <View style={styles.itemTopRow}>
+                      <View style={styles.itemIdent}>
+                        <Text style={styles.itemSigla}>CA</Text>
+                        <View style={styles.itemNomeCol}>
+                          <Text style={styles.itemNome}>Classe de Armadura</Text>
+                          <Text style={styles.itemBaseText}>
+                            Sem buff: {calcularCaTotal({ ...ficha, buffsTemporarios: { ...buffs, ca: 0 } })}
+                          </Text>
+                        </View>
+                      </View>
+
+                      <View style={[styles.totalCol, buffs.ca !== 0 && styles.totalColAtivo]}>
+                        {buffs.ca !== 0 && (
+                          <Text style={styles.totalLabel}>
+                            {formatarModificador(buffs.ca)} temp
+                          </Text>
+                        )}
+                        <Text style={styles.totalValor}>
+                          CA Total: {calcularCaTotal(ficha)}
+                        </Text>
+                      </View>
                     </View>
 
-                    <View style={styles.stepperCol}>
+                    <View style={styles.itemBottomRow}>
+                      <Text style={styles.stepperDescLabel}>Bônus Temporário na CA:</Text>
                       <StepperValor
                         valor={buffs.ca}
                         onValorChange={(v) => atualizarBuff('ca', v)}
                         min={-20}
                         max={50}
                       />
-                    </View>
-
-                    <View style={[styles.totalCol, buffs.ca !== 0 && styles.totalColAtivo]}>
-                      <Text style={styles.totalLabel}>
-                        {buffs.ca !== 0 ? `${formatarModificador(buffs.ca)} temp` : 'Sem bônus'}
-                      </Text>
-                      <Text style={styles.totalValor}>
-                        CA Total: {calcularCaTotal(ficha)}
-                      </Text>
                     </View>
                   </View>
                 </View>
@@ -414,44 +435,74 @@ const styles = StyleSheet.create({
     lineHeight: 15,
   },
   atributosGrid: {
+    gap: 10,
+  },
+  itemCard: {
+    backgroundColor: COLORS.surface,
+    paddingVertical: 10,
+    paddingHorizontal: 12,
+    borderRadius: 8,
+    borderWidth: 1,
+    borderColor: COLORS.border,
     gap: 8,
   },
-  itemRow: {
+  itemTopRow: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    backgroundColor: COLORS.surface,
-    padding: 10,
-    borderRadius: 6,
-    borderWidth: 1,
-    borderColor: COLORS.border,
+    gap: 8,
   },
-  itemLabelCol: {
-    width: 105,
+  itemIdent: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
+    flex: 1,
+  },
+  itemNomeCol: {
+    flex: 1,
   },
   itemSigla: {
-    fontSize: 14,
+    fontSize: 15,
     fontWeight: 'bold',
     color: COLORS.primaryDark,
+    minWidth: 36,
   },
   itemNome: {
-    fontSize: 11,
+    fontSize: 12,
+    fontWeight: '600',
     color: COLORS.text,
   },
   itemBaseText: {
-    fontSize: 10,
+    fontSize: 10.5,
     color: COLORS.textSecondary,
+    marginTop: 1,
   },
-  stepperCol: {
-    flexShrink: 0,
+  itemBottomRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    paddingTop: 8,
+    borderTopWidth: 1,
+    borderTopColor: 'rgba(0,0,0,0.06)',
+    gap: 8,
+  },
+  stepperDescLabel: {
+    fontSize: 11,
+    color: COLORS.textSecondary,
+    fontWeight: '500',
+    flex: 1,
   },
   totalCol: {
-    width: 130,
     alignItems: 'flex-end',
+    justifyContent: 'center',
     paddingVertical: 4,
     paddingHorizontal: 8,
     borderRadius: 6,
     backgroundColor: 'rgba(0,0,0,0.03)',
+    borderWidth: 1,
+    borderColor: 'transparent',
+    minWidth: 110,
+    flexShrink: 0,
   },
   totalColAtivo: {
     backgroundColor: 'rgba(46, 107, 62, 0.1)',
@@ -461,10 +512,10 @@ const styles = StyleSheet.create({
   totalLabel: {
     fontSize: 10,
     fontWeight: 'bold',
-    color: COLORS.textSecondary,
+    color: '#2E6B3E',
   },
   totalValor: {
-    fontSize: 12,
+    fontSize: 12.5,
     fontWeight: 'bold',
     color: COLORS.text,
     marginTop: 1,
