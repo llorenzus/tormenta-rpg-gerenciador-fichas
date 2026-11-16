@@ -54,6 +54,7 @@ describe('Conversões e Consultas do Compêndio (TRPG)', () => {
       tipo: 'Arcana',
       tempoExecucao: 'Padrão',
       alcance: 'Médio',
+      alvoAreaEfeito: 'Esfera com 6m de raio',
       duracao: 'Instantânea',
       resistencia: 'Reflexos reduz à metade',
       descricao: 'Explosão de chamas causando dano de fogo.',

@@ -8,7 +8,7 @@ export interface MagiaData {
   escola: string;
   tempoExecucao: string;
   alcance: string;
-  alvoAreaEfeito: string;
+  alvoAreaEfeito?: string;
   duracao: string;
   resistencia?: string;
   componenteMaterial?: string;
