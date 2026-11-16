@@ -2355,12 +2355,12 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   btnAdicionarSecundario: {
-    backgroundColor: '#EBE5DC',
+    backgroundColor: COLORS.success,
     borderWidth: 1,
-    borderColor: '#D4C9BC',
+    borderColor: '#245632',
   },
   btnAdicionarSecundarioText: {
-    color: '#6F6357',
+    color: COLORS.white,
     fontWeight: 'bold',
   },
   btnAdicionarText: {
