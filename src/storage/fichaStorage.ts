@@ -65,6 +65,7 @@ export function normalizarFicha(ficha: FichaPersonagem): FichaPersonagem {
           ...a,
           usaDestreza: !!a.usaDestreza,
           outrosBonus: Number.isFinite(a.outrosBonus) ? Number(a.outrosBonus) : 0,
+          habilidadesMagicas: Array.isArray(a.habilidadesMagicas) ? a.habilidadesMagicas : [],
         }))
       : [],
     armaduras: Array.isArray(ficha.armaduras) ? ficha.armaduras : [],

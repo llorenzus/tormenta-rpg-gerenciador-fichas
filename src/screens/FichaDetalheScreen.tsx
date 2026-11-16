@@ -811,7 +811,7 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
     borderBottomWidth: 3,
     borderBottomColor: 'transparent',
-    cursor: 'default' as any,
+    cursor: 'pointer' as any,
   },
   tabItemActive: {
     borderBottomColor: COLORS.primary,
@@ -859,6 +859,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     flexShrink: 0,
+    cursor: 'pointer' as any,
   },
   fixedTabOrganizarIcon: {
     fontSize: 15,
@@ -875,6 +876,7 @@ const styles = StyleSheet.create({
     backgroundColor: 'rgba(139,30,30,0.08)',
     borderWidth: 1,
     borderColor: 'rgba(139,30,30,0.2)',
+    cursor: 'pointer' as any,
   },
   tabTextOrganizar: {
     fontSize: 12,

@@ -2179,6 +2179,7 @@ const styles = StyleSheet.create({
     paddingVertical: 8,
     alignItems: 'center',
     borderRadius: 6,
+    cursor: 'pointer' as any,
   },
   tabBtnAtivo: {
     backgroundColor: COLORS.primary,

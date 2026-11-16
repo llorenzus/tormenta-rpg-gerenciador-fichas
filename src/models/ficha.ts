@@ -44,6 +44,13 @@ export interface MagiaItem {
   descricao: string;
 }
 
+export interface HabilidadeMagicaArma {
+  id: string;
+  nome: string;
+  descricao?: string;
+  bonusEquivalente?: string;
+}
+
 export interface ArmaItem {
   id: string;
   nome: string;
@@ -54,6 +61,27 @@ export interface ArmaItem {
   tipoDano: string;
   usaDestreza?: boolean;
   outrosBonus?: number;
+  habilidadesMagicas?: HabilidadeMagicaArma[];
+}
+
+export function obterHabilidadesMagicasArma(arma: ArmaItem): HabilidadeMagicaArma[] {
+  if (!Array.isArray(arma.habilidadesMagicas)) return [];
+  return arma.habilidadesMagicas.map((h: any, idx) => {
+    if (typeof h === 'string') {
+      return {
+        id: `hab-arma-${idx}-${h}`,
+        nome: h,
+        descricao: '',
+        bonusEquivalente: '',
+      };
+    }
+    return {
+      id: h.id || `hab-arma-${idx}`,
+      nome: h.nome || '',
+      descricao: h.descricao || '',
+      bonusEquivalente: h.bonusEquivalente || '',
+    };
+  });
 }
 
 export interface ArmaduraEquipamento {

@@ -20,14 +20,17 @@ import {
   FichaPersonagem,
   formatarModificador,
   gerarId,
+  HabilidadeMagicaArma,
   ItemGeral,
   obterBonusArmaduraEquipada,
   obterBonusEscudoEquipado,
+  obterHabilidadesMagicasArma,
   obterModAtributo,
 } from '../models/ficha';
 import { COLORS } from '../theme/colors';
 import { CampoInteiro, CampoTexto, SecaoHeader } from './CommonInput';
 import { CompendioModal } from './CompendioModal';
+import { ModalPoderesArma, PoderArmaSelecionado } from './ModalPoderesArma';
 
 interface Props {
   ficha: FichaPersonagem;
@@ -36,6 +39,44 @@ interface Props {
 
 export const AbaEquipamentos: React.FC<Props> = ({ ficha, onChange }) => {
   const [compendioAberto, setCompendioAberto] = useState(false);
+  const [modalPoderesArmaId, setModalPoderesArmaId] = useState<string | null>(null);
+
+  const armaSelecionada = ficha.armas.find((a) => a.id === modalPoderesArmaId);
+
+  const handleAdicionarPoderArma = (poder: PoderArmaSelecionado) => {
+    if (!modalPoderesArmaId) return;
+    const armasAtualizadas = ficha.armas.map((a) => {
+      if (a.id === modalPoderesArmaId) {
+        const habsAtuais = obterHabilidadesMagicasArma(a);
+        const novaHab: HabilidadeMagicaArma = {
+          id: gerarId(),
+          nome: poder.nome,
+          descricao: poder.descricao,
+          bonusEquivalente: poder.bonusEquivalente,
+        };
+        return {
+          ...a,
+          habilidadesMagicas: [...habsAtuais, novaHab],
+        };
+      }
+      return a;
+    });
+    onChange({ ...ficha, armas: armasAtualizadas });
+  };
+
+  const handleRemoverPoderArma = (armaId: string, habIndex: number) => {
+    const armasAtualizadas = ficha.armas.map((a) => {
+      if (a.id === armaId) {
+        const habsAtuais = obterHabilidadesMagicasArma(a);
+        return {
+          ...a,
+          habilidadesMagicas: habsAtuais.filter((_, idx) => idx !== habIndex),
+        };
+      }
+      return a;
+    });
+    onChange({ ...ficha, armas: armasAtualizadas });
+  };
 
   const handleAdicionarEquipamentoCompendio = (equip: EquipamentoData) => {
     if (equip.tipo === 'Arma') {
@@ -401,6 +442,66 @@ export const AbaEquipamentos: React.FC<Props> = ({ ficha, onChange }) => {
                       style={styles.col}
                     />
                   </View>
+
+                  {/* Seção de Habilidades Especiais Mágicas da Arma */}
+                  {(() => {
+                    const habsMagicas = obterHabilidadesMagicasArma(arma);
+                    return (
+                      <View style={styles.secaoHabilidadesMagicas}>
+                        <View style={styles.habMagicasHeaderRow}>
+                          <View style={styles.habMagicasTitleRow}>
+                            <Text style={styles.habMagicasIcon}>✨</Text>
+                            <Text style={styles.habMagicasTitle}>Poderes Mágicos Especiais</Text>
+                            {habsMagicas.length > 0 && (
+                              <View style={styles.badgeHabsCount}>
+                                <Text style={styles.badgeHabsCountText}>{habsMagicas.length}</Text>
+                              </View>
+                            )}
+                          </View>
+                          <TouchableOpacity
+                            style={styles.btnAddHabMagica}
+                            onPress={() => setModalPoderesArmaId(arma.id)}
+                            activeOpacity={0.8}
+                          >
+                            <Text style={styles.btnAddHabMagicaText}>+ Poder Mágico</Text>
+                          </TouchableOpacity>
+                        </View>
+
+                        {habsMagicas.length === 0 ? (
+                          <Text style={styles.semHabsMagicasText}>
+                            Nenhum poder mágico (ex: Flamejante, Afiada...). Toque em "+ Poder Mágico" para encantar esta arma.
+                          </Text>
+                        ) : (
+                          <View style={styles.habsMagicasList}>
+                            {habsMagicas.map((hab, hIdx) => (
+                              <View key={hab.id || `hab-${hIdx}`} style={styles.habMagicaItemCard}>
+                                <View style={styles.habMagicaTopRow}>
+                                  <View style={styles.habMagicaNomeWrap}>
+                                    <Text style={styles.habMagicaNome}>{hab.nome}</Text>
+                                    {!!hab.bonusEquivalente && (
+                                      <View style={styles.badgeBonusEquiv}>
+                                        <Text style={styles.badgeBonusEquivText}>{hab.bonusEquivalente}</Text>
+                                      </View>
+                                    )}
+                                  </View>
+                                  <TouchableOpacity
+                                    style={styles.btnRemoveHab}
+                                    onPress={() => handleRemoverPoderArma(arma.id, hIdx)}
+                                    activeOpacity={0.7}
+                                  >
+                                    <Text style={styles.btnRemoveHabText}>✕</Text>
+                                  </TouchableOpacity>
+                                </View>
+                                {!!hab.descricao && (
+                                  <Text style={styles.habMagicaDesc}>{hab.descricao}</Text>
+                                )}
+                              </View>
+                            ))}
+                          </View>
+                        )}
+                      </View>
+                    );
+                  })()}
                 </View>
               );
             })
@@ -591,6 +692,14 @@ export const AbaEquipamentos: React.FC<Props> = ({ ficha, onChange }) => {
         fichaAtual={ficha}
         onAtualizarFichaAtual={onChange}
         onAdicionarEquipamentoAFicha={handleAdicionarEquipamentoCompendio}
+      />
+
+      {/* Modal de Habilidades Especiais Mágicas da Arma */}
+      <ModalPoderesArma
+        visivel={!!modalPoderesArmaId}
+        armaNome={armaSelecionada?.nome || 'Arma'}
+        onSelecionarPoder={handleAdicionarPoderArma}
+        onFechar={() => setModalPoderesArmaId(null)}
       />
     </ScrollView>
   );
@@ -953,6 +1062,124 @@ const styles = StyleSheet.create({
     fontWeight: '600',
     color: '#654B0E',
     textAlign: 'center',
+  },
+  secaoHabilidadesMagicas: {
+    marginTop: 10,
+    paddingTop: 8,
+    borderTopWidth: 1,
+    borderTopColor: COLORS.border,
+  },
+  habMagicasHeaderRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    marginBottom: 6,
+  },
+  habMagicasTitleRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 6,
+  },
+  habMagicasIcon: {
+    fontSize: 14,
+  },
+  habMagicasTitle: {
+    fontSize: 12,
+    fontWeight: 'bold',
+    color: COLORS.primaryDark,
+  },
+  badgeHabsCount: {
+    backgroundColor: COLORS.gold,
+    borderRadius: 8,
+    paddingHorizontal: 5,
+    paddingVertical: 1,
+  },
+  badgeHabsCountText: {
+    fontSize: 9.5,
+    fontWeight: 'bold',
+    color: COLORS.primaryDark,
+  },
+  btnAddHabMagica: {
+    backgroundColor: 'rgba(200,157,60,0.18)',
+    borderWidth: 1,
+    borderColor: COLORS.gold,
+    borderRadius: 5,
+    paddingHorizontal: 8,
+    paddingVertical: 4,
+    cursor: 'pointer' as any,
+  },
+  btnAddHabMagicaText: {
+    fontSize: 11,
+    fontWeight: 'bold',
+    color: '#8A6414',
+  },
+  semHabsMagicasText: {
+    fontSize: 11,
+    color: COLORS.textSecondary,
+    fontStyle: 'italic',
+    lineHeight: 15,
+  },
+  habsMagicasList: {
+    gap: 6,
+    marginTop: 2,
+  },
+  habMagicaItemCard: {
+    backgroundColor: COLORS.surface,
+    borderRadius: 6,
+    borderWidth: 1,
+    borderColor: COLORS.border,
+    padding: 8,
+  },
+  habMagicaTopRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    gap: 6,
+  },
+  habMagicaNomeWrap: {
+    flex: 1,
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 6,
+    flexWrap: 'wrap',
+  },
+  habMagicaNome: {
+    fontSize: 12.5,
+    fontWeight: 'bold',
+    color: COLORS.primary,
+  },
+  badgeBonusEquiv: {
+    backgroundColor: 'rgba(200,157,60,0.18)',
+    borderRadius: 4,
+    paddingHorizontal: 5,
+    paddingVertical: 1,
+    borderWidth: 1,
+    borderColor: COLORS.gold,
+  },
+  badgeBonusEquivText: {
+    fontSize: 10,
+    fontWeight: 'bold',
+    color: '#8A6414',
+  },
+  btnRemoveHab: {
+    width: 22,
+    height: 22,
+    borderRadius: 11,
+    backgroundColor: 'rgba(179,38,30,0.1)',
+    alignItems: 'center',
+    justifyContent: 'center',
+    cursor: 'pointer' as any,
+  },
+  btnRemoveHabText: {
+    fontSize: 11,
+    fontWeight: 'bold',
+    color: COLORS.danger,
+  },
+  habMagicaDesc: {
+    fontSize: 11,
+    color: COLORS.text,
+    marginTop: 3,
+    lineHeight: 15,
   },
 });
 

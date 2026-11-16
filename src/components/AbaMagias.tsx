@@ -466,6 +466,7 @@ const styles = StyleSheet.create({
     backgroundColor: COLORS.surfaceVariant,
     borderWidth: 1,
     borderColor: COLORS.border,
+    cursor: 'pointer' as any,
   },
   tabNivelBtnAtivo: {
     backgroundColor: COLORS.primary,

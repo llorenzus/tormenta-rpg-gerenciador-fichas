@@ -58,6 +58,21 @@ export default function App() {
 
   useEffect(() => {
     carregarFichasLocais().then(setFichas);
+
+    // No Windows Desktop (Electron) e Web, garante o cursor de mãozinha (pointer) em abas e botões
+    if (Platform.OS === 'web' && typeof document !== 'undefined') {
+      const styleId = 'trpg-pointer-cursor-fix';
+      if (!document.getElementById(styleId)) {
+        const style = document.createElement('style');
+        style.id = styleId;
+        style.innerHTML = `
+          [role="button"], button, [role="tab"], [data-focusable="true"], .r-cursor-pointer {
+            cursor: pointer !important;
+          }
+        `;
+        document.head.appendChild(style);
+      }
+    }
   }, []);
 
   const handleVoltarDaFicha = async () => {

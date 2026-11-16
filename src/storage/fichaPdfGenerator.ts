@@ -33,9 +33,15 @@ export function gerarHtmlFichaPdf(ficha: FichaPersonagem): string {
                 ? a.bonusAtaque
                 : formatarModificador(calcularAtaqueArma(ficha, a));
             const tagAtrib = a.usaDestreza ? ' <small style="color:#666;">(DES)</small>' : ' <small style="color:#666;">(FOR)</small>';
+            const habsTexto =
+              Array.isArray(a.habilidadesMagicas) && a.habilidadesMagicas.length > 0
+                ? `<div style="font-size:9.5px; color:#8A6414; margin-top:2px; font-weight:500;">✨ ${a.habilidadesMagicas
+                    .map((h: any) => (typeof h === 'string' ? h : h.nome))
+                    .join(' • ')}</div>`
+                : '';
             return `
         <tr>
-          <td><strong>${a.nome || '-'}${tagAtrib}</strong></td>
+          <td><strong>${a.nome || '-'}${tagAtrib}</strong>${habsTexto}</td>
           <td style="text-align:center;">${ataqueExibicao}</td>
           <td style="text-align:center;">${a.dano || '-'}</td>
           <td style="text-align:center;">${a.critico || '-'}</td>

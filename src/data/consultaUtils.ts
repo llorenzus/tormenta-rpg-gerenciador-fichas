@@ -95,6 +95,7 @@ export const converterArmaParaItem = (equip: EquipamentoData): ArmaItem => {
     tipoDano: equip.tipoDano || 'Corte',
     usaDestreza: false,
     outrosBonus: 0,
+    habilidadesMagicas: [],
   };
 };
 

@@ -19,6 +19,7 @@ import {
   PosturaData,
   GolpeMarcialData,
 } from '../src/data';
+import { obterHabilidadesMagicasArma } from '../src/models/ficha';
 
 describe('Conversões e Consultas do Compêndio (TRPG)', () => {
   it('deve converter Magia para item da ficha respeitando custo de PM e descrição', () => {
@@ -115,6 +116,17 @@ describe('Conversões e Consultas do Compêndio (TRPG)', () => {
     const itemArco = converterArmaParaItem(arcoCurto);
     assert.strictEqual(itemArco.distancia, '15m');
     assert.strictEqual(itemArco.critico, 'x3');
+
+    // Habilidades mágicas em armas
+    itemArma.habilidadesMagicas = [
+      { id: 'h1', nome: 'Flamejante', descricao: '+1d6 de dano de fogo', bonusEquivalente: '+1' },
+      { id: 'h2', nome: 'Afiada', descricao: 'Dobra margem de crítico', bonusEquivalente: '+1' },
+    ];
+    const habs = obterHabilidadesMagicasArma(itemArma);
+    assert.strictEqual(habs.length, 2);
+    assert.strictEqual(habs[0].nome, 'Flamejante');
+    assert.strictEqual(habs[0].bonusEquivalente, '+1');
+    assert.strictEqual(habs[1].nome, 'Afiada');
   });
 
   it('deve converter Armaduras e Escudos para itens defensivos equipados', () => {
