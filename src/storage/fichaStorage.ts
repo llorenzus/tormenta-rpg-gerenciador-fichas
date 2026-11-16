@@ -71,6 +71,7 @@ export function normalizarFicha(ficha: FichaPersonagem): FichaPersonagem {
     itensGerais: Array.isArray(ficha.itensGerais) ? ficha.itensGerais : [],
     tibares: ficha.tibares || '',
     ordemAbas: Array.isArray(ficha.ordemAbas) ? ficha.ordemAbas : undefined,
+    buffsTemporarios: ficha.buffsTemporarios || undefined,
   };
 }
 

@@ -9,6 +9,11 @@ import {
   calcularAtaqueArma,
   calcularNivelTotal,
   obterClassesFicha,
+  calcularResistencia,
+  obterBuffsTemporarios,
+  temBuffsAtivos,
+  contarBuffsAtivos,
+  zerarBuffsTemporarios,
   FichaPersonagem,
   ArmaduraEquipamento,
   ArmaItem,
@@ -224,5 +229,64 @@ describe('Regras do Tormenta RPG - Cálculos e Modificadores', () => {
     assert.strictEqual(classes.length, 2);
     assert.strictEqual(classes[0].nome, 'Guerreiro');
     assert.strictEqual(classes[1].nome, 'Mago');
+  });
+
+  it('deve aplicar buffs temporários de atributos, resistências e PV corretamente e zerar no descanso', () => {
+    const ficha = criarFichaBase();
+    ficha.forca = 16;       // Mod base: +3
+    ficha.destreza = 14;    // Mod base: +2
+    ficha.constituicao = 14;// Mod base: +2
+    ficha.nivel = 4;        // 1/2 nível = 2
+
+    // Inicialmente sem buffs
+    assert.strictEqual(temBuffsAtivos(ficha), false);
+    assert.strictEqual(contarBuffsAtivos(ficha), 0);
+    assert.strictEqual(obterModAtributo(ficha, 'FOR'), 3);
+    assert.strictEqual(obterModAtributo(ficha, 'DES'), 2);
+    assert.strictEqual(calcularResistencia(ficha, 'fortitude'), 4); // 2 (meio nív) + 2 (CON) + 0
+
+    // Aplicar buffs temporários: +4 Força (ex: Força do Touro), +2 Destreza, +3 Fortitude e +15 PV temp
+    ficha.buffsTemporarios = {
+      forca: 4,
+      destreza: 2,
+      fortitude: 3,
+      pvTemporario: 15,
+    };
+
+    assert.strictEqual(temBuffsAtivos(ficha), true);
+    assert.strictEqual(contarBuffsAtivos(ficha), 4);
+
+    // Força agora é 20 => Mod +5
+    assert.strictEqual(obterModAtributo(ficha, 'FOR'), 5);
+    // Destreza agora é 16 => Mod +3
+    assert.strictEqual(obterModAtributo(ficha, 'DES'), 3);
+
+    // CA deve refletir o mod de DES aumentado
+    // CA = 10 + 2 (1/2 nív) + 3 (DES buffado) = 15
+    assert.strictEqual(calcularCaTotal(ficha), 15);
+
+    // Ataque com arma de Força deve refletir mod FOR (+5)
+    const espada: ArmaItem = {
+      id: 'a-test',
+      nome: 'Espada',
+      bonusAtaque: '',
+      dano: '1d8',
+      critico: '19-20',
+      tipo: 'Corpo a corpo',
+    };
+    // Acerto = 4 (BBA) + 5 (FOR buffada) = 9
+    assert.strictEqual(calcularAtaqueArma(ficha, espada), 9);
+
+    // Fortitude = 2 (meio nív) + 2 (CON) + 0 + 3 (buff fortitude) = 7
+    assert.strictEqual(calcularResistencia(ficha, 'fortitude'), 7);
+
+    // Ao zerar (equivalente ao Descanso Pleno)
+    const fichaDescansada = zerarBuffsTemporarios(ficha);
+    assert.strictEqual(temBuffsAtivos(fichaDescansada), false);
+    assert.strictEqual(contarBuffsAtivos(fichaDescansada), 0);
+    assert.strictEqual(obterModAtributo(fichaDescansada, 'FOR'), 3);
+    assert.strictEqual(obterModAtributo(fichaDescansada, 'DES'), 2);
+    assert.strictEqual(calcularCaTotal(fichaDescansada), 14);
+    assert.strictEqual(calcularResistencia(fichaDescansada, 'fortitude'), 4);
   });
 });

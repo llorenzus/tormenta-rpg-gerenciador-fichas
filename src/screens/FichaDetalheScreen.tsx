@@ -282,12 +282,15 @@ export const FichaDetalheScreen: React.FC<Props> = ({
     []
   );
 
+  const pvTemp = ficha.buffsTemporarios?.pvTemporario || 0;
+  const pvTexto = `PV ${ficha.pvAtual}${pvTemp > 0 ? ` (+${pvTemp} temp)` : ''}/${ficha.pvTotal}`;
+
   const subtituloDesktop = [
     ficha.raca?.trim(),
     ficha.classe?.trim(),
     `Nível Total: ${ficha.nivel}`,
     ficha.jogador?.trim() && `Jogador: ${ficha.jogador.trim()}`,
-    `PV ${ficha.pvAtual}/${ficha.pvTotal}`,
+    pvTexto,
     `PM ${ficha.pmAtual}/${ficha.pmTotal}`,
     `CA ${caTotal}`,
   ]
@@ -439,7 +442,7 @@ export const FichaDetalheScreen: React.FC<Props> = ({
             <Text style={styles.subtitleText} numberOfLines={1} ellipsizeMode="tail">
               {isDesktop
                 ? subtituloDesktop || 'Tormenta RPG'
-                : `PV ${ficha.pvAtual}/${ficha.pvTotal} • PM ${ficha.pmAtual}/${ficha.pmTotal} • CA ${caTotal}`}
+                : `${pvTexto} • PM ${ficha.pmAtual}/${ficha.pmTotal} • CA ${caTotal}`}
             </Text>
           </View>
 

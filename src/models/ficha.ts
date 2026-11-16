@@ -136,6 +136,88 @@ export interface FichaPersonagem {
 
   // Ordem personalizada das abas da ficha
   ordemAbas?: string[];
+
+  // Buffs e Efeitos Temporários (Atributos, Resistências e PV Temporário)
+  buffsTemporarios?: BuffsTemporarios;
+}
+
+export interface BuffsTemporarios {
+  forca?: number;
+  destreza?: number;
+  constituicao?: number;
+  inteligencia?: number;
+  sabedoria?: number;
+  carisma?: number;
+  fortitude?: number;
+  reflexos?: number;
+  vontade?: number;
+  pvTemporario?: number;
+}
+
+export function obterBuffsTemporarios(ficha: FichaPersonagem): Required<BuffsTemporarios> {
+  const b = ficha.buffsTemporarios || {};
+  return {
+    forca: Number(b.forca) || 0,
+    destreza: Number(b.destreza) || 0,
+    constituicao: Number(b.constituicao) || 0,
+    inteligencia: Number(b.inteligencia) || 0,
+    sabedoria: Number(b.sabedoria) || 0,
+    carisma: Number(b.carisma) || 0,
+    fortitude: Number(b.fortitude) || 0,
+    reflexos: Number(b.reflexos) || 0,
+    vontade: Number(b.vontade) || 0,
+    pvTemporario: Number(b.pvTemporario) || 0,
+  };
+}
+
+export function temBuffsAtivos(ficha: FichaPersonagem): boolean {
+  const b = obterBuffsTemporarios(ficha);
+  return (
+    b.forca !== 0 ||
+    b.destreza !== 0 ||
+    b.constituicao !== 0 ||
+    b.inteligencia !== 0 ||
+    b.sabedoria !== 0 ||
+    b.carisma !== 0 ||
+    b.fortitude !== 0 ||
+    b.reflexos !== 0 ||
+    b.vontade !== 0 ||
+    b.pvTemporario !== 0
+  );
+}
+
+export function contarBuffsAtivos(ficha: FichaPersonagem): number {
+  const b = obterBuffsTemporarios(ficha);
+  let count = 0;
+  if (b.forca !== 0) count++;
+  if (b.destreza !== 0) count++;
+  if (b.constituicao !== 0) count++;
+  if (b.inteligencia !== 0) count++;
+  if (b.sabedoria !== 0) count++;
+  if (b.carisma !== 0) count++;
+  if (b.fortitude !== 0) count++;
+  if (b.reflexos !== 0) count++;
+  if (b.vontade !== 0) count++;
+  if (b.pvTemporario !== 0) count++;
+  return count;
+}
+
+export function zerarBuffsTemporarios(ficha: FichaPersonagem): FichaPersonagem {
+  return {
+    ...ficha,
+    buffsTemporarios: {
+      forca: 0,
+      destreza: 0,
+      constituicao: 0,
+      inteligencia: 0,
+      sabedoria: 0,
+      carisma: 0,
+      fortitude: 0,
+      reflexos: 0,
+      vontade: 0,
+      pvTemporario: 0,
+    },
+  };
 }
 
 export function gerarId(): string {
@@ -157,6 +239,24 @@ export function obterMeioNivel(nivel: number): number {
 }
 
 export function obterValorAtributo(ficha: FichaPersonagem, sigla: AtributoSigla): number {
+  const buffs = obterBuffsTemporarios(ficha);
+  switch (sigla) {
+    case 'FOR':
+      return ficha.forca + buffs.forca;
+    case 'DES':
+      return ficha.destreza + buffs.destreza;
+    case 'CON':
+      return ficha.constituicao + buffs.constituicao;
+    case 'INT':
+      return ficha.inteligencia + buffs.inteligencia;
+    case 'SAB':
+      return ficha.sabedoria + buffs.sabedoria;
+    case 'CAR':
+      return ficha.carisma + buffs.carisma;
+  }
+}
+
+export function obterValorAtributoBase(ficha: FichaPersonagem, sigla: AtributoSigla): number {
   switch (sigla) {
     case 'FOR':
       return ficha.forca;
@@ -170,6 +270,24 @@ export function obterValorAtributo(ficha: FichaPersonagem, sigla: AtributoSigla)
       return ficha.sabedoria;
     case 'CAR':
       return ficha.carisma;
+  }
+}
+
+export function obterBuffAtributo(ficha: FichaPersonagem, sigla: AtributoSigla): number {
+  const buffs = obterBuffsTemporarios(ficha);
+  switch (sigla) {
+    case 'FOR':
+      return buffs.forca;
+    case 'DES':
+      return buffs.destreza;
+    case 'CON':
+      return buffs.constituicao;
+    case 'INT':
+      return buffs.inteligencia;
+    case 'SAB':
+      return buffs.sabedoria;
+    case 'CAR':
+      return buffs.carisma;
   }
 }
 
@@ -194,7 +312,7 @@ export function obterBonusEscudoEquipado(ficha: FichaPersonagem): number {
  */
 export function calcularCaTotal(ficha: FichaPersonagem): number {
   const meioNivel = obterMeioNivel(ficha.nivel);
-  const modDes = calcularModificador(ficha.destreza);
+  const modDes = obterModAtributo(ficha, 'DES');
   const armadura = obterBonusArmaduraEquipada(ficha);
   const escudo = obterBonusEscudoEquipado(ficha);
   const tamanho = Number(ficha.caBonusTamanho) || 0;
@@ -227,16 +345,17 @@ export function calcularResistencia(
   tipo: 'fortitude' | 'reflexos' | 'vontade'
 ): number {
   const meioNivel = Math.floor((ficha.nivel || 1) / 2);
+  const buffs = obterBuffsTemporarios(ficha);
   if (tipo === 'fortitude') {
     const modCon = obterModAtributo(ficha, 'CON');
-    return meioNivel + modCon + (Number(ficha.fortitudeOutros) || 0);
+    return meioNivel + modCon + (Number(ficha.fortitudeOutros) || 0) + buffs.fortitude;
   }
   if (tipo === 'reflexos') {
     const modDes = obterModAtributo(ficha, 'DES');
-    return meioNivel + modDes + (Number(ficha.reflexosOutros) || 0);
+    return meioNivel + modDes + (Number(ficha.reflexosOutros) || 0) + buffs.reflexos;
   }
   const modSab = obterModAtributo(ficha, 'SAB');
-  return meioNivel + modSab + (Number(ficha.vontadeOutros) || 0);
+  return meioNivel + modSab + (Number(ficha.vontadeOutros) || 0) + buffs.vontade;
 }
 
 export function calcularAtaqueArma(ficha: FichaPersonagem, arma: ArmaItem): number {

@@ -1,18 +1,24 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Alert, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import {
   ATRIBUTOS_LISTA,
   calcularCaTotal,
   calcularModificador,
+  calcularResistencia,
+  contarBuffsAtivos,
   FichaPersonagem,
   formatarModificador,
   obterBonusArmaduraEquipada,
   obterBonusEscudoEquipado,
+  obterBuffsTemporarios,
   obterMeioNivel,
+  obterModAtributo,
+  temBuffsAtivos,
 } from '../models/ficha';
 import { COLORS } from '../theme/colors';
 import { BarraDeProgressoRecurso } from './BarraDeProgressoRecurso';
 import { CampoInteiro, SecaoHeader, StepperValor } from './CommonInput';
+import { ModalBuffsTemporarios } from './ModalBuffsTemporarios';
 
 interface Props {
   ficha: FichaPersonagem;
@@ -20,10 +26,16 @@ interface Props {
 }
 
 export const AbaAtributos: React.FC<Props> = ({ ficha, onChange }) => {
+  const [modalBuffsAberto, setModalBuffsAberto] = useState(false);
+
+  const buffs = obterBuffsTemporarios(ficha);
+  const temBuffs = temBuffsAtivos(ficha);
+  const qtdBuffs = contarBuffsAtivos(ficha);
+
   const meioNivel = obterMeioNivel(ficha.nivel);
-  const modDes = calcularModificador(ficha.destreza);
-  const modCon = calcularModificador(ficha.constituicao);
-  const modSab = calcularModificador(ficha.sabedoria);
+  const modDes = obterModAtributo(ficha, 'DES');
+  const modCon = obterModAtributo(ficha, 'CON');
+  const modSab = obterModAtributo(ficha, 'SAB');
   const bonusArmadura = obterBonusArmaduraEquipada(ficha);
   const bonusEscudo = obterBonusEscudoEquipado(ficha);
   const caTotal = calcularCaTotal(ficha);
@@ -32,9 +44,9 @@ export const AbaAtributos: React.FC<Props> = ({ ficha, onChange }) => {
   const refOutros = Number(ficha.reflexosOutros) || 0;
   const vonOutros = Number(ficha.vontadeOutros) || 0;
 
-  const fortTotal = meioNivel + modCon + fortOutros;
-  const refTotal = meioNivel + modDes + refOutros;
-  const vonTotal = meioNivel + modSab + vonOutros;
+  const fortTotal = calcularResistencia(ficha, 'fortitude');
+  const refTotal = calcularResistencia(ficha, 'reflexos');
+  const vonTotal = calcularResistencia(ficha, 'vontade');
 
   const handleDescansoPleno = () => {
     onChange({
@@ -43,36 +55,54 @@ export const AbaAtributos: React.FC<Props> = ({ ficha, onChange }) => {
       pmAtual: ficha.pmTotal,
       peAtual: ficha.peTotal ?? 0,
       pontosAcao: 1,
+      buffsTemporarios: {
+        forca: 0,
+        destreza: 0,
+        constituicao: 0,
+        inteligencia: 0,
+        sabedoria: 0,
+        carisma: 0,
+        fortitude: 0,
+        reflexos: 0,
+        vontade: 0,
+        pvTemporario: 0,
+      },
     });
     Alert.alert(
       'Descanso Pleno',
-      'Todos os seus recursos atuais (PV, PM, PE e Pontos de Ação) foram restaurados aos valores padrão!'
+      'Todos os seus recursos atuais (PV, PM, PE e Pontos de Ação) foram restaurados aos valores padrão e todos os buffs temporários foram zerados!'
     );
   };
 
   const resistencias = [
     {
       chave: 'fortitudeOutros' as const,
+      chaveBuff: 'fortitude' as const,
       nome: 'Fortitude',
       atrib: 'CON',
       mod: modCon,
       outros: fortOutros,
+      buff: buffs.fortitude,
       total: fortTotal,
     },
     {
       chave: 'reflexosOutros' as const,
+      chaveBuff: 'reflexos' as const,
       nome: 'Reflexos',
       atrib: 'DES',
       mod: modDes,
       outros: refOutros,
+      buff: buffs.reflexos,
       total: refTotal,
     },
     {
       chave: 'vontadeOutros' as const,
+      chaveBuff: 'vontade' as const,
       nome: 'Vontade',
       atrib: 'SAB',
       mod: modSab,
       outros: vonOutros,
+      buff: buffs.vontade,
       total: vonTotal,
     },
   ];
@@ -83,6 +113,34 @@ export const AbaAtributos: React.FC<Props> = ({ ficha, onChange }) => {
       contentContainerStyle={styles.content}
       keyboardShouldPersistTaps="handled"
     >
+      {/* BANNER DE ACESSO AOS BUFFS TEMPORÁRIOS */}
+      <TouchableOpacity
+        style={[styles.bannerBuffs, temBuffs && styles.bannerBuffsAtivo]}
+        onPress={() => setModalBuffsAberto(true)}
+        activeOpacity={0.8}
+        accessibilityLabel="Gerenciar Buffs e Efeitos Temporários"
+      >
+        <View style={styles.bannerBuffsLeft}>
+          <Text style={styles.bannerBuffsIcon}>⚡</Text>
+          <View style={styles.bannerBuffsTextCol}>
+            <View style={styles.bannerBuffsTitleRow}>
+              <Text style={styles.bannerBuffsTitle}>Buffs & Efeitos Temporários</Text>
+              {temBuffs && (
+                <View style={styles.badgeBuffsContador}>
+                  <Text style={styles.badgeBuffsContadorText}>{qtdBuffs} ATIVO(S)</Text>
+                </View>
+              )}
+            </View>
+            <Text style={styles.bannerBuffsSubtitle}>
+              {temBuffs
+                ? 'Toque para visualizar ou editar bônus temporários'
+                : 'Toque para adicionar bônus temporários de atributos, resistências ou PV'}
+            </Text>
+          </View>
+        </View>
+        <Text style={styles.bannerBuffsActionText}>Configurar ❯</Text>
+      </TouchableOpacity>
+
       {/* 1. ATRIBUTOS BÁSICOS E MODIFICADORES */}
       <View style={styles.card}>
         <SecaoHeader
@@ -91,8 +149,12 @@ export const AbaAtributos: React.FC<Props> = ({ ficha, onChange }) => {
         />
         <View style={styles.cardBody}>
           {ATRIBUTOS_LISTA.map((atrib, idx) => {
-            const valor = ficha[atrib.campo];
-            const mod = calcularModificador(valor);
+            const valorBase = ficha[atrib.campo];
+            const buff = buffs[atrib.campo];
+            const valorTotal = valorBase + buff;
+            const modTotal = calcularModificador(valorTotal);
+            const temBuff = buff !== 0;
+
             return (
               <View
                 key={atrib.sigla}
@@ -104,18 +166,32 @@ export const AbaAtributos: React.FC<Props> = ({ ficha, onChange }) => {
                 <View style={styles.atributoLabelCol}>
                   <Text style={styles.atributoSigla}>{atrib.sigla}</Text>
                   <Text style={styles.atributoNome}>{atrib.nome}</Text>
+                  {temBuff && (
+                    <Text style={styles.atributoBaseNota}>Base: {valorBase}</Text>
+                  )}
                 </View>
 
                 <StepperValor
-                  valor={valor}
+                  valor={valorBase}
                   onValorChange={(novo) => onChange({ ...ficha, [atrib.campo]: novo })}
                   min={1}
                   max={50}
                 />
 
-                <View style={styles.modBadge}>
-                  <Text style={styles.modBadgeLabel}>MOD</Text>
-                  <Text style={styles.modBadgeValue}>{formatarModificador(mod)}</Text>
+                <View style={[styles.modBadge, temBuff && styles.modBadgeAtivo]}>
+                  {temBuff ? (
+                    <>
+                      <Text style={styles.modBadgeLabelTotal}>
+                        TOTAL {valorTotal} ({formatarModificador(buff)})
+                      </Text>
+                      <Text style={styles.modBadgeValue}>{formatarModificador(modTotal)}</Text>
+                    </>
+                  ) : (
+                    <>
+                      <Text style={styles.modBadgeLabel}>MOD</Text>
+                      <Text style={styles.modBadgeValue}>{formatarModificador(modTotal)}</Text>
+                    </>
+                  )}
                 </View>
               </View>
             );
@@ -146,7 +222,8 @@ export const AbaAtributos: React.FC<Props> = ({ ficha, onChange }) => {
             <View style={styles.statusHeaderRow}>
               <Text style={[styles.statusGroupTitle, styles.statusTitlePv]}>❤️ PONTOS DE VIDA (PV)</Text>
               <Text style={[styles.statusValDestaque, { color: '#C62828' }]}>
-                {ficha.pvAtual} / {ficha.pvTotal}
+                {ficha.pvAtual}
+                {buffs.pvTemporario > 0 ? ` (+${buffs.pvTemporario} temp)` : ''} / {ficha.pvTotal}
               </Text>
             </View>
             <BarraDeProgressoRecurso
@@ -156,6 +233,13 @@ export const AbaAtributos: React.FC<Props> = ({ ficha, onChange }) => {
               corFundo="rgba(198,40,40,0.12)"
               unidade="PV"
             />
+            {buffs.pvTemporario > 0 && (
+              <View style={styles.pvTempBadge}>
+                <Text style={styles.pvTempBadgeText}>
+                  🛡️ +{buffs.pvTemporario} PV Temporário ativo (absorve dano antes do PV real)
+                </Text>
+              </View>
+            )}
             <View style={styles.row}>
               <CampoInteiro
                 label="PV Atuais"
@@ -386,9 +470,14 @@ export const AbaAtributos: React.FC<Props> = ({ ficha, onChange }) => {
                     max={99}
                     compact
                   />
+                  {res.buff !== 0 && (
+                    <Text style={styles.resBuffNota}>
+                      {formatarModificador(res.buff)} temp
+                    </Text>
+                  )}
                 </View>
 
-                <View style={styles.resTotalBadge}>
+                <View style={[styles.resTotalBadge, res.buff !== 0 && styles.resTotalBadgeBuff]}>
                   <Text style={styles.resTotalText}>
                     {formatarModificador(res.total)}
                   </Text>
@@ -398,6 +487,13 @@ export const AbaAtributos: React.FC<Props> = ({ ficha, onChange }) => {
           </View>
         </View>
       </View>
+
+      <ModalBuffsTemporarios
+        visivel={modalBuffsAberto}
+        ficha={ficha}
+        onChange={onChange}
+        onFechar={() => setModalBuffsAberto(false)}
+      />
     </ScrollView>
   );
 };
@@ -691,6 +787,113 @@ const styles = StyleSheet.create({
     fontSize: 14,
     fontWeight: 'bold',
     color: COLORS.white,
+  },
+  bannerBuffs: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    backgroundColor: COLORS.surface,
+    borderRadius: 10,
+    borderWidth: 1,
+    borderColor: COLORS.border,
+    paddingVertical: 10,
+    paddingHorizontal: 14,
+    marginBottom: 14,
+    elevation: 2,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.1,
+    shadowRadius: 3,
+  },
+  bannerBuffsAtivo: {
+    backgroundColor: 'rgba(200, 157, 60, 0.12)',
+    borderColor: COLORS.gold,
+    borderWidth: 1.5,
+  },
+  bannerBuffsLeft: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 10,
+    flex: 1,
+  },
+  bannerBuffsIcon: {
+    fontSize: 22,
+  },
+  bannerBuffsTextCol: {
+    flex: 1,
+  },
+  bannerBuffsTitleRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
+  },
+  bannerBuffsTitle: {
+    fontSize: 14,
+    fontWeight: 'bold',
+    color: COLORS.primaryDark,
+  },
+  bannerBuffsSubtitle: {
+    fontSize: 11,
+    color: COLORS.textSecondary,
+    marginTop: 1,
+  },
+  badgeBuffsContador: {
+    backgroundColor: COLORS.gold,
+    paddingHorizontal: 6,
+    paddingVertical: 2,
+    borderRadius: 10,
+  },
+  badgeBuffsContadorText: {
+    fontSize: 9.5,
+    fontWeight: 'bold',
+    color: COLORS.primaryDark,
+  },
+  bannerBuffsActionText: {
+    fontSize: 12,
+    fontWeight: 'bold',
+    color: COLORS.primary,
+    marginLeft: 8,
+  },
+  atributoBaseNota: {
+    fontSize: 10,
+    color: COLORS.textSecondary,
+    marginTop: 1,
+  },
+  modBadgeAtivo: {
+    backgroundColor: 'rgba(46, 107, 62, 0.12)',
+    borderColor: 'rgba(46, 107, 62, 0.4)',
+    borderWidth: 1,
+  },
+  modBadgeLabelTotal: {
+    fontSize: 8.5,
+    fontWeight: 'bold',
+    color: '#2E6B3E',
+  },
+  pvTempBadge: {
+    marginTop: 8,
+    backgroundColor: 'rgba(198, 40, 40, 0.08)',
+    borderWidth: 1,
+    borderColor: 'rgba(198, 40, 40, 0.25)',
+    padding: 6,
+    borderRadius: 6,
+  },
+  pvTempBadgeText: {
+    fontSize: 11,
+    fontWeight: '600',
+    color: '#C62828',
+    textAlign: 'center',
+  },
+  resBuffNota: {
+    fontSize: 9.5,
+    fontWeight: 'bold',
+    color: '#2E6B3E',
+    marginTop: 2,
+    textAlign: 'center',
+  },
+  resTotalBadgeBuff: {
+    backgroundColor: 'rgba(46, 107, 62, 0.2)',
+    borderColor: 'rgba(46, 107, 62, 0.4)',
+    borderWidth: 1,
   },
 });
 
