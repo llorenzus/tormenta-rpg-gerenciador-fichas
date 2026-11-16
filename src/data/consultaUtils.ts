@@ -15,7 +15,7 @@ import { CondicaoData, condicoes, RegraData, todasRegras } from './regras';
 import { GolpeMarcialData, golpesMarciais, PosturaData, posturas } from './manobras';
 
 export const normalizarTexto = (texto: string): string => {
-  if (!texto) return '';
+  if (!texto || typeof texto !== 'string') return '';
   return texto
     .normalize('NFD')
     .replace(/[\u0300-\u036f]/g, '')
