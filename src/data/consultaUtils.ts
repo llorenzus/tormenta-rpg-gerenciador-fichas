@@ -1,6 +1,18 @@
-import { gerarId, HabilidadeOuTalento, MagiaItem } from '../models/ficha';
+import {
+  ArmaItem,
+  ArmaduraEquipamento,
+  gerarId,
+  HabilidadeOuTalento,
+  ItemGeral,
+  MagiaItem,
+} from '../models/ficha';
+import { ClasseData, classes } from './classes';
+import { EquipamentoData, equipamentos, TipoEquipamento } from './equipamentos';
 import { MagiaData, magias } from './magias';
+import { RacaData, racas } from './racas';
 import { CategoriaTalento, TalentoData, talentos } from './talentos';
+import { CondicaoData, condicoes, RegraData, todasRegras } from './regras';
+import { GolpeMarcialData, golpesMarciais, PosturaData, posturas } from './manobras';
 
 export const normalizarTexto = (texto: string): string => {
   if (!texto) return '';
@@ -73,6 +85,38 @@ export const converterMagiaParaItem = (magia: MagiaData): MagiaItem => {
   };
 };
 
+export const converterArmaParaItem = (equip: EquipamentoData): ArmaItem => {
+  return {
+    id: gerarId(),
+    nome: equip.nome,
+    bonusAtaque: '+0',
+    dano: equip.dano || '1d6',
+    critico: equip.critico || '20/x2',
+    distancia: equip.alcance && equip.alcance !== '—' ? equip.alcance : '',
+    tipoDano: equip.tipoDano || 'Corte',
+    usaDestreza: false,
+    outrosBonus: 0,
+  };
+};
+
+export const converterArmaduraParaItem = (equip: EquipamentoData): ArmaduraEquipamento => {
+  return {
+    id: gerarId(),
+    nome: equip.nome,
+    tipo: equip.tipo === 'Escudo' ? 'ESCUDO' : 'ARMADURA',
+    bonusCa: equip.bonusCa || 1,
+    equipada: true,
+  };
+};
+
+export const converterItemGeralParaItem = (equip: EquipamentoData): ItemGeral => {
+  return {
+    id: gerarId(),
+    nome: equip.nome,
+    quantidade: '1',
+  };
+};
+
 export const buscarTalentosSugeridos = (
   termo: string,
   categoria?: CategoriaTalento,
@@ -135,6 +179,42 @@ export const buscarMagiasSugeridas = (
   }
 
   return [...exatos, ...comecaCom, ...contem].slice(0, limite);
+};
+
+export const buscarRacasSugeridas = (termo: string, limite = 8): RacaData[] => {
+  const norm = normalizarTexto(termo);
+  if (!norm || norm.length < 2) return [];
+
+  return racas
+    .filter((r) => normalizarTexto(r.nome).includes(norm))
+    .slice(0, limite);
+};
+
+export const buscarClassesSugeridas = (termo: string, limite = 8): ClasseData[] => {
+  const norm = normalizarTexto(termo);
+  if (!norm || norm.length < 2) return [];
+
+  return classes
+    .filter((c) => normalizarTexto(c.nome).includes(norm))
+    .slice(0, limite);
+};
+
+export const buscarEquipamentosSugeridos = (
+  termo: string,
+  tipo?: TipoEquipamento,
+  limite = 8
+): EquipamentoData[] => {
+  const norm = normalizarTexto(termo);
+  if (!norm || norm.length < 2) return [];
+
+  let lista = equipamentos;
+  if (tipo) {
+    lista = lista.filter((e) => e.tipo === tipo);
+  }
+
+  return lista
+    .filter((e) => normalizarTexto(e.nome).includes(norm))
+    .slice(0, limite);
 };
 
 export interface FiltrosTalentos {
@@ -213,6 +293,49 @@ export const filtrarMagias = ({
   });
 };
 
+export const filtrarRacas = (termo = ''): RacaData[] => {
+  const normTermo = normalizarTexto(termo);
+  if (!normTermo) return racas;
+
+  return racas.filter((r) => {
+    const nomeNorm = normalizarTexto(r.nome);
+    const descNorm = normalizarTexto(r.descricao);
+    const traçosNorm = r.tracosRaciais.map((t) => normalizarTexto(t.nome + ' ' + t.descricao)).join(' ');
+    return nomeNorm.includes(normTermo) || descNorm.includes(normTermo) || traçosNorm.includes(normTermo);
+  });
+};
+
+export const filtrarClasses = (termo = '', tipo: 'Todas' | 'Basica' | 'Prestigio' = 'Todas'): ClasseData[] => {
+  const normTermo = normalizarTexto(termo);
+
+  return classes.filter((c) => {
+    if (tipo !== 'Todas' && c.tipo !== tipo) return false;
+    if (!normTermo) return true;
+
+    const nomeNorm = normalizarTexto(c.nome);
+    const descNorm = normalizarTexto(c.descricao);
+    const habsNorm = c.habilidades.map((h) => normalizarTexto(h.nome + ' ' + h.descricao)).join(' ');
+    return nomeNorm.includes(normTermo) || descNorm.includes(normTermo) || habsNorm.includes(normTermo);
+  });
+};
+
+export const filtrarEquipamentos = (
+  termo = '',
+  tipo: 'Todos' | TipoEquipamento = 'Todos'
+): EquipamentoData[] => {
+  const normTermo = normalizarTexto(termo);
+
+  return equipamentos.filter((e) => {
+    if (tipo !== 'Todos' && e.tipo !== tipo) return false;
+    if (!normTermo) return true;
+
+    const nomeNorm = normalizarTexto(e.nome);
+    const descNorm = normalizarTexto(e.descricao);
+    const catNorm = normalizarTexto(e.categoria);
+    return nomeNorm.includes(normTermo) || descNorm.includes(normTermo) || catNorm.includes(normTermo);
+  });
+};
+
 export const ESCOLAS_MAGIA = [
   'Todas',
   'Abjuração',
@@ -235,3 +358,118 @@ export const CATEGORIAS_TALENTO: Array<CategoriaTalento | 'Todas'> = [
   'Regional',
   'Tormenta',
 ];
+
+export const TIPOS_EQUIPAMENTO: Array<'Todos' | TipoEquipamento> = [
+  'Todos',
+  'Arma',
+  'Armadura',
+  'Escudo',
+  'Item Geral',
+];
+
+export const TIPOS_REGRA = [
+  'Todas',
+  'Condições',
+  'Pontos de Ação',
+  'Armas Mágicas',
+] as const;
+
+export type TipoRegraFiltro = (typeof TIPOS_REGRA)[number];
+
+export const filtrarRegras = (
+  termo = '',
+  categoria: TipoRegraFiltro = 'Todas'
+): RegraData[] => {
+  const normTermo = normalizarTexto(termo);
+
+  return todasRegras.filter((r) => {
+    if (categoria === 'Condições' && r.tipo !== 'Condição') return false;
+    if (categoria === 'Pontos de Ação' && r.tipo !== 'Pontos de Ação') return false;
+    if (categoria === 'Armas Mágicas' && r.tipo !== 'Armas Mágicas') return false;
+
+    if (!normTermo) return true;
+
+    const nomeNorm = normalizarTexto(r.nome);
+    const descNorm = normalizarTexto(r.descricao);
+    const detNorm = r.detalhes ? normalizarTexto(r.detalhes) : '';
+    const subNorm = r.subtipo ? normalizarTexto(r.subtipo) : '';
+
+    return (
+      nomeNorm.includes(normTermo) ||
+      descNorm.includes(normTermo) ||
+      detNorm.includes(normTermo) ||
+      subNorm.includes(normTermo)
+    );
+  });
+};
+
+export const filtrarCondicoes = (termo = ''): CondicaoData[] => {
+  const normTermo = normalizarTexto(termo);
+  if (!normTermo) return condicoes;
+
+  return condicoes.filter((c) => {
+    const nomeNorm = normalizarTexto(c.nome);
+    const descNorm = normalizarTexto(c.descricao);
+    return nomeNorm.includes(normTermo) || descNorm.includes(normTermo);
+  });
+};
+
+export const filtrarManobras = (
+  termo = '',
+  tipo: 'Todas' | 'Postura' | 'Golpe Marcial' = 'Todas'
+): Array<PosturaData | GolpeMarcialData> => {
+  const normTermo = normalizarTexto(termo);
+  const todasManobras: Array<PosturaData | GolpeMarcialData> = [
+    ...posturas,
+    ...golpesMarciais,
+  ];
+
+  return todasManobras.filter((m) => {
+    if (tipo !== 'Todas' && m.tipo !== tipo) return false;
+    if (!normTermo) return true;
+
+    const nomeNorm = normalizarTexto(m.nome);
+    const descNorm = normalizarTexto(m.descricao);
+    const efeitoNorm = normalizarTexto(m.efeito);
+    return (
+      nomeNorm.includes(normTermo) ||
+      descNorm.includes(normTermo) ||
+      efeitoNorm.includes(normTermo)
+    );
+  });
+};
+
+export const buscarManobrasSugeridas = (
+  termo: string,
+  tipo?: 'Postura' | 'Golpe Marcial',
+  limite = 6
+): Array<PosturaData | GolpeMarcialData> => {
+  return filtrarManobras(termo, tipo || 'Todas').slice(0, limite);
+};
+
+export const formatarDescricaoManobra = (
+  manobra: PosturaData | GolpeMarcialData
+): string => {
+  const partes: string[] = [];
+  if ('custo' in manobra && manobra.custo) {
+    partes.push(`Custo: ${manobra.custo}`);
+  }
+  if (manobra.efeito) {
+    partes.push(`Efeito: ${manobra.efeito}`);
+  }
+  if (manobra.descricao && manobra.descricao !== manobra.efeito) {
+    partes.push(manobra.descricao);
+  }
+  return partes.join('\n\n');
+};
+
+export const converterManobraParaItem = (
+  manobra: PosturaData | GolpeMarcialData
+): HabilidadeOuTalento => {
+  return {
+    id: gerarId(),
+    nome: `${manobra.nome} [${manobra.tipo}]`,
+    descricao: formatarDescricaoManobra(manobra),
+  };
+};
+

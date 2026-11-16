@@ -37,8 +37,9 @@ export const SecaoHeader: React.FC<SecaoHeaderProps> = ({
   );
 };
 
-interface CampoTextoProps {
-  label: string;
+export interface CampoTextoProps {
+  label?: string;
+  rightAction?: React.ReactNode;
   value: string;
   onChangeText: (text: string) => void;
   placeholder?: string;
@@ -49,6 +50,7 @@ interface CampoTextoProps {
 
 export const CampoTexto: React.FC<CampoTextoProps> = ({
   label,
+  rightAction,
   value,
   onChangeText,
   placeholder,
@@ -56,9 +58,19 @@ export const CampoTexto: React.FC<CampoTextoProps> = ({
   keyboardType,
   style,
 }) => {
+  const hasHeader = Boolean((label && label.trim().length > 0) || rightAction);
   return (
     <View style={[styles.fieldWrap, style]}>
-      <Text style={styles.fieldLabel}>{label}</Text>
+      {hasHeader && (
+        <View style={styles.labelRow}>
+          {!!label && label.trim().length > 0 ? (
+            <Text style={styles.fieldLabel}>{label}</Text>
+          ) : (
+            <View />
+          )}
+          {rightAction}
+        </View>
+      )}
       <TextInput
         style={[styles.textInput, multiline && styles.textInputMultiline]}
         value={value}
@@ -211,11 +223,18 @@ const styles = StyleSheet.create({
   fieldWrap: {
     marginBottom: 4,
   },
+  labelRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    minHeight: 22,
+    marginBottom: 4,
+  },
   fieldLabel: {
     fontSize: 11,
     fontWeight: '600',
     color: COLORS.textSecondary,
-    marginBottom: 4,
+    includeFontPadding: false,
   },
   textInput: {
     backgroundColor: COLORS.surface,

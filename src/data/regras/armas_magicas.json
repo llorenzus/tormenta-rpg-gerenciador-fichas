@@ -1,0 +1,590 @@
+[
+  {
+    "id": "arma_magica_regras_gerais",
+    "nome": "Armas Mágicas (Regras Gerais)",
+    "tipo": "Armas Mágicas",
+    "subtipo": "Regra de Equipamento",
+    "descricao": "Armas mágicas fornecem seus bônus nas jogadas de ataque e dano do usuário (+1 a +5). Algumas podem também possuir outros poderes especiais mágicos.",
+    "detalhes": "• Toda arma mágica é obra-prima, mas o bônus de obra-prima (+1 no ataque) não se acumula com o bônus mágico.\n• Nenhuma arma pode ter bônus numérico superior a +5. Bônus extras (+6 a +10) servem para calcular o custo de poderes especiais adicionados à arma.\n• Nenhum item pode acumular bônus equivalente acima de +10.\n• Auras Mágicas: Bônus +1 possui aura tênue; bônus de +2 a +4 possui aura moderada; bônus +5 ou superior possui aura poderosa.\n• Armas de ataque à distância (arcos, bestas, fundas) imbuem seus bônus e poderes especiais à munição disparada. O bônus da arma não se acumula com o de munição mágica (aplica-se o maior).\n• Preço: O valor mágico é somado ao preço de um item obra-prima do mesmo tipo (preço normal da arma + 300 TO de obra-prima + bônus mágico).",
+    "livroFonte": "Tormenta RPG / TSRD"
+  },
+  {
+    "id": "arma_magica_tabela_precos",
+    "nome": "Armas Mágicas: Tabela de Preços por Bônus",
+    "tipo": "Armas Mágicas",
+    "subtipo": "Tabela de Preços",
+    "descricao": "Custo adicional em Tibares de Ouro (TO) para encantar ou comprar armas com bônus e poderes especiais.",
+    "detalhes": "• Bônus +1: +2.000 TO\n• Bônus +2: +8.000 TO\n• Bônus +3: +18.000 TO\n• Bônus +4: +32.000 TO\n• Bônus +5: +50.000 TO\n• Equivalente +6: +72.000 TO\n• Equivalente +7: +98.000 TO\n• Equivalente +8: +128.000 TO\n• Equivalente +9: +162.000 TO\n• Equivalente +10: +200.000 TO",
+    "livroFonte": "Tormenta RPG / TSRD"
+  },
+  {
+    "id": "poder_arma_afiada",
+    "nome": "Poder Especial: Afiada",
+    "tipo": "Armas Mágicas",
+    "subtipo": "Corpo a Corpo",
+    "bonusEquivalente": "+1",
+    "descricao": "A margem de ameaça de acerto crítico da arma é duplicada.",
+    "detalhes": "Por exemplo, uma espada longa (margem 19-20) com este poder passa a ter margem de ameaça 17-20. Aplicável apenas a armas cortantes ou perfurantes.",
+    "livroFonte": "Tormenta RPG / TSRD"
+  },
+  {
+    "id": "poder_arma_anarquica",
+    "nome": "Poder Especial: Anárquica",
+    "tipo": "Armas Mágicas",
+    "subtipo": "Corpo a Corpo e Distância",
+    "bonusEquivalente": "+2",
+    "descricao": "Imbuída com o poder cósmico do Caos. Atravessa redução de dano por Caos e causa +2d6 de dano extra contra criaturas de tendência Leal.",
+    "detalhes": "Uma criatura Leal que empunhar uma arma anárquica sofre automaticamente um nível negativo enquanto a empunhar.",
+    "livroFonte": "Tormenta RPG / TSRD"
+  },
+  {
+    "id": "poder_arma_anti_criatura",
+    "nome": "Poder Especial: Anti-criatura",
+    "tipo": "Armas Mágicas",
+    "subtipo": "Corpo a Corpo e Distância",
+    "bonusEquivalente": "+1",
+    "descricao": "Consagrada contra um tipo específico de criatura. Contra aquele tipo, o bônus da arma aumenta em +2 e ela causa +2d6 pontos de dano adicional.",
+    "detalhes": "Tipos possíveis: Animal, Construto, Espírito, Humanoide, Monstro ou Morto-Vivo.",
+    "livroFonte": "Tormenta RPG / TSRD"
+  },
+  {
+    "id": "poder_arma_armazenar_magia",
+    "nome": "Poder Especial: Armazenar Magia",
+    "tipo": "Armas Mágicas",
+    "subtipo": "Corpo a Corpo",
+    "bonusEquivalente": "+1",
+    "descricao": "Um conjurador pode guardar uma magia de até 3º nível na arma.",
+    "detalhes": "Sempre que a arma atinge uma criatura, seu usuário pode liberar a magia guardada contra o alvo como uma ação livre. Após lançada, uma nova magia pode ser guardada.",
+    "livroFonte": "Tormenta RPG / TSRD"
+  },
+  {
+    "id": "poder_arma_arremesso",
+    "nome": "Poder Especial: Arremesso",
+    "tipo": "Armas Mágicas",
+    "subtipo": "Corpo a Corpo",
+    "bonusEquivalente": "+1",
+    "descricao": "A arma pode ser arremessada contra inimigos distantes, com alcance base de 3m.",
+    "detalhes": "Armas que já possuíam alcance de arremesso têm seu alcance melhorado.",
+    "livroFonte": "Tormenta RPG / TSRD"
+  },
+  {
+    "id": "poder_arma_axiomatica",
+    "nome": "Poder Especial: Axiomática",
+    "tipo": "Armas Mágicas",
+    "subtipo": "Corpo a Corpo e Distância",
+    "bonusEquivalente": "+2",
+    "descricao": "Imbuída com o poder cósmico da Ordem. Atravessa redução de dano por Ordem e causa +2d6 de dano extra contra criaturas de tendência Caótica.",
+    "detalhes": "Uma criatura Caótica que empunhar uma arma axiomática sofre automaticamente um nível negativo enquanto a empunhar.",
+    "livroFonte": "Tormenta RPG / TSRD"
+  },
+  {
+    "id": "poder_arma_cacadora",
+    "nome": "Poder Especial: Caçadora",
+    "tipo": "Armas Mágicas",
+    "subtipo": "Armas de Distância",
+    "bonusEquivalente": "+1",
+    "descricao": "O projétil desvia em direção ao seu alvo em pleno ar, anulando quaisquer chances de erro (como camuflagem ou cobertura parcial).",
+    "detalhes": "Aplicável exclusivamente a armas de ataque à distância.",
+    "livroFonte": "Tormenta RPG / TSRD"
+  },
+  {
+    "id": "poder_arma_congelante",
+    "nome": "Poder Especial: Congelante",
+    "tipo": "Armas Mágicas",
+    "subtipo": "Corpo a Corpo e Distância",
+    "bonusEquivalente": "+1",
+    "descricao": "A arma causa +1d6 de dano adicional de frio a cada acerto.",
+    "detalhes": "Quando empunhada, recobre-se de uma fina camada de gelo e geada mística, sem ferir seu portador.",
+    "livroFonte": "Tormenta RPG / TSRD"
+  },
+  {
+    "id": "poder_arma_dancarina",
+    "nome": "Poder Especial: Dançarina",
+    "tipo": "Armas Mágicas",
+    "subtipo": "Corpo a Corpo",
+    "bonusEquivalente": "+3",
+    "descricao": "Como uma ação padrão, o usuário pode soltar a arma no ar para lutar sozinha.",
+    "detalhes": "A arma flutua no ar e ataca os inimigos designados por 4 rodadas com os mesmos bônus que teria se empunhada pelo dono, caindo ao chão ao término do efeito.",
+    "livroFonte": "Tormenta RPG / TSRD"
+  },
+  {
+    "id": "poder_arma_defensora",
+    "nome": "Poder Especial: Defensora",
+    "tipo": "Armas Mágicas",
+    "subtipo": "Corpo a Corpo",
+    "bonusEquivalente": "+1",
+    "descricao": "Permite remanejar o bônus de melhoria da arma para a Classe de Armadura (CA).",
+    "detalhes": "No início de cada rodada, o portador decide livremente como distribuir o bônus mágico da arma entre suas jogadas de ataque/dano e sua Classe de Armadura.",
+    "livroFonte": "Tormenta RPG / TSRD"
+  },
+  {
+    "id": "poder_arma_dissonante",
+    "nome": "Poder Especial: Dissonante",
+    "tipo": "Armas Mágicas",
+    "subtipo": "Corpo a Corpo",
+    "bonusEquivalente": "+1",
+    "descricao": "Ao acertar uma criatura, libera um lampejo de energia que causa +2d6 de dano ao alvo e 1d6 de dano de recuo ao próprio usuário.",
+    "detalhes": "Uma arma de fúria e risco calculada para causar grande destruição imediata.",
+    "livroFonte": "Tormenta RPG / TSRD"
+  },
+  {
+    "id": "poder_arma_distancia",
+    "nome": "Poder Especial: Distância",
+    "tipo": "Armas Mágicas",
+    "subtipo": "Armas de Distância",
+    "bonusEquivalente": "+1",
+    "descricao": "O alcance padrão de disparo ou arremesso da arma é totalmente duplicado.",
+    "detalhes": "Aplicável apenas a armas de ataque à distância.",
+    "livroFonte": "Tormenta RPG / TSRD"
+  },
+  {
+    "id": "poder_arma_dolorosa",
+    "nome": "Poder Especial: Dolorosa",
+    "tipo": "Armas Mágicas",
+    "subtipo": "Corpo a Corpo",
+    "bonusEquivalente": "+1",
+    "descricao": "Cada acerto causa dano de choque igual ao modificador de Força do usuário em todas as criaturas a até 3m (incluindo usuário).",
+    "detalhes": "O alvo direto do ataque recebe este dano em adição ao dano normal da arma. Apenas armas corpo a corpo.",
+    "livroFonte": "Manual do Arcano, pág. 63"
+  },
+  {
+    "id": "poder_arma_drenante",
+    "nome": "Poder Especial: Drenante",
+    "tipo": "Armas Mágicas",
+    "subtipo": "Corpo a Corpo",
+    "bonusEquivalente": "+1",
+    "descricao": "A cada ataque bem-sucedido, causa +1 ponto de dano e o usuário recupera 1 PM ou 1 PV (à sua escolha).",
+    "detalhes": "Excelente sustentação de recursos de combate para guerreiros e conjuradores de linha de frente.",
+    "livroFonte": "Manual do Arcano, pág. 63"
+  },
+  {
+    "id": "poder_arma_eletrica",
+    "nome": "Poder Especial: Elétrica",
+    "tipo": "Armas Mágicas",
+    "subtipo": "Corpo a Corpo e Distância",
+    "bonusEquivalente": "+1",
+    "descricao": "A arma causa +1d6 de dano adicional de eletricidade a cada acerto.",
+    "detalhes": "Faíscas elétricas e estática mágica crepitam ao longo do impacto sem eletrocutar seu portador.",
+    "livroFonte": "Tormenta RPG / TSRD"
+  },
+  {
+    "id": "poder_arma_energia_brilhante",
+    "nome": "Poder Especial: Energia Brilhante",
+    "tipo": "Armas Mágicas",
+    "subtipo": "Corpo a Corpo e Distância",
+    "bonusEquivalente": "+4",
+    "descricao": "A parte perigosa da arma (lâmina, ponta) se transforma em pura energia radiante.",
+    "detalhes": "A arma realiza ataques de toque (ignorando armaduras e escudos físicos dos alvos) e ilumina como uma tocha (raio de 6m).",
+    "livroFonte": "Tormenta RPG / TSRD"
+  },
+  {
+    "id": "poder_arma_explosao_congelante",
+    "nome": "Poder Especial: Explosão Congelante",
+    "tipo": "Armas Mágicas",
+    "subtipo": "Corpo a Corpo e Distância",
+    "bonusEquivalente": "+2",
+    "descricao": "Causa +1d6 de dano de frio em acertos normais e explode em estilhaços glaciais em acertos críticos.",
+    "detalhes": "Em caso de acerto crítico confirmado, causa dano extra de frio de acordo com o multiplicador da arma:\n• Multiplicador x2: +1d10 de frio\n• Multiplicador x3: +2d10 de frio\n• Multiplicador x4+: +3d10 de frio",
+    "livroFonte": "Tormenta RPG / TSRD"
+  },
+  {
+    "id": "poder_arma_explosao_eletrica",
+    "nome": "Poder Especial: Explosão Elétrica",
+    "tipo": "Armas Mágicas",
+    "subtipo": "Corpo a Corpo e Distância",
+    "bonusEquivalente": "+2",
+    "descricao": "Causa +1d6 de dano elétrico em acertos normais e libera uma violenta descarga de raios em acertos críticos.",
+    "detalhes": "Em caso de acerto crítico confirmado, causa dano elétrico adicional de acordo com o multiplicador:\n• Multiplicador x2: +1d10 elétrico\n• Multiplicador x3: +2d10 elétrico\n• Multiplicador x4+: +3d10 elétrico",
+    "livroFonte": "Tormenta RPG / TSRD"
+  },
+  {
+    "id": "poder_arma_explosao_flamejante",
+    "nome": "Poder Especial: Explosão Flamejante",
+    "tipo": "Armas Mágicas",
+    "subtipo": "Corpo a Corpo e Distância",
+    "bonusEquivalente": "+2",
+    "descricao": "Causa +1d6 de dano de fogo em acertos normais e explode em chamas devastadoras em acertos críticos.",
+    "detalhes": "Em caso de acerto crítico confirmado, causa dano ígneo adicional de acordo com o multiplicador:\n• Multiplicador x2: +1d10 de fogo\n• Multiplicador x3: +2d10 de fogo\n• Multiplicador x4+: +3d10 de fogo",
+    "livroFonte": "Tormenta RPG / TSRD"
+  },
+  {
+    "id": "poder_arma_flamejante",
+    "nome": "Poder Especial: Flamejante",
+    "tipo": "Armas Mágicas",
+    "subtipo": "Corpo a Corpo e Distância",
+    "bonusEquivalente": "+1",
+    "descricao": "A arma causa +1d6 de dano adicional de fogo a cada acerto.",
+    "detalhes": "Emana labaredas vívidas que não ferem o usuário, consumindo e queimando os inimigos atingidos.",
+    "livroFonte": "Tormenta RPG / TSRD"
+  },
+  {
+    "id": "poder_arma_impaciente",
+    "nome": "Poder Especial: Impaciente",
+    "tipo": "Armas Mágicas",
+    "subtipo": "Corpo a Corpo",
+    "bonusEquivalente": "+2",
+    "descricao": "Pode ser sacada como ação livre. Concede bônus táticos impressionantes de velocidade e retenção.",
+    "detalhes": "• Pode ser sacada como ação livre.\n• Caso possua o talento Saque Rápido, concede +4 em Iniciativa.\n• Se for sacada e usada para atacar na mesma rodada, concede +2 na jogada de ataque.\n• Caso seja desarmada, a arma salta de volta para a mão do dono na rodada seguinte (se desimpedida).",
+    "livroFonte": "Manual do Arcano, pág. 63"
+  },
+  {
+    "id": "poder_arma_impetuosa",
+    "nome": "Poder Especial: Impetuosa",
+    "tipo": "Armas Mágicas",
+    "subtipo": "Corpo a Corpo",
+    "bonusEquivalente": "+1",
+    "descricao": "Parece querer saltar da bainha a qualquer instante e treme frente à iminência de combate.",
+    "detalhes": "• Concede +4 em testes de Iniciativa e concede o talento Iniciativa Aprimorada.\n• Penalidade de -4 em Diplomacia para acalmar ânimos e -4 em Vontade para resistir a insultos.",
+    "livroFonte": "Manual do Malandro, pág. 79"
+  },
+  {
+    "id": "poder_arma_misericordia",
+    "nome": "Poder Especial: Misericórdia",
+    "tipo": "Armas Mágicas",
+    "subtipo": "Corpo a Corpo e Distância",
+    "bonusEquivalente": "+1",
+    "descricao": "A arma causa +1d6 de dano adicional, mas todo o dano causado por ela é não-letal.",
+    "detalhes": "O usuário pode ativar ou desativar este poder com uma ação livre para alternar entre dano letal e não-letal.",
+    "livroFonte": "Tormenta RPG / TSRD"
+  },
+  {
+    "id": "poder_arma_primitiva",
+    "nome": "Poder Especial: Primitiva",
+    "tipo": "Armas Mágicas",
+    "subtipo": "Corpo a Corpo",
+    "bonusEquivalente": "+2",
+    "descricao": "Exclusivo para porretes, adagas, lanças e machadinhas feitas de materiais rústicos (pedra, osso, madeira).",
+    "detalhes": "Causa +4 de dano fixo e concede +10 em testes para quebrar armas e objetos refinados (de metal, obra-prima) com a manobra separar.",
+    "livroFonte": "Manual do Arcano, pág. 63"
+  },
+  {
+    "id": "poder_arma_profana",
+    "nome": "Poder Especial: Profana",
+    "tipo": "Armas Mágicas",
+    "subtipo": "Corpo a Corpo e Distância",
+    "bonusEquivalente": "+2",
+    "descricao": "Imbuída com essência do Mal. Atravessa redução de dano por Mal e inflige +2d6 de dano extra contra criaturas de tendência Bondosa.",
+    "detalhes": "Uma criatura Bondosa que empunhar uma arma profana sofre automaticamente um nível negativo enquanto a empunhar.",
+    "livroFonte": "Tormenta RPG / TSRD"
+  },
+  {
+    "id": "poder_arma_recarga_rapida",
+    "nome": "Poder Especial: Recarga Rápida",
+    "tipo": "Armas Mágicas",
+    "subtipo": "Armas de Disparo",
+    "bonusEquivalente": "+1",
+    "descricao": "Acelera o mecanismo de recarga de bestas, pistolas e mosquetes em uma categoria de ação.",
+    "detalhes": "A ação necessária diminui em um passo: ação completa vira ação padrão; ação padrão vira ação de movimento; ação de movimento vira ação livre.",
+    "livroFonte": "Manual do Malandro, pág. 63"
+  },
+  {
+    "id": "poder_arma_retorno",
+    "nome": "Poder Especial: Retorno",
+    "tipo": "Armas Mágicas",
+    "subtipo": "Armas de Arremesso",
+    "bonusEquivalente": "+1",
+    "descricao": "A arma voa pelo ar de volta para a mão de quem a arremessou no início de seu próximo turno.",
+    "detalhes": "Pegar a arma em voo é uma ação livre e não exige teste. Aplicável exclusivamente a armas de arremesso.",
+    "livroFonte": "Tormenta RPG / TSRD"
+  },
+  {
+    "id": "poder_arma_ricocheteadora",
+    "nome": "Poder Especial: Ricocheteadora",
+    "tipo": "Armas Mágicas",
+    "subtipo": "Armas de Distância",
+    "bonusEquivalente": "+1",
+    "descricao": "Uma vez por combate, o ataque à distância pode ricochetear no alvo e atingir um segundo inimigo a até 9m.",
+    "detalhes": "Deve haver linha de efeito entre o primeiro e o segundo alvo. O uso deve ser declarado antes da jogada. Se o primeiro acertar, o segundo sofre o mesmo acerto.",
+    "livroFonte": "Manual do Malandro, pág. 63"
+  },
+  {
+    "id": "poder_arma_rompimento",
+    "nome": "Poder Especial: Rompimento",
+    "tipo": "Armas Mágicas",
+    "subtipo": "Corpo a Corpo",
+    "bonusEquivalente": "+2",
+    "descricao": "Destruição fulminante de mortos-vivos.",
+    "detalhes": "Qualquer morto-vivo atingido pela arma deve ser bem-sucedido em um teste de Vontade (CD 10 + metade do nível do usuário) ou é instantaneamente destruído.",
+    "livroFonte": "Tormenta RPG / TSRD"
+  },
+  {
+    "id": "poder_arma_sagrada",
+    "nome": "Poder Especial: Sagrada",
+    "tipo": "Armas Mágicas",
+    "subtipo": "Corpo a Corpo e Distância",
+    "bonusEquivalente": "+2",
+    "descricao": "Imbuída com a glória do Bem. Atravessa redução de dano por Bem e inflige +2d6 de dano extra contra criaturas de tendência Maligna.",
+    "detalhes": "Uma criatura Maligna que empunhar uma arma sagrada sofre automaticamente um nível negativo enquanto a empunhar.",
+    "livroFonte": "Tormenta RPG / TSRD"
+  },
+  {
+    "id": "poder_arma_sangramento",
+    "nome": "Poder Especial: Sangramento",
+    "tipo": "Armas Mágicas",
+    "subtipo": "Corpo a Corpo",
+    "bonusEquivalente": "+2",
+    "descricao": "A cada acerto, causa 1 ponto de dano na Constituição do oponente além do dano normal da arma.",
+    "detalhes": "O dano de Constituição não multiplica em acertos críticos. Criaturas imunes a acertos críticos são imunes a este dano de habilidade.",
+    "livroFonte": "Tormenta RPG / TSRD"
+  },
+  {
+    "id": "poder_arma_toque_espectral",
+    "nome": "Poder Especial: Toque Espectral",
+    "tipo": "Armas Mágicas",
+    "subtipo": "Corpo a Corpo",
+    "bonusEquivalente": "+1",
+    "descricao": "Atinge criaturas incorpóreas normalmente, ignorando a chance padrão de 50% de falha.",
+    "detalhes": "Criaturas incorpóreas podem empunhar armas com toque espectral como se fossem seres físicos corpóreos.",
+    "livroFonte": "Tormenta RPG / TSRD"
+  },
+  {
+    "id": "poder_arma_trespassar_poderoso",
+    "nome": "Poder Especial: Trespassar Poderoso",
+    "tipo": "Armas Mágicas",
+    "subtipo": "Corpo a Corpo",
+    "bonusEquivalente": "+1",
+    "descricao": "Concede ao usuário os benefícios do talento Trespassar, mesmo sem preencher seus pré-requisitos.",
+    "detalhes": "Caso o portador já possua o talento Trespassar, pode usá-lo uma vez adicional por rodada.",
+    "livroFonte": "Tormenta RPG / TSRD"
+  },
+  {
+    "id": "poder_arma_trovejante",
+    "nome": "Poder Especial: Trovejante",
+    "tipo": "Armas Mágicas",
+    "subtipo": "Corpo a Corpo e Distância",
+    "bonusEquivalente": "+1",
+    "descricao": "Cria um estampido ensurdecedor quando desfere um acerto crítico.",
+    "detalhes": "Em caso de acerto crítico confirmado, causa dano sônico adicional de acordo com o multiplicador:\n• Multiplicador x2: +1d10 sônico\n• Multiplicador x3: +2d10 sônico\n• Multiplicador x4+: +3d10 sônico",
+    "livroFonte": "Tormenta RPG / TSRD"
+  },
+  {
+    "id": "poder_arma_velocidade",
+    "nome": "Poder Especial: Velocidade",
+    "tipo": "Armas Mágicas",
+    "subtipo": "Corpo a Corpo e Distância",
+    "bonusEquivalente": "+4",
+    "descricao": "Concede os benefícios do talento Ataque Duplo sem precisar cumprir seus pré-requisitos.",
+    "detalhes": "Caso o usuário já possua o talento Ataque Duplo, pode realizar dois ataques sem sofrer a penalidade habitual de -5.",
+    "livroFonte": "Tormenta RPG / TSRD"
+  },
+  {
+    "id": "poder_arma_vorpal",
+    "nome": "Poder Especial: Vorpal",
+    "tipo": "Armas Mágicas",
+    "subtipo": "Corpo a Corpo",
+    "bonusEquivalente": "+5",
+    "descricao": "Ao tirar um 20 natural na jogada de ataque, a arma decepa a cabeça do oponente, matando-o instantaneamente.",
+    "detalhes": "Aplicável apenas a armas corpo a corpo cortantes. Algumas criaturas (construtos, mortos-vivos ou monstros com múltiplas cabeças) não morrem necessariamente ao perder uma cabeça, mas a esmagadora maioria é eliminada imediatamente.",
+    "livroFonte": "Tormenta RPG / TSRD"
+  },
+  {
+    "id": "arma_esp_flecha_sono",
+    "nome": "Arma Específica: Flecha do Sono",
+    "tipo": "Armas Mágicas",
+    "subtipo": "Munição Específica",
+    "preco": "132 TO",
+    "descricao": "Flecha encantada que força a criatura atingida a fazer um teste de Vontade (CD 11) ou cai em sono profundo (como a magia Sono).",
+    "detalhes": "A flecha se destrói com o impacto.",
+    "livroFonte": "Tormenta RPG / TSRD"
+  },
+  {
+    "id": "arma_esp_virote_gritante",
+    "nome": "Arma Específica: Virote Gritante",
+    "tipo": "Armas Mágicas",
+    "subtipo": "Munição Específica",
+    "preco": "267 TO",
+    "descricao": "Virote que emite um grito estarrecedor em voo. Oponentes a até 6m do trajeto devem ter sucesso em Vontade (CD 14) ou ficam abalados.",
+    "detalhes": "Destrói-se com o impacto.",
+    "livroFonte": "Tormenta RPG / TSRD"
+  },
+  {
+    "id": "arma_esp_azagaia_relampagos",
+    "nome": "Arma Específica: Azagaia dos Relâmpagos",
+    "tipo": "Armas Mágicas",
+    "subtipo": "Arma de Arremesso Específica",
+    "preco": "1.500 TO",
+    "descricao": "Ao ser arremessada, transforma-se em um relâmpago de 9m causando 5d6 de dano de eletricidade a todas as criaturas na linha (Reflexos CD 14 reduz à metade).",
+    "detalhes": "Destrói-se após o arremesso relampejante.",
+    "livroFonte": "Tormenta RPG / TSRD"
+  },
+  {
+    "id": "arma_esp_flecha_assassina",
+    "nome": "Arma Específica: Flecha Assassina",
+    "tipo": "Armas Mágicas",
+    "subtipo": "Munição Específica",
+    "preco": "2.282 TO",
+    "descricao": "Consagrada contra um tipo específico de criatura. Se acertar o tipo designado, o alvo deve ter sucesso em teste de Fortitude (CD 20) ou morre instantaneamente.",
+    "detalhes": "Caso passe no teste, ainda sofre 3d10 pontos de dano adicional.",
+    "livroFonte": "Tormenta RPG / TSRD"
+  },
+  {
+    "id": "arma_esp_estilhacadora",
+    "nome": "Arma Específica: Estilhaçadora",
+    "tipo": "Armas Mágicas",
+    "subtipo": "Arma Específica",
+    "preco": "4.315 TO",
+    "descricao": "Espada curta +1 feita de obsidiana mística especializada em separar e estilhaçar armas e escudos dos inimigos.",
+    "detalhes": "Concede +4 em testes da manobra separar e causa +2d6 de dano contra construtos.",
+    "livroFonte": "Tormenta RPG / TSRD"
+  },
+  {
+    "id": "arma_esp_adaga_venenosa",
+    "nome": "Arma Específica: Adaga Venenosa",
+    "tipo": "Armas Mágicas",
+    "subtipo": "Arma Específica",
+    "preco": "8.302 TO",
+    "descricao": "Adaga +1 cuja lâmina de aço negro escorre veneno perpétuo que não necessita ser reposto.",
+    "detalhes": "Até 3 vezes ao dia, pode cobrir a lâmina com um veneno letal (Fortitude CD 14 ou sofre 1d10 de dano de Constituição inicial e secundário).",
+    "livroFonte": "Tormenta RPG / TSRD"
+  },
+  {
+    "id": "arma_esp_tridente_peixes",
+    "nome": "Arma Específica: Tridente de Comandar Peixes",
+    "tipo": "Armas Mágicas",
+    "subtipo": "Arma Específica",
+    "preco": "18.650 TO",
+    "descricao": "Tridente +2 forjado em coral e metal aquático capaz de comandar e comunicar-se com a fauna marinha.",
+    "detalhes": "Permite lançar Acalmar Animais (aquáticos) e Falar com Animais (aquáticos) à vontade, e Dominar Animais (CD 14) até 3x ao dia.",
+    "livroFonte": "Tormenta RPG / TSRD"
+  },
+  {
+    "id": "arma_esp_lingua_flamejante",
+    "nome": "Arma Específica: Língua Flamejante",
+    "tipo": "Armas Mágicas",
+    "subtipo": "Arma Específica",
+    "preco": "20.715 TO",
+    "descricao": "Espada longa +1 flamejante e de explosão flamejante forjada nos fogos vulcânicos do Deus Tauron.",
+    "detalhes": "Além dos poderes flamejantes, permite disparar uma vez ao dia um raio de fogo com alcance de 9m causando 4d6 de dano de fogo (Reflexos CD 14 metade).",
+    "livroFonte": "Tormenta RPG / TSRD"
+  },
+  {
+    "id": "arma_esp_espada_sutileza",
+    "nome": "Arma Específica: Espada da Sutileza",
+    "tipo": "Armas Mágicas",
+    "subtipo": "Arma Específica",
+    "preco": "22.310 TO",
+    "descricao": "Espada curta +2 balanceada magistralmente para usuários ardilosos e ladinos.",
+    "detalhes": "Concede um bônus adicional de +4 nas jogadas de ataque e dano sempre que o portador realizar um Ataque Furtivo.",
+    "livroFonte": "Tormenta RPG / TSRD"
+  },
+  {
+    "id": "arma_esp_espada_planos",
+    "nome": "Arma Específica: Espada dos Planos",
+    "tipo": "Armas Mágicas",
+    "subtipo": "Arma Específica",
+    "preco": "22.315 TO",
+    "descricao": "Espada longa +1 forjada com materiais multidimensionais.",
+    "detalhes": "No Plano Material ela funciona como uma arma +2. Em qualquer outro plano (como os Reinos dos Deuses), seu bônus aumenta para +4.",
+    "livroFonte": "Tormenta RPG / TSRD"
+  },
+  {
+    "id": "arma_esp_ladra_nove_vidas",
+    "nome": "Arma Específica: Ladra das Nove Vidas",
+    "tipo": "Armas Mágicas",
+    "subtipo": "Arma Específica",
+    "preco": "23.057 TO",
+    "descricao": "Espada longa +2 sinistra que anseia por sugar as vidas de seus alvos.",
+    "detalhes": "Possui 9 cargas no total. Ao desferir um acerto crítico, o usuário pode drenar uma carga para forçar a criatura a passar em Fortitude (CD 20) ou sua alma é consumida, morrendo na hora.",
+    "livroFonte": "Tormenta RPG / TSRD"
+  },
+  {
+    "id": "poder_dolorosa",
+    "nome": "Dolorosa",
+    "tipo": "Armas Mágicas",
+    "subtipo": "Poder Especial de Arma Corpo a Corpo",
+    "bonusEquivalente": "+1 de bônus",
+    "descricao": "A arma possui serrilhas cruéis ou ganchos místicos que causam ferimentos profundos e hemorragias persistentes.",
+    "detalhes": "Ao acertar um ataque com esta arma, o alvo sofre 1d4 de dano de sangramento contínuo no início de cada um de seus turnos. O sangramento cessa com um teste de Cura CD 15 ou qualquer efeito de magia de cura.",
+    "livroFonte": "Manual do Arcano"
+  },
+  {
+    "id": "poder_drenante",
+    "nome": "Drenante",
+    "tipo": "Armas Mágicas",
+    "subtipo": "Poder Especial de Arma Corpo a Corpo",
+    "bonusEquivalente": "+2 de bônus",
+    "descricao": "A arma ressoa com energias de drenagem espiritual que sugam a energia vital e mística de seus oponentes.",
+    "detalhes": "Ao confirmar um acerto crítico contra uma criatura com capacidade mágica, a arma drena 1 Ponto de Magia (PM) do alvo e transfere imediatamente para a reserva de PM do usuário (não pode ultrapassar o máximo normal do usuário).",
+    "livroFonte": "Manual do Arcano"
+  },
+  {
+    "id": "poder_impaciente",
+    "nome": "Impaciente",
+    "tipo": "Armas Mágicas",
+    "subtipo": "Poder Especial de Arma",
+    "bonusEquivalente": "+1 de bônus",
+    "descricao": "A arma pulsa com agilidade sobrenatural e anseia pelo combate antes mesmo de qualquer outro combatente reagir.",
+    "detalhes": "Enquanto a arma estiver na bainha ou empunhada, o portador recebe um bônus de +2 em jogadas de Iniciativa e pode sacar ou embainhar a arma como uma ação livre imediata.",
+    "livroFonte": "Manual do Arcano"
+  },
+  {
+    "id": "poder_primitiva",
+    "nome": "Primitiva",
+    "tipo": "Armas Mágicas",
+    "subtipo": "Poder Especial de Arma Corpo a Corpo",
+    "bonusEquivalente": "+1 de bônus",
+    "descricao": "Feita com ossos afiados, dentes de feras e ligada aos espíritos da selvageria pura de Arton.",
+    "detalhes": "Causa +2 pontos de dano adicionais. Se o usuário estiver em estado de Fúria (ou sob efeitos similares de ferocidade), o bônus de dano aumenta para +4.",
+    "livroFonte": "Manual do Arcano"
+  },
+  {
+    "id": "poder_celebre",
+    "nome": "Célebre",
+    "tipo": "Armas Mágicas",
+    "subtipo": "Poder Especial de Arma ou Escudo",
+    "bonusEquivalente": "+2 de bônus",
+    "descricao": "Item gravado com brasões faustosos e auras de magnetismo pessoal que realçam a presença do portador.",
+    "detalhes": "Concede ao portador bônus de +2 em todos os testes baseados em Carisma (como Diplomacia, Atuação e Enganação) e aumenta a CD de todas as suas magias de Encantamento ou Ilusão em +1.",
+    "livroFonte": "Manual do Arcano"
+  },
+  {
+    "id": "poder_perseveranca",
+    "nome": "Perseverança",
+    "tipo": "Armas Mágicas",
+    "subtipo": "Poder Especial de Armadura ou Escudo",
+    "bonusEquivalente": "+1 de bônus",
+    "descricao": "A armadura ou escudo irradia uma barreira protetora constante contra feitiços hostis.",
+    "detalhes": "O usuário recebe um bônus de +2 em todos os testes de resistência contra magias e habilidades similares a magia.",
+    "livroFonte": "Manual do Arcano"
+  },
+  {
+    "id": "poder_portal",
+    "nome": "Portal",
+    "tipo": "Armas Mágicas",
+    "subtipo": "Poder Especial de Arma ou Escudo",
+    "bonusEquivalente": "+3 de bônus",
+    "descricao": "Permite dobrar o espaço físico ao redor da lâmina ou do escudo para saltar através de fendas dimensionais.",
+    "detalhes": "Uma vez por dia como uma ação de movimento, o usuário pode se teletransportar instantaneamente para qualquer espaço visível a até 9 metros, sem provocar ataques de oportunidade.",
+    "livroFonte": "Manual do Arcano"
+  },
+  {
+    "id": "poder_tufao",
+    "nome": "Tufão",
+    "tipo": "Armas Mágicas",
+    "subtipo": "Poder Especial de Arma Corpo a Corpo",
+    "bonusEquivalente": "+2 de bônus",
+    "descricao": "A arma é envolvida por um vórtice contínuo de ar pressurizado que uiva durante os golpes.",
+    "detalhes": "Ao confirmar um acerto crítico, uma rajada de vento com força ciclônica é liberada: todos os oponentes adjacentes ao alvo original devem ser bem-sucedidos em um teste de Fortitude (CD 10 + metade do nível do portador + mod. Força) ou serão derrubados.",
+    "livroFonte": "Manual do Arcano"
+  },
+  {
+    "id": "poder_armadura_absorcao",
+    "nome": "Poder Especial: Absorção",
+    "tipo": "Armas Mágicas",
+    "subtipo": "Armaduras e Escudos",
+    "bonusEquivalente": "+4",
+    "descricao": "Uma armadura ou escudo com este poder é cinzenta e opaca. Fornece ao usuário resistência 10 a todos os tipos de energia (ácido, eletricidade, fogo, frio e sônico). Além disso, se o usuário for alvo de uma magia prejudicial, há 25% de chance de que a magia não tenha efeito.",
+    "detalhes": "Aura moderada; Criar Armas e Armaduras Mágicas, resistência a energia, resistência a magia; Preço +4 de bônus.",
+    "livroFonte": "Guia da Trilogia"
+  },
+  {
+    "id": "arma_especifica_wakizashi_da_morte",
+    "nome": "Arma Específica: Wakizashi da Morte",
+    "tipo": "Armas Mágicas",
+    "subtipo": "Armas Específicas",
+    "bonusEquivalente": "+1",
+    "descricao": "Esta espada curta tradicional de Tamu-ra costuma ser entregue ao Executor Imperial — ou, em raríssimos casos, a outros guerreiros valorosos. A wakizashi da morte tem apenas +1 de bônus numérico, mas seu poder real é muito mais impressionante.",
+    "detalhes": "• Qualquer criatura inteligente que veja seu reflexo na lâmina da wakizashi irá enxergar o momento de sua própria morte, vendo a si mesma \"de fora\".\n• Um personagem que enxergue sua morte tem um bônus de +2 em CA e testes de resistência em qualquer combate antes do momento fatídico.\n• No encontro que levará à sua morte, sofre -4 em CA e testes de resistência, e todos os acertos contra ele são considerados críticos. Tudo conspira para que a profecia se cumpra.\n• Aura poderosa.",
+    "livroFonte": "Guia da Trilogia"
+  }
+]

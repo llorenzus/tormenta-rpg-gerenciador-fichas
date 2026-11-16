@@ -70,6 +70,12 @@ export interface ItemGeral {
   quantidade: string;
 }
 
+export interface ClassePersonagem {
+  id: string;
+  nome: string;
+  nivel: number;
+}
+
 export interface FichaPersonagem {
   id: string;
   atualizadoEm: number;
@@ -78,9 +84,11 @@ export interface FichaPersonagem {
   nomePersonagem: string;
   jogador: string;
   raca: string;
-  classe: string;
-  nivel: number;
+  classe: string; // Resumo textual (ex: "Samurai 3 / Mago 4")
+  nivel: number;  // Nível total do personagem (soma de todas as classes)
+  classes?: ClassePersonagem[]; // Lista detalhada de classes e níveis
   tendencia: string;
+
   sexo: string;
   idade: string;
   divindade: string;
@@ -95,11 +103,14 @@ export interface FichaPersonagem {
   sabedoria: number;
   carisma: number;
 
-  // Status de Combate: PV, PM, BBA, CA e Resistências (campos manuais)
+  // Status de Combate: PV, PM, PE, Pontos de Ação, BBA, CA e Resistências (campos manuais)
   pvTotal: number;
   pvAtual: number;
   pmTotal: number;
   pmAtual: number;
+  pontosAcao?: number; // Pontos de Ação (PA)
+  peTotal?: number;    // Pontos de Energia Totais (PE)
+  peAtual?: number;    // Pontos de Energia Atuais (PE)
   bba: number;
   caBonusTamanho: number;
   caOutrosBonus: number;
@@ -110,9 +121,10 @@ export interface FichaPersonagem {
   // 3. Perícias
   pericias: PericiaItem[];
 
-  // 4. Habilidades de Raça, Classe, Talentos e Magias
+  // 4. Habilidades de Raça, Classe, Manobras, Talentos e Magias
   habilidadesRaca: HabilidadeOuTalento[];
   habilidadesClasse: HabilidadeOuTalento[];
+  manobras?: HabilidadeOuTalento[];
   talentos: HabilidadeOuTalento[];
   magias: MagiaItem[];
 
@@ -121,6 +133,9 @@ export interface FichaPersonagem {
   armaduras: ArmaduraEquipamento[];
   itensGerais: ItemGeral[];
   tibares: string;
+
+  // Ordem personalizada das abas da ficha
+  ordemAbas?: string[];
 }
 
 export function gerarId(): string {
@@ -251,7 +266,9 @@ export function criarPericiasPadrao(): PericiaItem[] {
     { nome: 'Iniciativa', atributoChave: 'DES' },
     { nome: 'Intimidação', atributoChave: 'CAR' },
     { nome: 'Intuição', atributoChave: 'SAB' },
+    { nome: 'Jogatina', atributoChave: 'CAR' },
     { nome: 'Ladinagem', atributoChave: 'DES', somenteTreinada: true },
+    { nome: 'Meditação', atributoChave: 'SAB', somenteTreinada: true },
     { nome: 'Obter Informação', atributoChave: 'CAR' },
     { nome: 'Ofício', atributoChave: 'INT' },
     { nome: 'Percepção', atributoChave: 'SAB' },
@@ -266,6 +283,32 @@ export function criarPericiasPadrao(): PericiaItem[] {
     treinada: false,
     outrosBonus: 0,
   }));
+}
+
+export function garantirPericiasPadrao(periciasAtuais: PericiaItem[]): PericiaItem[] {
+  if (!Array.isArray(periciasAtuais) || periciasAtuais.length === 0) {
+    return criarPericiasPadrao();
+  }
+
+  const padrao = criarPericiasPadrao();
+  const nomesExistentes = new Set(
+    periciasAtuais.map((p) => p.nome.trim().toLowerCase())
+  );
+
+  const novasAdicionadas = [...periciasAtuais];
+
+  padrao.forEach((itemPadrao) => {
+    const nomeNorm = itemPadrao.nome.trim().toLowerCase();
+    const jaExiste = Array.from(nomesExistentes).some(
+      (n) => n === nomeNorm || n.startsWith(`${nomeNorm} (`)
+    );
+    if (!jaExiste) {
+      novasAdicionadas.push(itemPadrao);
+      nomesExistentes.add(nomeNorm);
+    }
+  });
+
+  return novasAdicionadas;
 }
 
 export function existeFichaComMesmoNome(
@@ -328,6 +371,9 @@ export function criarNovaFichaPadrao(): FichaPersonagem {
     pvAtual: 10,
     pmTotal: 0,
     pmAtual: 0,
+    pontosAcao: 1,
+    peTotal: 0,
+    peAtual: 0,
     bba: 0,
     caBonusTamanho: 0,
     caOutrosBonus: 0,
@@ -337,12 +383,131 @@ export function criarNovaFichaPadrao(): FichaPersonagem {
     pericias: criarPericiasPadrao(),
     habilidadesRaca: [],
     habilidadesClasse: [],
+    manobras: [],
     talentos: [],
     magias: [],
     armas: [],
     armaduras: [],
     itensGerais: [],
     tibares: '',
+    classes: [{ id: gerarId(), nome: '', nivel: 1 }],
   };
 }
+
+export function obterManobrasFicha(ficha: FichaPersonagem): HabilidadeOuTalento[] {
+  return Array.isArray(ficha.manobras) ? ficha.manobras : [];
+}
+
+export function obterClassesFicha(ficha: FichaPersonagem): ClassePersonagem[] {
+  if (Array.isArray(ficha.classes) && ficha.classes.length > 0) {
+    return ficha.classes.map((c) => ({
+      id: c.id || gerarId(),
+      nome: c.nome || '',
+      nivel: Math.max(1, Number(c.nivel) || 1),
+    }));
+  }
+  const texto = ficha.classe?.trim() || '';
+  if (!texto) {
+    return [{ id: gerarId(), nome: '', nivel: Math.max(1, Number(ficha.nivel) || 1) }];
+  }
+  const partes = texto.split('/').map((p) => p.trim()).filter(Boolean);
+  if (partes.length > 1) {
+    return partes.map((p) => {
+      const match = p.match(/^(.+?)\s*(?:\(?[Nn][íi]v\.?\s*)?(\d+)\)?$/);
+      if (match) {
+        return {
+          id: gerarId(),
+          nome: match[1].trim(),
+          nivel: Math.max(1, parseInt(match[2], 10) || 1),
+        };
+      }
+      return { id: gerarId(), nome: p, nivel: 1 };
+    });
+  }
+  return [{ id: gerarId(), nome: texto, nivel: Math.max(1, Number(ficha.nivel) || 1) }];
+}
+
+export function formatarResumoClasses(classes: ClassePersonagem[]): string {
+  const validas = classes.filter((c) => c.nome.trim());
+  if (validas.length === 0) return '';
+  return validas.map((c) => `${c.nome.trim()} ${c.nivel}`).join(' / ');
+}
+
+export function calcularNivelTotal(classes: ClassePersonagem[]): number {
+  if (!classes || classes.length === 0) return 1;
+  const total = classes.reduce((acc, c) => acc + (Math.max(1, Number(c.nivel) || 1)), 0);
+  return Math.max(1, total);
+}
+
+export function atualizarClassesFicha(
+  ficha: FichaPersonagem,
+  novasClasses: ClassePersonagem[]
+): FichaPersonagem {
+  const classesNormalizadas = novasClasses.map((c) => ({
+    ...c,
+    nivel: Math.max(1, Number(c.nivel) || 1),
+  }));
+  const nivelTotal = calcularNivelTotal(classesNormalizadas);
+  const resumo = formatarResumoClasses(classesNormalizadas);
+  return {
+    ...ficha,
+    classes: classesNormalizadas,
+    nivel: nivelTotal,
+    classe: resumo || ficha.classe,
+  };
+}
+
+export function aplicarClasseNaFicha(
+  ficha: FichaPersonagem,
+  classe: { nome: string; habilidades?: Array<{ nivel?: number; nome: string; descricao: string }> }
+): FichaPersonagem {
+  const classesAtuais = obterClassesFicha(ficha);
+  let novasClasses = [...classesAtuais];
+  const indexExistente = novasClasses.findIndex(
+    (c) => c.nome.trim().toLowerCase() === classe.nome.trim().toLowerCase()
+  );
+
+  let nivelAlvo = 1;
+  if (indexExistente >= 0) {
+    nivelAlvo = novasClasses[indexExistente].nivel + 1;
+    novasClasses[indexExistente] = {
+      ...novasClasses[indexExistente],
+      nivel: nivelAlvo,
+    };
+  } else if (novasClasses.length === 1 && !novasClasses[0].nome.trim()) {
+    novasClasses[0] = {
+      ...novasClasses[0],
+      nome: classe.nome,
+      nivel: 1,
+    };
+    nivelAlvo = 1;
+  } else {
+    novasClasses.push({
+      id: gerarId(),
+      nome: classe.nome,
+      nivel: 1,
+    });
+    nivelAlvo = 1;
+  }
+
+  const novasHabs: HabilidadeOuTalento[] = (classe.habilidades || [])
+    .filter((h) => (Number(h.nivel) || 1) <= nivelAlvo)
+    .map((h) => ({
+      id: gerarId(),
+      nome: `${h.nome} [${classe.nome} ${h.nivel || 1}]`,
+      descricao: h.descricao,
+    }));
+
+  const nomesExistentes = new Set(ficha.habilidadesClasse.map((h) => h.nome));
+  const habsFiltradas = novasHabs.filter((h) => !nomesExistentes.has(h.nome));
+
+  const fichaComClasses = atualizarClassesFicha(ficha, novasClasses);
+  return {
+    ...fichaComClasses,
+    habilidadesClasse: [...fichaComClasses.habilidadesClasse, ...habsFiltradas],
+  };
+}
+
+
+
 

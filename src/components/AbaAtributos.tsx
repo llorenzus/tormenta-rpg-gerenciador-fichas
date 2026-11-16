@@ -11,6 +11,7 @@ import {
   obterMeioNivel,
 } from '../models/ficha';
 import { COLORS } from '../theme/colors';
+import { BarraDeProgressoRecurso } from './BarraDeProgressoRecurso';
 import { CampoInteiro, SecaoHeader, StepperValor } from './CommonInput';
 
 interface Props {
@@ -35,15 +36,17 @@ export const AbaAtributos: React.FC<Props> = ({ ficha, onChange }) => {
   const refTotal = meioNivel + modDes + refOutros;
   const vonTotal = meioNivel + modSab + vonOutros;
 
-  const handleDescansoLongo = () => {
+  const handleDescansoPleno = () => {
     onChange({
       ...ficha,
       pvAtual: ficha.pvTotal,
       pmAtual: ficha.pmTotal,
+      peAtual: ficha.peTotal ?? 0,
+      pontosAcao: 1,
     });
     Alert.alert(
-      'Descanso Longo',
-      'Todos os seus atributos atuais (PV e PM) foram recuperados aos valores máximos!'
+      'Descanso Pleno',
+      'Todos os seus recursos atuais (PV, PM, PE e Pontos de Ação) foram restaurados aos valores padrão!'
     );
   };
 
@@ -128,19 +131,31 @@ export const AbaAtributos: React.FC<Props> = ({ ficha, onChange }) => {
         />
         <View style={styles.cardBody}>
           <TouchableOpacity
-            style={styles.btnDescansoLongo}
-            onPress={handleDescansoLongo}
+            style={styles.btnDescansoPleno}
+            onPress={handleDescansoPleno}
             activeOpacity={0.85}
           >
-            <Text style={styles.btnDescansoLongoText}>Descanso Longo</Text>
-            <Text style={styles.btnDescansoLongoSub}>
-              Recuperar PV e PM atuais para os valores máximos
+            <Text style={styles.btnDescansoPlenoText}>Descanso Pleno</Text>
+            <Text style={styles.btnDescansoPlenoSub}>
+              Recuperar PV, PM e PE atuais para os valores máximos
             </Text>
           </TouchableOpacity>
 
-          {/* PV */}
-          <View style={styles.statusSubBox}>
-            <Text style={styles.statusGroupTitle}>PONTOS DE VIDA (PV)</Text>
+          {/* PV - Vermelho */}
+          <View style={[styles.statusSubBox, styles.statusSubBoxPv]}>
+            <View style={styles.statusHeaderRow}>
+              <Text style={[styles.statusGroupTitle, styles.statusTitlePv]}>❤️ PONTOS DE VIDA (PV)</Text>
+              <Text style={[styles.statusValDestaque, { color: '#C62828' }]}>
+                {ficha.pvAtual} / {ficha.pvTotal}
+              </Text>
+            </View>
+            <BarraDeProgressoRecurso
+              atual={ficha.pvAtual}
+              max={ficha.pvTotal}
+              cor="#C62828"
+              corFundo="rgba(198,40,40,0.12)"
+              unidade="PV"
+            />
             <View style={styles.row}>
               <CampoInteiro
                 label="PV Atuais"
@@ -161,9 +176,21 @@ export const AbaAtributos: React.FC<Props> = ({ ficha, onChange }) => {
             </View>
           </View>
 
-          {/* PM */}
-          <View style={styles.statusSubBox}>
-            <Text style={styles.statusGroupTitle}>PONTOS DE MAGIA (PM)</Text>
+          {/* PM - Azul */}
+          <View style={[styles.statusSubBox, styles.statusSubBoxPm]}>
+            <View style={styles.statusHeaderRow}>
+              <Text style={[styles.statusGroupTitle, styles.statusTitlePm]}>✨ PONTOS DE MAGIA (PM)</Text>
+              <Text style={[styles.statusValDestaque, { color: '#1565C0' }]}>
+                {ficha.pmAtual} / {ficha.pmTotal}
+              </Text>
+            </View>
+            <BarraDeProgressoRecurso
+              atual={ficha.pmAtual}
+              max={ficha.pmTotal}
+              cor="#1565C0"
+              corFundo="rgba(21,101,192,0.12)"
+              unidade="PM"
+            />
             <View style={styles.row}>
               <CampoInteiro
                 label="PM Atuais"
@@ -182,6 +209,59 @@ export const AbaAtributos: React.FC<Props> = ({ ficha, onChange }) => {
                 style={styles.col}
               />
             </View>
+          </View>
+
+          {/* PE - Amarelo */}
+          <View style={[styles.statusSubBox, styles.statusSubBoxPe]}>
+            <View style={styles.statusHeaderRow}>
+              <Text style={[styles.statusGroupTitle, styles.statusTitlePe]}>⚡ PONTOS DE ENERGIA (PE)</Text>
+              <Text style={[styles.statusValDestaque, { color: '#E69500' }]}>
+                {ficha.peAtual ?? 0} / {ficha.peTotal ?? 0}
+              </Text>
+            </View>
+            <BarraDeProgressoRecurso
+              atual={ficha.peAtual ?? 0}
+              max={ficha.peTotal ?? 0}
+              cor="#E69500"
+              corFundo="rgba(230,149,0,0.14)"
+              unidade="PE"
+            />
+            <View style={styles.row}>
+              <CampoInteiro
+                label="PE Atuais"
+                valor={ficha.peAtual ?? 0}
+                onValorChange={(v) => onChange({ ...ficha, peAtual: v })}
+                min={0}
+                max={9999}
+                style={styles.col}
+              />
+              <CampoInteiro
+                label="PE Totais"
+                valor={ficha.peTotal ?? 0}
+                onValorChange={(v) => onChange({ ...ficha, peTotal: v })}
+                min={0}
+                max={9999}
+                style={styles.col}
+              />
+            </View>
+          </View>
+
+          {/* PONTOS DE AÇÃO (PA) */}
+          <View style={styles.statusSubBox}>
+            <Text style={styles.statusGroupTitle}>PONTOS DE AÇÃO (PA)</Text>
+            <View style={styles.row}>
+              <CampoInteiro
+                label="Pontos de Ação Disponíveis"
+                valor={ficha.pontosAcao ?? 1}
+                onValorChange={(v) => onChange({ ...ficha, pontosAcao: Math.max(0, v) })}
+                min={0}
+                max={99}
+                style={styles.col}
+              />
+            </View>
+            <Text style={styles.helperText}>
+              Inicia cada sessão com 1 PA. Permite dados extras no d20, bônus na CA, ação extra ou cura rápida.
+            </Text>
           </View>
 
           {/* BBA */}
@@ -405,8 +485,49 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     padding: 10,
     marginBottom: 10,
+    borderWidth: 1,
+    borderColor: COLORS.border,
   },
-  btnDescansoLongo: {
+  statusSubBoxPv: {
+    borderLeftWidth: 4,
+    borderLeftColor: '#C62828',
+    backgroundColor: 'rgba(198,40,40,0.04)',
+  },
+  statusSubBoxPm: {
+    borderLeftWidth: 4,
+    borderLeftColor: '#1565C0',
+    backgroundColor: 'rgba(21,101,192,0.04)',
+  },
+  statusSubBoxPe: {
+    borderLeftWidth: 4,
+    borderLeftColor: '#E69500',
+    backgroundColor: 'rgba(230,149,0,0.05)',
+  },
+  statusHeaderRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    marginBottom: 4,
+  },
+  statusGroupTitle: {
+    fontSize: 12,
+    fontWeight: 'bold',
+    color: COLORS.primary,
+  },
+  statusTitlePv: {
+    color: '#C62828',
+  },
+  statusTitlePm: {
+    color: '#1565C0',
+  },
+  statusTitlePe: {
+    color: '#D87A00',
+  },
+  statusValDestaque: {
+    fontSize: 13,
+    fontWeight: 'bold',
+  },
+  btnDescansoPleno: {
     backgroundColor: COLORS.primary,
     borderWidth: 1.5,
     borderColor: COLORS.gold,
@@ -417,21 +538,15 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
-  btnDescansoLongoText: {
+  btnDescansoPlenoText: {
     color: COLORS.white,
     fontSize: 15,
     fontWeight: 'bold',
   },
-  btnDescansoLongoSub: {
+  btnDescansoPlenoSub: {
     color: 'rgba(255,255,255,0.85)',
     fontSize: 11,
     marginTop: 2,
-  },
-  statusGroupTitle: {
-    fontSize: 12,
-    fontWeight: 'bold',
-    color: COLORS.primary,
-    marginBottom: 4,
   },
   helperText: {
     fontSize: 12,

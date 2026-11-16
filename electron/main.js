@@ -40,6 +40,14 @@ function createWindow() {
     mainWindow.loadURL('app://bundle/index.html');
   }
 
+  // Permite abrir DevTools com Ctrl+Shift+I ou F12 para diagnóstico se necessário
+  mainWindow.webContents.on('before-input-event', (event, input) => {
+    if (input.key === 'F12' || (input.control && input.shift && input.key.toLowerCase() === 'i')) {
+      mainWindow.webContents.toggleDevTools();
+      event.preventDefault();
+    }
+  });
+
   // Abre links externos no navegador padrão do usuário
   mainWindow.webContents.setWindowOpenHandler(({ url: targetUrl }) => {
     if (targetUrl.startsWith('http:') || targetUrl.startsWith('https:')) {
@@ -53,16 +61,21 @@ function createWindow() {
 app.whenReady().then(() => {
   // Protocolo app:// mapeia para a pasta dist/
   protocol.handle('app', (request) => {
-    const parsedUrl = new URL(request.url);
-    let pathname = decodeURIComponent(parsedUrl.pathname);
-    if (!pathname || pathname === '/') {
-      pathname = '/index.html';
+    try {
+      const parsedUrl = new URL(request.url);
+      let pathname = decodeURIComponent(parsedUrl.pathname);
+      if (!pathname || pathname === '/') {
+        pathname = '/index.html';
+      }
+
+      const distPath = path.join(__dirname, '../dist');
+      const resolvedPath = path.join(distPath, pathname);
+
+      return net.fetch(url.pathToFileURL(resolvedPath).toString());
+    } catch (err) {
+      console.error('[Protocol app Error]', err);
+      throw err;
     }
-
-    const distPath = path.join(__dirname, '../dist');
-    const resolvedPath = path.join(distPath, pathname);
-
-    return net.fetch(url.pathToFileURL(resolvedPath).toString());
   });
 
   createWindow();
