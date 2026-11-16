@@ -3,6 +3,7 @@ import {
   StyleSheet,
   Text,
   TextInput,
+  TextStyle,
   TouchableOpacity,
   View,
   ViewStyle,
@@ -44,8 +45,11 @@ export interface CampoTextoProps {
   onChangeText: (text: string) => void;
   placeholder?: string;
   multiline?: boolean;
+  numberOfLines?: number;
+  minHeight?: number;
   keyboardType?: 'default' | 'numeric' | 'number-pad' | 'decimal-pad' | 'email-address' | 'phone-pad';
   style?: ViewStyle;
+  inputStyle?: TextStyle;
 }
 
 export const CampoTexto: React.FC<CampoTextoProps> = ({
@@ -55,8 +59,11 @@ export const CampoTexto: React.FC<CampoTextoProps> = ({
   onChangeText,
   placeholder,
   multiline = false,
+  numberOfLines,
+  minHeight,
   keyboardType,
   style,
+  inputStyle,
 }) => {
   const hasHeader = Boolean((label && label.trim().length > 0) || rightAction);
   return (
@@ -72,12 +79,18 @@ export const CampoTexto: React.FC<CampoTextoProps> = ({
         </View>
       )}
       <TextInput
-        style={[styles.textInput, multiline && styles.textInputMultiline]}
+        style={[
+          styles.textInput,
+          multiline && styles.textInputMultiline,
+          minHeight ? { minHeight } : undefined,
+          inputStyle,
+        ]}
         value={value}
         onChangeText={onChangeText}
         placeholder={placeholder}
         placeholderTextColor="#9D8E80"
         multiline={multiline}
+        numberOfLines={numberOfLines}
         keyboardType={keyboardType}
       />
     </View>
@@ -241,14 +254,16 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: COLORS.border,
     borderRadius: 8,
-    paddingHorizontal: 10,
-    paddingVertical: 8,
+    paddingHorizontal: 11,
+    paddingVertical: 9,
     fontSize: 14,
     color: COLORS.text,
   },
   textInputMultiline: {
-    minHeight: 56,
+    minHeight: 80,
     textAlignVertical: 'top',
+    lineHeight: 20,
+    paddingVertical: 10,
   },
   numberInput: {
     textAlign: 'center',

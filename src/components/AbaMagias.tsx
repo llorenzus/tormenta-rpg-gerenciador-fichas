@@ -293,6 +293,8 @@ export const AbaMagias: React.FC<Props> = ({ ficha, onChange }) => {
                           atualizarMagia({ ...magia, descricao: v })
                         }
                         multiline
+                        minHeight={96}
+                        numberOfLines={4}
                       />
                     </View>
                   ))

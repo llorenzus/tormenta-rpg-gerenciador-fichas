@@ -164,6 +164,8 @@ export const AbaTalentos: React.FC<Props> = ({ ficha, onChange }) => {
                     atualizarTalento({ ...item, descricao: v })
                   }
                   multiline
+                  minHeight={96}
+                  numberOfLines={4}
                 />
               </View>
             ))

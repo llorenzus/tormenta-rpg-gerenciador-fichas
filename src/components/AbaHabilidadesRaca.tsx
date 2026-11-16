@@ -142,6 +142,8 @@ export const AbaHabilidadesRaca: React.FC<Props> = ({ ficha, onChange }) => {
                     atualizarHabilidadeRaca({ ...item, descricao: v })
                   }
                   multiline
+                  minHeight={90}
+                  numberOfLines={4}
                 />
               </View>
             ))

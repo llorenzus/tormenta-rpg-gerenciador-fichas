@@ -183,6 +183,8 @@ export const AbaHabilidadesClasse: React.FC<Props> = ({ ficha, onChange }) => {
                     atualizarHabilidade({ ...item, descricao: v })
                   }
                   multiline
+                  minHeight={90}
+                  numberOfLines={4}
                 />
               </View>
             ))

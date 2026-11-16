@@ -233,6 +233,8 @@ export const AbaManobras: React.FC<Props> = ({ ficha, onChange }) => {
                     atualizarManobra({ ...item, descricao: v })
                   }
                   multiline
+                  minHeight={90}
+                  numberOfLines={4}
                 />
               </View>
             ))
