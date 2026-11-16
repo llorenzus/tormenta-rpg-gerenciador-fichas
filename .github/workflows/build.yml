@@ -32,6 +32,9 @@ jobs:
       - name: Instalar dependências
         run: npm install
 
+      - name: Executar Testes Unitários
+        run: npm test
+
       - name: Obter Versão do Pacote
         run: |
           APP_VER=$(node -p "require('./package.json').version")
@@ -80,6 +83,9 @@ jobs:
 
       - name: Instalar dependências
         run: npm install
+
+      - name: Executar Testes Unitários
+        run: npm test
 
       - name: Compilar Web e Empacotar Executável Windows (Electron)
         run: npm run build:windows
