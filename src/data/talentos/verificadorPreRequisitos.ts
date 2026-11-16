@@ -390,6 +390,44 @@ export function verificarPreRequisitosCumpridos(
     }
   }
 
+  // d) Capacidade de lançar magias arcanas ou divinas
+  if (/capacidade\s+de\s+lançar\s+magias?\s+arcanas?/i.test(texto)) {
+    const classesArcanas = [
+      'mago',
+      'feiticeiro',
+      'bardo',
+      'necromante',
+      'ilusionista',
+      'evocador',
+      'abjurador',
+      'adivinho',
+      'encantador',
+      'transmutador',
+    ];
+    const temClasseArcana = classesArcanas.some(
+      (c) => obterNivelClasseFicha(ficha, c) > 0
+    );
+    const temMagiaArcana = (ficha.magias || []).some(
+      (m) => (m.tipo || '').toLowerCase().includes('arcana')
+    );
+    if (!temClasseArcana && !temMagiaArcana) {
+      pendencias.push('Capacidade de lançar magias arcanas');
+    }
+  }
+
+  if (/capacidade\s+de\s+lançar\s+magias?\s+divinas?/i.test(texto)) {
+    const classesDivinas = ['clerigo', 'druida', 'paladino', 'ranger', 'abencoado'];
+    const temClasseDivina = classesDivinas.some(
+      (c) => obterNivelClasseFicha(ficha, c) > 0
+    );
+    const temMagiaDivina = (ficha.magias || []).some(
+      (m) => (m.tipo || '').toLowerCase().includes('divina')
+    );
+    if (!temClasseDivina && !temMagiaDivina) {
+      pendencias.push('Capacidade de lançar magias divinas');
+    }
+  }
+
   // 5. Checagem de Perícias
   // a) <Perícia> <X> graduações
   const gradMatches = [

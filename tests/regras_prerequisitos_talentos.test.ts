@@ -280,4 +280,35 @@ describe('Verificador de Pré-Requisitos de Talentos (TRPG)', () => {
     assert.strictEqual(resTrespassar.cumpre, false);
     assert.strictEqual(resTrespassar.pendencias.some((p) => p.includes('Trespassar')), true);
   });
+
+  it('deve validar o talento Mago Nato e capacidade de lançar magias arcanas', () => {
+    const { getTalentoPorId } = require('../src/data/talentos');
+    const magoNato = getTalentoPorId('mago_nato');
+    assert.ok(magoNato, 'Talento Mago Nato deve existir no banco de talentos');
+    assert.strictEqual(magoNato.categoria, 'Regional');
+    assert.strictEqual(magoNato.nome, 'Mago Nato');
+    assert.ok(magoNato.beneficio.includes('-1 PM') || magoNato.beneficio.includes('-1'));
+
+    // Personagem sem classe arcana nem magias arcanas
+    const guerreiroPuro = criarFichaTeste();
+    guerreiroPuro.classes = [{ id: 'c1', nome: 'Guerreiro', nivel: 4 }];
+    guerreiroPuro.classe = 'Guerreiro';
+    guerreiroPuro.magias = [];
+
+    const resGuerreiro = verificarPreRequisitosCumpridos(guerreiroPuro, magoNato);
+    assert.strictEqual(resGuerreiro.cumpre, false);
+    assert.ok(
+      resGuerreiro.pendencias.some((p) => p.includes('magias arcanas')),
+      'Deve acusar pendência de capacidade de lançar magias arcanas'
+    );
+
+    // Personagem Mago
+    const mago = criarFichaTeste();
+    mago.classes = [{ id: 'c1', nome: 'Mago', nivel: 3 }];
+    mago.classe = 'Mago';
+
+    const resMago = verificarPreRequisitosCumpridos(mago, magoNato);
+    assert.strictEqual(resMago.cumpre, true);
+    assert.strictEqual(resMago.pendencias.length, 0);
+  });
 });

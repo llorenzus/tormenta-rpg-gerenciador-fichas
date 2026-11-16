@@ -2532,6 +2532,14 @@
     "categoria": "Magia"
   },
   {
+    "id": "mago_nato",
+    "nome": "Mago Nato",
+    "categoria": "Regional",
+    "preRequisitos": "Capacidade de lançar magias arcanas, nativo do Reino da Magia.",
+    "beneficio": "O custo para preparar ou lançar magias cai em -1 PM. Por exemplo, preparar uma magia de 3° custa 2 PM, em vez de 3. Esta redução é aplicada antes de quaisquer talentos metamágicos, e nunca reduz o custo de uma magia abaixo de 1 PM.",
+    "descricao": "Nascido no Reino da Magia (Wynlla), você possui facilidade inata para conjurar arcanos com custo reduzido de energia mental."
+  },
+  {
     "id": "mandibula_de_aco",
     "nome": "Mandíbula de Aço",
     "categoria": "Combate",
