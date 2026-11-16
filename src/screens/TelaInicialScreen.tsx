@@ -1,5 +1,6 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { ModalSobre } from '../components/ModalSobre';
 import { COLORS } from '../theme/colors';
 
 interface Props {
@@ -7,6 +8,8 @@ interface Props {
 }
 
 export const TelaInicialScreen: React.FC<Props> = ({ onIniciar }) => {
+  const [sobreVisivel, setSobreVisivel] = useState(false);
+
   return (
     <View style={styles.container}>
       <View style={styles.headerBlock}>
@@ -26,7 +29,21 @@ export const TelaInicialScreen: React.FC<Props> = ({ onIniciar }) => {
         </TouchableOpacity>
       </View>
 
-      <Text style={styles.footerText}>Toque em Iniciar para acessar suas fichas</Text>
+      <View style={styles.footerWrap}>
+        <Text style={styles.footerText}>Toque em Iniciar para acessar suas fichas</Text>
+        <TouchableOpacity
+          style={styles.btnSobre}
+          onPress={() => setSobreVisivel(true)}
+          activeOpacity={0.7}
+        >
+          <Text style={styles.btnSobreText}>ℹ️ Sobre o Aplicativo & Isenção Legal</Text>
+        </TouchableOpacity>
+      </View>
+
+      <ModalSobre
+        visivel={sobreVisivel}
+        onFechar={() => setSobreVisivel(false)}
+      />
     </View>
   );
 };
@@ -92,9 +109,24 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     letterSpacing: 1,
   },
+  footerWrap: {
+    alignItems: 'center',
+    gap: 10,
+  },
   footerText: {
     fontSize: 13,
     color: COLORS.textSecondary,
     textAlign: 'center',
+  },
+  btnSobre: {
+    paddingVertical: 6,
+    paddingHorizontal: 12,
+    borderRadius: 6,
+    backgroundColor: 'rgba(255, 255, 255, 0.05)',
+  },
+  btnSobreText: {
+    fontSize: 12,
+    color: COLORS.gold,
+    textDecorationLine: 'underline',
   },
 });

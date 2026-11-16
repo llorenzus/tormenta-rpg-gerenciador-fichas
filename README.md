@@ -1,5 +1,9 @@
 # 🎲 TRPG Gerenciador de Fichas (React Native + Expo Go + Electron)
 
+> [!IMPORTANT]
+> **Aviso Legal / Disclaimer**:
+> Este é um projeto de código aberto desenvolvido por fãs, de forma independente e sem fins lucrativos. Não é um produto oficial da Jambô Editora e não possui qualquer vínculo com a mesma. Todos os direitos sobre o universo, termos e marcas de Tormenta pertencem à Jambô Editora e seus respectivos autores.
+
 Aplicativo multiplataforma para criação, cálculo dinâmico e gerenciamento de fichas de personagem do sistema **Tormenta RPG (TRPG)**. O projeto foi construído utilizando **React Native + Expo (TypeScript)** com suporte nativo para **Android** (via APK e Expo Go) e **Windows Desktop** (via Electron).
 
 > [!NOTE]  

@@ -17,6 +17,7 @@ import {
   formatarModificador,
 } from '../models/ficha';
 import { COLORS } from '../theme/colors';
+import { ModalSobre } from '../components/ModalSobre';
 
 interface Props {
   fichas: FichaPersonagem[];
@@ -42,6 +43,7 @@ export const ListaFichasScreen: React.FC<Props> = ({
   const numColumns = width >= 1200 ? 3 : width >= 800 ? 2 : 1;
 
   const [fichaParaExcluir, setFichaParaExcluir] = useState<FichaPersonagem | null>(null);
+  const [sobreVisivel, setSobreVisivel] = useState(false);
 
   const confirmarExclusao = (ficha: FichaPersonagem) => {
     setFichaParaExcluir(ficha);
@@ -76,6 +78,16 @@ export const ListaFichasScreen: React.FC<Props> = ({
           </View>
 
           <View style={[styles.topActionsRow, isDesktop ? styles.actionsDesktop : styles.actionsMobile]}>
+            <TouchableOpacity
+              style={[styles.btnAction, styles.btnSobreAction]}
+              onPress={() => setSobreVisivel(true)}
+              activeOpacity={0.8}
+            >
+              <Text style={styles.btnSobreActionText}>
+                {isDesktop ? 'ℹ️ Sobre' : 'ℹ️'}
+              </Text>
+            </TouchableOpacity>
+
             <TouchableOpacity
               style={[styles.btnAction, isDesktop ? styles.btnCompendioDesktop : styles.btnCompendioMobile]}
               onPress={onAbrirCompendio}
@@ -280,6 +292,11 @@ export const ListaFichasScreen: React.FC<Props> = ({
           </View>
         </TouchableWithoutFeedback>
       </Modal>
+      {/* Modal Sobre o Aplicativo & Isenção Legal */}
+      <ModalSobre
+        visivel={sobreVisivel}
+        onFechar={() => setSobreVisivel(false)}
+      />
     </View>
   );
 };
@@ -352,6 +369,18 @@ const styles = StyleSheet.create({
     borderRadius: 7,
     alignItems: 'center',
     justifyContent: 'center',
+  },
+  btnSobreAction: {
+    backgroundColor: 'rgba(255, 255, 255, 0.1)',
+    borderWidth: 1,
+    borderColor: 'rgba(255, 255, 255, 0.25)',
+    paddingHorizontal: 8,
+    paddingVertical: 6,
+  },
+  btnSobreActionText: {
+    fontSize: 12,
+    color: COLORS.white,
+    fontWeight: 'bold',
   },
   btnCompendioMobile: {
     backgroundColor: 'rgba(200,157,60,0.25)',

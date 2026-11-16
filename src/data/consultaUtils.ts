@@ -31,9 +31,8 @@ export const formatarDescricaoTalento = (talento: TalentoData): string => {
   }
   if (talento.beneficio && talento.beneficio.trim()) {
     partes.push(`Benefício: ${talento.beneficio}`);
-  }
-  if (talento.descricao && talento.descricao.trim()) {
-    partes.push(`\n${talento.descricao}`);
+  } else if (talento.descricao && talento.descricao.trim()) {
+    partes.push(`Efeito: ${talento.descricao}`);
   }
   return partes.join('\n');
 };

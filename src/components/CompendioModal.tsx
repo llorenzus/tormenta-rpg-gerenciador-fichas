@@ -917,15 +917,9 @@ export const CompendioModal: React.FC<Props> = ({
                           </View>
                         )}
 
-                        {item.descricao ? (
-                          <Text style={styles.cardItemDescricaoFlavor}>
-                            "{item.descricao}"
-                          </Text>
-                        ) : null}
-
                         <View style={styles.beneficioBox}>
-                          <Text style={styles.beneficioLabel}>Benefício:</Text>
-                          <Text style={styles.beneficioTexto}>{item.beneficio}</Text>
+                          <Text style={styles.beneficioLabel}>Benefício / Efeito:</Text>
+                          <Text style={styles.beneficioTexto}>{item.beneficio || item.descricao}</Text>
                         </View>
 
                         <TouchableOpacity
