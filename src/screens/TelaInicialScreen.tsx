@@ -15,6 +15,9 @@ export const TelaInicialScreen: React.FC<Props> = ({ onIniciar }) => {
       <View style={styles.headerBlock}>
         <Text style={styles.title}>TORMENTA RPG</Text>
         <Text style={styles.subtitle}>Gerenciador de Fichas de Personagem</Text>
+        <View style={styles.authorBadge}>
+          <Text style={styles.authorText}>Desenvolvido e produzido por Lucas Lorenzi (llorenzus)</Text>
+        </View>
       </View>
 
       <View style={styles.centerArea}>
@@ -35,8 +38,9 @@ export const TelaInicialScreen: React.FC<Props> = ({ onIniciar }) => {
           style={styles.btnSobre}
           onPress={() => setSobreVisivel(true)}
           activeOpacity={0.7}
+          accessibilityLabel="Informações e Aviso Legal"
         >
-          <Text style={styles.btnSobreText}>ℹ️ Sobre o Aplicativo & Isenção Legal</Text>
+          <Text style={styles.btnSobreText}>ℹ️</Text>
         </TouchableOpacity>
       </View>
 
@@ -72,6 +76,21 @@ const styles = StyleSheet.create({
     fontSize: 15,
     color: COLORS.textSecondary,
     marginTop: 8,
+    textAlign: 'center',
+  },
+  authorBadge: {
+    marginTop: 10,
+    paddingHorizontal: 14,
+    paddingVertical: 5,
+    borderRadius: 14,
+    backgroundColor: COLORS.surfaceVariant,
+    borderWidth: 1,
+    borderColor: COLORS.border,
+  },
+  authorText: {
+    fontSize: 12,
+    color: COLORS.primaryDark,
+    fontWeight: '600',
     textAlign: 'center',
   },
   centerArea: {
@@ -119,14 +138,21 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
   btnSobre: {
-    paddingVertical: 6,
-    paddingHorizontal: 12,
-    borderRadius: 6,
-    backgroundColor: 'rgba(255, 255, 255, 0.05)',
+    width: 38,
+    height: 38,
+    borderRadius: 19,
+    backgroundColor: COLORS.surface,
+    borderWidth: 1.5,
+    borderColor: COLORS.gold,
+    alignItems: 'center',
+    justifyContent: 'center',
+    elevation: 2,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.15,
+    shadowRadius: 3,
   },
   btnSobreText: {
-    fontSize: 12,
-    color: COLORS.gold,
-    textDecorationLine: 'underline',
+    fontSize: 18,
   },
 });

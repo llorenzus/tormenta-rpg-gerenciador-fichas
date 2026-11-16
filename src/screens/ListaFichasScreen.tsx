@@ -18,6 +18,7 @@ import {
 } from '../models/ficha';
 import { COLORS } from '../theme/colors';
 import { ModalSobre } from '../components/ModalSobre';
+import { abrirCompendioEmJanelaSeparada } from '../utils/janelaCompendio';
 
 interface Props {
   fichas: FichaPersonagem[];
@@ -82,10 +83,9 @@ export const ListaFichasScreen: React.FC<Props> = ({
               style={[styles.btnAction, styles.btnSobreAction]}
               onPress={() => setSobreVisivel(true)}
               activeOpacity={0.8}
+              accessibilityLabel="Informações do Aplicativo"
             >
-              <Text style={styles.btnSobreActionText}>
-                {isDesktop ? 'ℹ️ Sobre' : 'ℹ️'}
-              </Text>
+              <Text style={styles.btnSobreActionText}>ℹ️</Text>
             </TouchableOpacity>
 
             <TouchableOpacity
@@ -97,6 +97,17 @@ export const ListaFichasScreen: React.FC<Props> = ({
                 {isDesktop ? '📖 Compêndio' : '📖 Regras'}
               </Text>
             </TouchableOpacity>
+
+            {isDesktop && Platform.OS === 'web' && (
+              <TouchableOpacity
+                style={[styles.btnAction, styles.btnJanelaSeparadaAction]}
+                onPress={abrirCompendioEmJanelaSeparada}
+                activeOpacity={0.8}
+                accessibilityLabel="Abrir Compêndio em Janela Separada"
+              >
+                <Text style={styles.btnJanelaSeparadaActionText}>🗗 Janela</Text>
+              </TouchableOpacity>
+            )}
 
             <TouchableOpacity
               style={[styles.btnAction, isDesktop ? styles.btnImportarDesktop : styles.btnImportarMobile]}
@@ -395,6 +406,18 @@ const styles = StyleSheet.create({
     borderColor: COLORS.gold,
     paddingHorizontal: 13,
     paddingVertical: 8,
+  },
+  btnJanelaSeparadaAction: {
+    backgroundColor: 'rgba(200,157,60,0.18)',
+    borderWidth: 1,
+    borderColor: COLORS.gold,
+    paddingHorizontal: 10,
+    paddingVertical: 8,
+  },
+  btnJanelaSeparadaActionText: {
+    color: COLORS.white,
+    fontWeight: 'bold',
+    fontSize: 12,
   },
   btnImportarMobile: {
     backgroundColor: 'rgba(255,255,255,0.18)',

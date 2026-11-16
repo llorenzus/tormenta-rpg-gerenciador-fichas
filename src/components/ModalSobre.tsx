@@ -44,8 +44,11 @@ export const ModalSobre: React.FC<Props> = ({ visivel, onFechar }) => {
                   </Text>
                 </View>
 
+                <Text style={styles.creditsText}>
+                  Desenvolvido e produzido por Lucas Lorenzi (llorenzus)
+                </Text>
                 <Text style={styles.infoText}>
-                  Desenvolvido para auxiliar jogadores e mestres na gestão prática de fichas e consulta rápida de regras durante sessões de RPG de mesa.
+                  Criado para auxiliar jogadores e mestres na gestão prática de fichas e consulta rápida de regras durante sessões de RPG de mesa.
                 </Text>
               </View>
 
@@ -75,9 +78,9 @@ const styles = StyleSheet.create({
   modalCard: {
     width: '100%',
     maxWidth: 520,
-    backgroundColor: COLORS.cardBackground,
+    backgroundColor: COLORS.surface,
     borderRadius: 12,
-    borderWidth: 1,
+    borderWidth: 1.5,
     borderColor: COLORS.gold,
     padding: 24,
     elevation: 10,
@@ -92,13 +95,13 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginBottom: 16,
     borderBottomWidth: 1,
-    borderBottomColor: 'rgba(255, 255, 255, 0.1)',
+    borderBottomColor: COLORS.border,
     paddingBottom: 10,
   },
   title: {
     fontSize: 18,
     fontWeight: 'bold',
-    color: COLORS.gold,
+    color: COLORS.primaryDark,
   },
   btnClose: {
     padding: 6,
@@ -112,9 +115,9 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   appTitle: {
-    fontSize: 16,
+    fontSize: 17,
     fontWeight: 'bold',
-    color: COLORS.white,
+    color: COLORS.primaryDark,
     textAlign: 'center',
     marginBottom: 4,
   },
@@ -123,19 +126,22 @@ const styles = StyleSheet.create({
     color: COLORS.textSecondary,
     textAlign: 'center',
     marginBottom: 16,
+    fontWeight: '500',
   },
   disclaimerBox: {
-    backgroundColor: 'rgba(200, 157, 60, 0.08)',
-    borderLeftWidth: 3,
+    backgroundColor: COLORS.surfaceVariant,
+    borderLeftWidth: 4,
     borderLeftColor: COLORS.gold,
-    padding: 12,
-    borderRadius: 6,
+    borderWidth: 1,
+    borderColor: COLORS.border,
+    padding: 14,
+    borderRadius: 8,
     marginBottom: 14,
   },
   disclaimerTitle: {
     fontSize: 13,
     fontWeight: 'bold',
-    color: COLORS.gold,
+    color: COLORS.primaryDark,
     marginBottom: 6,
   },
   disclaimerText: {
@@ -143,6 +149,13 @@ const styles = StyleSheet.create({
     lineHeight: 18,
     color: COLORS.text,
     textAlign: 'justify',
+  },
+  creditsText: {
+    fontSize: 13,
+    fontWeight: 'bold',
+    color: COLORS.primary,
+    textAlign: 'center',
+    marginBottom: 6,
   },
   infoText: {
     fontSize: 12,

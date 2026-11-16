@@ -51,6 +51,7 @@ import {
   HabilidadeOuTalento,
 } from '../models/ficha';
 import { COLORS } from '../theme/colors';
+import { abrirCompendioEmJanelaSeparada } from '../utils/janelaCompendio';
 
 interface Props {
   ficha: FichaPersonagem;
@@ -453,6 +454,17 @@ export const FichaDetalheScreen: React.FC<Props> = ({
               </Text>
             </TouchableOpacity>
 
+            {isDesktop && Platform.OS === 'web' && (
+              <TouchableOpacity
+                style={styles.compendioJanelaSeparadaBtn}
+                onPress={abrirCompendioEmJanelaSeparada}
+                activeOpacity={0.8}
+                accessibilityLabel="Abrir Compêndio em Janela Separada"
+              >
+                <Text style={styles.compendioJanelaSeparadaBtnText}>🗗 Janela</Text>
+              </TouchableOpacity>
+            )}
+
             {/* Botão para Ativar/Desativar Split View no Desktop */}
             {isDesktop && (
               <TouchableOpacity
@@ -641,6 +653,20 @@ const styles = StyleSheet.create({
     flexShrink: 0,
   },
   compendioTopBtnText: {
+    color: COLORS.white,
+    fontWeight: 'bold',
+    fontSize: 12,
+  },
+  compendioJanelaSeparadaBtn: {
+    backgroundColor: 'rgba(200,157,60,0.22)',
+    borderWidth: 1,
+    borderColor: COLORS.gold,
+    paddingHorizontal: 8,
+    paddingVertical: 6,
+    borderRadius: 6,
+    flexShrink: 0,
+  },
+  compendioJanelaSeparadaBtnText: {
     color: COLORS.white,
     fontWeight: 'bold',
     fontSize: 12,

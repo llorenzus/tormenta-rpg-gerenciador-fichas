@@ -1,4 +1,4 @@
-const { app, BrowserWindow, shell, protocol, net } = require('electron');
+const { app, BrowserWindow, shell, protocol, net, ipcMain } = require('electron');
 const path = require('path');
 const url = require('url');
 
@@ -16,10 +16,13 @@ protocol.registerSchemesAsPrivileged([
   },
 ]);
 
+let mainWindow = null;
+let compendioWindow = null;
+
 function createWindow() {
   const iconPath = path.join(__dirname, '../assets/icon.png');
 
-  const mainWindow = new BrowserWindow({
+  mainWindow = new BrowserWindow({
     width: 1200,
     height: 820,
     minWidth: 900,
@@ -31,6 +34,7 @@ function createWindow() {
     webPreferences: {
       nodeIntegration: false,
       contextIsolation: true,
+      preload: path.join(__dirname, 'preload.js'),
     },
   });
 
@@ -56,7 +60,69 @@ function createWindow() {
     }
     return { action: 'allow' };
   });
+
+  mainWindow.on('closed', () => {
+    mainWindow = null;
+  });
 }
+
+function createCompendioWindow() {
+  if (compendioWindow && !compendioWindow.isDestroyed()) {
+    compendioWindow.focus();
+    return compendioWindow;
+  }
+
+  const iconPath = path.join(__dirname, '../assets/icon.png');
+
+  compendioWindow = new BrowserWindow({
+    width: 1100,
+    height: 800,
+    minWidth: 800,
+    minHeight: 550,
+    title: 'TRPG - Compêndio de Regras',
+    icon: iconPath,
+    autoHideMenuBar: true,
+    backgroundColor: '#FAF6EE',
+    webPreferences: {
+      nodeIntegration: false,
+      contextIsolation: true,
+      preload: path.join(__dirname, 'preload.js'),
+    },
+  });
+
+  const baseUrl = process.env.ELECTRON_START_URL || 'app://bundle/index.html';
+  const targetUrl = baseUrl.includes('?')
+    ? `${baseUrl}&janela=compendio`
+    : `${baseUrl}?janela=compendio`;
+
+  compendioWindow.loadURL(targetUrl);
+
+  compendioWindow.webContents.on('before-input-event', (event, input) => {
+    if (input.key === 'F12' || (input.control && input.shift && input.key.toLowerCase() === 'i')) {
+      compendioWindow.webContents.toggleDevTools();
+      event.preventDefault();
+    }
+  });
+
+  compendioWindow.webContents.setWindowOpenHandler(({ url: targetUrl }) => {
+    if (targetUrl.startsWith('http:') || targetUrl.startsWith('https:')) {
+      shell.openExternal(targetUrl);
+      return { action: 'deny' };
+    }
+    return { action: 'allow' };
+  });
+
+  compendioWindow.on('closed', () => {
+    compendioWindow = null;
+  });
+
+  return compendioWindow;
+}
+
+// Ouve chamadas do renderizador para abrir a janela destacada do Compêndio
+ipcMain.on('abrir-janela-compendio', () => {
+  createCompendioWindow();
+});
 
 app.whenReady().then(() => {
   // Protocolo app:// mapeia para a pasta dist/

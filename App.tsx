@@ -327,6 +327,33 @@ export default function App() {
     );
   };
 
+  // Se estiver abrindo em uma janela dedicada ao Compêndio (Desktop / Windows / Web)
+  const isJanelaCompendio =
+    Platform.OS === 'web' &&
+    typeof window !== 'undefined' &&
+    new URLSearchParams(window.location.search).get('janela') === 'compendio';
+
+  if (isJanelaCompendio) {
+    return (
+      <SafeAreaView style={styles.safeArea}>
+        <StatusBar barStyle="light-content" backgroundColor={COLORS.primaryDark} />
+        <View style={styles.container}>
+          <CompendioModal
+            visivel={true}
+            onFechar={() => {
+              if (typeof window !== 'undefined' && typeof window.close === 'function') {
+                window.close();
+              }
+            }}
+            todasFichas={fichas}
+            onAdicionarItemParaFichaEspecifica={handleAdicionarItemParaFichaEspecifica}
+            standalone={true}
+          />
+        </View>
+      </SafeAreaView>
+    );
+  }
+
   return (
     <SafeAreaView style={styles.safeArea}>
       <StatusBar barStyle="light-content" />

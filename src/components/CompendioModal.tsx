@@ -2,6 +2,7 @@ import React, { useMemo, useState } from 'react';
 import {
   FlatList,
   Modal,
+  Platform,
   SafeAreaView,
   ScrollView,
   StyleSheet,
@@ -57,6 +58,7 @@ import {
 } from '../data';
 import { FichaPersonagem, gerarId, HabilidadeOuTalento, obterClassesFicha, aplicarClasseNaFicha } from '../models/ficha';
 import { COLORS } from '../theme/colors';
+import { abrirCompendioEmJanelaSeparada } from '../utils/janelaCompendio';
 
 export type AbaCompendio =
   | 'talentos'
@@ -99,6 +101,7 @@ interface Props {
     tipo: 'talento' | 'magia' | 'raca' | 'classe' | 'equipamento' | 'manobra',
     item: TalentoData | MagiaData | RacaData | ClasseData | EquipamentoData | PosturaData | GolpeMarcialData
   ) => void;
+  standalone?: boolean;
 }
 
 export const CompendioModal: React.FC<Props> = ({
@@ -117,6 +120,7 @@ export const CompendioModal: React.FC<Props> = ({
   onAdicionarManobraAFicha,
   todasFichas = [],
   onAdicionarItemParaFichaEspecifica,
+  standalone = false,
 }) => {
   const [abaAtiva, setAbaAtiva] = useState<AbaCompendio>(abaInicial);
   const [busca, setBusca] = useState('');
@@ -402,15 +406,9 @@ export const CompendioModal: React.FC<Props> = ({
     }
   };
 
-  return (
-    <Modal
-      visible={visivel}
-      animationType="slide"
-      onRequestClose={onFechar}
-      presentationStyle="pageSheet"
-    >
-      <SafeAreaView style={styles.container}>
-        <View style={styles.innerContainer}>
+  const conteudoCompendio = (
+    <SafeAreaView style={styles.container}>
+      <View style={styles.innerContainer}>
           {/* Top Header */}
           <View style={styles.header}>
             <View style={styles.headerTitleCol}>
@@ -421,9 +419,21 @@ export const CompendioModal: React.FC<Props> = ({
                   : 'Consulta de Talentos, Magias, Raças, Classes e Equipamentos'}
               </Text>
             </View>
-            <TouchableOpacity style={styles.btnFechar} onPress={onFechar}>
-              <Text style={styles.btnFecharText}>✕ Fechar</Text>
-            </TouchableOpacity>
+            <View style={styles.headerActionsRow}>
+              {!standalone && Platform.OS === 'web' && (
+                <TouchableOpacity
+                  style={styles.btnDestacar}
+                  onPress={abrirCompendioEmJanelaSeparada}
+                  activeOpacity={0.8}
+                  accessibilityLabel="Abrir em Nova Janela Separada"
+                >
+                  <Text style={styles.btnDestacarText}>🗗 Nova Janela</Text>
+                </TouchableOpacity>
+              )}
+              <TouchableOpacity style={styles.btnFechar} onPress={onFechar}>
+                <Text style={styles.btnFecharText}>{standalone ? '✕ Fechar Janela' : '✕ Fechar'}</Text>
+              </TouchableOpacity>
+            </View>
           </View>
 
           {/* Abas Superiores (Scroll horizontal para comportar todas) */}
@@ -2071,6 +2081,20 @@ export const CompendioModal: React.FC<Props> = ({
           )}
         </View>
       </SafeAreaView>
+  );
+
+  if (standalone) {
+    return conteudoCompendio;
+  }
+
+  return (
+    <Modal
+      visible={visivel}
+      animationType="slide"
+      onRequestClose={onFechar}
+      presentationStyle="pageSheet"
+    >
+      {conteudoCompendio}
     </Modal>
   );
 };
@@ -2109,6 +2133,24 @@ const styles = StyleSheet.create({
     fontSize: 12,
     color: COLORS.textSecondary,
     marginTop: 2,
+  },
+  headerActionsRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
+  },
+  btnDestacar: {
+    paddingHorizontal: 10,
+    paddingVertical: 6,
+    borderRadius: 6,
+    backgroundColor: 'rgba(200, 157, 60, 0.15)',
+    borderWidth: 1,
+    borderColor: COLORS.gold,
+  },
+  btnDestacarText: {
+    color: COLORS.primaryDark,
+    fontWeight: 'bold',
+    fontSize: 12,
   },
   btnFechar: {
     paddingHorizontal: 12,
