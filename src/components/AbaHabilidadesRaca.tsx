@@ -155,6 +155,7 @@ export const AbaHabilidadesRaca: React.FC<Props> = ({ ficha, onChange }) => {
         onFechar={() => setCompendioVisivel(false)}
         abaInicial="racas"
         fichaAtual={ficha}
+        onAtualizarFichaAtual={onChange}
         onAplicarRacaAFicha={handleAplicarRacaCompendio}
       />
     </ScrollView>

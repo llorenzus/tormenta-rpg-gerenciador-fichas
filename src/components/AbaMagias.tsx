@@ -28,6 +28,15 @@ const NIVEIS_MAGIA = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
 export const AbaMagias: React.FC<Props> = ({ ficha, onChange }) => {
   const [compendioVisivel, setCompendioVisivel] = useState(false);
   const [compendioNivelFiltro, setCompendioNivelFiltro] = useState<number | null>(null);
+  const [filtroNivelAba, setFiltroNivelAba] = useState<number | 'todas'>('todas');
+
+  const contarMagiasPorNivel = (nivel: number) => {
+    return ficha.magias.filter((m) => m.nivelCirculo === nivel).length;
+  };
+
+  const niveisParaExibir = filtroNivelAba === 'todas'
+    ? NIVEIS_MAGIA
+    : [filtroNivelAba];
 
   const abrirCompendioMagias = (nivel?: number | null) => {
     setCompendioNivelFiltro(nivel !== undefined ? nivel : null);
@@ -161,8 +170,57 @@ export const AbaMagias: React.FC<Props> = ({ ficha, onChange }) => {
           </TouchableOpacity>
         </View>
 
+        {/* Abas de Filtragem por Nível de Magia */}
+        <View style={styles.filtroNiveisWrap}>
+          <ScrollView
+            horizontal
+            showsHorizontalScrollIndicator={false}
+            contentContainerStyle={styles.filtroNiveisScroll}
+          >
+            <TouchableOpacity
+              style={[
+                styles.tabNivelBtn,
+                filtroNivelAba === 'todas' && styles.tabNivelBtnAtivo,
+              ]}
+              onPress={() => setFiltroNivelAba('todas')}
+              activeOpacity={0.7}
+            >
+              <Text
+                style={[
+                  styles.tabNivelBtnText,
+                  filtroNivelAba === 'todas' && styles.tabNivelBtnTextAtivo,
+                ]}
+              >
+                Todas ({ficha.magias.length})
+              </Text>
+            </TouchableOpacity>
+
+            {NIVEIS_MAGIA.map((nivel) => {
+              const qtd = contarMagiasPorNivel(nivel);
+              const ativo = filtroNivelAba === nivel;
+              return (
+                <TouchableOpacity
+                  key={nivel}
+                  style={[styles.tabNivelBtn, ativo && styles.tabNivelBtnAtivo]}
+                  onPress={() => setFiltroNivelAba(nivel)}
+                  activeOpacity={0.7}
+                >
+                  <Text
+                    style={[
+                      styles.tabNivelBtnText,
+                      ativo && styles.tabNivelBtnTextAtivo,
+                    ]}
+                  >
+                    {nivel === 0 ? 'Nível 0' : `${nivel}º Nível`} {qtd > 0 ? `(${qtd})` : ''}
+                  </Text>
+                </TouchableOpacity>
+              );
+            })}
+          </ScrollView>
+        </View>
+
         <View style={styles.cardBody}>
-          {NIVEIS_MAGIA.map((nivel) => {
+          {niveisParaExibir.map((nivel) => {
             const magiasNivel = ficha.magias.filter(
               (m) => m.nivelCirculo === nivel
             );
@@ -252,6 +310,7 @@ export const AbaMagias: React.FC<Props> = ({ ficha, onChange }) => {
         abaInicial="magias"
         nivelFiltroInicial={compendioNivelFiltro}
         fichaAtual={ficha}
+        onAtualizarFichaAtual={onChange}
         onAdicionarMagiaAFicha={handleAdicionarMagiaCompendio}
       />
     </ScrollView>
@@ -387,6 +446,37 @@ const styles = StyleSheet.create({
     color: '#3B2900',
     fontWeight: 'bold',
     fontSize: 12,
+  },
+  filtroNiveisWrap: {
+    backgroundColor: 'rgba(0, 0, 0, 0.03)',
+    borderBottomWidth: 1,
+    borderBottomColor: COLORS.border,
+    paddingVertical: 8,
+  },
+  filtroNiveisScroll: {
+    paddingHorizontal: 12,
+    gap: 6,
+  },
+  tabNivelBtn: {
+    paddingHorizontal: 12,
+    paddingVertical: 6,
+    borderRadius: 16,
+    backgroundColor: COLORS.surfaceVariant,
+    borderWidth: 1,
+    borderColor: COLORS.border,
+  },
+  tabNivelBtnAtivo: {
+    backgroundColor: COLORS.primary,
+    borderColor: COLORS.primaryDark,
+  },
+  tabNivelBtnText: {
+    fontSize: 12,
+    fontWeight: '600',
+    color: COLORS.text,
+  },
+  tabNivelBtnTextAtivo: {
+    color: COLORS.white,
+    fontWeight: 'bold',
   },
   cardBody: {
     padding: 12,

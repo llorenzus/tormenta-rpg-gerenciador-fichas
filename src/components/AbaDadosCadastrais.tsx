@@ -278,6 +278,7 @@ export const AbaDadosCadastrais: React.FC<Props> = ({ ficha, onChange }) => {
         onFechar={() => setCompendioVisivel(false)}
         abaInicial={compendioAba}
         fichaAtual={ficha}
+        onAtualizarFichaAtual={onChange}
         onAplicarRacaAFicha={handleAplicarRaca}
         onAplicarClasseAFicha={handleAplicarClasse}
       />

@@ -246,6 +246,7 @@ export const AbaManobras: React.FC<Props> = ({ ficha, onChange }) => {
         onFechar={() => setCompendioVisivel(false)}
         abaInicial="manobras"
         fichaAtual={ficha}
+        onAtualizarFichaAtual={onChange}
         onAdicionarManobraAFicha={handleAdicionarManobraCompendio}
       />
     </ScrollView>

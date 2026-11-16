@@ -589,6 +589,7 @@ export const AbaEquipamentos: React.FC<Props> = ({ ficha, onChange }) => {
         onFechar={() => setCompendioAberto(false)}
         abaInicial="equipamentos"
         fichaAtual={ficha}
+        onAtualizarFichaAtual={onChange}
         onAdicionarEquipamentoAFicha={handleAdicionarEquipamentoCompendio}
       />
     </ScrollView>

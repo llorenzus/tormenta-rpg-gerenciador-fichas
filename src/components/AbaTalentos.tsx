@@ -177,6 +177,7 @@ export const AbaTalentos: React.FC<Props> = ({ ficha, onChange }) => {
         onFechar={() => setCompendioVisivel(false)}
         abaInicial="talentos"
         fichaAtual={ficha}
+        onAtualizarFichaAtual={onChange}
         onAdicionarTalentoAFicha={handleAdicionarTalentoCompendio}
       />
     </ScrollView>

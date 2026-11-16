@@ -3706,7 +3706,7 @@
   },
   {
     "id": "feiticeiro",
-    "nome": "Feiticeiro",
+    "nome": "Feiticeiro (Padrão)",
     "tipo": "Basica",
     "pvInicial": 8,
     "pvPorNivel": 2,
@@ -3714,143 +3714,163 @@
     "bba": "1/2 por nível (baixo)",
     "preRequisitos": "Nenhum.",
     "proficiencias": "Armas simples. Nenhuma armadura ou escudo.",
-    "descricao": "Conjurador nato cuja magia brota das veias, fruto de ascendência mágica pura, dragões, fadas ou entidades planares.",
+    "descricao": "Conjurador nato cujo poder provém de sangue mágico e carisma, lançando magias de forma espontânea sem necessidade de grimórios.",
     "livroFonte": "Manual Básico",
     "habilidades": [
       {
         "nivel": 1,
-        "nome": "Linhagem Sobrenatural",
-        "descricao": "Você possui magia em seu próprio sangue por herança mística de antepassados sobrenaturais."
+        "nome": "Magias Arcanas Espontâneas",
+        "descricao": "Lança magias arcanas com base em Carisma, sem necessidade de preparar feitiços em grimórios."
       },
       {
         "nivel": 1,
-        "nome": "Magias Arcanas Espontâneas (0º e 1º níveis)",
-        "descricao": "Você lança magias arcanas com base em Carisma sem precisar preparar previamente em grimório."
+        "nome": "Linhagem Sobrenatural (Poder de 1º nível)",
+        "descricao": "Sua ascendência mística desperta o poder inicial de sua linhagem escolhida."
       },
       {
         "nivel": 3,
-        "nome": "Magias Arcanas ( nível)",
-        "descricao": "Ganha acesso a magias arcanas de  nível."
+        "nome": "Magias Arcanas (2º nível)",
+        "descricao": "Aprende espontaneamente magias de 2º círculo."
       },
       {
         "nivel": 5,
-        "nome": "Magias Arcanas ( nível)",
-        "descricao": "Ganha acesso a magias arcanas de  nível."
+        "nome": "Magias Arcanas (3º nível)",
+        "descricao": "Aprende espontaneamente magias de 3º círculo."
       },
       {
         "nivel": 5,
-        "nome": "Poder Mágico (+1)",
-        "descricao": "Recebe +1 PM adicional por nível de feiticeiro."
+        "nome": "Poder da Linhagem (5º nível)",
+        "descricao": "Desperta a segunda habilidade mística herdada de sua linhagem sobrenatural."
       },
       {
         "nivel": 7,
-        "nome": "Magias Arcanas ( nível)",
-        "descricao": "Ganha acesso a magias arcanas de  nível."
+        "nome": "Magias Arcanas (4º nível)",
+        "descricao": "Aprende espontaneamente magias de 4º círculo."
       },
       {
         "nivel": 9,
-        "nome": "Magias Arcanas ( nível)",
-        "descricao": "Ganha acesso a magias arcanas de  nível."
+        "nome": "Magias Arcanas (5º nível)",
+        "descricao": "Aprende espontaneamente magias de 5º círculo."
       },
       {
         "nivel": 10,
-        "nome": "Poder Mágico (+2)",
-        "descricao": "Recebe mais +1 PM adicional por nível de feiticeiro."
+        "nome": "Poder da Linhagem (10º nível)",
+        "descricao": "Desperta a terceira habilidade mística herdada de sua linhagem sobrenatural."
       },
       {
         "nivel": 11,
-        "nome": "Magias Arcanas ( nível)",
-        "descricao": "Ganha acesso a magias arcanas de  nível."
+        "nome": "Magias Arcanas (6º nível)",
+        "descricao": "Aprende espontaneamente magias de 6º círculo."
       },
       {
         "nivel": 13,
-        "nome": "Magias Arcanas ( nível)",
-        "descricao": "Ganha acesso a magias arcanas de  nível."
+        "nome": "Magias Arcanas (7º nível)",
+        "descricao": "Aprende espontaneamente magias de 7º círculo."
       },
       {
         "nivel": 15,
-        "nome": "Magias Arcanas ( nível)",
-        "descricao": "Ganha acesso a magias arcanas de  nível."
+        "nome": "Magias Arcanas (8º nível)",
+        "descricao": "Aprende espontaneamente magias de 8º círculo."
       },
       {
         "nivel": 15,
-        "nome": "Poder Mágico (+3)",
-        "descricao": "Recebe mais +1 PM adicional por nível de feiticeiro."
+        "nome": "Poder da Linhagem (15º nível)",
+        "descricao": "Desperta a quarta habilidade mística herdada de sua linhagem sobrenatural."
       },
       {
         "nivel": 17,
-        "nome": "Magias Arcanas ( nível)",
-        "descricao": "Ganha acesso ao supremo 9º nível de magias arcanas artonianas."
+        "nome": "Magias Arcanas (9º nível)",
+        "descricao": "Atinge magias espontâneas do lendário 9º círculo."
       },
       {
         "nivel": 20,
-        "nome": "Apoteose da Linhagem",
-        "descricao": "Sua forma física transforma-se em pura essência mística de sua linhagem com imunidades elementais completas e +4 de Carisma."
-      },
-      {
-        "nivel": 20,
-        "nome": "Poder Mágico (+4)",
-        "descricao": "Recebe mais +1 PM adicional por nível de feiticeiro."
+        "nome": "Apoteose da Linhagem (20º nível)",
+        "descricao": "Atinge a transcendência completa, transformando-se na manifestação viva de sua linhagem."
       }
     ]
   },
   {
     "id": "feiticeiro_draconico",
-    "nome": "Feiticeiro Dracônico",
+    "nome": "Feiticeiro: Linhagem Dracônica",
     "tipo": "Basica",
-    "pvInicial": 12,
-    "pvPorNivel": 3,
+    "pvInicial": 8,
+    "pvPorNivel": 2,
     "pmPorNivel": 3,
     "bba": "1/2 por nível (baixo)",
-    "preRequisitos": "Carisma 13.",
-    "proficiencias": "Armas simples.",
-    "descricao": "Feiticeiro com o sangue dos grandes dragões antigos: garras afiadas, escamas resistentes, sopro elemental e asas.",
+    "preRequisitos": "Nenhum.",
+    "proficiencias": "Armas simples. Nenhuma armadura ou escudo.",
+    "descricao": "Descendente direto dos dragões de Arton, dotado de escamas resistentes, garras e sopro elemental destruidor.",
     "livroFonte": "Manual do Arcano",
     "habilidades": [
       {
         "nivel": 1,
-        "nome": "Garras Dracônicas",
-        "descricao": "Pode manifestar garras como armas naturais causando 1d6 de dano perfurante/cortante."
+        "nome": "Magias Arcanas Espontâneas",
+        "descricao": "Lança magias arcanas com base em Carisma, sem necessidade de preparar feitiços em grimórios."
       },
       {
         "nivel": 1,
-        "nome": "Magias Arcanas Espontâneas",
-        "descricao": "Conjura magias usando Carisma."
+        "nome": "Linhagem: Garras Dracônicas",
+        "descricao": "Ganha garras naturais que causam 1d4 de dano e bônus de +1 em armadura natural na CA."
       },
       {
         "nivel": 3,
-        "nome": "Escamas de Dragão (+2 CA)",
-        "descricao": "Ganha +2 na CA por armadura natural e resistência 5 ao elemento de seu patrono dracônico."
+        "nome": "Magias Arcanas (2º nível)",
+        "descricao": "Ganha acesso espontâneo a magias arcanas de 2º círculo."
       },
       {
         "nivel": 5,
-        "nome": "Sopro Dracônico",
-        "descricao": "Uma vez por dia por ponto de Carisma, desfere um cone ou linha elemental causando 1d6 por nível de feiticeiro."
+        "nome": "Magias Arcanas (3º nível)",
+        "descricao": "Ganha acesso espontâneo a magias arcanas de 3º círculo."
+      },
+      {
+        "nivel": 5,
+        "nome": "Poder da Linhagem (5º): Escamas de Dragão",
+        "descricao": "Bônus de armadura natural na CA sobe para +2 e ganha resistência 10 ao elemento de seu dragão antepassado."
       },
       {
         "nivel": 7,
-        "nome": "Presença Aterradora",
-        "descricao": "Emite uma aura de medo dracônico que abala inimigos próximos."
+        "nome": "Magias Arcanas (4º nível)",
+        "descricao": "Ganha acesso espontâneo a magias arcanas de 4º círculo."
+      },
+      {
+        "nivel": 9,
+        "nome": "Magias Arcanas (5º nível)",
+        "descricao": "Ganha acesso espontâneo a magias arcanas de 5º círculo."
       },
       {
         "nivel": 10,
-        "nome": "Resistência Dracônica Elevada",
-        "descricao": "Resistência elemental sobe para 20 e bônus na CA por escamas sobe para +4."
+        "nome": "Poder da Linhagem (10º): Sopro Dracônico",
+        "descricao": "Desfere um sopro elemental (cone de 9m ou linha de 18m) causando 1d6 de dano por nível (Reflexos reduz à metade)."
       },
       {
-        "nivel": 12,
-        "nome": "Asas de Dragão",
-        "descricao": "Manifesta grandes asas reptilianas nas costas ganhando deslocamento de voo 18m."
+        "nivel": 11,
+        "nome": "Magias Arcanas (6º nível)",
+        "descricao": "Ganha acesso espontâneo a magias arcanas de 6º círculo."
+      },
+      {
+        "nivel": 13,
+        "nome": "Magias Arcanas (7º nível)",
+        "descricao": "Ganha acesso espontâneo a magias arcanas de 7º círculo."
       },
       {
         "nivel": 15,
-        "nome": "Sopro Dracônico Devastador",
-        "descricao": "O dano do sopro passa a 1d8 por nível e sua área dobra de tamanho."
+        "nome": "Magias Arcanas (8º nível)",
+        "descricao": "Ganha acesso espontâneo a magias arcanas de 8º círculo."
+      },
+      {
+        "nivel": 15,
+        "nome": "Poder da Linhagem (15º): Asas de Dragão",
+        "descricao": "Com ação de movimento abre grandes asas de couro com deslocamento de voo 18m."
+      },
+      {
+        "nivel": 17,
+        "nome": "Magias Arcanas (9º nível)",
+        "descricao": "Ganha acesso espontâneo a magias arcanas de 9º círculo."
       },
       {
         "nivel": 20,
-        "nome": "Forma do Dragão Primordial",
-        "descricao": "Torna-se um dragão verdadeiro vivo: imunidade total ao elemento, imunidade a paralisia e sono, RD 10/magia."
+        "nome": "Apoteose da Linhagem (20º): Apoteose Dracônica",
+        "descricao": "Ganha imunidade total ao elemento escolhido, presença aterradora (CD 20) e bônus de +4 em Força e Constituição."
       }
     ]
   },
@@ -3906,52 +3926,7 @@
   },
   {
     "id": "feiticeiro_elemental",
-    "nome": "Feiticeiro Elemental",
-    "tipo": "Basica",
-    "pvInicial": 8,
-    "pvPorNivel": 2,
-    "pmPorNivel": 3,
-    "bba": "1/2 por nível (baixo)",
-    "preRequisitos": "Nenhum.",
-    "proficiencias": "Armas simples.",
-    "descricao": "Conectado aos quatro planos elementais (fogo, água/gelo, ar/eletricidade ou terra/ácido), moldando a matéria bruta da natureza.",
-    "livroFonte": "Manual do Arcano",
-    "habilidades": [
-      {
-        "nivel": 1,
-        "nome": "Raio Elemental",
-        "descricao": "Ataque de toque à distância causando 1d6 + mod Carisma do elemento escolhido."
-      },
-      {
-        "nivel": 3,
-        "nome": "Resistência Elemental (10)",
-        "descricao": "Resistência 10 ao elemento de sua linhagem ancestral."
-      },
-      {
-        "nivel": 5,
-        "nome": "Transmutação Elemental",
-        "descricao": "Pode converter o dano de qualquer magia elemental para o tipo de seu elemento."
-      },
-      {
-        "nivel": 9,
-        "nome": "Explosão Elemental",
-        "descricao": "Cria ondas de choque e labaredas ao conjurar magias de seu elemento patrono."
-      },
-      {
-        "nivel": 15,
-        "nome": "Corpo Elemental Parcial",
-        "descricao": "Resistência 20 e deslocamento especial (cavar na terra, planar no vento ou nadar na água)."
-      },
-      {
-        "nivel": 20,
-        "nome": "Monolito Elemental",
-        "descricao": "Imunidade total ao seu elemento e imunidade a veneno, paralisia, atordoamento e acertos críticos."
-      }
-    ]
-  },
-  {
-    "id": "mago",
-    "nome": "Mago",
+    "nome": "Feiticeiro: Linhagem Elemental",
     "tipo": "Basica",
     "pvInicial": 8,
     "pvPorNivel": 2,
@@ -3959,7 +3934,92 @@
     "bba": "1/2 por nível (baixo)",
     "preRequisitos": "Nenhum.",
     "proficiencias": "Armas simples. Nenhuma armadura ou escudo.",
-    "descricao": "Acadêmico dos mistérios ocultos que domina a realidade através do estudo árduo, livros arcanos e grimórios.",
+    "descricao": "Carrega em seu cerne a força viva dos elementos primordiais (Fogo, Frio, Eletricidade ou Ácido).",
+    "livroFonte": "Manual do Arcano",
+    "habilidades": [
+      {
+        "nivel": 1,
+        "nome": "Magias Arcanas Espontâneas",
+        "descricao": "Lança magias arcanas com base em Carisma, sem necessidade de preparar feitiços em grimórios."
+      },
+      {
+        "nivel": 1,
+        "nome": "Linhagem: Raio Elemental",
+        "descricao": "Dispara raios de energia do elemento escolhido com ataque de toque à distância causando 1d6 + mod. Car."
+      },
+      {
+        "nivel": 3,
+        "nome": "Magias Arcanas (2º nível)",
+        "descricao": "Ganha acesso espontâneo a magias arcanas de 2º círculo."
+      },
+      {
+        "nivel": 5,
+        "nome": "Magias Arcanas (3º nível)",
+        "descricao": "Ganha acesso espontâneo a magias arcanas de 3º círculo."
+      },
+      {
+        "nivel": 5,
+        "nome": "Poder da Linhagem (5º): Afinidade Elemental",
+        "descricao": "Ganha resistência 10 ao elemento escolhido e todas as suas magias desse elemento causam +1 ponto de dano por dado."
+      },
+      {
+        "nivel": 7,
+        "nome": "Magias Arcanas (4º nível)",
+        "descricao": "Ganha acesso espontâneo a magias arcanas de 4º círculo."
+      },
+      {
+        "nivel": 9,
+        "nome": "Magias Arcanas (5º nível)",
+        "descricao": "Ganha acesso espontâneo a magias arcanas de 5º círculo."
+      },
+      {
+        "nivel": 10,
+        "nome": "Poder da Linhagem (10º): Explosão Elemental",
+        "descricao": "Gasta 2 PM para liberar uma onda de energia elemental atingindo todas as criaturas adjacentes."
+      },
+      {
+        "nivel": 11,
+        "nome": "Magias Arcanas (6º nível)",
+        "descricao": "Ganha acesso espontâneo a magias arcanas de 6º círculo."
+      },
+      {
+        "nivel": 13,
+        "nome": "Magias Arcanas (7º nível)",
+        "descricao": "Ganha acesso espontâneo a magias arcanas de 7º círculo."
+      },
+      {
+        "nivel": 15,
+        "nome": "Magias Arcanas (8º nível)",
+        "descricao": "Ganha acesso espontâneo a magias arcanas de 8º círculo."
+      },
+      {
+        "nivel": 15,
+        "nome": "Poder da Linhagem (15º): Corpo Elemental",
+        "descricao": "Ganha imunidade ao elemento escolhido e 50% de chance de ignorar acertos críticos e ataques furtivos."
+      },
+      {
+        "nivel": 17,
+        "nome": "Magias Arcanas (9º nível)",
+        "descricao": "Ganha acesso espontâneo a magias arcanas de 9º círculo."
+      },
+      {
+        "nivel": 20,
+        "nome": "Apoteose da Linhagem (20º): Monólito Elemental",
+        "descricao": "Pode assumir a forma de um Elemental Ancião de seu elemento, recebendo bônus imensos e ataques colossais."
+      }
+    ]
+  },
+  {
+    "id": "mago",
+    "nome": "Mago (Generalista)",
+    "tipo": "Basica",
+    "pvInicial": 8,
+    "pvPorNivel": 2,
+    "pmPorNivel": 3,
+    "bba": "1/2 por nível (baixo)",
+    "preRequisitos": "Nenhum.",
+    "proficiencias": "Armas simples. Nenhuma armadura ou escudo.",
+    "descricao": "Estudioso dos mistérios arcanos que pesquisa todas as escolas de magia de forma ampla, sem restrições ou escolas proibidas.",
     "livroFonte": "Manual Básico",
     "habilidades": [
       {
@@ -3970,77 +4030,77 @@
       {
         "nivel": 1,
         "nome": "Magias Arcanas (Grimório) - 0º e 1º níveis",
-        "descricao": "Você aprende magias através do estudo minucioso e as anota em seu grimório, preparando-as diariamente com base em Inteligência."
+        "descricao": "Aprende e prepara magias diariamente através de seu grimório com base em Inteligência. Inicialmente possui 3 magias de 1º nível + mod. Int. A cada nível aprende 2 novas magias."
       },
       {
         "nivel": 1,
-        "nome": "Mistério Arcano",
-        "descricao": "Recebe um talento metaprágico ou talento de conhecimento adicional."
+        "nome": "Mistério Arcano (1º nível)",
+        "descricao": "Recebe um talento de magia ou metamágico adicional."
       },
       {
         "nivel": 3,
-        "nome": "Magias Arcanas ( nível)",
-        "descricao": "Seu grimório expande-se para abarcar magias arcanas de  nível."
+        "nome": "Magias Arcanas (2º nível)",
+        "descricao": "Ganha acesso a magias arcanas de 2º círculo."
       },
       {
         "nivel": 5,
-        "nome": "Magias Arcanas ( nível)",
-        "descricao": "Ganha acesso a magias arcanas de  nível."
+        "nome": "Magias Arcanas (3º nível)",
+        "descricao": "Ganha acesso a magias arcanas de 3º círculo."
       },
       {
         "nivel": 5,
-        "nome": "Mistério Arcano",
-        "descricao": "Recebe um talento metamágico ou arcano adicional."
+        "nome": "Mistério Arcano (5º nível)",
+        "descricao": "Recebe um talento de magia ou metamágico adicional."
       },
       {
         "nivel": 7,
-        "nome": "Magias Arcanas ( nível)",
-        "descricao": "Ganha acesso a magias arcanas de  nível."
+        "nome": "Magias Arcanas (4º nível)",
+        "descricao": "Ganha acesso a magias arcanas de 4º círculo."
       },
       {
         "nivel": 9,
-        "nome": "Magias Arcanas ( nível)",
-        "descricao": "Ganha acesso a magias arcanas de  nível."
+        "nome": "Magias Arcanas (5º nível)",
+        "descricao": "Ganha acesso a magias arcanas de 5º círculo."
       },
       {
         "nivel": 10,
-        "nome": "Mistério Arcano",
-        "descricao": "Recebe um talento metamágico ou arcano adicional."
+        "nome": "Mistério Arcano (10º nível)",
+        "descricao": "Recebe um talento de magia ou metamágico adicional."
       },
       {
         "nivel": 11,
-        "nome": "Magias Arcanas ( nível)",
-        "descricao": "Ganha acesso a magias arcanas de  nível."
+        "nome": "Magias Arcanas (6º nível)",
+        "descricao": "Ganha acesso a magias arcanas de 6º círculo."
       },
       {
         "nivel": 13,
-        "nome": "Magias Arcanas ( nível)",
-        "descricao": "Ganha acesso a magias arcanas de  nível."
+        "nome": "Magias Arcanas (7º nível)",
+        "descricao": "Ganha acesso a magias arcanas de 7º círculo."
       },
       {
         "nivel": 15,
-        "nome": "Magias Arcanas ( nível)",
-        "descricao": "Ganha acesso a magias arcanas de  nível."
+        "nome": "Magias Arcanas (8º nível)",
+        "descricao": "Ganha acesso a magias arcanas de 8º círculo."
       },
       {
         "nivel": 15,
-        "nome": "Mistério Arcano",
-        "descricao": "Recebe um talento metamágico ou arcano adicional."
+        "nome": "Mistério Arcano (15º nível)",
+        "descricao": "Recebe um talento de magia ou metamágico adicional."
       },
       {
         "nivel": 17,
-        "nome": "Magias Arcanas ( nível)",
-        "descricao": "Atinge a cúspide da alta magia com feitiços arcanos de  nível."
+        "nome": "Magias Arcanas (9º nível)",
+        "descricao": "Ganha acesso a magias arcanas de 9º círculo."
       },
       {
         "nivel": 20,
         "nome": "Mestre da Magia Suprema",
-        "descricao": "Você pode lançar qualquer magia que conheça sem precisar prepará-la previamente no grimório, com custo de PM reduzido em –1."
+        "descricao": "Você pode lançar qualquer magia que conheça sem precisar prepará-la previamente no grimório, com custo de PM reduzido em -1."
       },
       {
         "nivel": 20,
-        "nome": "Mistério Arcano",
-        "descricao": "Recebe mais um talento metamágico supremo."
+        "nome": "Mistério Arcano (20º nível)",
+        "descricao": "Recebe mais um talento de magia ou metamágico adicional."
       }
     ]
   },
@@ -4050,42 +4110,97 @@
     "tipo": "Basica",
     "pvInicial": 8,
     "pvPorNivel": 2,
-    "pmPorNivel": 4,
-    "bba": "1/2 por nível (médio/baixo)",
-    "preRequisitos": "Inteligência 13. Mago de 1º nível.",
-    "proficiencias": "Nenhuma proficiência adicional.",
-    "descricao": "Estudioso da fronteira entre a vida e a morte, mestre de energias negativas, maldições de definhamento e mortos-vivos.",
+    "pmPorNivel": 3,
+    "bba": "1/2 por nível (baixo)",
+    "preRequisitos": "Tendência não Bondosa.",
+    "proficiencias": "Armas simples, foice (gadanho negro). Nenhuma armadura ou escudo.",
+    "descricao": "Estudioso dos segredos da vida e da morte. Ao contrário dos outros especialistas, possui um Gadanho Negro como item de poder exclusivo e opções mortais de mistérios arcanos.",
     "livroFonte": "Manual do Arcano",
     "habilidades": [
       {
         "nivel": 1,
-        "nome": "Escola Especializada: Necromancia",
-        "descricao": "1 PM extra por nível para magias de Necromancia. Escolas Proibidas: Abjuração e Encantamento."
+        "nome": "Magias Arcanas (Grimório)",
+        "descricao": "Prepara magias diariamente baseadas em Inteligência. Magias Iniciais: 3 de 1º nível da escola Necromancia + mod. Int de qualquer escola (exceto proibida). A cada novo nível aprende 1 de Necromancia e 1 de qualquer escola permitida."
       },
       {
         "nivel": 1,
-        "nome": "Toque Macabro",
-        "descricao": "Ataque de toque que causa 1d6 de dano de trevas e cura você em metade do valor causado (1/combate)."
+        "nome": "Especialização: Necromancia (Escola Proibida: Encantamento)",
+        "descricao": "Você concentra seus estudos arcanos na escola Necromancia. Por outro lado, nunca pode aprender magias da escola Encantamento, nem mesmo através de talentos ou multiclasse."
+      },
+      {
+        "nivel": 1,
+        "nome": "Vínculo Arcano Especial",
+        "descricao": "Gadanho Negro (Item de Poder exclusivo: foice mágica de duas mãos 2d4 corte, 19-20/x4, com bônus mágico de +1 a cada 5 níveis e cura PV igual à metade do dano causado) OU Familiar Funesto (lacaio funesto ou montaria esquelética)."
+      },
+      {
+        "nivel": 1,
+        "nome": "Mistério Arcano (1º nível)",
+        "descricao": "Pode escolher um talento de magia/metamágico OU uma das habilidades exclusivas de sua especialização:\n• Gadanho Negro: Foice negra mágica que causa 2d4 (19-20/x4), bônus mágico +1 (+1 a cada 5 níveis) e cura metade do dano em PV.\n• Armadura de Ossos: Gasta 1 PM para criar armadura de ossos (+4 CA, +1 CA extra por PM adicional até +1/3 do nível de necromante).\n• Carisma Mortal: Permite usar Diplomacia/Enganação com mortos-vivos sem penalidade na primeira rodada (Pré-req: 10º nível, Língua dos Mortos).\n• Carrasco dos Mortos: Recebe Inimigo Predileto (mortos-vivos) de ranger (+2 nas jogadas de dano e testes).\n• Ceifador de Almas: Abate com gadanho negro recupera PV total do dano e lança Drenar Força Vital sem custo de PM (Pré-req: 10º nível, Gadanho Negro).\n• Horda Cinzenta: Controla o dobro da quantidade normal de níveis de mortos-vivos.\n• Lacaio Funesto: Cria ou adquire um servo esquelético inteligente permanente.\n• Lich: Transcende a mortalidade através de um filactério e torna-se um lich morto-vivo (Pré-req: 15º nível).\n• Língua dos Mortos: Pode se comunicar com qualquer criatura morta-viva.\n• Mais Forte que a Morte: Testes de Fortitude para resistir à morte recebem bônus de +4.\n• Montaria Esquelética: Invoca um corcel esquelético dócil para transporte rápido.\n• Morte Insistente: Magias de necromancia ignoram imunidade a dano negativo de criaturas vivas.\n• Necropotência: Magias de necromancia têm sua CD aumentada em +2.\n• Proteção Positiva: Reduz a metade todo dano sofrido por energia positiva.\n• Seguidores Funestos: Mortos-vivos sob seu comando recebem +2 em ataques e resistências."
+      },
+      {
+        "nivel": 3,
+        "nome": "Magias Arcanas (2º nível)",
+        "descricao": "Seu grimório expande-se para abarcar magias arcanas de 2º círculo."
       },
       {
         "nivel": 5,
-        "nome": "Lorde dos Cadáveres",
-        "descricao": "O limite de dados de vida de mortos-vivos sob seu comando aumenta em +2 por nível de mago."
+        "nome": "Magias Arcanas (3º nível)",
+        "descricao": "Ganha acesso a magias arcanas de 3º círculo."
+      },
+      {
+        "nivel": 5,
+        "nome": "Mistério Arcano (5º nível)",
+        "descricao": "Pode escolher um talento de magia/metamágico OU uma das habilidades exclusivas de sua especialização:\n• Gadanho Negro: Foice negra mágica que causa 2d4 (19-20/x4), bônus mágico +1 (+1 a cada 5 níveis) e cura metade do dano em PV.\n• Armadura de Ossos: Gasta 1 PM para criar armadura de ossos (+4 CA, +1 CA extra por PM adicional até +1/3 do nível de necromante).\n• Carisma Mortal: Permite usar Diplomacia/Enganação com mortos-vivos sem penalidade na primeira rodada (Pré-req: 10º nível, Língua dos Mortos).\n• Carrasco dos Mortos: Recebe Inimigo Predileto (mortos-vivos) de ranger (+2 nas jogadas de dano e testes).\n• Ceifador de Almas: Abate com gadanho negro recupera PV total do dano e lança Drenar Força Vital sem custo de PM (Pré-req: 10º nível, Gadanho Negro).\n• Horda Cinzenta: Controla o dobro da quantidade normal de níveis de mortos-vivos.\n• Lacaio Funesto: Cria ou adquire um servo esquelético inteligente permanente.\n• Lich: Transcende a mortalidade através de um filactério e torna-se um lich morto-vivo (Pré-req: 15º nível).\n• Língua dos Mortos: Pode se comunicar com qualquer criatura morta-viva.\n• Mais Forte que a Morte: Testes de Fortitude para resistir à morte recebem bônus de +4.\n• Montaria Esquelética: Invoca um corcel esquelético dócil para transporte rápido.\n• Morte Insistente: Magias de necromancia ignoram imunidade a dano negativo de criaturas vivas.\n• Necropotência: Magias de necromancia têm sua CD aumentada em +2.\n• Proteção Positiva: Reduz a metade todo dano sofrido por energia positiva.\n• Seguidores Funestos: Mortos-vivos sob seu comando recebem +2 em ataques e resistências."
+      },
+      {
+        "nivel": 7,
+        "nome": "Magias Arcanas (4º nível)",
+        "descricao": "Ganha acesso a magias arcanas de 4º círculo."
+      },
+      {
+        "nivel": 9,
+        "nome": "Magias Arcanas (5º nível)",
+        "descricao": "Ganha acesso a magias arcanas de 5º círculo."
       },
       {
         "nivel": 10,
-        "nome": "Resistência à Morte",
-        "descricao": "Ganha imunidade a efeitos de dreno de energia e resistência a trevas 10."
+        "nome": "Mistério Arcano (10º nível)",
+        "descricao": "Pode escolher um talento de magia/metamágico OU uma das habilidades exclusivas de sua especialização:\n• Gadanho Negro: Foice negra mágica que causa 2d4 (19-20/x4), bônus mágico +1 (+1 a cada 5 níveis) e cura metade do dano em PV.\n• Armadura de Ossos: Gasta 1 PM para criar armadura de ossos (+4 CA, +1 CA extra por PM adicional até +1/3 do nível de necromante).\n• Carisma Mortal: Permite usar Diplomacia/Enganação com mortos-vivos sem penalidade na primeira rodada (Pré-req: 10º nível, Língua dos Mortos).\n• Carrasco dos Mortos: Recebe Inimigo Predileto (mortos-vivos) de ranger (+2 nas jogadas de dano e testes).\n• Ceifador de Almas: Abate com gadanho negro recupera PV total do dano e lança Drenar Força Vital sem custo de PM (Pré-req: 10º nível, Gadanho Negro).\n• Horda Cinzenta: Controla o dobro da quantidade normal de níveis de mortos-vivos.\n• Lacaio Funesto: Cria ou adquire um servo esquelético inteligente permanente.\n• Lich: Transcende a mortalidade através de um filactério e torna-se um lich morto-vivo (Pré-req: 15º nível).\n• Língua dos Mortos: Pode se comunicar com qualquer criatura morta-viva.\n• Mais Forte que a Morte: Testes de Fortitude para resistir à morte recebem bônus de +4.\n• Montaria Esquelética: Invoca um corcel esquelético dócil para transporte rápido.\n• Morte Insistente: Magias de necromancia ignoram imunidade a dano negativo de criaturas vivas.\n• Necropotência: Magias de necromancia têm sua CD aumentada em +2.\n• Proteção Positiva: Reduz a metade todo dano sofrido por energia positiva.\n• Seguidores Funestos: Mortos-vivos sob seu comando recebem +2 em ataques e resistências."
+      },
+      {
+        "nivel": 11,
+        "nome": "Magias Arcanas (6º nível)",
+        "descricao": "Ganha acesso a magias arcanas de 6º círculo."
+      },
+      {
+        "nivel": 13,
+        "nome": "Magias Arcanas (7º nível)",
+        "descricao": "Ganha acesso a magias arcanas de 7º círculo."
       },
       {
         "nivel": 15,
-        "nome": "Animação Efêmera",
-        "descricao": "Como ação padrão, reanima temporariamente um cadáver inimigo derrotado por 1 minuto sem custo de material."
+        "nome": "Magias Arcanas (8º nível)",
+        "descricao": "Ganha acesso a magias arcanas de 8º círculo."
+      },
+      {
+        "nivel": 15,
+        "nome": "Mistério Arcano (15º nível)",
+        "descricao": "Pode escolher um talento de magia/metamágico OU uma das habilidades exclusivas de sua especialização:\n• Gadanho Negro: Foice negra mágica que causa 2d4 (19-20/x4), bônus mágico +1 (+1 a cada 5 níveis) e cura metade do dano em PV.\n• Armadura de Ossos: Gasta 1 PM para criar armadura de ossos (+4 CA, +1 CA extra por PM adicional até +1/3 do nível de necromante).\n• Carisma Mortal: Permite usar Diplomacia/Enganação com mortos-vivos sem penalidade na primeira rodada (Pré-req: 10º nível, Língua dos Mortos).\n• Carrasco dos Mortos: Recebe Inimigo Predileto (mortos-vivos) de ranger (+2 nas jogadas de dano e testes).\n• Ceifador de Almas: Abate com gadanho negro recupera PV total do dano e lança Drenar Força Vital sem custo de PM (Pré-req: 10º nível, Gadanho Negro).\n• Horda Cinzenta: Controla o dobro da quantidade normal de níveis de mortos-vivos.\n• Lacaio Funesto: Cria ou adquire um servo esquelético inteligente permanente.\n• Lich: Transcende a mortalidade através de um filactério e torna-se um lich morto-vivo (Pré-req: 15º nível).\n• Língua dos Mortos: Pode se comunicar com qualquer criatura morta-viva.\n• Mais Forte que a Morte: Testes de Fortitude para resistir à morte recebem bônus de +4.\n• Montaria Esquelética: Invoca um corcel esquelético dócil para transporte rápido.\n• Morte Insistente: Magias de necromancia ignoram imunidade a dano negativo de criaturas vivas.\n• Necropotência: Magias de necromancia têm sua CD aumentada em +2.\n• Proteção Positiva: Reduz a metade todo dano sofrido por energia positiva.\n• Seguidores Funestos: Mortos-vivos sob seu comando recebem +2 em ataques e resistências."
+      },
+      {
+        "nivel": 17,
+        "nome": "Magias Arcanas (9º nível)",
+        "descricao": "Atinge a cúspide da alta magia com feitiços arcanos de 9º círculo."
       },
       {
         "nivel": 20,
-        "nome": "Comandante da Morte Eterna",
-        "descricao": "Mortos-vivos criados por você ganham bônus profano de +4 em Força, Destreza e CA."
+        "nome": "Mestre da Magia Suprema",
+        "descricao": "Você atinge o ápice de sua especialização arcana, lançando suas magias de forma impecável."
+      },
+      {
+        "nivel": 20,
+        "nome": "Mistério Arcano (20º nível)",
+        "descricao": "Pode escolher um talento de magia/metamágico OU uma das habilidades exclusivas de sua especialização:\n• Gadanho Negro: Foice negra mágica que causa 2d4 (19-20/x4), bônus mágico +1 (+1 a cada 5 níveis) e cura metade do dano em PV.\n• Armadura de Ossos: Gasta 1 PM para criar armadura de ossos (+4 CA, +1 CA extra por PM adicional até +1/3 do nível de necromante).\n• Carisma Mortal: Permite usar Diplomacia/Enganação com mortos-vivos sem penalidade na primeira rodada (Pré-req: 10º nível, Língua dos Mortos).\n• Carrasco dos Mortos: Recebe Inimigo Predileto (mortos-vivos) de ranger (+2 nas jogadas de dano e testes).\n• Ceifador de Almas: Abate com gadanho negro recupera PV total do dano e lança Drenar Força Vital sem custo de PM (Pré-req: 10º nível, Gadanho Negro).\n• Horda Cinzenta: Controla o dobro da quantidade normal de níveis de mortos-vivos.\n• Lacaio Funesto: Cria ou adquire um servo esquelético inteligente permanente.\n• Lich: Transcende a mortalidade através de um filactério e torna-se um lich morto-vivo (Pré-req: 15º nível).\n• Língua dos Mortos: Pode se comunicar com qualquer criatura morta-viva.\n• Mais Forte que a Morte: Testes de Fortitude para resistir à morte recebem bônus de +4.\n• Montaria Esquelética: Invoca um corcel esquelético dócil para transporte rápido.\n• Morte Insistente: Magias de necromancia ignoram imunidade a dano negativo de criaturas vivas.\n• Necropotência: Magias de necromancia têm sua CD aumentada em +2.\n• Proteção Positiva: Reduz a metade todo dano sofrido por energia positiva.\n• Seguidores Funestos: Mortos-vivos sob seu comando recebem +2 em ataques e resistências."
       }
     ]
   },
@@ -4095,82 +4210,197 @@
     "tipo": "Basica",
     "pvInicial": 8,
     "pvPorNivel": 2,
-    "pmPorNivel": 4,
-    "bba": "1/2 por nível (médio/baixo)",
-    "preRequisitos": "Inteligência 13. Mago de 1º nível.",
-    "proficiencias": "Nenhuma proficiência adicional.",
-    "descricao": "Artífice da ilusão, decepção visual e sensorial. Escolas Proibidas: Abjuração e Evocação.",
+    "pmPorNivel": 3,
+    "bba": "1/2 por nível (baixo)",
+    "preRequisitos": "Tendência não Leal.",
+    "proficiencias": "Armas simples. Nenhuma armadura ou escudo.",
+    "descricao": "Artista dos reflexos, quimeras e distorções da percepção, criando ilusões indistinguíveis da realidade.",
     "livroFonte": "Manual do Arcano",
     "habilidades": [
       {
         "nivel": 1,
-        "nome": "Escola Especializada: Ilusão",
-        "descricao": "1 PM extra por nível para magias de Ilusão. Escolas Proibidas: Abjuração e Evocação."
+        "nome": "Magias Arcanas (Grimório)",
+        "descricao": "Prepara magias diariamente baseadas em Inteligência. Magias Iniciais: 3 de 1º nível da escola Ilusão + mod. Int de qualquer escola (exceto proibida). A cada novo nível aprende 1 de Ilusão e 1 de qualquer escola permitida."
       },
       {
         "nivel": 1,
-        "nome": "Duplo Fantasmagórico",
-        "descricao": "Como reação a um ataque recebido, projeta cópia ilusória causando 50% de chance de erro no atacante."
+        "nome": "Especialização: Ilusão (Escola Proibida: Invocação)",
+        "descricao": "Você concentra seus estudos arcanos na escola Ilusão. Por outro lado, nunca pode aprender magias da escola Invocação, nem mesmo através de talentos ou multiclasse."
+      },
+      {
+        "nivel": 1,
+        "nome": "Vínculo Arcano Especial",
+        "descricao": "Item de Poder (espelho de mão, leque, máscara ornamentada) ou Familiar (camaleão com +10 em disfarces, lebre com Aparência Inofensiva)."
+      },
+      {
+        "nivel": 1,
+        "nome": "Mistério Arcano (1º nível)",
+        "descricao": "Pode escolher um talento de magia/metamágico OU uma das habilidades exclusivas de sua especialização:\n• Ilusões Econômicas: Magias de ilusão custam -1 PM (mínimo 1 PM).\n• Detectar Amadorismo: Vê através de qualquer ilusão conjurada por conjurador de nível inferior.\n• Ilusões de Grandeza: Suas ilusões podem abranger áreas monumentais sem custo extra de PM.\n• Ilusões Poderosas: Aumenta a CD para desacreditar de suas ilusões em +2.\n• Invisibilidade Suprema: Invisibilidade não é dissipada ao atacar ou conjurar magias ofensivas.\n• Modelador de Sombras: Converte porcentagem de suas ilusões em dano físico real de sombra.\n• Não Fui Eu: Pode trocar de lugar com uma réplica ilusória ao ser alvejado por ataque.\n• Resíduo Ilusório: Deixa um clone falso que distrai oponentes ao se movimentar."
+      },
+      {
+        "nivel": 3,
+        "nome": "Magias Arcanas (2º nível)",
+        "descricao": "Seu grimório expande-se para abarcar magias arcanas de 2º círculo."
       },
       {
         "nivel": 5,
-        "nome": "Ilusão Convincente",
-        "descricao": "Inimigos que tentam desacreditar de suas ilusões sofrem penalidade de -3 no teste de Vontade."
+        "nome": "Magias Arcanas (3º nível)",
+        "descricao": "Ganha acesso a magias arcanas de 3º círculo."
+      },
+      {
+        "nivel": 5,
+        "nome": "Mistério Arcano (5º nível)",
+        "descricao": "Pode escolher um talento de magia/metamágico OU uma das habilidades exclusivas de sua especialização:\n• Ilusões Econômicas: Magias de ilusão custam -1 PM (mínimo 1 PM).\n• Detectar Amadorismo: Vê através de qualquer ilusão conjurada por conjurador de nível inferior.\n• Ilusões de Grandeza: Suas ilusões podem abranger áreas monumentais sem custo extra de PM.\n• Ilusões Poderosas: Aumenta a CD para desacreditar de suas ilusões em +2.\n• Invisibilidade Suprema: Invisibilidade não é dissipada ao atacar ou conjurar magias ofensivas.\n• Modelador de Sombras: Converte porcentagem de suas ilusões em dano físico real de sombra.\n• Não Fui Eu: Pode trocar de lugar com uma réplica ilusória ao ser alvejado por ataque.\n• Resíduo Ilusório: Deixa um clone falso que distrai oponentes ao se movimentar."
+      },
+      {
+        "nivel": 7,
+        "nome": "Magias Arcanas (4º nível)",
+        "descricao": "Ganha acesso a magias arcanas de 4º círculo."
+      },
+      {
+        "nivel": 9,
+        "nome": "Magias Arcanas (5º nível)",
+        "descricao": "Ganha acesso a magias arcanas de 5º círculo."
       },
       {
         "nivel": 10,
-        "nome": "Sombra Semi-Real",
-        "descricao": "Suas ilusões de monstros ou ataques causam 20% do dano real mesmo se desacreditadas."
+        "nome": "Mistério Arcano (10º nível)",
+        "descricao": "Pode escolher um talento de magia/metamágico OU uma das habilidades exclusivas de sua especialização:\n• Ilusões Econômicas: Magias de ilusão custam -1 PM (mínimo 1 PM).\n• Detectar Amadorismo: Vê através de qualquer ilusão conjurada por conjurador de nível inferior.\n• Ilusões de Grandeza: Suas ilusões podem abranger áreas monumentais sem custo extra de PM.\n• Ilusões Poderosas: Aumenta a CD para desacreditar de suas ilusões em +2.\n• Invisibilidade Suprema: Invisibilidade não é dissipada ao atacar ou conjurar magias ofensivas.\n• Modelador de Sombras: Converte porcentagem de suas ilusões em dano físico real de sombra.\n• Não Fui Eu: Pode trocar de lugar com uma réplica ilusória ao ser alvejado por ataque.\n• Resíduo Ilusório: Deixa um clone falso que distrai oponentes ao se movimentar."
+      },
+      {
+        "nivel": 11,
+        "nome": "Magias Arcanas (6º nível)",
+        "descricao": "Ganha acesso a magias arcanas de 6º círculo."
+      },
+      {
+        "nivel": 13,
+        "nome": "Magias Arcanas (7º nível)",
+        "descricao": "Ganha acesso a magias arcanas de 7º círculo."
       },
       {
         "nivel": 15,
-        "nome": "Invisibilidade Perfeita",
-        "descricao": "Seus efeitos de invisibilidade não são cancelados por testes de Percepção normais ou farejar."
+        "nome": "Magias Arcanas (8º nível)",
+        "descricao": "Ganha acesso a magias arcanas de 8º círculo."
+      },
+      {
+        "nivel": 15,
+        "nome": "Mistério Arcano (15º nível)",
+        "descricao": "Pode escolher um talento de magia/metamágico OU uma das habilidades exclusivas de sua especialização:\n• Ilusões Econômicas: Magias de ilusão custam -1 PM (mínimo 1 PM).\n• Detectar Amadorismo: Vê através de qualquer ilusão conjurada por conjurador de nível inferior.\n• Ilusões de Grandeza: Suas ilusões podem abranger áreas monumentais sem custo extra de PM.\n• Ilusões Poderosas: Aumenta a CD para desacreditar de suas ilusões em +2.\n• Invisibilidade Suprema: Invisibilidade não é dissipada ao atacar ou conjurar magias ofensivas.\n• Modelador de Sombras: Converte porcentagem de suas ilusões em dano físico real de sombra.\n• Não Fui Eu: Pode trocar de lugar com uma réplica ilusória ao ser alvejado por ataque.\n• Resíduo Ilusório: Deixa um clone falso que distrai oponentes ao se movimentar."
+      },
+      {
+        "nivel": 17,
+        "nome": "Magias Arcanas (9º nível)",
+        "descricao": "Atinge a cúspide da alta magia com feitiços arcanos de 9º círculo."
       },
       {
         "nivel": 20,
-        "nome": "Mundo de Fantasmas",
-        "descricao": "Pode reescrever a percepção visual de uma área de até 1km por até 24 horas."
+        "nome": "Mestre da Magia Suprema",
+        "descricao": "Você atinge o ápice de sua especialização arcana, lançando suas magias de forma impecável."
+      },
+      {
+        "nivel": 20,
+        "nome": "Mistério Arcano (20º nível)",
+        "descricao": "Pode escolher um talento de magia/metamágico OU uma das habilidades exclusivas de sua especialização:\n• Ilusões Econômicas: Magias de ilusão custam -1 PM (mínimo 1 PM).\n• Detectar Amadorismo: Vê através de qualquer ilusão conjurada por conjurador de nível inferior.\n• Ilusões de Grandeza: Suas ilusões podem abranger áreas monumentais sem custo extra de PM.\n• Ilusões Poderosas: Aumenta a CD para desacreditar de suas ilusões em +2.\n• Invisibilidade Suprema: Invisibilidade não é dissipada ao atacar ou conjurar magias ofensivas.\n• Modelador de Sombras: Converte porcentagem de suas ilusões em dano físico real de sombra.\n• Não Fui Eu: Pode trocar de lugar com uma réplica ilusória ao ser alvejado por ataque.\n• Resíduo Ilusório: Deixa um clone falso que distrai oponentes ao se movimentar."
       }
     ]
   },
   {
     "id": "mago_cronomante",
-    "nome": "Mago: Cronomante (Variante)",
+    "nome": "Mago: Cronomante (Especialista)",
     "tipo": "Basica",
     "pvInicial": 8,
     "pvPorNivel": 2,
-    "pmPorNivel": 4,
-    "bba": "1/2 por nível (médio/baixo)",
-    "preRequisitos": "Inteligência 13. Mago de 1º nível.",
-    "proficiencias": "Nenhuma proficiência adicional.",
-    "descricao": "Mago dos segredos temporais. Dobra o fluxo dos segundos para desacelerar oponentes ou agir com velocidade sobre-humana.",
+    "pmPorNivel": 3,
+    "bba": "1/2 por nível (baixo)",
+    "preRequisitos": "Destreza 13.",
+    "proficiencias": "Armas simples. Nenhuma armadura ou escudo.",
+    "descricao": "Manipulador do contínuo do espaço-tempo em Arton, capaz de acelerar eventos, retardar inimigos e viajar entre momentos.",
     "livroFonte": "Manual do Arcano",
     "habilidades": [
       {
         "nivel": 1,
-        "nome": "Aceleração Temporal Menor",
-        "descricao": "Gasta 2 PM para realizar uma ação de movimento adicional na rodada."
+        "nome": "Magias Arcanas (Grimório)",
+        "descricao": "Prepara magias diariamente baseadas em Inteligência. Magias Iniciais: 3 de 1º nível da escola Cronomancia (Tempo) + mod. Int de qualquer escola (exceto proibida). A cada novo nível aprende 1 de Cronomancia (Tempo) e 1 de qualquer escola permitida."
+      },
+      {
+        "nivel": 1,
+        "nome": "Especialização: Cronomancia (Tempo) (Escola Proibida: Nenhuma)",
+        "descricao": "Você concentra seus estudos arcanos na escola Cronomancia (Tempo). Por outro lado, nunca pode aprender magias da escola Nenhuma, nem mesmo através de talentos ou multiclasse."
+      },
+      {
+        "nivel": 1,
+        "nome": "Vínculo Arcano Especial",
+        "descricao": "Item de Poder (ampulheta, báculo, relógio de bolso ou símbolo temporal)."
+      },
+      {
+        "nivel": 1,
+        "nome": "Mistério Arcano (1º nível)",
+        "descricao": "Pode escolher um talento de magia/metamágico OU uma das habilidades exclusivas de sua especialização:\n• Celeridade Arcana: Pode realizar uma ação de movimento adicional por rodada gastando 1 PM.\n• Elixir da Juventude: Prepara uma beberagem alquímica que rejuvenesce o consumidor (Pré-req: 10º nível, Ofício Alquimia).\n• Exílio Cósmico: Retira-se voluntariamente do espaço-tempo por anos sem sofrer envelhecimento.\n• Lentidão Maior: Magia lentidão impõe penalidade dobrada e afeta o dobro de alvos.\n• Magias Duradouras: Dobra a duração de magias temporais sem custo adicional de PM.\n• Mestre do Tempo: Uma vez por dia pode re-rolar uma rodada completa de combate.\n• Piscadela: Teletransporta-se até 9m como reação a um ataque recebido.\n• Teletransporte Defensivo: Quando atacado, teleporta 3m evitando o ataque completamente.\n• Velocidade Maior: Aliados sob velocidade recebem duas ações padrão em vez de uma."
+      },
+      {
+        "nivel": 3,
+        "nome": "Magias Arcanas (2º nível)",
+        "descricao": "Seu grimório expande-se para abarcar magias arcanas de 2º círculo."
       },
       {
         "nivel": 5,
-        "nome": "Retardar",
-        "descricao": "Gasta 3 PM para forçar um inimigo a realizar teste de Vontade; falha deixa o alvo sob efeito de Lentidão por 1d4 rodadas."
+        "nome": "Magias Arcanas (3º nível)",
+        "descricao": "Ganha acesso a magias arcanas de 3º círculo."
+      },
+      {
+        "nivel": 5,
+        "nome": "Mistério Arcano (5º nível)",
+        "descricao": "Pode escolher um talento de magia/metamágico OU uma das habilidades exclusivas de sua especialização:\n• Celeridade Arcana: Pode realizar uma ação de movimento adicional por rodada gastando 1 PM.\n• Elixir da Juventude: Prepara uma beberagem alquímica que rejuvenesce o consumidor (Pré-req: 10º nível, Ofício Alquimia).\n• Exílio Cósmico: Retira-se voluntariamente do espaço-tempo por anos sem sofrer envelhecimento.\n• Lentidão Maior: Magia lentidão impõe penalidade dobrada e afeta o dobro de alvos.\n• Magias Duradouras: Dobra a duração de magias temporais sem custo adicional de PM.\n• Mestre do Tempo: Uma vez por dia pode re-rolar uma rodada completa de combate.\n• Piscadela: Teletransporta-se até 9m como reação a um ataque recebido.\n• Teletransporte Defensivo: Quando atacado, teleporta 3m evitando o ataque completamente.\n• Velocidade Maior: Aliados sob velocidade recebem duas ações padrão em vez de uma."
+      },
+      {
+        "nivel": 7,
+        "nome": "Magias Arcanas (4º nível)",
+        "descricao": "Ganha acesso a magias arcanas de 4º círculo."
+      },
+      {
+        "nivel": 9,
+        "nome": "Magias Arcanas (5º nível)",
+        "descricao": "Ganha acesso a magias arcanas de 5º círculo."
       },
       {
         "nivel": 10,
-        "nome": "Eco Temporal",
-        "descricao": "Uma vez por dia, pode repetir uma jogada de ataque ou teste de resistência que acabou de falhar."
+        "nome": "Mistério Arcano (10º nível)",
+        "descricao": "Pode escolher um talento de magia/metamágico OU uma das habilidades exclusivas de sua especialização:\n• Celeridade Arcana: Pode realizar uma ação de movimento adicional por rodada gastando 1 PM.\n• Elixir da Juventude: Prepara uma beberagem alquímica que rejuvenesce o consumidor (Pré-req: 10º nível, Ofício Alquimia).\n• Exílio Cósmico: Retira-se voluntariamente do espaço-tempo por anos sem sofrer envelhecimento.\n• Lentidão Maior: Magia lentidão impõe penalidade dobrada e afeta o dobro de alvos.\n• Magias Duradouras: Dobra a duração de magias temporais sem custo adicional de PM.\n• Mestre do Tempo: Uma vez por dia pode re-rolar uma rodada completa de combate.\n• Piscadela: Teletransporta-se até 9m como reação a um ataque recebido.\n• Teletransporte Defensivo: Quando atacado, teleporta 3m evitando o ataque completamente.\n• Velocidade Maior: Aliados sob velocidade recebem duas ações padrão em vez de uma."
+      },
+      {
+        "nivel": 11,
+        "nome": "Magias Arcanas (6º nível)",
+        "descricao": "Ganha acesso a magias arcanas de 6º círculo."
+      },
+      {
+        "nivel": 13,
+        "nome": "Magias Arcanas (7º nível)",
+        "descricao": "Ganha acesso a magias arcanas de 7º círculo."
       },
       {
         "nivel": 15,
-        "nome": "Salto Temporal",
-        "descricao": "Teleporta até 18m como ação livre após lançar uma magia temporal."
+        "nome": "Magias Arcanas (8º nível)",
+        "descricao": "Ganha acesso a magias arcanas de 8º círculo."
+      },
+      {
+        "nivel": 15,
+        "nome": "Mistério Arcano (15º nível)",
+        "descricao": "Pode escolher um talento de magia/metamágico OU uma das habilidades exclusivas de sua especialização:\n• Celeridade Arcana: Pode realizar uma ação de movimento adicional por rodada gastando 1 PM.\n• Elixir da Juventude: Prepara uma beberagem alquímica que rejuvenesce o consumidor (Pré-req: 10º nível, Ofício Alquimia).\n• Exílio Cósmico: Retira-se voluntariamente do espaço-tempo por anos sem sofrer envelhecimento.\n• Lentidão Maior: Magia lentidão impõe penalidade dobrada e afeta o dobro de alvos.\n• Magias Duradouras: Dobra a duração de magias temporais sem custo adicional de PM.\n• Mestre do Tempo: Uma vez por dia pode re-rolar uma rodada completa de combate.\n• Piscadela: Teletransporta-se até 9m como reação a um ataque recebido.\n• Teletransporte Defensivo: Quando atacado, teleporta 3m evitando o ataque completamente.\n• Velocidade Maior: Aliados sob velocidade recebem duas ações padrão em vez de uma."
+      },
+      {
+        "nivel": 17,
+        "nome": "Magias Arcanas (9º nível)",
+        "descricao": "Atinge a cúspide da alta magia com feitiços arcanos de 9º círculo."
       },
       {
         "nivel": 20,
-        "nome": "Parar o Tempo Supremo",
-        "descricao": "Pode conjurar Parar o Tempo gastando metade dos PM normais uma vez por dia (após descanso pleno)."
+        "nome": "Mestre da Magia Suprema",
+        "descricao": "Você atinge o ápice de sua especialização arcana, lançando suas magias de forma impecável."
+      },
+      {
+        "nivel": 20,
+        "nome": "Mistério Arcano (20º nível)",
+        "descricao": "Pode escolher um talento de magia/metamágico OU uma das habilidades exclusivas de sua especialização:\n• Celeridade Arcana: Pode realizar uma ação de movimento adicional por rodada gastando 1 PM.\n• Elixir da Juventude: Prepara uma beberagem alquímica que rejuvenesce o consumidor (Pré-req: 10º nível, Ofício Alquimia).\n• Exílio Cósmico: Retira-se voluntariamente do espaço-tempo por anos sem sofrer envelhecimento.\n• Lentidão Maior: Magia lentidão impõe penalidade dobrada e afeta o dobro de alvos.\n• Magias Duradouras: Dobra a duração de magias temporais sem custo adicional de PM.\n• Mestre do Tempo: Uma vez por dia pode re-rolar uma rodada completa de combate.\n• Piscadela: Teletransporta-se até 9m como reação a um ataque recebido.\n• Teletransporte Defensivo: Quando atacado, teleporta 3m evitando o ataque completamente.\n• Velocidade Maior: Aliados sob velocidade recebem duas ações padrão em vez de uma."
       }
     ]
   },
@@ -5520,42 +5750,97 @@
     "tipo": "Basica",
     "pvInicial": 8,
     "pvPorNivel": 2,
-    "pmPorNivel": 4,
-    "bba": "1/2 por nível (médio/baixo)",
-    "preRequisitos": "Inteligência 13. Mago de 1º nível.",
-    "proficiencias": "Nenhuma proficiência adicional.",
-    "descricao": "Mago especialista na escola de Abjuração. Mestres da proteção mágica, barreiras impenetráveis e anulação de feitiços inimigos.",
+    "pmPorNivel": 3,
+    "bba": "1/2 por nível (baixo)",
+    "preRequisitos": "Tendência Leal.",
+    "proficiencias": "Armas simples. Nenhuma armadura ou escudo.",
+    "descricao": "Mestre da proteção e defesas arcanas, capaz de anular magias inimigas, criar barreiras impenetráveis e repelir males extraplanares.",
     "livroFonte": "Manual do Arcano",
     "habilidades": [
       {
         "nivel": 1,
-        "nome": "Escola Especializada: Abjuração",
-        "descricao": "Você recebe 1 PM extra para cada nível de mago para lançar magias de Abjuração. Escolas Proibidas: Ilusão e Necromancia (ou Transmutação)."
+        "nome": "Magias Arcanas (Grimório)",
+        "descricao": "Prepara magias diariamente baseadas em Inteligência. Magias Iniciais: 3 de 1º nível da escola Abjuração + mod. Int de qualquer escola (exceto proibida). A cada novo nível aprende 1 de Abjuração e 1 de qualquer escola permitida."
       },
       {
         "nivel": 1,
-        "nome": "Escudo Protetor",
-        "descricao": "Pode gastar 1 PM como reação para receber CA +2 contra um ataque iminente."
+        "nome": "Especialização: Abjuração (Escola Proibida: Transmutação)",
+        "descricao": "Você concentra seus estudos arcanos na escola Abjuração. Por outro lado, nunca pode aprender magias da escola Transmutação, nem mesmo através de talentos ou multiclasse."
+      },
+      {
+        "nivel": 1,
+        "nome": "Vínculo Arcano Especial",
+        "descricao": "Item de Poder (amuleto, bracelete, cinto, escudo ou espelho) ou Familiar (escaravelho que dá +1 CA, porco-espinho que dá Reflexos de Combate)."
+      },
+      {
+        "nivel": 1,
+        "nome": "Mistério Arcano (1º nível)",
+        "descricao": "Pode escolher um talento de magia/metamágico OU uma das habilidades exclusivas de sua especialização:\n• Abjurações Econômicas: Magias de abjuração custam -1 PM (mínimo 1 PM).\n• Armadura Protetora: Magia armadura arcana concede bônus de CA adicional de +2.\n• Barreira Mística: Pode criar uma cúpula de força protetora ao redor dos aliados.\n• Campo de Força Pessoal: Adquire resistência a dano contínua enquanto tiver PM disponível.\n• Contramágica Aprimorada: Pode anular magias inimigas como uma reação gastando PMs equivalentes.\n• Proteção contra Lefeu: Proteção contra o mal em área de Tormenta dura 1 dia e não pode ser dissipada (Pré-req: 10º nível).\n• Proteção contra Magias: Recebe +2 em todos os testes de resistência contra magias e nenhum efeito se passar (Pré-req: 15º nível)."
+      },
+      {
+        "nivel": 3,
+        "nome": "Magias Arcanas (2º nível)",
+        "descricao": "Seu grimório expande-se para abarcar magias arcanas de 2º círculo."
       },
       {
         "nivel": 5,
-        "nome": "Resistência Arcana",
-        "descricao": "Recebe bônus de +2 em todos os testes de resistência contra magias e efeitos mágicos."
+        "nome": "Magias Arcanas (3º nível)",
+        "descricao": "Ganha acesso a magias arcanas de 3º círculo."
+      },
+      {
+        "nivel": 5,
+        "nome": "Mistério Arcano (5º nível)",
+        "descricao": "Pode escolher um talento de magia/metamágico OU uma das habilidades exclusivas de sua especialização:\n• Abjurações Econômicas: Magias de abjuração custam -1 PM (mínimo 1 PM).\n• Armadura Protetora: Magia armadura arcana concede bônus de CA adicional de +2.\n• Barreira Mística: Pode criar uma cúpula de força protetora ao redor dos aliados.\n• Campo de Força Pessoal: Adquire resistência a dano contínua enquanto tiver PM disponível.\n• Contramágica Aprimorada: Pode anular magias inimigas como uma reação gastando PMs equivalentes.\n• Proteção contra Lefeu: Proteção contra o mal em área de Tormenta dura 1 dia e não pode ser dissipada (Pré-req: 10º nível).\n• Proteção contra Magias: Recebe +2 em todos os testes de resistência contra magias e nenhum efeito se passar (Pré-req: 15º nível)."
+      },
+      {
+        "nivel": 7,
+        "nome": "Magias Arcanas (4º nível)",
+        "descricao": "Ganha acesso a magias arcanas de 4º círculo."
+      },
+      {
+        "nivel": 9,
+        "nome": "Magias Arcanas (5º nível)",
+        "descricao": "Ganha acesso a magias arcanas de 5º círculo."
       },
       {
         "nivel": 10,
-        "nome": "Mestre da Contramágica",
-        "descricao": "Pode anular magias inimigas como uma ação preparada gastando metade dos PM normais."
+        "nome": "Mistério Arcano (10º nível)",
+        "descricao": "Pode escolher um talento de magia/metamágico OU uma das habilidades exclusivas de sua especialização:\n• Abjurações Econômicas: Magias de abjuração custam -1 PM (mínimo 1 PM).\n• Armadura Protetora: Magia armadura arcana concede bônus de CA adicional de +2.\n• Barreira Mística: Pode criar uma cúpula de força protetora ao redor dos aliados.\n• Campo de Força Pessoal: Adquire resistência a dano contínua enquanto tiver PM disponível.\n• Contramágica Aprimorada: Pode anular magias inimigas como uma reação gastando PMs equivalentes.\n• Proteção contra Lefeu: Proteção contra o mal em área de Tormenta dura 1 dia e não pode ser dissipada (Pré-req: 10º nível).\n• Proteção contra Magias: Recebe +2 em todos os testes de resistência contra magias e nenhum efeito se passar (Pré-req: 15º nível)."
+      },
+      {
+        "nivel": 11,
+        "nome": "Magias Arcanas (6º nível)",
+        "descricao": "Ganha acesso a magias arcanas de 6º círculo."
+      },
+      {
+        "nivel": 13,
+        "nome": "Magias Arcanas (7º nível)",
+        "descricao": "Ganha acesso a magias arcanas de 7º círculo."
       },
       {
         "nivel": 15,
-        "nome": "Barreira Impenetrável",
-        "descricao": "Suas magias de abjuração não podem ser dissipadas por conjuradores de nível inferior ao seu."
+        "nome": "Magias Arcanas (8º nível)",
+        "descricao": "Ganha acesso a magias arcanas de 8º círculo."
+      },
+      {
+        "nivel": 15,
+        "nome": "Mistério Arcano (15º nível)",
+        "descricao": "Pode escolher um talento de magia/metamágico OU uma das habilidades exclusivas de sua especialização:\n• Abjurações Econômicas: Magias de abjuração custam -1 PM (mínimo 1 PM).\n• Armadura Protetora: Magia armadura arcana concede bônus de CA adicional de +2.\n• Barreira Mística: Pode criar uma cúpula de força protetora ao redor dos aliados.\n• Campo de Força Pessoal: Adquire resistência a dano contínua enquanto tiver PM disponível.\n• Contramágica Aprimorada: Pode anular magias inimigas como uma reação gastando PMs equivalentes.\n• Proteção contra Lefeu: Proteção contra o mal em área de Tormenta dura 1 dia e não pode ser dissipada (Pré-req: 10º nível).\n• Proteção contra Magias: Recebe +2 em todos os testes de resistência contra magias e nenhum efeito se passar (Pré-req: 15º nível)."
+      },
+      {
+        "nivel": 17,
+        "nome": "Magias Arcanas (9º nível)",
+        "descricao": "Atinge a cúspide da alta magia com feitiços arcanos de 9º círculo."
       },
       {
         "nivel": 20,
-        "nome": "Invulnerabilidade Mística",
-        "descricao": "Uma vez por dia, ganha imunidade completa a qualquer dano ou magia por 1 rodada inteira."
+        "nome": "Mestre da Magia Suprema",
+        "descricao": "Você atinge o ápice de sua especialização arcana, lançando suas magias de forma impecável."
+      },
+      {
+        "nivel": 20,
+        "nome": "Mistério Arcano (20º nível)",
+        "descricao": "Pode escolher um talento de magia/metamágico OU uma das habilidades exclusivas de sua especialização:\n• Abjurações Econômicas: Magias de abjuração custam -1 PM (mínimo 1 PM).\n• Armadura Protetora: Magia armadura arcana concede bônus de CA adicional de +2.\n• Barreira Mística: Pode criar uma cúpula de força protetora ao redor dos aliados.\n• Campo de Força Pessoal: Adquire resistência a dano contínua enquanto tiver PM disponível.\n• Contramágica Aprimorada: Pode anular magias inimigas como uma reação gastando PMs equivalentes.\n• Proteção contra Lefeu: Proteção contra o mal em área de Tormenta dura 1 dia e não pode ser dissipada (Pré-req: 10º nível).\n• Proteção contra Magias: Recebe +2 em todos os testes de resistência contra magias e nenhum efeito se passar (Pré-req: 15º nível)."
       }
     ]
   },
@@ -5565,87 +5850,197 @@
     "tipo": "Basica",
     "pvInicial": 8,
     "pvPorNivel": 2,
-    "pmPorNivel": 4,
-    "bba": "1/2 por nível (médio/baixo)",
-    "preRequisitos": "Inteligência 13. Mago de 1º nível.",
-    "proficiencias": "Nenhuma proficiência adicional.",
-    "descricao": "Especialista em desvendar segredos passados, presentes e futuros, ler mentes e antever as ações dos oponentes.",
+    "pmPorNivel": 3,
+    "bba": "1/2 por nível (baixo)",
+    "preRequisitos": "Sabedoria 13.",
+    "proficiencias": "Armas simples. Nenhuma armadura ou escudo.",
+    "descricao": "Mago focado em desvendar mistérios, ler mentes, observar através do tempo-espaço e prever os movimentos do destino.",
     "livroFonte": "Manual do Arcano",
     "habilidades": [
       {
         "nivel": 1,
-        "nome": "Escola Especializada: Adivinhação",
-        "descricao": "Você recebe 1 PM extra por nível para lançar magias de Adivinhação. Possui apenas uma única Escola Proibida à sua escolha (exceto Adivinhação)."
+        "nome": "Magias Arcanas (Grimório)",
+        "descricao": "Prepara magias diariamente baseadas em Inteligência. Magias Iniciais: 3 de 1º nível da escola Adivinhação + mod. Int de qualquer escola (exceto proibida). A cada novo nível aprende 1 de Adivinhação e 1 de qualquer escola permitida."
       },
       {
         "nivel": 1,
-        "nome": "Antevisão",
-        "descricao": "Soma seu modificador de Inteligência em iniciativa e não pode ser pego desprevenido."
+        "nome": "Especialização: Adivinhação (Escola Proibida: Evocação)",
+        "descricao": "Você concentra seus estudos arcanos na escola Adivinhação. Por outro lado, nunca pode aprender magias da escola Evocação, nem mesmo através de talentos ou multiclasse."
+      },
+      {
+        "nivel": 1,
+        "nome": "Vínculo Arcano Especial",
+        "descricao": "Item de Poder (anel, baralho de adivinhação, bola de cristal, chapéu) ou Familiar (águia com +3 Percepção, marmota com visão no escuro, papagaio)."
+      },
+      {
+        "nivel": 1,
+        "nome": "Mistério Arcano (1º nível)",
+        "descricao": "Pode escolher um talento de magia/metamágico OU uma das habilidades exclusivas de sua especialização:\n• Adivinhações Econômicas: Todas as suas magias de adivinhação custam -1 PM (mínimo 1 PM).\n• Bisbilhoteiro Mental: Usa detectar pensamentos em conjunto com vidência sem ação adicional e +2 na CD (Pré-req: 5º nível).\n• Ler a Sorte: Concede bônus de sorte de +2 para um aliado em sua próxima rolagem.\n• Mestre da Concentração: Pode rolar novamente qualquer teste de concentração com sucesso garantido.\n• Mestre Vidente: Alcance e duração de magias de vidência são duplicados.\n• Olhos Atrás da Cabeça: Não pode ser surpreendido nem ficar desprevenido contra ataques normais.\n• Precognição em Combate: Adiciona modificador de Inteligência na Classe de Armadura.\n• Profeta: Pode conjurar magias de adivinhação como se possuísse o talento Acelerar Magia.\n• Sentidos Aguçados: Ganha bônus de +4 em testes de Percepção e Iniciativa."
+      },
+      {
+        "nivel": 3,
+        "nome": "Magias Arcanas (2º nível)",
+        "descricao": "Seu grimório expande-se para abarcar magias arcanas de 2º círculo."
       },
       {
         "nivel": 5,
-        "nome": "Olho do Conjurador",
-        "descricao": "Recebe Visão no Escuro (ou dobra o alcance existente) e +4 em testes de Percepção."
+        "nome": "Magias Arcanas (3º nível)",
+        "descricao": "Ganha acesso a magias arcanas de 3º círculo."
+      },
+      {
+        "nivel": 5,
+        "nome": "Mistério Arcano (5º nível)",
+        "descricao": "Pode escolher um talento de magia/metamágico OU uma das habilidades exclusivas de sua especialização:\n• Adivinhações Econômicas: Todas as suas magias de adivinhação custam -1 PM (mínimo 1 PM).\n• Bisbilhoteiro Mental: Usa detectar pensamentos em conjunto com vidência sem ação adicional e +2 na CD (Pré-req: 5º nível).\n• Ler a Sorte: Concede bônus de sorte de +2 para um aliado em sua próxima rolagem.\n• Mestre da Concentração: Pode rolar novamente qualquer teste de concentração com sucesso garantido.\n• Mestre Vidente: Alcance e duração de magias de vidência são duplicados.\n• Olhos Atrás da Cabeça: Não pode ser surpreendido nem ficar desprevenido contra ataques normais.\n• Precognição em Combate: Adiciona modificador de Inteligência na Classe de Armadura.\n• Profeta: Pode conjurar magias de adivinhação como se possuísse o talento Acelerar Magia.\n• Sentidos Aguçados: Ganha bônus de +4 em testes de Percepção e Iniciativa."
+      },
+      {
+        "nivel": 7,
+        "nome": "Magias Arcanas (4º nível)",
+        "descricao": "Ganha acesso a magias arcanas de 4º círculo."
+      },
+      {
+        "nivel": 9,
+        "nome": "Magias Arcanas (5º nível)",
+        "descricao": "Ganha acesso a magias arcanas de 5º círculo."
       },
       {
         "nivel": 10,
-        "nome": "Desvendar Fraqueza",
-        "descricao": "Como ação de movimento, estuda um alvo para conceder a você e aliados +2 nas jogadas de ataque contra ele."
+        "nome": "Mistério Arcano (10º nível)",
+        "descricao": "Pode escolher um talento de magia/metamágico OU uma das habilidades exclusivas de sua especialização:\n• Adivinhações Econômicas: Todas as suas magias de adivinhação custam -1 PM (mínimo 1 PM).\n• Bisbilhoteiro Mental: Usa detectar pensamentos em conjunto com vidência sem ação adicional e +2 na CD (Pré-req: 5º nível).\n• Ler a Sorte: Concede bônus de sorte de +2 para um aliado em sua próxima rolagem.\n• Mestre da Concentração: Pode rolar novamente qualquer teste de concentração com sucesso garantido.\n• Mestre Vidente: Alcance e duração de magias de vidência são duplicados.\n• Olhos Atrás da Cabeça: Não pode ser surpreendido nem ficar desprevenido contra ataques normais.\n• Precognição em Combate: Adiciona modificador de Inteligência na Classe de Armadura.\n• Profeta: Pode conjurar magias de adivinhação como se possuísse o talento Acelerar Magia.\n• Sentidos Aguçados: Ganha bônus de +4 em testes de Percepção e Iniciativa."
+      },
+      {
+        "nivel": 11,
+        "nome": "Magias Arcanas (6º nível)",
+        "descricao": "Ganha acesso a magias arcanas de 6º círculo."
+      },
+      {
+        "nivel": 13,
+        "nome": "Magias Arcanas (7º nível)",
+        "descricao": "Ganha acesso a magias arcanas de 7º círculo."
       },
       {
         "nivel": 15,
-        "nome": "Clarividência Instantânea",
-        "descricao": "Pode conjurar magias de adivinhação com tempo de execução padrão como ação livre (1/dia)."
+        "nome": "Magias Arcanas (8º nível)",
+        "descricao": "Ganha acesso a magias arcanas de 8º círculo."
+      },
+      {
+        "nivel": 15,
+        "nome": "Mistério Arcano (15º nível)",
+        "descricao": "Pode escolher um talento de magia/metamágico OU uma das habilidades exclusivas de sua especialização:\n• Adivinhações Econômicas: Todas as suas magias de adivinhação custam -1 PM (mínimo 1 PM).\n• Bisbilhoteiro Mental: Usa detectar pensamentos em conjunto com vidência sem ação adicional e +2 na CD (Pré-req: 5º nível).\n• Ler a Sorte: Concede bônus de sorte de +2 para um aliado em sua próxima rolagem.\n• Mestre da Concentração: Pode rolar novamente qualquer teste de concentração com sucesso garantido.\n• Mestre Vidente: Alcance e duração de magias de vidência são duplicados.\n• Olhos Atrás da Cabeça: Não pode ser surpreendido nem ficar desprevenido contra ataques normais.\n• Precognição em Combate: Adiciona modificador de Inteligência na Classe de Armadura.\n• Profeta: Pode conjurar magias de adivinhação como se possuísse o talento Acelerar Magia.\n• Sentidos Aguçados: Ganha bônus de +4 em testes de Percepção e Iniciativa."
+      },
+      {
+        "nivel": 17,
+        "nome": "Magias Arcanas (9º nível)",
+        "descricao": "Atinge a cúspide da alta magia com feitiços arcanos de 9º círculo."
       },
       {
         "nivel": 20,
-        "nome": "Onisciência Tática",
-        "descricao": "Recebe bônus de esquiva de +4 na CA e em todos os testes de resistência pelo resto da vida."
+        "nome": "Mestre da Magia Suprema",
+        "descricao": "Você atinge o ápice de sua especialização arcana, lançando suas magias de forma impecável."
+      },
+      {
+        "nivel": 20,
+        "nome": "Mistério Arcano (20º nível)",
+        "descricao": "Pode escolher um talento de magia/metamágico OU uma das habilidades exclusivas de sua especialização:\n• Adivinhações Econômicas: Todas as suas magias de adivinhação custam -1 PM (mínimo 1 PM).\n• Bisbilhoteiro Mental: Usa detectar pensamentos em conjunto com vidência sem ação adicional e +2 na CD (Pré-req: 5º nível).\n• Ler a Sorte: Concede bônus de sorte de +2 para um aliado em sua próxima rolagem.\n• Mestre da Concentração: Pode rolar novamente qualquer teste de concentração com sucesso garantido.\n• Mestre Vidente: Alcance e duração de magias de vidência são duplicados.\n• Olhos Atrás da Cabeça: Não pode ser surpreendido nem ficar desprevenido contra ataques normais.\n• Precognição em Combate: Adiciona modificador de Inteligência na Classe de Armadura.\n• Profeta: Pode conjurar magias de adivinhação como se possuísse o talento Acelerar Magia.\n• Sentidos Aguçados: Ganha bônus de +4 em testes de Percepção e Iniciativa."
       }
     ]
   },
   {
     "id": "mago_bruxo",
-    "nome": "Mago: Bruxo (Variante)",
+    "nome": "Mago: Bruxo (Especialista)",
     "tipo": "Basica",
     "pvInicial": 8,
     "pvPorNivel": 2,
-    "pmPorNivel": 4,
-    "bba": "1/2 por nível (médio/baixo)",
-    "preRequisitos": "Inteligência 13. Mago de 1º nível.",
-    "proficiencias": "Nenhuma proficiência adicional.",
-    "descricao": "Mago que pratica tradições arcanas rituais e ocultas com caldeirões, vassouras, bonecos e poções sinistras.",
+    "pmPorNivel": 3,
+    "bba": "1/2 por nível (baixo)",
+    "preRequisitos": "Tendência não Leal.",
+    "proficiencias": "Armas simples. Nenhuma armadura ou escudo.",
+    "descricao": "Especialista em magia primitiva, poções raras e maldições nefastas. Não possui escola proibida, mas foca em infortúnios e poções.",
     "livroFonte": "Manual do Arcano",
     "habilidades": [
       {
         "nivel": 1,
-        "nome": "Foco Bruxo",
-        "descricao": "Usa um caldeirão, cajado de bruxo ou vassoura como foco de poder ritualístico."
+        "nome": "Magias Arcanas (Grimório)",
+        "descricao": "Prepara magias diariamente baseadas em Inteligência. Magias Iniciais: 3 de 1º nível da escola Maldições & Bruxaria + mod. Int de qualquer escola (exceto proibida). A cada novo nível aprende 1 de Maldições & Bruxaria e 1 de qualquer escola permitida."
       },
       {
         "nivel": 1,
-        "nome": "Maldição Menor",
-        "descricao": "Como ação padrão e 1 PM, inflige -2 em testes de perícia ou ataque de um inimigo que falhe em Vontade."
+        "nome": "Especialização: Maldições & Bruxaria (Escola Proibida: Nenhuma)",
+        "descricao": "Você concentra seus estudos arcanos na escola Maldições & Bruxaria. Por outro lado, nunca pode aprender magias da escola Nenhuma, nem mesmo através de talentos ou multiclasse."
+      },
+      {
+        "nivel": 1,
+        "nome": "Vínculo Arcano Especial",
+        "descricao": "Item de Poder (animal empalhado, boneco de palha, chapéu pontudo, cajado, pé de galinha) ou Familiar (aranha com escalada, mico com bônus de Ladinagem)."
+      },
+      {
+        "nivel": 1,
+        "nome": "Mistério Arcano (1º nível)",
+        "descricao": "Pode escolher um talento de magia/metamágico OU uma das habilidades exclusivas de sua especialização:\n• Caldeirão do Bruxo: Prepara poções na metade do tempo e por metade do custo em TO.\n• Maldição da Visão Turva: Alvo a até 9m tem visão prejudicada (20% chance de erro) por 1 minuto (Pré-req: 5º nível).\n• Maldição do Corpo Aberto: Teste oposto de Identificar Magia vs Vontade deixa o alvo vulnerável a dano dobrado (Pré-req: 5º nível).\n• Maldição do Corpo Fechado: Ganha resistência a dano e bônus contra venenos.\n• Maldição da Magia Minguada: Inimigo amaldiçoado gasta +1 PM em cada magia conjurada.\n• Maldição da Miséria: Inimigo amaldiçoado perde bônus de equipamentos mágicos temporariamente.\n• Maldição do Parasita: Drena vida de um alvo amaldiçoado toda rodada para curar o bruxo.\n• Maldição do Traidor: O alvo não consegue distinguir aliados e ataca quem estiver mais perto.\n• Rogar Maldição Suprema: Rogar maldição não pode ser dissipada sem desejo ou milagre."
+      },
+      {
+        "nivel": 3,
+        "nome": "Magias Arcanas (2º nível)",
+        "descricao": "Seu grimório expande-se para abarcar magias arcanas de 2º círculo."
       },
       {
         "nivel": 5,
-        "nome": "Preparo Rápido de Poções",
-        "descricao": "Pode preparar poções na metade do tempo normal e com custo de TO reduzido em 25%."
+        "nome": "Magias Arcanas (3º nível)",
+        "descricao": "Ganha acesso a magias arcanas de 3º círculo."
+      },
+      {
+        "nivel": 5,
+        "nome": "Mistério Arcano (5º nível)",
+        "descricao": "Pode escolher um talento de magia/metamágico OU uma das habilidades exclusivas de sua especialização:\n• Caldeirão do Bruxo: Prepara poções na metade do tempo e por metade do custo em TO.\n• Maldição da Visão Turva: Alvo a até 9m tem visão prejudicada (20% chance de erro) por 1 minuto (Pré-req: 5º nível).\n• Maldição do Corpo Aberto: Teste oposto de Identificar Magia vs Vontade deixa o alvo vulnerável a dano dobrado (Pré-req: 5º nível).\n• Maldição do Corpo Fechado: Ganha resistência a dano e bônus contra venenos.\n• Maldição da Magia Minguada: Inimigo amaldiçoado gasta +1 PM em cada magia conjurada.\n• Maldição da Miséria: Inimigo amaldiçoado perde bônus de equipamentos mágicos temporariamente.\n• Maldição do Parasita: Drena vida de um alvo amaldiçoado toda rodada para curar o bruxo.\n• Maldição do Traidor: O alvo não consegue distinguir aliados e ataca quem estiver mais perto.\n• Rogar Maldição Suprema: Rogar maldição não pode ser dissipada sem desejo ou milagre."
+      },
+      {
+        "nivel": 7,
+        "nome": "Magias Arcanas (4º nível)",
+        "descricao": "Ganha acesso a magias arcanas de 4º círculo."
+      },
+      {
+        "nivel": 9,
+        "nome": "Magias Arcanas (5º nível)",
+        "descricao": "Ganha acesso a magias arcanas de 5º círculo."
       },
       {
         "nivel": 10,
-        "nome": "Olho Mau",
-        "descricao": "Suas maldições impõem -4 em testes e causam 2d6 de dano de trevas a cada rodada."
+        "nome": "Mistério Arcano (10º nível)",
+        "descricao": "Pode escolher um talento de magia/metamágico OU uma das habilidades exclusivas de sua especialização:\n• Caldeirão do Bruxo: Prepara poções na metade do tempo e por metade do custo em TO.\n• Maldição da Visão Turva: Alvo a até 9m tem visão prejudicada (20% chance de erro) por 1 minuto (Pré-req: 5º nível).\n• Maldição do Corpo Aberto: Teste oposto de Identificar Magia vs Vontade deixa o alvo vulnerável a dano dobrado (Pré-req: 5º nível).\n• Maldição do Corpo Fechado: Ganha resistência a dano e bônus contra venenos.\n• Maldição da Magia Minguada: Inimigo amaldiçoado gasta +1 PM em cada magia conjurada.\n• Maldição da Miséria: Inimigo amaldiçoado perde bônus de equipamentos mágicos temporariamente.\n• Maldição do Parasita: Drena vida de um alvo amaldiçoado toda rodada para curar o bruxo.\n• Maldição do Traidor: O alvo não consegue distinguir aliados e ataca quem estiver mais perto.\n• Rogar Maldição Suprema: Rogar maldição não pode ser dissipada sem desejo ou milagre."
+      },
+      {
+        "nivel": 11,
+        "nome": "Magias Arcanas (6º nível)",
+        "descricao": "Ganha acesso a magias arcanas de 6º círculo."
+      },
+      {
+        "nivel": 13,
+        "nome": "Magias Arcanas (7º nível)",
+        "descricao": "Ganha acesso a magias arcanas de 7º círculo."
       },
       {
         "nivel": 15,
-        "nome": "Boneco de Cera",
-        "descricao": "Pode criar uma efígie de um inimigo conhecido para atingi-lo à distância com feitiços pessoais."
+        "nome": "Magias Arcanas (8º nível)",
+        "descricao": "Ganha acesso a magias arcanas de 8º círculo."
+      },
+      {
+        "nivel": 15,
+        "nome": "Mistério Arcano (15º nível)",
+        "descricao": "Pode escolher um talento de magia/metamágico OU uma das habilidades exclusivas de sua especialização:\n• Caldeirão do Bruxo: Prepara poções na metade do tempo e por metade do custo em TO.\n• Maldição da Visão Turva: Alvo a até 9m tem visão prejudicada (20% chance de erro) por 1 minuto (Pré-req: 5º nível).\n• Maldição do Corpo Aberto: Teste oposto de Identificar Magia vs Vontade deixa o alvo vulnerável a dano dobrado (Pré-req: 5º nível).\n• Maldição do Corpo Fechado: Ganha resistência a dano e bônus contra venenos.\n• Maldição da Magia Minguada: Inimigo amaldiçoado gasta +1 PM em cada magia conjurada.\n• Maldição da Miséria: Inimigo amaldiçoado perde bônus de equipamentos mágicos temporariamente.\n• Maldição do Parasita: Drena vida de um alvo amaldiçoado toda rodada para curar o bruxo.\n• Maldição do Traidor: O alvo não consegue distinguir aliados e ataca quem estiver mais perto.\n• Rogar Maldição Suprema: Rogar maldição não pode ser dissipada sem desejo ou milagre."
+      },
+      {
+        "nivel": 17,
+        "nome": "Magias Arcanas (9º nível)",
+        "descricao": "Atinge a cúspide da alta magia com feitiços arcanos de 9º círculo."
       },
       {
         "nivel": 20,
-        "nome": "Mestre da Bruxaria",
-        "descricao": "Qualquer criatura amaldiçoada sofre penalidade dobrada e você absorve metade dos PM gastos pelo alvo."
+        "nome": "Mestre da Magia Suprema",
+        "descricao": "Você atinge o ápice de sua especialização arcana, lançando suas magias de forma impecável."
+      },
+      {
+        "nivel": 20,
+        "nome": "Mistério Arcano (20º nível)",
+        "descricao": "Pode escolher um talento de magia/metamágico OU uma das habilidades exclusivas de sua especialização:\n• Caldeirão do Bruxo: Prepara poções na metade do tempo e por metade do custo em TO.\n• Maldição da Visão Turva: Alvo a até 9m tem visão prejudicada (20% chance de erro) por 1 minuto (Pré-req: 5º nível).\n• Maldição do Corpo Aberto: Teste oposto de Identificar Magia vs Vontade deixa o alvo vulnerável a dano dobrado (Pré-req: 5º nível).\n• Maldição do Corpo Fechado: Ganha resistência a dano e bônus contra venenos.\n• Maldição da Magia Minguada: Inimigo amaldiçoado gasta +1 PM em cada magia conjurada.\n• Maldição da Miséria: Inimigo amaldiçoado perde bônus de equipamentos mágicos temporariamente.\n• Maldição do Parasita: Drena vida de um alvo amaldiçoado toda rodada para curar o bruxo.\n• Maldição do Traidor: O alvo não consegue distinguir aliados e ataca quem estiver mais perto.\n• Rogar Maldição Suprema: Rogar maldição não pode ser dissipada sem desejo ou milagre."
       }
     ]
   },
@@ -5655,42 +6050,97 @@
     "tipo": "Basica",
     "pvInicial": 8,
     "pvPorNivel": 2,
-    "pmPorNivel": 4,
-    "bba": "1/2 por nível (médio/baixo)",
-    "preRequisitos": "Inteligência 13. Mago de 1º nível.",
-    "proficiencias": "Nenhuma proficiência adicional.",
-    "descricao": "Manipulador das mentes, emoções e lealdades. Escolas Proibidas: Evocação e Necromancia.",
+    "pmPorNivel": 3,
+    "bba": "1/2 por nível (baixo)",
+    "preRequisitos": "Carisma 13.",
+    "proficiencias": "Armas simples. Nenhuma armadura ou escudo.",
+    "descricao": "Mestre da influência mental, carisma avassalador, fascinação e controle das emoções de criaturas vivas.",
     "livroFonte": "Manual do Arcano",
     "habilidades": [
       {
         "nivel": 1,
-        "nome": "Escola Especializada: Encantamento",
-        "descricao": "1 PM extra por nível para magias de Encantamento. Escolas Proibidas: Evocação e Necromancia."
+        "nome": "Magias Arcanas (Grimório)",
+        "descricao": "Prepara magias diariamente baseadas em Inteligência. Magias Iniciais: 3 de 1º nível da escola Encantamento + mod. Int de qualquer escola (exceto proibida). A cada novo nível aprende 1 de Encantamento e 1 de qualquer escola permitida."
       },
       {
         "nivel": 1,
-        "nome": "Presença Cativante",
-        "descricao": "Adiciona seu modificador de Inteligência em Diplomacia, Enganação e Intimidação."
+        "nome": "Especialização: Encantamento (Escola Proibida: Necromancia)",
+        "descricao": "Você concentra seus estudos arcanos na escola Encantamento. Por outro lado, nunca pode aprender magias da escola Necromancia, nem mesmo através de talentos ou multiclasse."
+      },
+      {
+        "nivel": 1,
+        "nome": "Vínculo Arcano Especial",
+        "descricao": "Item de Poder (anel, cetro, capa nobre, tiara de pedras preciosas)."
+      },
+      {
+        "nivel": 1,
+        "nome": "Mistério Arcano (1º nível)",
+        "descricao": "Pode escolher um talento de magia/metamágico OU uma das habilidades exclusivas de sua especialização:\n• Encantamentos Econômicos: Magias de encantamento custam -1 PM (mínimo 1 PM).\n• Amigo de Todos: Reações de NPCs começam um passo mais amigáveis em relação a você.\n• Encantador de Cães: Magias mentais funcionam normalmente em animais e monstros sem mente.\n• Encantador de Golens: Permite afetar construtos com magias de encantamento gastando +2 PM.\n• Encantamentos Poderosos: Aumenta a CD de suas magias de encantamento em +2.\n• Manipulador Ultrajante: Vítimas de encantamento não percebem que foram enfeitiçadas após o término.\n• Multidão do Encantador: Pode afetar alvos extras sem custo adicional de PM.\n• Vontade Suprema: Ganha bônus de +4 em testes de Vontade contra efeitos mentais."
+      },
+      {
+        "nivel": 3,
+        "nome": "Magias Arcanas (2º nível)",
+        "descricao": "Seu grimório expande-se para abarcar magias arcanas de 2º círculo."
       },
       {
         "nivel": 5,
-        "nome": "Fascinação Hipnótica",
-        "descricao": "Inimigos que sofrem suas magias de sono ou charme têm CD de teste aumentada em +2."
+        "nome": "Magias Arcanas (3º nível)",
+        "descricao": "Ganha acesso a magias arcanas de 3º círculo."
+      },
+      {
+        "nivel": 5,
+        "nome": "Mistério Arcano (5º nível)",
+        "descricao": "Pode escolher um talento de magia/metamágico OU uma das habilidades exclusivas de sua especialização:\n• Encantamentos Econômicos: Magias de encantamento custam -1 PM (mínimo 1 PM).\n• Amigo de Todos: Reações de NPCs começam um passo mais amigáveis em relação a você.\n• Encantador de Cães: Magias mentais funcionam normalmente em animais e monstros sem mente.\n• Encantador de Golens: Permite afetar construtos com magias de encantamento gastando +2 PM.\n• Encantamentos Poderosos: Aumenta a CD de suas magias de encantamento em +2.\n• Manipulador Ultrajante: Vítimas de encantamento não percebem que foram enfeitiçadas após o término.\n• Multidão do Encantador: Pode afetar alvos extras sem custo adicional de PM.\n• Vontade Suprema: Ganha bônus de +4 em testes de Vontade contra efeitos mentais."
+      },
+      {
+        "nivel": 7,
+        "nome": "Magias Arcanas (4º nível)",
+        "descricao": "Ganha acesso a magias arcanas de 4º círculo."
+      },
+      {
+        "nivel": 9,
+        "nome": "Magias Arcanas (5º nível)",
+        "descricao": "Ganha acesso a magias arcanas de 5º círculo."
       },
       {
         "nivel": 10,
-        "nome": "Mente Dominadora",
-        "descricao": "Criaturas encantadas por você realizam ações arriscadas sem direito a novo teste imediato de Vontade."
+        "nome": "Mistério Arcano (10º nível)",
+        "descricao": "Pode escolher um talento de magia/metamágico OU uma das habilidades exclusivas de sua especialização:\n• Encantamentos Econômicos: Magias de encantamento custam -1 PM (mínimo 1 PM).\n• Amigo de Todos: Reações de NPCs começam um passo mais amigáveis em relação a você.\n• Encantador de Cães: Magias mentais funcionam normalmente em animais e monstros sem mente.\n• Encantador de Golens: Permite afetar construtos com magias de encantamento gastando +2 PM.\n• Encantamentos Poderosos: Aumenta a CD de suas magias de encantamento em +2.\n• Manipulador Ultrajante: Vítimas de encantamento não percebem que foram enfeitiçadas após o término.\n• Multidão do Encantador: Pode afetar alvos extras sem custo adicional de PM.\n• Vontade Suprema: Ganha bônus de +4 em testes de Vontade contra efeitos mentais."
+      },
+      {
+        "nivel": 11,
+        "nome": "Magias Arcanas (6º nível)",
+        "descricao": "Ganha acesso a magias arcanas de 6º círculo."
+      },
+      {
+        "nivel": 13,
+        "nome": "Magias Arcanas (7º nível)",
+        "descricao": "Ganha acesso a magias arcanas de 7º círculo."
       },
       {
         "nivel": 15,
-        "nome": "Manto da Amizade Falsa",
-        "descricao": "Criaturas inteligentes hesitam em atacá-lo; devem passar em Vontade para escolher você como alvo."
+        "nome": "Magias Arcanas (8º nível)",
+        "descricao": "Ganha acesso a magias arcanas de 8º círculo."
+      },
+      {
+        "nivel": 15,
+        "nome": "Mistério Arcano (15º nível)",
+        "descricao": "Pode escolher um talento de magia/metamágico OU uma das habilidades exclusivas de sua especialização:\n• Encantamentos Econômicos: Magias de encantamento custam -1 PM (mínimo 1 PM).\n• Amigo de Todos: Reações de NPCs começam um passo mais amigáveis em relação a você.\n• Encantador de Cães: Magias mentais funcionam normalmente em animais e monstros sem mente.\n• Encantador de Golens: Permite afetar construtos com magias de encantamento gastando +2 PM.\n• Encantamentos Poderosos: Aumenta a CD de suas magias de encantamento em +2.\n• Manipulador Ultrajante: Vítimas de encantamento não percebem que foram enfeitiçadas após o término.\n• Multidão do Encantador: Pode afetar alvos extras sem custo adicional de PM.\n• Vontade Suprema: Ganha bônus de +4 em testes de Vontade contra efeitos mentais."
+      },
+      {
+        "nivel": 17,
+        "nome": "Magias Arcanas (9º nível)",
+        "descricao": "Atinge a cúspide da alta magia com feitiços arcanos de 9º círculo."
       },
       {
         "nivel": 20,
-        "nome": "Mestre dos Títeres",
-        "descricao": "Pode manter até 2 alvos sob controle mental permanente simultaneamente sem concentração."
+        "nome": "Mestre da Magia Suprema",
+        "descricao": "Você atinge o ápice de sua especialização arcana, lançando suas magias de forma impecável."
+      },
+      {
+        "nivel": 20,
+        "nome": "Mistério Arcano (20º nível)",
+        "descricao": "Pode escolher um talento de magia/metamágico OU uma das habilidades exclusivas de sua especialização:\n• Encantamentos Econômicos: Magias de encantamento custam -1 PM (mínimo 1 PM).\n• Amigo de Todos: Reações de NPCs começam um passo mais amigáveis em relação a você.\n• Encantador de Cães: Magias mentais funcionam normalmente em animais e monstros sem mente.\n• Encantador de Golens: Permite afetar construtos com magias de encantamento gastando +2 PM.\n• Encantamentos Poderosos: Aumenta a CD de suas magias de encantamento em +2.\n• Manipulador Ultrajante: Vítimas de encantamento não percebem que foram enfeitiçadas após o término.\n• Multidão do Encantador: Pode afetar alvos extras sem custo adicional de PM.\n• Vontade Suprema: Ganha bônus de +4 em testes de Vontade contra efeitos mentais."
       }
     ]
   },
@@ -5700,82 +6150,197 @@
     "tipo": "Basica",
     "pvInicial": 8,
     "pvPorNivel": 2,
-    "pmPorNivel": 4,
-    "bba": "1/2 por nível (médio/baixo)",
-    "preRequisitos": "Inteligência 13. Mago de 1º nível.",
-    "proficiencias": "Nenhuma proficiência adicional.",
-    "descricao": "Mestre do poder elemental bruto: fogo, raios, gelo e forças destrutivas que varrem campos de batalha inteiros.",
+    "pmPorNivel": 3,
+    "bba": "1/2 por nível (baixo)",
+    "preRequisitos": "Constituição 13.",
+    "proficiencias": "Armas simples. Nenhuma armadura ou escudo.",
+    "descricao": "Mago focado no poder destrutivo puro, energia elemental brutal, fogo, relâmpagos e explosões arrasadoras.",
     "livroFonte": "Manual do Arcano",
     "habilidades": [
       {
         "nivel": 1,
-        "nome": "Escola Especializada: Evocação",
-        "descricao": "1 PM extra por nível para magias de Evocação. Escolas Proibidas: Encantamento e Ilusão."
+        "nome": "Magias Arcanas (Grimório)",
+        "descricao": "Prepara magias diariamente baseadas em Inteligência. Magias Iniciais: 3 de 1º nível da escola Evocação + mod. Int de qualquer escola (exceto proibida). A cada novo nível aprende 1 de Evocação e 1 de qualquer escola permitida."
       },
       {
         "nivel": 1,
-        "nome": "Energia Brutal",
-        "descricao": "Suas magias de dano de evocação causam +1 ponto de dano por dado rolado."
+        "nome": "Especialização: Evocação (Escola Proibida: Adivinhação)",
+        "descricao": "Você concentra seus estudos arcanos na escola Evocação. Por outro lado, nunca pode aprender magias da escola Adivinhação, nem mesmo através de talentos ou multiclasse."
+      },
+      {
+        "nivel": 1,
+        "nome": "Vínculo Arcano Especial",
+        "descricao": "Item de Poder (arma de combate corpo-a-corpo, cajado de batalha, varinha) ou Familiar (carcaju com +1 ataque, cão com faro, mangusto)."
+      },
+      {
+        "nivel": 1,
+        "nome": "Mistério Arcano (1º nível)",
+        "descricao": "Pode escolher um talento de magia/metamágico OU uma das habilidades exclusivas de sua especialização:\n• Evocações Econômicas: Magias de evocação custam -1 PM (mínimo 1 PM).\n• Acumular Energia: Gasta ação completa para carregar magia de dano, aumentando em +1 o dano por dado.\n• Dicotomia Elemental: Pode dividir o dano da magia entre dois elementos diferentes.\n• Evocações Poderosas: Aumenta a CD de todas as suas magias de evocação em +2.\n• Força Bruta: Quando rola dano de evocação, dados com resultado 1 podem ser re-rolados.\n• Magia Incendiária: Alvos que sofrem dano de fogo continuam queimando nas rodadas seguintes.\n• Magia Inescapável: Magias de área impõem metade do dano mesmo em alvos com Evasão.\n• Magia Inevitável: Ignora até 10 pontos de resistência elemental do alvo."
+      },
+      {
+        "nivel": 3,
+        "nome": "Magias Arcanas (2º nível)",
+        "descricao": "Seu grimório expande-se para abarcar magias arcanas de 2º círculo."
       },
       {
         "nivel": 5,
-        "nome": "Molda Feitiço",
-        "descricao": "Pode excluir até seu modificador de Inteligência em quadrados/criaturas de áreas de efeito de suas magias."
+        "nome": "Magias Arcanas (3º nível)",
+        "descricao": "Ganha acesso a magias arcanas de 3º círculo."
+      },
+      {
+        "nivel": 5,
+        "nome": "Mistério Arcano (5º nível)",
+        "descricao": "Pode escolher um talento de magia/metamágico OU uma das habilidades exclusivas de sua especialização:\n• Evocações Econômicas: Magias de evocação custam -1 PM (mínimo 1 PM).\n• Acumular Energia: Gasta ação completa para carregar magia de dano, aumentando em +1 o dano por dado.\n• Dicotomia Elemental: Pode dividir o dano da magia entre dois elementos diferentes.\n• Evocações Poderosas: Aumenta a CD de todas as suas magias de evocação em +2.\n• Força Bruta: Quando rola dano de evocação, dados com resultado 1 podem ser re-rolados.\n• Magia Incendiária: Alvos que sofrem dano de fogo continuam queimando nas rodadas seguintes.\n• Magia Inescapável: Magias de área impõem metade do dano mesmo em alvos com Evasão.\n• Magia Inevitável: Ignora até 10 pontos de resistência elemental do alvo."
+      },
+      {
+        "nivel": 7,
+        "nome": "Magias Arcanas (4º nível)",
+        "descricao": "Ganha acesso a magias arcanas de 4º círculo."
+      },
+      {
+        "nivel": 9,
+        "nome": "Magias Arcanas (5º nível)",
+        "descricao": "Ganha acesso a magias arcanas de 5º círculo."
       },
       {
         "nivel": 10,
-        "nome": "Potência Concentrada",
-        "descricao": "Gasta 2 PM extras ao lançar uma evocação para maximizar metade dos dados de dano."
+        "nome": "Mistério Arcano (10º nível)",
+        "descricao": "Pode escolher um talento de magia/metamágico OU uma das habilidades exclusivas de sua especialização:\n• Evocações Econômicas: Magias de evocação custam -1 PM (mínimo 1 PM).\n• Acumular Energia: Gasta ação completa para carregar magia de dano, aumentando em +1 o dano por dado.\n• Dicotomia Elemental: Pode dividir o dano da magia entre dois elementos diferentes.\n• Evocações Poderosas: Aumenta a CD de todas as suas magias de evocação em +2.\n• Força Bruta: Quando rola dano de evocação, dados com resultado 1 podem ser re-rolados.\n• Magia Incendiária: Alvos que sofrem dano de fogo continuam queimando nas rodadas seguintes.\n• Magia Inescapável: Magias de área impõem metade do dano mesmo em alvos com Evasão.\n• Magia Inevitável: Ignora até 10 pontos de resistência elemental do alvo."
+      },
+      {
+        "nivel": 11,
+        "nome": "Magias Arcanas (6º nível)",
+        "descricao": "Ganha acesso a magias arcanas de 6º círculo."
+      },
+      {
+        "nivel": 13,
+        "nome": "Magias Arcanas (7º nível)",
+        "descricao": "Ganha acesso a magias arcanas de 7º círculo."
       },
       {
         "nivel": 15,
-        "nome": "Penetração Elemental",
-        "descricao": "Suas magias de evocação ignoram até 10 pontos de resistência a energia de qualquer tipo."
+        "nome": "Magias Arcanas (8º nível)",
+        "descricao": "Ganha acesso a magias arcanas de 8º círculo."
+      },
+      {
+        "nivel": 15,
+        "nome": "Mistério Arcano (15º nível)",
+        "descricao": "Pode escolher um talento de magia/metamágico OU uma das habilidades exclusivas de sua especialização:\n• Evocações Econômicas: Magias de evocação custam -1 PM (mínimo 1 PM).\n• Acumular Energia: Gasta ação completa para carregar magia de dano, aumentando em +1 o dano por dado.\n• Dicotomia Elemental: Pode dividir o dano da magia entre dois elementos diferentes.\n• Evocações Poderosas: Aumenta a CD de todas as suas magias de evocação em +2.\n• Força Bruta: Quando rola dano de evocação, dados com resultado 1 podem ser re-rolados.\n• Magia Incendiária: Alvos que sofrem dano de fogo continuam queimando nas rodadas seguintes.\n• Magia Inescapável: Magias de área impõem metade do dano mesmo em alvos com Evasão.\n• Magia Inevitável: Ignora até 10 pontos de resistência elemental do alvo."
+      },
+      {
+        "nivel": 17,
+        "nome": "Magias Arcanas (9º nível)",
+        "descricao": "Atinge a cúspide da alta magia com feitiços arcanos de 9º círculo."
       },
       {
         "nivel": 20,
-        "nome": "Apocalipse Elemental",
-        "descricao": "Uma vez por dia, sua próxima evocação causa dano máximo automático sem custo extra de PM."
+        "nome": "Mestre da Magia Suprema",
+        "descricao": "Você atinge o ápice de sua especialização arcana, lançando suas magias de forma impecável."
+      },
+      {
+        "nivel": 20,
+        "nome": "Mistério Arcano (20º nível)",
+        "descricao": "Pode escolher um talento de magia/metamágico OU uma das habilidades exclusivas de sua especialização:\n• Evocações Econômicas: Magias de evocação custam -1 PM (mínimo 1 PM).\n• Acumular Energia: Gasta ação completa para carregar magia de dano, aumentando em +1 o dano por dado.\n• Dicotomia Elemental: Pode dividir o dano da magia entre dois elementos diferentes.\n• Evocações Poderosas: Aumenta a CD de todas as suas magias de evocação em +2.\n• Força Bruta: Quando rola dano de evocação, dados com resultado 1 podem ser re-rolados.\n• Magia Incendiária: Alvos que sofrem dano de fogo continuam queimando nas rodadas seguintes.\n• Magia Inescapável: Magias de área impõem metade do dano mesmo em alvos com Evasão.\n• Magia Inevitável: Ignora até 10 pontos de resistência elemental do alvo."
       }
     ]
   },
   {
     "id": "mago_geomante",
-    "nome": "Mago: Geomante (Variante)",
+    "nome": "Mago: Geomante (Especialista)",
     "tipo": "Basica",
-    "pvInicial": 10,
-    "pvPorNivel": 3,
-    "pmPorNivel": 4,
-    "bba": "1/2 por nível (médio/baixo)",
-    "preRequisitos": "Inteligência 13. Mago de 1º nível.",
-    "proficiencias": "Nenhuma proficiência adicional.",
-    "descricao": "Mago que extrai magia telúrica da própria rocha, solo e montanhas, com resistência física acima da média dos arcanistas.",
+    "pvInicial": 8,
+    "pvPorNivel": 2,
+    "pmPorNivel": 3,
+    "bba": "1/2 por nível (baixo)",
+    "preRequisitos": "Força 13, Constituição 13.",
+    "proficiencias": "Armas simples. Nenhuma armadura ou escudo.",
+    "descricao": "Mago em comunhão com a matéria bruta de Arton, montanhas e solo, acompanhado por um servo elemental adaptável.",
     "livroFonte": "Manual do Arcano",
     "habilidades": [
       {
         "nivel": 1,
-        "nome": "Sintonia com a Rocha",
-        "descricao": "Recebe +1 na CA e estabilidade (+4 em testes contra ser derrubado ou empurrado) em terreno natural rochoso."
+        "nome": "Magias Arcanas (Grimório)",
+        "descricao": "Prepara magias diariamente baseadas em Inteligência. Magias Iniciais: 3 de 1º nível da escola Geomancia (Terra/Elemental) + mod. Int de qualquer escola (exceto proibida). A cada novo nível aprende 1 de Geomancia (Terra/Elemental) e 1 de qualquer escola permitida."
+      },
+      {
+        "nivel": 1,
+        "nome": "Especialização: Geomancia (Terra/Elemental) (Escola Proibida: Nenhuma)",
+        "descricao": "Você concentra seus estudos arcanos na escola Geomancia (Terra/Elemental). Por outro lado, nunca pode aprender magias da escola Nenhuma, nem mesmo através de talentos ou multiclasse."
+      },
+      {
+        "nivel": 1,
+        "nome": "Vínculo Arcano Especial",
+        "descricao": "Servo Elemental exclusivo (pequena criatura elemental adaptável que assume diferentes formas de combate e utilidade)."
+      },
+      {
+        "nivel": 1,
+        "nome": "Mistério Arcano (1º nível)",
+        "descricao": "Pode escolher um talento de magia/metamágico OU uma das habilidades exclusivas de sua especialização:\n• Ataque Elemental: O servo elemental desfere golpes causando dano elemental adicional.\n• Camaleão Ambiental: O servo elemental adapta-se ao terreno concedendo camuflagem ao geomante.\n• Comunhão Arcana: Pode lançar magias de toque através de seu servo elemental.\n• Servo Atirador: O servo elemental realiza ataques de projétil elemental à distância.\n• Servo Durão: Aumenta PV e resistências do servo elemental consideravelmente.\n• Servo Lutador: O servo elemental ganha tamanho Médio e bônus em manobras de combate.\n• Uno com Arton: Ganha sentido sísmico 18m e deslocamento de escavação."
+      },
+      {
+        "nivel": 3,
+        "nome": "Magias Arcanas (2º nível)",
+        "descricao": "Seu grimório expande-se para abarcar magias arcanas de 2º círculo."
       },
       {
         "nivel": 5,
-        "nome": "Pele de Pedra Natural",
-        "descricao": "Ganha Redução de Dano 2/adamante permanente."
+        "nome": "Magias Arcanas (3º nível)",
+        "descricao": "Ganha acesso a magias arcanas de 3º círculo."
+      },
+      {
+        "nivel": 5,
+        "nome": "Mistério Arcano (5º nível)",
+        "descricao": "Pode escolher um talento de magia/metamágico OU uma das habilidades exclusivas de sua especialização:\n• Ataque Elemental: O servo elemental desfere golpes causando dano elemental adicional.\n• Camaleão Ambiental: O servo elemental adapta-se ao terreno concedendo camuflagem ao geomante.\n• Comunhão Arcana: Pode lançar magias de toque através de seu servo elemental.\n• Servo Atirador: O servo elemental realiza ataques de projétil elemental à distância.\n• Servo Durão: Aumenta PV e resistências do servo elemental consideravelmente.\n• Servo Lutador: O servo elemental ganha tamanho Médio e bônus em manobras de combate.\n• Uno com Arton: Ganha sentido sísmico 18m e deslocamento de escavação."
+      },
+      {
+        "nivel": 7,
+        "nome": "Magias Arcanas (4º nível)",
+        "descricao": "Ganha acesso a magias arcanas de 4º círculo."
+      },
+      {
+        "nivel": 9,
+        "nome": "Magias Arcanas (5º nível)",
+        "descricao": "Ganha acesso a magias arcanas de 5º círculo."
       },
       {
         "nivel": 10,
-        "nome": "Sentido Sísmico",
-        "descricao": "Percebe vibrações e criaturas em contato com o solo em até 18 metros."
+        "nome": "Mistério Arcano (10º nível)",
+        "descricao": "Pode escolher um talento de magia/metamágico OU uma das habilidades exclusivas de sua especialização:\n• Ataque Elemental: O servo elemental desfere golpes causando dano elemental adicional.\n• Camaleão Ambiental: O servo elemental adapta-se ao terreno concedendo camuflagem ao geomante.\n• Comunhão Arcana: Pode lançar magias de toque através de seu servo elemental.\n• Servo Atirador: O servo elemental realiza ataques de projétil elemental à distância.\n• Servo Durão: Aumenta PV e resistências do servo elemental consideravelmente.\n• Servo Lutador: O servo elemental ganha tamanho Médio e bônus em manobras de combate.\n• Uno com Arton: Ganha sentido sísmico 18m e deslocamento de escavação."
+      },
+      {
+        "nivel": 11,
+        "nome": "Magias Arcanas (6º nível)",
+        "descricao": "Ganha acesso a magias arcanas de 6º círculo."
+      },
+      {
+        "nivel": 13,
+        "nome": "Magias Arcanas (7º nível)",
+        "descricao": "Ganha acesso a magias arcanas de 7º círculo."
       },
       {
         "nivel": 15,
-        "nome": "Fendas da Terra",
-        "descricao": "Suas magias que alteram a terra ou rocha dobram de área de efeito e causam dano extra de esmagamento."
+        "nome": "Magias Arcanas (8º nível)",
+        "descricao": "Ganha acesso a magias arcanas de 8º círculo."
+      },
+      {
+        "nivel": 15,
+        "nome": "Mistério Arcano (15º nível)",
+        "descricao": "Pode escolher um talento de magia/metamágico OU uma das habilidades exclusivas de sua especialização:\n• Ataque Elemental: O servo elemental desfere golpes causando dano elemental adicional.\n• Camaleão Ambiental: O servo elemental adapta-se ao terreno concedendo camuflagem ao geomante.\n• Comunhão Arcana: Pode lançar magias de toque através de seu servo elemental.\n• Servo Atirador: O servo elemental realiza ataques de projétil elemental à distância.\n• Servo Durão: Aumenta PV e resistências do servo elemental consideravelmente.\n• Servo Lutador: O servo elemental ganha tamanho Médio e bônus em manobras de combate.\n• Uno com Arton: Ganha sentido sísmico 18m e deslocamento de escavação."
+      },
+      {
+        "nivel": 17,
+        "nome": "Magias Arcanas (9º nível)",
+        "descricao": "Atinge a cúspide da alta magia com feitiços arcanos de 9º círculo."
       },
       {
         "nivel": 20,
-        "nome": "Forma de Titã Telúrico",
-        "descricao": "Uma vez por dia, funde-se com rocha viva ganhando RD 10/adamante e bônus de +6 em Força por 1 hora."
+        "nome": "Mestre da Magia Suprema",
+        "descricao": "Você atinge o ápice de sua especialização arcana, lançando suas magias de forma impecável."
+      },
+      {
+        "nivel": 20,
+        "nome": "Mistério Arcano (20º nível)",
+        "descricao": "Pode escolher um talento de magia/metamágico OU uma das habilidades exclusivas de sua especialização:\n• Ataque Elemental: O servo elemental desfere golpes causando dano elemental adicional.\n• Camaleão Ambiental: O servo elemental adapta-se ao terreno concedendo camuflagem ao geomante.\n• Comunhão Arcana: Pode lançar magias de toque através de seu servo elemental.\n• Servo Atirador: O servo elemental realiza ataques de projétil elemental à distância.\n• Servo Durão: Aumenta PV e resistências do servo elemental consideravelmente.\n• Servo Lutador: O servo elemental ganha tamanho Médio e bônus em manobras de combate.\n• Uno com Arton: Ganha sentido sísmico 18m e deslocamento de escavação."
       }
     ]
   },
@@ -5785,42 +6350,97 @@
     "tipo": "Basica",
     "pvInicial": 8,
     "pvPorNivel": 2,
-    "pmPorNivel": 4,
-    "bba": "1/2 por nível (médio/baixo)",
-    "preRequisitos": "Inteligência 13. Mago de 1º nível.",
-    "proficiencias": "Nenhuma proficiência adicional.",
-    "descricao": "Mestre da convocação de criaturas astrais, elementais, demônios e teletransporte. Escolas Proibidas: Adivinhação e Transmutação.",
+    "pmPorNivel": 3,
+    "bba": "1/2 por nível (baixo)",
+    "preRequisitos": "Talento Potencializar Invocação.",
+    "proficiencias": "Armas simples. Nenhuma armadura ou escudo.",
+    "descricao": "Especialista em abrir portais interdimensionais para trazer criaturas astrais e manipular o teletransporte com mestria tática.",
     "livroFonte": "Manual do Arcano",
     "habilidades": [
       {
         "nivel": 1,
-        "nome": "Escola Especializada: Invocação",
-        "descricao": "1 PM extra por nível para magias de Invocação. Escolas Proibidas: Adivinhação e Transmutação."
+        "nome": "Magias Arcanas (Grimório)",
+        "descricao": "Prepara magias diariamente baseadas em Inteligência. Magias Iniciais: 3 de 1º nível da escola Invocação + mod. Int de qualquer escola (exceto proibida). A cada novo nível aprende 1 de Invocação e 1 de qualquer escola permitida."
       },
       {
         "nivel": 1,
-        "nome": "Invocação Fortalecida",
-        "descricao": "Criaturas invocadas por você ganham +2 em testes de ataque e dano e +2 PV por dado de vida."
+        "nome": "Especialização: Invocação (Escola Proibida: Ilusão)",
+        "descricao": "Você concentra seus estudos arcanos na escola Invocação. Por outro lado, nunca pode aprender magias da escola Ilusão, nem mesmo através de talentos ou multiclasse."
+      },
+      {
+        "nivel": 1,
+        "nome": "Vínculo Arcano Especial",
+        "descricao": "Item de Poder (cajado convocador, giz consagrado para círculos mágicos, bolota metálica planar)."
+      },
+      {
+        "nivel": 1,
+        "nome": "Mistério Arcano (1º nível)",
+        "descricao": "Pode escolher um talento de magia/metamágico OU uma das habilidades exclusivas de sua especialização:\n• Invocações Econômicas: Magias de invocação custam -1 PM (mínimo 1 PM).\n• Esconjurar: Pode banir criaturas invocadas inimigas com facilidade incomparável.\n• Estudos Extracurriculares: Adiciona opções exóticas e poderosas à lista de Invocar Monstro.\n• Invocação Apressada: Conjura magias de invocar monstro como ação padrão em vez de rodada completa.\n• Invocações Poderosas: Criaturas invocadas ganham +2 em Força e Constituição e +1 PV por dado.\n• Invocações Teimosas: Criaturas invocadas permanecem por 1 rodada a mais por nível.\n• Mestre do Teletransporte: Pode se teleportar como ação de movimento e levar aliados adjacentes."
+      },
+      {
+        "nivel": 3,
+        "nome": "Magias Arcanas (2º nível)",
+        "descricao": "Seu grimório expande-se para abarcar magias arcanas de 2º círculo."
       },
       {
         "nivel": 5,
-        "nome": "Teletransporte Tático",
-        "descricao": "Pode trocar de posição com uma criatura aliada ou convocada a até 9m como ação de movimento."
+        "nome": "Magias Arcanas (3º nível)",
+        "descricao": "Ganha acesso a magias arcanas de 3º círculo."
+      },
+      {
+        "nivel": 5,
+        "nome": "Mistério Arcano (5º nível)",
+        "descricao": "Pode escolher um talento de magia/metamágico OU uma das habilidades exclusivas de sua especialização:\n• Invocações Econômicas: Magias de invocação custam -1 PM (mínimo 1 PM).\n• Esconjurar: Pode banir criaturas invocadas inimigas com facilidade incomparável.\n• Estudos Extracurriculares: Adiciona opções exóticas e poderosas à lista de Invocar Monstro.\n• Invocação Apressada: Conjura magias de invocar monstro como ação padrão em vez de rodada completa.\n• Invocações Poderosas: Criaturas invocadas ganham +2 em Força e Constituição e +1 PV por dado.\n• Invocações Teimosas: Criaturas invocadas permanecem por 1 rodada a mais por nível.\n• Mestre do Teletransporte: Pode se teleportar como ação de movimento e levar aliados adjacentes."
+      },
+      {
+        "nivel": 7,
+        "nome": "Magias Arcanas (4º nível)",
+        "descricao": "Ganha acesso a magias arcanas de 4º círculo."
+      },
+      {
+        "nivel": 9,
+        "nome": "Magias Arcanas (5º nível)",
+        "descricao": "Ganha acesso a magias arcanas de 5º círculo."
       },
       {
         "nivel": 10,
-        "nome": "Convocação Rápida",
-        "descricao": "Magias de Invocar Monstro que exigem 1 rodada completa podem ser lançadas como ação padrão."
+        "nome": "Mistério Arcano (10º nível)",
+        "descricao": "Pode escolher um talento de magia/metamágico OU uma das habilidades exclusivas de sua especialização:\n• Invocações Econômicas: Magias de invocação custam -1 PM (mínimo 1 PM).\n• Esconjurar: Pode banir criaturas invocadas inimigas com facilidade incomparável.\n• Estudos Extracurriculares: Adiciona opções exóticas e poderosas à lista de Invocar Monstro.\n• Invocação Apressada: Conjura magias de invocar monstro como ação padrão em vez de rodada completa.\n• Invocações Poderosas: Criaturas invocadas ganham +2 em Força e Constituição e +1 PV por dado.\n• Invocações Teimosas: Criaturas invocadas permanecem por 1 rodada a mais por nível.\n• Mestre do Teletransporte: Pode se teleportar como ação de movimento e levar aliados adjacentes."
+      },
+      {
+        "nivel": 11,
+        "nome": "Magias Arcanas (6º nível)",
+        "descricao": "Ganha acesso a magias arcanas de 6º círculo."
+      },
+      {
+        "nivel": 13,
+        "nome": "Magias Arcanas (7º nível)",
+        "descricao": "Ganha acesso a magias arcanas de 7º círculo."
       },
       {
         "nivel": 15,
-        "nome": "Vínculo Astral Duradouro",
-        "descricao": "A duração das criaturas invocadas por você é dobrada sem custo adicional de PM."
+        "nome": "Magias Arcanas (8º nível)",
+        "descricao": "Ganha acesso a magias arcanas de 8º círculo."
+      },
+      {
+        "nivel": 15,
+        "nome": "Mistério Arcano (15º nível)",
+        "descricao": "Pode escolher um talento de magia/metamágico OU uma das habilidades exclusivas de sua especialização:\n• Invocações Econômicas: Magias de invocação custam -1 PM (mínimo 1 PM).\n• Esconjurar: Pode banir criaturas invocadas inimigas com facilidade incomparável.\n• Estudos Extracurriculares: Adiciona opções exóticas e poderosas à lista de Invocar Monstro.\n• Invocação Apressada: Conjura magias de invocar monstro como ação padrão em vez de rodada completa.\n• Invocações Poderosas: Criaturas invocadas ganham +2 em Força e Constituição e +1 PV por dado.\n• Invocações Teimosas: Criaturas invocadas permanecem por 1 rodada a mais por nível.\n• Mestre do Teletransporte: Pode se teleportar como ação de movimento e levar aliados adjacentes."
+      },
+      {
+        "nivel": 17,
+        "nome": "Magias Arcanas (9º nível)",
+        "descricao": "Atinge a cúspide da alta magia com feitiços arcanos de 9º círculo."
       },
       {
         "nivel": 20,
-        "nome": "Exército Dimensional",
-        "descricao": "Pode manter dois grupos de criaturas convocadas ativas no campo simultaneamente."
+        "nome": "Mestre da Magia Suprema",
+        "descricao": "Você atinge o ápice de sua especialização arcana, lançando suas magias de forma impecável."
+      },
+      {
+        "nivel": 20,
+        "nome": "Mistério Arcano (20º nível)",
+        "descricao": "Pode escolher um talento de magia/metamágico OU uma das habilidades exclusivas de sua especialização:\n• Invocações Econômicas: Magias de invocação custam -1 PM (mínimo 1 PM).\n• Esconjurar: Pode banir criaturas invocadas inimigas com facilidade incomparável.\n• Estudos Extracurriculares: Adiciona opções exóticas e poderosas à lista de Invocar Monstro.\n• Invocação Apressada: Conjura magias de invocar monstro como ação padrão em vez de rodada completa.\n• Invocações Poderosas: Criaturas invocadas ganham +2 em Força e Constituição e +1 PV por dado.\n• Invocações Teimosas: Criaturas invocadas permanecem por 1 rodada a mais por nível.\n• Mestre do Teletransporte: Pode se teleportar como ação de movimento e levar aliados adjacentes."
       }
     ]
   },
@@ -5830,42 +6450,97 @@
     "tipo": "Basica",
     "pvInicial": 8,
     "pvPorNivel": 2,
-    "pmPorNivel": 4,
-    "bba": "1/2 por nível (médio/baixo)",
-    "preRequisitos": "Inteligência 13. Mago de 1º nível.",
-    "proficiencias": "Nenhuma proficiência adicional.",
-    "descricao": "Mago que domina a mudança física, a metamorfose corporal e a alteração da matéria física.",
+    "pmPorNivel": 3,
+    "bba": "1/2 por nível (baixo)",
+    "preRequisitos": "Treinado em Ofício (alquimia).",
+    "proficiencias": "Armas simples. Nenhuma armadura ou escudo.",
+    "descricao": "Pesquisador da matéria e das mutações, capaz de remodelar a forma física de aliados, inimigos e objetos mundanos.",
     "livroFonte": "Manual do Arcano",
     "habilidades": [
       {
         "nivel": 1,
-        "nome": "Escola Especializada: Transmutação",
-        "descricao": "1 PM extra por nível para magias de Transmutação. Escolas Proibidas: Adivinhação e Invocação."
+        "nome": "Magias Arcanas (Grimório)",
+        "descricao": "Prepara magias diariamente baseadas em Inteligência. Magias Iniciais: 3 de 1º nível da escola Transmutação + mod. Int de qualquer escola (exceto proibida). A cada novo nível aprende 1 de Transmutação e 1 de qualquer escola permitida."
       },
       {
         "nivel": 1,
-        "nome": "Alterar Propriedade",
-        "descricao": "Pode mudar temporariamente a rigidez, peso ou forma de um objeto inanimado por 10 minutos."
+        "nome": "Especialização: Transmutação (Escola Proibida: Abjuração)",
+        "descricao": "Você concentra seus estudos arcanos na escola Transmutação. Por outro lado, nunca pode aprender magias da escola Abjuração, nem mesmo através de talentos ou multiclasse."
+      },
+      {
+        "nivel": 1,
+        "nome": "Vínculo Arcano Especial",
+        "descricao": "Item de Poder (anel de mercúrio, pedra de toque alquímica, cadinho mágico)."
+      },
+      {
+        "nivel": 1,
+        "nome": "Mistério Arcano (1º nível)",
+        "descricao": "Pode escolher um talento de magia/metamágico OU uma das habilidades exclusivas de sua especialização:\n• Transmutações Econômicas: Magias de transmutação custam -1 PM (mínimo 1 PM).\n• Aprimorar a Vida: Magias de aumento de atributo (como Força do Touro) concedem +6 em vez de +4.\n• Criar Pedra Filosofal: Cria a lendária pedra filosofal capaz de transmutar metais em ouro.\n• Fortitude Suprema: 1x/dia gasta 1 PM para transformar falha em Fortitude em sucesso.\n• Mago Construtor: Adiciona moldar madeira e pedra à lista sem custo extra de aprendizado.\n• Memória Mutável: Pode alterar uma magia preparada durante o dia com 10 minutos de estudo.\n• Transmutações Poderosas: Aumenta a CD de magias de polimorfia e transmutação em +2.\n• Uno com o Universo: Ganha imunidade a paralisia, sono mágico e metamorfose involuntária."
+      },
+      {
+        "nivel": 3,
+        "nome": "Magias Arcanas (2º nível)",
+        "descricao": "Seu grimório expande-se para abarcar magias arcanas de 2º círculo."
       },
       {
         "nivel": 5,
-        "nome": "Metamorfose Adaptativa",
-        "descricao": "Ao assumir outra forma, ganha +2 em jogadas de ataque e bônus de deslocamento de +3m."
+        "nome": "Magias Arcanas (3º nível)",
+        "descricao": "Ganha acesso a magias arcanas de 3º círculo."
+      },
+      {
+        "nivel": 5,
+        "nome": "Mistério Arcano (5º nível)",
+        "descricao": "Pode escolher um talento de magia/metamágico OU uma das habilidades exclusivas de sua especialização:\n• Transmutações Econômicas: Magias de transmutação custam -1 PM (mínimo 1 PM).\n• Aprimorar a Vida: Magias de aumento de atributo (como Força do Touro) concedem +6 em vez de +4.\n• Criar Pedra Filosofal: Cria a lendária pedra filosofal capaz de transmutar metais em ouro.\n• Fortitude Suprema: 1x/dia gasta 1 PM para transformar falha em Fortitude em sucesso.\n• Mago Construtor: Adiciona moldar madeira e pedra à lista sem custo extra de aprendizado.\n• Memória Mutável: Pode alterar uma magia preparada durante o dia com 10 minutos de estudo.\n• Transmutações Poderosas: Aumenta a CD de magias de polimorfia e transmutação em +2.\n• Uno com o Universo: Ganha imunidade a paralisia, sono mágico e metamorfose involuntária."
+      },
+      {
+        "nivel": 7,
+        "nome": "Magias Arcanas (4º nível)",
+        "descricao": "Ganha acesso a magias arcanas de 4º círculo."
+      },
+      {
+        "nivel": 9,
+        "nome": "Magias Arcanas (5º nível)",
+        "descricao": "Ganha acesso a magias arcanas de 5º círculo."
       },
       {
         "nivel": 10,
-        "nome": "Corpo Maleável",
-        "descricao": "Recebe Redução de Dano 5/perfurante ou cortante (à sua escolha no início do dia)."
+        "nome": "Mistério Arcano (10º nível)",
+        "descricao": "Pode escolher um talento de magia/metamágico OU uma das habilidades exclusivas de sua especialização:\n• Transmutações Econômicas: Magias de transmutação custam -1 PM (mínimo 1 PM).\n• Aprimorar a Vida: Magias de aumento de atributo (como Força do Touro) concedem +6 em vez de +4.\n• Criar Pedra Filosofal: Cria a lendária pedra filosofal capaz de transmutar metais em ouro.\n• Fortitude Suprema: 1x/dia gasta 1 PM para transformar falha em Fortitude em sucesso.\n• Mago Construtor: Adiciona moldar madeira e pedra à lista sem custo extra de aprendizado.\n• Memória Mutável: Pode alterar uma magia preparada durante o dia com 10 minutos de estudo.\n• Transmutações Poderosas: Aumenta a CD de magias de polimorfia e transmutação em +2.\n• Uno com o Universo: Ganha imunidade a paralisia, sono mágico e metamorfose involuntária."
+      },
+      {
+        "nivel": 11,
+        "nome": "Magias Arcanas (6º nível)",
+        "descricao": "Ganha acesso a magias arcanas de 6º círculo."
+      },
+      {
+        "nivel": 13,
+        "nome": "Magias Arcanas (7º nível)",
+        "descricao": "Ganha acesso a magias arcanas de 7º círculo."
       },
       {
         "nivel": 15,
-        "nome": "Transmutação Permanente",
-        "descricao": "Pode tornar permanentes certas alterações de materiais simples com custo de XP reduzido em 50%."
+        "nome": "Magias Arcanas (8º nível)",
+        "descricao": "Ganha acesso a magias arcanas de 8º círculo."
+      },
+      {
+        "nivel": 15,
+        "nome": "Mistério Arcano (15º nível)",
+        "descricao": "Pode escolher um talento de magia/metamágico OU uma das habilidades exclusivas de sua especialização:\n• Transmutações Econômicas: Magias de transmutação custam -1 PM (mínimo 1 PM).\n• Aprimorar a Vida: Magias de aumento de atributo (como Força do Touro) concedem +6 em vez de +4.\n• Criar Pedra Filosofal: Cria a lendária pedra filosofal capaz de transmutar metais em ouro.\n• Fortitude Suprema: 1x/dia gasta 1 PM para transformar falha em Fortitude em sucesso.\n• Mago Construtor: Adiciona moldar madeira e pedra à lista sem custo extra de aprendizado.\n• Memória Mutável: Pode alterar uma magia preparada durante o dia com 10 minutos de estudo.\n• Transmutações Poderosas: Aumenta a CD de magias de polimorfia e transmutação em +2.\n• Uno com o Universo: Ganha imunidade a paralisia, sono mágico e metamorfose involuntária."
+      },
+      {
+        "nivel": 17,
+        "nome": "Magias Arcanas (9º nível)",
+        "descricao": "Atinge a cúspide da alta magia com feitiços arcanos de 9º círculo."
       },
       {
         "nivel": 20,
-        "nome": "Mestre da Forma Pura",
-        "descricao": "Pode usar Metamorfose à vontade em si mesmo como ação de movimento."
+        "nome": "Mestre da Magia Suprema",
+        "descricao": "Você atinge o ápice de sua especialização arcana, lançando suas magias de forma impecável."
+      },
+      {
+        "nivel": 20,
+        "nome": "Mistério Arcano (20º nível)",
+        "descricao": "Pode escolher um talento de magia/metamágico OU uma das habilidades exclusivas de sua especialização:\n• Transmutações Econômicas: Magias de transmutação custam -1 PM (mínimo 1 PM).\n• Aprimorar a Vida: Magias de aumento de atributo (como Força do Touro) concedem +6 em vez de +4.\n• Criar Pedra Filosofal: Cria a lendária pedra filosofal capaz de transmutar metais em ouro.\n• Fortitude Suprema: 1x/dia gasta 1 PM para transformar falha em Fortitude em sucesso.\n• Mago Construtor: Adiciona moldar madeira e pedra à lista sem custo extra de aprendizado.\n• Memória Mutável: Pode alterar uma magia preparada durante o dia com 10 minutos de estudo.\n• Transmutações Poderosas: Aumenta a CD de magias de polimorfia e transmutação em +2.\n• Uno com o Universo: Ganha imunidade a paralisia, sono mágico e metamorfose involuntária."
       }
     ]
   },
@@ -5875,37 +6550,82 @@
     "tipo": "Basica",
     "pvInicial": 8,
     "pvPorNivel": 2,
-    "pmPorNivel": 4,
-    "bba": "1/2 por nível (médio/baixo)",
-    "preRequisitos": "Carisma 13. Tendência não Leal.",
-    "proficiencias": "Nenhuma proficiência adicional.",
-    "descricao": "Feiticeiro cujo sangue ferve com a instabilidade do Caos elemental e planar.",
+    "pmPorNivel": 3,
+    "bba": "1/2 por nível (baixo)",
+    "preRequisitos": "Tendência Caótica.",
+    "proficiencias": "Armas simples. Nenhuma armadura ou escudo.",
+    "descricao": "Feiticeiro cujo sangue carrega a bênção e maldição do Deus Nimb e das energias entrópicas.",
     "livroFonte": "Manual do Arcano",
     "habilidades": [
       {
         "nivel": 1,
-        "nome": "Herança do Caos",
-        "descricao": "Uma vez por dia, pode rerrolar qualquer dado com resultado 1 natural."
+        "nome": "Magias Arcanas Espontâneas",
+        "descricao": "Lança magias arcanas com base em Carisma, sem necessidade de preparar feitiços em grimórios."
+      },
+      {
+        "nivel": 1,
+        "nome": "Linhagem: Poder do Caos",
+        "descricao": "Adiciona mod. Carisma ao dano de magias. Magias ganham descritor caos e não pode lançar magias de ordem."
+      },
+      {
+        "nivel": 3,
+        "nome": "Magias Arcanas (2º nível)",
+        "descricao": "Ganha acesso espontâneo a magias arcanas de 2º círculo."
       },
       {
         "nivel": 5,
-        "nome": "Sorte Inconstante",
-        "descricao": "No início de cada dia, role 1d6: 1-2 recebe +1 na CA, 3-4 recebe +1 em ataques, 5-6 recebe +2 em resistências."
+        "nome": "Magias Arcanas (3º nível)",
+        "descricao": "Ganha acesso espontâneo a magias arcanas de 3º círculo."
+      },
+      {
+        "nivel": 5,
+        "nome": "Poder da Linhagem (5º): Aura de Distorção",
+        "descricao": "Gasta 2 PM para criar aura de caos por 1 minuto: ataques contra você têm 20% de chance de erro."
+      },
+      {
+        "nivel": 7,
+        "nome": "Magias Arcanas (4º nível)",
+        "descricao": "Ganha acesso espontâneo a magias arcanas de 4º círculo."
+      },
+      {
+        "nivel": 9,
+        "nome": "Magias Arcanas (5º nível)",
+        "descricao": "Ganha acesso espontâneo a magias arcanas de 5º círculo."
       },
       {
         "nivel": 10,
-        "nome": "Corpo Imprevisível",
-        "descricao": "Garante 20% de chance de camuflagem permanente contra ataques à distância e corpo a corpo."
+        "nome": "Poder da Linhagem (10º): Vácuo de Sorte",
+        "descricao": "Recebe +3 em qualquer teste ou na CD de magia; mestre pode impor -3 posteriormente."
+      },
+      {
+        "nivel": 11,
+        "nome": "Magias Arcanas (6º nível)",
+        "descricao": "Ganha acesso espontâneo a magias arcanas de 6º círculo."
+      },
+      {
+        "nivel": 13,
+        "nome": "Magias Arcanas (7º nível)",
+        "descricao": "Ganha acesso espontâneo a magias arcanas de 7º círculo."
       },
       {
         "nivel": 15,
-        "nome": "Ruptura da Realidade",
-        "descricao": "Suas magias ignoram imunidades elementais de criaturas ordeiras ou neutras."
+        "nome": "Magias Arcanas (8º nível)",
+        "descricao": "Ganha acesso espontâneo a magias arcanas de 8º círculo."
+      },
+      {
+        "nivel": 15,
+        "nome": "Poder da Linhagem (15º): Caos Inescapável",
+        "descricao": "Gasta 3 PM por alvo que falhar em resistência para deixá-lo sob efeito de confusão por 1 rodada."
+      },
+      {
+        "nivel": 17,
+        "nome": "Magias Arcanas (9º nível)",
+        "descricao": "Ganha acesso espontâneo a magias arcanas de 9º círculo."
       },
       {
         "nivel": 20,
-        "nome": "Entropia Total",
-        "descricao": "Ao lançar uma magia, pode escolher 1 alvo para forçar 2 testes de resistência e usar o pior resultado."
+        "nome": "Apoteose da Linhagem (20º): Senhor do Caos",
+        "descricao": "Bônus de vácuo de sorte sobe para +6; torna-se permanentemente imune a magias com o descritor ordem."
       }
     ]
   },
@@ -5915,37 +6635,82 @@
     "tipo": "Basica",
     "pvInicial": 8,
     "pvPorNivel": 2,
-    "pmPorNivel": 4,
-    "bba": "1/2 por nível (médio/baixo)",
-    "preRequisitos": "Carisma 13. Tendência não Maligna.",
-    "proficiencias": "Nenhuma proficiência adicional.",
-    "descricao": "Descendente de anjos, arcontes e seres dos reinos de luz e bondade.",
+    "pmPorNivel": 3,
+    "bba": "1/2 por nível (baixo)",
+    "preRequisitos": "Tendência Bondosa.",
+    "proficiencias": "Armas simples. Nenhuma armadura ou escudo.",
+    "descricao": "Descendente de anjos e arcontes dos Reinos dos deuses bondosos, canalizando luz e salvação.",
     "livroFonte": "Manual do Arcano",
     "habilidades": [
       {
         "nivel": 1,
-        "nome": "Sangue Sagrado",
-        "descricao": "Pode lançar Curar Ferimentos Leves gastando PM mesmo sendo feiticeiro arcano."
+        "nome": "Magias Arcanas Espontâneas",
+        "descricao": "Lança magias arcanas com base em Carisma, sem necessidade de preparar feitiços em grimórios."
+      },
+      {
+        "nivel": 1,
+        "nome": "Linhagem: Radiância Sagrada",
+        "descricao": "Aumenta a dificuldade do teste de resistência de suas magias em CD +4 contra criaturas Malignas."
+      },
+      {
+        "nivel": 3,
+        "nome": "Magias Arcanas (2º nível)",
+        "descricao": "Ganha acesso espontâneo a magias arcanas de 2º círculo."
       },
       {
         "nivel": 5,
-        "nome": "Asas Astrais",
-        "descricao": "Manifesta asas luminescentes concedendo deslocamento de voo 12m por até 10 rodadas ao custo de 2 PM."
+        "nome": "Magias Arcanas (3º nível)",
+        "descricao": "Ganha acesso espontâneo a magias arcanas de 3º círculo."
+      },
+      {
+        "nivel": 5,
+        "nome": "Poder da Linhagem (5º): Proteção Sagrada",
+        "descricao": "Você está permanentemente sob o efeito da magia proteção contra o mal."
+      },
+      {
+        "nivel": 7,
+        "nome": "Magias Arcanas (4º nível)",
+        "descricao": "Ganha acesso espontâneo a magias arcanas de 4º círculo."
+      },
+      {
+        "nivel": 9,
+        "nome": "Magias Arcanas (5º nível)",
+        "descricao": "Ganha acesso espontâneo a magias arcanas de 5º círculo."
       },
       {
         "nivel": 10,
-        "nome": "Aura de Retidão",
-        "descricao": "Gera aura de luz de 6m; aliados na área recebem +2 em testes contra medo e efeitos de trevas."
+        "nome": "Poder da Linhagem (10º): Imponência Divina",
+        "descricao": "Sua herança divina se manifesta fisicamente, concedendo-lhe bônus permanente de +2 em Carisma."
+      },
+      {
+        "nivel": 11,
+        "nome": "Magias Arcanas (6º nível)",
+        "descricao": "Ganha acesso espontâneo a magias arcanas de 6º círculo."
+      },
+      {
+        "nivel": 13,
+        "nome": "Magias Arcanas (7º nível)",
+        "descricao": "Ganha acesso espontâneo a magias arcanas de 7º círculo."
       },
       {
         "nivel": 15,
-        "nome": "Luz Purificadora",
-        "descricao": "Suas magias causam 50% de dano adicional contra mortos-vivos e criaturas malignas."
+        "nome": "Magias Arcanas (8º nível)",
+        "descricao": "Ganha acesso espontâneo a magias arcanas de 8º círculo."
+      },
+      {
+        "nivel": 15,
+        "nome": "Poder da Linhagem (15º): Asas Angelicais",
+        "descricao": "Com uma ação de movimento manifesta belas asas emplumadas com deslocamento de voo de 18m."
+      },
+      {
+        "nivel": 17,
+        "nome": "Magias Arcanas (9º nível)",
+        "descricao": "Ganha acesso espontâneo a magias arcanas de 9º círculo."
       },
       {
         "nivel": 20,
-        "nome": "Forma Angelical",
-        "descricao": "Ganha asas permanentes, redução de dano 10/mal e imunidade a ácido, frio e petrificação."
+        "nome": "Apoteose da Linhagem (20º): Avatar Celestial",
+        "descricao": "Torna-se um ser celestial completo, imune a eletricidade, frio e petrificação, com RD 10/maligna."
       }
     ]
   },
@@ -5955,37 +6720,82 @@
     "tipo": "Basica",
     "pvInicial": 8,
     "pvPorNivel": 2,
-    "pmPorNivel": 4,
-    "bba": "1/2 por nível (médio/baixo)",
-    "preRequisitos": "Carisma 13. Tendência não Bondosa.",
-    "proficiencias": "Nenhuma proficiência adicional.",
-    "descricao": "Descendente do Abismo voraz. Sangue carregado de fúria corrupta e destruição sanguinária.",
+    "pmPorNivel": 3,
+    "bba": "1/2 por nível (baixo)",
+    "preRequisitos": "Tendência não Leal.",
+    "proficiencias": "Armas simples. Nenhuma armadura ou escudo.",
+    "descricao": "Herdeiro das profundezas abissais, mestre da destruição descontrolada e das chamas profanas.",
     "livroFonte": "Manual do Arcano",
     "habilidades": [
       {
         "nivel": 1,
-        "nome": "Garras Abissais",
-        "descricao": "Pode manifestar garras retráteis que causam 1d6 de dano perfurante/cortante como armas naturais leves."
+        "nome": "Magias Arcanas Espontâneas",
+        "descricao": "Lança magias arcanas com base em Carisma, sem necessidade de preparar feitiços em grimórios."
+      },
+      {
+        "nivel": 1,
+        "nome": "Linhagem: Olhar Amedrontador",
+        "descricao": "Com ação padrão assusta criaturas a até 9m (Vontade CD 10 + 1/2 nível + Car ou fica apavorado)."
+      },
+      {
+        "nivel": 3,
+        "nome": "Magias Arcanas (2º nível)",
+        "descricao": "Ganha acesso espontâneo a magias arcanas de 2º círculo."
       },
       {
         "nivel": 5,
-        "nome": "Pele Demoníaca",
-        "descricao": "Ganha resistência a fogo 5 e bônus de armadura natural de +2 na CA."
+        "nome": "Magias Arcanas (3º nível)",
+        "descricao": "Ganha acesso espontâneo a magias arcanas de 3º círculo."
+      },
+      {
+        "nivel": 5,
+        "nome": "Poder da Linhagem (5º): Casca Demoníaca",
+        "descricao": "Recebe redução de dano 1, resistência a fogo 5 e treinamento automático em Enganação."
+      },
+      {
+        "nivel": 7,
+        "nome": "Magias Arcanas (4º nível)",
+        "descricao": "Ganha acesso espontâneo a magias arcanas de 4º círculo."
+      },
+      {
+        "nivel": 9,
+        "nome": "Magias Arcanas (5º nível)",
+        "descricao": "Ganha acesso espontâneo a magias arcanas de 5º círculo."
       },
       {
         "nivel": 10,
-        "nome": "Chama do Abismo",
-        "descricao": "Seu dano de fogo e ácido converte metade do valor em dano profano irresistível."
+        "nome": "Poder da Linhagem (10º): Garras Abissais",
+        "descricao": "Manifesta garras naturais afiadas que causam dano cortante e ignoram resistência a dano comum."
+      },
+      {
+        "nivel": 11,
+        "nome": "Magias Arcanas (6º nível)",
+        "descricao": "Ganha acesso espontâneo a magias arcanas de 6º círculo."
+      },
+      {
+        "nivel": 13,
+        "nome": "Magias Arcanas (7º nível)",
+        "descricao": "Ganha acesso espontâneo a magias arcanas de 7º círculo."
       },
       {
         "nivel": 15,
-        "nome": "Resistência Ímpia",
-        "descricao": "Recebe RD 5/bem ou ferro frio e resistência a fogo aumentada para 15."
+        "nome": "Magias Arcanas (8º nível)",
+        "descricao": "Ganha acesso espontâneo a magias arcanas de 8º círculo."
+      },
+      {
+        "nivel": 15,
+        "nome": "Poder da Linhagem (15º): Asas de Morcego",
+        "descricao": "Manifesta asas coriáceas negras com deslocamento de voo de 18m."
+      },
+      {
+        "nivel": 17,
+        "nome": "Magias Arcanas (9º nível)",
+        "descricao": "Ganha acesso espontâneo a magias arcanas de 9º círculo."
       },
       {
         "nivel": 20,
-        "nome": "Lorde Demoníaco",
-        "descricao": "Assume traços de demônio puro: imunidade a venenos e eletricidade, e presença aterradora (CD Vontade 20)."
+        "nome": "Apoteose da Linhagem (20º): Lorde Demoníaco",
+        "descricao": "Tipo muda para Espírito, ganha imunidade a fogo, eletricidade e veneno e presença aterradora."
       }
     ]
   },
@@ -5995,37 +6805,82 @@
     "tipo": "Basica",
     "pvInicial": 8,
     "pvPorNivel": 2,
-    "pmPorNivel": 4,
-    "bba": "1/2 por nível (médio/baixo)",
-    "preRequisitos": "Carisma 13. Tendência não Caótica.",
-    "proficiencias": "Nenhuma proficiência adicional.",
-    "descricao": "Herdeiro dos nove círculos infernais, mestre de contratos ardilosos, intrigas e coerção.",
+    "pmPorNivel": 3,
+    "bba": "1/2 por nível (baixo)",
+    "preRequisitos": "Tendência não Bondosa.",
+    "proficiencias": "Armas simples. Nenhuma armadura ou escudo.",
+    "descricao": "Carrega no sangue a herança dos diabos de Arton, mestre de pactos, tirania e roubo de poder arcano.",
     "livroFonte": "Manual do Arcano",
     "habilidades": [
       {
         "nivel": 1,
-        "nome": "Língua Serpentina",
-        "descricao": "Recebe +4 em testes de Enganação e Intimidação ao fazer pactos e acordos."
+        "nome": "Magias Arcanas Espontâneas",
+        "descricao": "Lança magias arcanas com base em Carisma, sem necessidade de preparar feitiços em grimórios."
+      },
+      {
+        "nivel": 1,
+        "nome": "Linhagem: Roubo de Almas",
+        "descricao": "Quando mata criatura inteligente com magia, recupera PMs equivalentes à metade do nível da criatura."
+      },
+      {
+        "nivel": 3,
+        "nome": "Magias Arcanas (2º nível)",
+        "descricao": "Ganha acesso espontâneo a magias arcanas de 2º círculo."
       },
       {
         "nivel": 5,
-        "nome": "Chamas Infernais",
-        "descricao": "Gasta 2 PM para imbuir suas magias ofensivas com fogo do inferno (+2d6 de dano de fogo profano)."
+        "nome": "Magias Arcanas (3º nível)",
+        "descricao": "Ganha acesso espontâneo a magias arcanas de 3º círculo."
+      },
+      {
+        "nivel": 5,
+        "nome": "Poder da Linhagem (5º): Drenar Pergaminhos",
+        "descricao": "Drena pergaminhos mágicos com ação completa, destruindo-os para recuperar PMs."
+      },
+      {
+        "nivel": 7,
+        "nome": "Magias Arcanas (4º nível)",
+        "descricao": "Ganha acesso espontâneo a magias arcanas de 4º círculo."
+      },
+      {
+        "nivel": 9,
+        "nome": "Magias Arcanas (5º nível)",
+        "descricao": "Ganha acesso espontâneo a magias arcanas de 5º círculo."
       },
       {
         "nivel": 10,
-        "nome": "Olhar do Enganador",
-        "descricao": "Detecta pensamentos superficiais e intenções hostis de qualquer criatura que conversar com você."
+        "nome": "Poder da Linhagem (10º): Dreno de Vida",
+        "descricao": "Com menos de metade dos PM, drena energia ao redor causando dano e recuperando seus recursos vitais."
+      },
+      {
+        "nivel": 11,
+        "nome": "Magias Arcanas (6º nível)",
+        "descricao": "Ganha acesso espontâneo a magias arcanas de 6º círculo."
+      },
+      {
+        "nivel": 13,
+        "nome": "Magias Arcanas (7º nível)",
+        "descricao": "Ganha acesso espontâneo a magias arcanas de 7º círculo."
       },
       {
         "nivel": 15,
-        "nome": "Contrato Forçado",
-        "descricao": "Pode forçar um alvo sob efeito de Encantamento a aceitar uma condição estrita como se fosse Missão Sagrada/Profana."
+        "nome": "Magias Arcanas (8º nível)",
+        "descricao": "Ganha acesso espontâneo a magias arcanas de 8º círculo."
+      },
+      {
+        "nivel": 15,
+        "nome": "Poder da Linhagem (15º): Drenar Itens Mágicos",
+        "descricao": "Drena cargas ou poder de itens mágicos para recarregar seus próprios PMs instantaneamente."
+      },
+      {
+        "nivel": 17,
+        "nome": "Magias Arcanas (9º nível)",
+        "descricao": "Ganha acesso espontâneo a magias arcanas de 9º círculo."
       },
       {
         "nivel": 20,
-        "nome": "Tirano dos Infernos",
-        "descricao": "Imunidade a fogo e venenos, resistência a magia +4 e comando sobre diabos menores."
+        "nome": "Apoteose da Linhagem (20º): Mestre dos Pactos",
+        "descricao": "Transforma-se em um Diabo, ganha imunidade a fogo e veneno e impõe ordens compulsórias a inimigos."
       }
     ]
   },
@@ -6035,37 +6890,82 @@
     "tipo": "Basica",
     "pvInicial": 8,
     "pvPorNivel": 2,
-    "pmPorNivel": 4,
-    "bba": "1/2 por nível (médio/baixo)",
-    "preRequisitos": "Carisma 13.",
-    "proficiencias": "Nenhuma proficiência adicional.",
-    "descricao": "Tocado pela magia primordial do Reino das Fadas, leveza mística, riso encantador e mistérios silvestres.",
+    "pmPorNivel": 3,
+    "bba": "1/2 por nível (baixo)",
+    "preRequisitos": "Nenhum.",
+    "proficiencias": "Armas simples. Nenhuma armadura ou escudo.",
+    "descricao": "Descendente das fadas e dos espíritos brincalhões de Pondsmânia, mestre dos encantos e ilusões sutis.",
     "livroFonte": "Manual do Arcano",
     "habilidades": [
       {
         "nivel": 1,
-        "nome": "Graça das Fadas",
-        "descricao": "Soma modificador de Carisma em iniciativa e recebe +2 em testes de Adestrar Animais e Diplomacia."
+        "nome": "Magias Arcanas Espontâneas",
+        "descricao": "Lança magias arcanas com base em Carisma, sem necessidade de preparar feitiços em grimórios."
+      },
+      {
+        "nivel": 1,
+        "nome": "Linhagem: Graça das Fadas",
+        "descricao": "Recebe bônus de +4 em testes de resistência contra encantamentos, ilusões e efeitos de sono."
+      },
+      {
+        "nivel": 3,
+        "nome": "Magias Arcanas (2º nível)",
+        "descricao": "Ganha acesso espontâneo a magias arcanas de 2º círculo."
       },
       {
         "nivel": 5,
-        "nome": "Voo Silfídeo",
-        "descricao": "Gasta 2 PM para levitar e planar livremente por 10 minutos (deslocamento 9m)."
+        "nome": "Magias Arcanas (3º nível)",
+        "descricao": "Ganha acesso espontâneo a magias arcanas de 3º círculo."
+      },
+      {
+        "nivel": 5,
+        "nome": "Poder da Linhagem (5º): Invisibilidade Feérica",
+        "descricao": "1x/dia como ação padrão torna-se invisível como na magia invisibilidade maior por 1 minuto."
+      },
+      {
+        "nivel": 7,
+        "nome": "Magias Arcanas (4º nível)",
+        "descricao": "Ganha acesso espontâneo a magias arcanas de 4º círculo."
+      },
+      {
+        "nivel": 9,
+        "nome": "Magias Arcanas (5º nível)",
+        "descricao": "Ganha acesso espontâneo a magias arcanas de 5º círculo."
       },
       {
         "nivel": 10,
-        "nome": "Confusão Feérica",
-        "descricao": "Suas magias de ilusão e encantamento ignoram imunidades a sono ou charme comuns."
+        "nome": "Poder da Linhagem (10º): Beleza das Fadas",
+        "descricao": "Suas feições tornam-se etéreas e fascinantes, concedendo-lhe bônus permanente de +2 em Carisma."
+      },
+      {
+        "nivel": 11,
+        "nome": "Magias Arcanas (6º nível)",
+        "descricao": "Ganha acesso espontâneo a magias arcanas de 6º círculo."
+      },
+      {
+        "nivel": 13,
+        "nome": "Magias Arcanas (7º nível)",
+        "descricao": "Ganha acesso espontâneo a magias arcanas de 7º círculo."
       },
       {
         "nivel": 15,
-        "nome": "Dança Ilusória",
-        "descricao": "Ao ser atacado, pode se teletransportar 6m como reação e deixar ilusão cintilante no lugar."
+        "nome": "Magias Arcanas (8º nível)",
+        "descricao": "Ganha acesso espontâneo a magias arcanas de 8º círculo."
+      },
+      {
+        "nivel": 15,
+        "nome": "Poder da Linhagem (15º): Asas de Borboleta",
+        "descricao": "Com ação de movimento manifesta asas coloridas de borboleta com deslocamento de voo 18m."
+      },
+      {
+        "nivel": 17,
+        "nome": "Magias Arcanas (9º nível)",
+        "descricao": "Ganha acesso espontâneo a magias arcanas de 9º círculo."
       },
       {
         "nivel": 20,
-        "nome": "Senhor do Primeiro Mundo",
-        "descricao": "Ganha RD 10/ferro frio, deslocamento de voo 18m permanente e imunidade total a encantamentos."
+        "nome": "Apoteose da Linhagem (20º): Imortalidade Feérica",
+        "descricao": "Não sofre penalidades por envelhecimento, não pode morrer de velhice e ganha imunidade a sono e paralisia."
       }
     ]
   },
@@ -6075,37 +6975,82 @@
     "tipo": "Basica",
     "pvInicial": 8,
     "pvPorNivel": 2,
-    "pmPorNivel": 4,
-    "bba": "1/2 por nível (médio/baixo)",
-    "preRequisitos": "Carisma 13.",
-    "proficiencias": "Nenhuma proficiência adicional.",
-    "descricao": "Sangue ancestral ligado aos grandes répteis venenosos e deuses-serpente.",
+    "pmPorNivel": 3,
+    "bba": "1/2 por nível (baixo)",
+    "preRequisitos": "Nenhum.",
+    "proficiencias": "Armas simples. Nenhuma armadura ou escudo.",
+    "descricao": "Feiticeiro com o sangue da Grande Serpente, senhor dos venenos, hipnose e metamorfose réptil.",
     "livroFonte": "Manual do Arcano",
     "habilidades": [
       {
         "nivel": 1,
-        "nome": "Presas Venenosas",
-        "descricao": "Ataque de mordida natural (1d4 + veneno que causa 1d6 de dano de Constituição se falhar em Fortitude CD 10 + 1/2 nível + Carisma)."
+        "nome": "Magias Arcanas Espontâneas",
+        "descricao": "Lança magias arcanas com base em Carisma, sem necessidade de preparar feitiços em grimórios."
+      },
+      {
+        "nivel": 1,
+        "nome": "Linhagem: Olhos da Serpente",
+        "descricao": "Ganha visão na penumbra, faro aguçado e pode desferir mordida venenosa (Fortitude CD 10 + 1/2 nível + mod. Car)."
+      },
+      {
+        "nivel": 3,
+        "nome": "Magias Arcanas (2º nível)",
+        "descricao": "Ganha acesso espontâneo a magias arcanas de 2º círculo."
       },
       {
         "nivel": 5,
-        "nome": "Olhar Hipnótico",
-        "descricao": "Como ação padrão gasta 2 PM para fascinar uma criatura a até 9m com seu olhar imóvel."
+        "nome": "Magias Arcanas (3º nível)",
+        "descricao": "Ganha acesso espontâneo a magias arcanas de 3º círculo."
+      },
+      {
+        "nivel": 5,
+        "nome": "Poder da Linhagem (5º): Presença Sinuosa",
+        "descricao": "Recebe bônus de +3 em testes de Diplomacia, Enganação e Intimidação."
+      },
+      {
+        "nivel": 7,
+        "nome": "Magias Arcanas (4º nível)",
+        "descricao": "Ganha acesso espontâneo a magias arcanas de 4º círculo."
+      },
+      {
+        "nivel": 9,
+        "nome": "Magias Arcanas (5º nível)",
+        "descricao": "Ganha acesso espontâneo a magias arcanas de 5º círculo."
       },
       {
         "nivel": 10,
-        "nome": "Corpo Serpentino",
-        "descricao": "Recebe +4 em testes de Furtividade e Acrobacia, e bônus de armadura de escamas +2 na CA."
+        "nome": "Poder da Linhagem (10º): Forma de Serpente",
+        "descricao": "Pode assumir a forma de cobra gigante recebendo +3 na CA, Destreza e ataque de constrição."
+      },
+      {
+        "nivel": 11,
+        "nome": "Magias Arcanas (6º nível)",
+        "descricao": "Ganha acesso espontâneo a magias arcanas de 6º círculo."
+      },
+      {
+        "nivel": 13,
+        "nome": "Magias Arcanas (7º nível)",
+        "descricao": "Ganha acesso espontâneo a magias arcanas de 7º círculo."
       },
       {
         "nivel": 15,
-        "nome": "Imunidade a Peçonhas",
-        "descricao": "Imunidade absoluta a qualquer tipo de veneno natural, mágico ou alquímico."
+        "nome": "Magias Arcanas (8º nível)",
+        "descricao": "Ganha acesso espontâneo a magias arcanas de 8º círculo."
+      },
+      {
+        "nivel": 15,
+        "nome": "Poder da Linhagem (15º): Olhar Hipnótico",
+        "descricao": "Bônus social sobe para +6 e pode fascinar ou paralisar alvos com um olhar magnético."
+      },
+      {
+        "nivel": 17,
+        "nome": "Magias Arcanas (9º nível)",
+        "descricao": "Ganha acesso espontâneo a magias arcanas de 9º círculo."
       },
       {
         "nivel": 20,
-        "nome": "A Grande Serpente",
-        "descricao": "Pode se transformar em uma cobra gigante monstruosa à vontade, ganhando bônus de Força +8 e veneno letal."
+        "nome": "Apoteose da Linhagem (20º): Avatar da Serpente",
+        "descricao": "Torna-se imune a todos os venenos do mundo e sua forma serpentina adquire tamanho Enorme e dentes letais."
       }
     ]
   },
@@ -6115,37 +7060,82 @@
     "tipo": "Basica",
     "pvInicial": 8,
     "pvPorNivel": 2,
-    "pmPorNivel": 4,
-    "bba": "1/2 por nível (médio/baixo)",
-    "preRequisitos": "Carisma 13. Tendência não Caótica.",
-    "proficiencias": "Nenhuma proficiência adicional.",
-    "descricao": "Conexão com a harmonia e perfeição geométrica dos planos leais e da Grande Ordem cósmica.",
+    "pmPorNivel": 3,
+    "bba": "1/2 por nível (baixo)",
+    "preRequisitos": "Tendência Leal.",
+    "proficiencias": "Armas simples. Nenhuma armadura ou escudo.",
+    "descricao": "Feiticeiro moldado pelas leis perfeitas dos Reinos da Ordem, eliminando o acaso com lógica absoluta.",
     "livroFonte": "Manual do Arcano",
     "habilidades": [
       {
         "nivel": 1,
-        "nome": "Mente Metódica",
-        "descricao": "Pode escolher 10 em testes de qualquer perícia treinada mesmo sob pressão e perigo imediato (3/dia)."
+        "nome": "Magias Arcanas Espontâneas",
+        "descricao": "Lança magias arcanas com base em Carisma, sem necessidade de preparar feitiços em grimórios."
+      },
+      {
+        "nivel": 1,
+        "nome": "Linhagem: Mente Disciplinada",
+        "descricao": "Necessita apenas de 4 horas de meditação para usufruir de descanso pleno completo de PV e PM."
+      },
+      {
+        "nivel": 3,
+        "nome": "Magias Arcanas (2º nível)",
+        "descricao": "Ganha acesso espontâneo a magias arcanas de 2º círculo."
       },
       {
         "nivel": 5,
-        "nome": "Axioma Puro",
-        "descricao": "Suas magias causam dano pleno (sem rolagem, usando média arredondada para cima) se você desejar."
+        "nome": "Magias Arcanas (3º nível)",
+        "descricao": "Ganha acesso espontâneo a magias arcanas de 3º círculo."
+      },
+      {
+        "nivel": 5,
+        "nome": "Poder da Linhagem (5º): Rigor Metódico",
+        "descricao": "Gasta 1 PM para substituir qualquer rolagem de dado de dano ou teste pela média matemática exata."
+      },
+      {
+        "nivel": 7,
+        "nome": "Magias Arcanas (4º nível)",
+        "descricao": "Ganha acesso espontâneo a magias arcanas de 4º círculo."
+      },
+      {
+        "nivel": 9,
+        "nome": "Magias Arcanas (5º nível)",
+        "descricao": "Ganha acesso espontâneo a magias arcanas de 5º círculo."
       },
       {
         "nivel": 10,
-        "nome": "Julgamento Inflexível",
-        "descricao": "Recebe +3 em testes de resistência contra magias e habilidades usadas por criaturas caóticas."
+        "nome": "Poder da Linhagem (10º): Vontade Inabalável",
+        "descricao": "Ganha imunidade total a efeitos de medo, ilusão mental e compulsões desordenadas."
+      },
+      {
+        "nivel": 11,
+        "nome": "Magias Arcanas (6º nível)",
+        "descricao": "Ganha acesso espontâneo a magias arcanas de 6º círculo."
+      },
+      {
+        "nivel": 13,
+        "nome": "Magias Arcanas (7º nível)",
+        "descricao": "Ganha acesso espontâneo a magias arcanas de 7º círculo."
       },
       {
         "nivel": 15,
-        "nome": "Barreira da Ordem",
-        "descricao": "Cria campo de 6m ao seu redor que anula efeitos de sorte, azar ou caos por 5 rodadas."
+        "nome": "Magias Arcanas (8º nível)",
+        "descricao": "Ganha acesso espontâneo a magias arcanas de 8º círculo."
+      },
+      {
+        "nivel": 15,
+        "nome": "Poder da Linhagem (15º): Axioma Místico",
+        "descricao": "Aumenta a CD de todas as suas magias de abjuração e com descritor ordem em +2."
+      },
+      {
+        "nivel": 17,
+        "nome": "Magias Arcanas (9º nível)",
+        "descricao": "Ganha acesso espontâneo a magias arcanas de 9º círculo."
       },
       {
         "nivel": 20,
-        "nome": "Perfeição Absoluta",
-        "descricao": "Ganha imunidade a atordoamento, confusão e sono, e bônus de +4 em todos os testes de resistência."
+        "nome": "Apoteose da Linhagem (20º): Perfeição Axiomática",
+        "descricao": "Torna-se imune a efeitos do descritor caos, magias imprevisíveis e penalidades de sorte adversa."
       }
     ]
   },
@@ -6155,37 +7145,82 @@
     "tipo": "Basica",
     "pvInicial": 8,
     "pvPorNivel": 2,
-    "pmPorNivel": 4,
-    "bba": "1/2 por nível (médio/baixo)",
-    "preRequisitos": "Carisma 13.",
-    "proficiencias": "Nenhuma proficiência adicional.",
-    "descricao": "Descendente direto das energias elementais primordiais da criação do universo.",
+    "pmPorNivel": 3,
+    "bba": "1/2 por nível (baixo)",
+    "preRequisitos": "Nenhum.",
+    "proficiencias": "Armas simples. Nenhuma armadura ou escudo.",
+    "descricao": "Ser nascido da pura urdidura mágica do cosmos, cujo corpo biológico é mantido pelo próprio fluxo arcano.",
     "livroFonte": "Manual do Arcano",
     "habilidades": [
       {
         "nivel": 1,
-        "nome": "Afinidade Elemental",
-        "descricao": "Escolha um elemento (Água/Frio, Fogo, Terra/Ácido ou Ar/Eletricidade). Suas magias desse tipo causam +1 de dano por dado."
+        "nome": "Magias Arcanas Espontâneas",
+        "descricao": "Lança magias arcanas com base em Carisma, sem necessidade de preparar feitiços em grimórios."
+      },
+      {
+        "nivel": 1,
+        "nome": "Linhagem: Cura Mística",
+        "descricao": "Sempre que lança uma magia, recupera quantidade de PV igual ao custo em PM da magia."
+      },
+      {
+        "nivel": 3,
+        "nome": "Magias Arcanas (2º nível)",
+        "descricao": "Ganha acesso espontâneo a magias arcanas de 2º círculo."
       },
       {
         "nivel": 5,
-        "nome": "Resistência Primordial",
-        "descricao": "Ganha resistência 10 contra o tipo de energia escolhido na afinidade elemental."
+        "nome": "Magias Arcanas (3º nível)",
+        "descricao": "Ganha acesso espontâneo a magias arcanas de 3º círculo."
+      },
+      {
+        "nivel": 5,
+        "nome": "Poder da Linhagem (5º): Evasão Mística",
+        "descricao": "Se for bem-sucedido em teste de resistência contra magia, não sofre nenhum efeito parcial."
+      },
+      {
+        "nivel": 7,
+        "nome": "Magias Arcanas (4º nível)",
+        "descricao": "Ganha acesso espontâneo a magias arcanas de 4º círculo."
+      },
+      {
+        "nivel": 9,
+        "nome": "Magias Arcanas (5º nível)",
+        "descricao": "Ganha acesso espontâneo a magias arcanas de 5º círculo."
       },
       {
         "nivel": 10,
-        "nome": "Pulso Elemental",
-        "descricao": "Gasta 3 PM como ação de movimento para liberar uma onda de 6m de raio causando 4d6 do seu elemento."
+        "nome": "Poder da Linhagem (10º): Ressonância Arcana",
+        "descricao": "Sempre que lança magia, recupera quantidade de PV igual ao dobro do custo em PM."
+      },
+      {
+        "nivel": 11,
+        "nome": "Magias Arcanas (6º nível)",
+        "descricao": "Ganha acesso espontâneo a magias arcanas de 6º círculo."
+      },
+      {
+        "nivel": 13,
+        "nome": "Magias Arcanas (7º nível)",
+        "descricao": "Ganha acesso espontâneo a magias arcanas de 7º círculo."
       },
       {
         "nivel": 15,
-        "nome": "Transcendência Elemental",
-        "descricao": "Pode transmutar qualquer magia de dano arcano para o tipo do seu elemento primordial."
+        "nome": "Magias Arcanas (8º nível)",
+        "descricao": "Ganha acesso espontâneo a magias arcanas de 8º círculo."
+      },
+      {
+        "nivel": 15,
+        "nome": "Poder da Linhagem (15º): Resistência Suprema",
+        "descricao": "Recebe bônus de +2 em todos os testes de resistência contra magias e habilidades similares."
+      },
+      {
+        "nivel": 17,
+        "nome": "Magias Arcanas (9º nível)",
+        "descricao": "Ganha acesso espontâneo a magias arcanas de 9º círculo."
       },
       {
         "nivel": 20,
-        "nome": "Encarnação Elemental",
-        "descricao": "Imunidade completa ao seu elemento escolhido e deslocamento de voo/escavação/natação de 18m."
+        "nome": "Apoteose da Linhagem (20º): Corpo de Pura Magia",
+        "descricao": "Transcende a carne: torna-se imune a acertos críticos, veneno, paralisia e metamorfose forçada."
       }
     ]
   },

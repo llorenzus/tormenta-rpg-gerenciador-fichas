@@ -55,7 +55,7 @@ import {
   PosturaData,
   GolpeMarcialData,
 } from '../data';
-import { FichaPersonagem, gerarId, HabilidadeOuTalento, obterClassesFicha } from '../models/ficha';
+import { FichaPersonagem, gerarId, HabilidadeOuTalento, obterClassesFicha, aplicarClasseNaFicha } from '../models/ficha';
 import { COLORS } from '../theme/colors';
 
 export type AbaCompendio =
@@ -84,6 +84,7 @@ interface Props {
 
   // Quando acionado a partir de uma ficha aberta:
   fichaAtual?: FichaPersonagem | null;
+  onAtualizarFichaAtual?: (novaFicha: FichaPersonagem) => void;
   onAdicionarTalentoAFicha?: (talento: TalentoData) => void;
   onAdicionarMagiaAFicha?: (magia: MagiaData) => void;
   onAplicarRacaAFicha?: (raca: RacaData) => void;
@@ -107,6 +108,7 @@ export const CompendioModal: React.FC<Props> = ({
   nivelFiltroInicial = null,
   categoriaInicial = 'Todas',
   fichaAtual,
+  onAtualizarFichaAtual,
   onAdicionarTalentoAFicha,
   onAdicionarMagiaAFicha,
   onAplicarRacaAFicha,
@@ -212,19 +214,82 @@ export const CompendioModal: React.FC<Props> = ({
     item: TalentoData | MagiaData | RacaData | ClasseData | EquipamentoData | PosturaData | GolpeMarcialData
   ) => {
     if (fichaAtual) {
-      if (tipo === 'talento' && onAdicionarTalentoAFicha) {
-        onAdicionarTalentoAFicha(item as TalentoData);
-      } else if (tipo === 'magia' && onAdicionarMagiaAFicha) {
-        onAdicionarMagiaAFicha(item as MagiaData);
-      } else if (tipo === 'raca' && onAplicarRacaAFicha) {
-        onAplicarRacaAFicha(item as RacaData);
-      } else if (tipo === 'classe' && onAplicarClasseAFicha) {
-        onAplicarClasseAFicha(item as ClasseData);
-      } else if (tipo === 'equipamento' && onAdicionarEquipamentoAFicha) {
-        onAdicionarEquipamentoAFicha(item as EquipamentoData);
-      } else if (tipo === 'manobra' && onAdicionarManobraAFicha) {
-        onAdicionarManobraAFicha(item as PosturaData | GolpeMarcialData);
-      } else if (onAdicionarItemParaFichaEspecifica) {
+      if (tipo === 'talento') {
+        if (onAdicionarTalentoAFicha) {
+          onAdicionarTalentoAFicha(item as TalentoData);
+          return;
+        } else if (onAtualizarFichaAtual) {
+          const novo = converterTalentoParaItem(item as TalentoData);
+          onAtualizarFichaAtual({ ...fichaAtual, talentos: [...fichaAtual.talentos, novo] });
+          return;
+        }
+      } else if (tipo === 'magia') {
+        if (onAdicionarMagiaAFicha) {
+          onAdicionarMagiaAFicha(item as MagiaData);
+          return;
+        } else if (onAtualizarFichaAtual) {
+          const nova = converterMagiaParaItem(item as MagiaData);
+          onAtualizarFichaAtual({ ...fichaAtual, magias: [...fichaAtual.magias, nova] });
+          return;
+        }
+      } else if (tipo === 'raca') {
+        if (onAplicarRacaAFicha) {
+          onAplicarRacaAFicha(item as RacaData);
+          return;
+        } else if (onAtualizarFichaAtual) {
+          const r = item as RacaData;
+          const novosTracos: HabilidadeOuTalento[] = (r.tracosRaciais || []).map((t) => ({
+            id: gerarId(),
+            nome: `${t.nome} (${r.nome})`,
+            descricao: t.descricao,
+          }));
+          onAtualizarFichaAtual({
+            ...fichaAtual,
+            raca: r.nome,
+            tamanho: r.tamanho,
+            deslocamento: `${r.deslocamento}m`,
+            habilidadesRaca: [...fichaAtual.habilidadesRaca, ...novosTracos],
+          });
+          return;
+        }
+      } else if (tipo === 'classe') {
+        if (onAplicarClasseAFicha) {
+          onAplicarClasseAFicha(item as ClasseData);
+          return;
+        } else if (onAtualizarFichaAtual) {
+          onAtualizarFichaAtual(aplicarClasseNaFicha(fichaAtual, item as ClasseData));
+          return;
+        }
+      } else if (tipo === 'equipamento') {
+        if (onAdicionarEquipamentoAFicha) {
+          onAdicionarEquipamentoAFicha(item as EquipamentoData);
+          return;
+        } else if (onAtualizarFichaAtual) {
+          const eq = item as EquipamentoData;
+          if (eq.tipo === 'Arma') {
+            const novaArma = converterArmaParaItem(eq);
+            onAtualizarFichaAtual({ ...fichaAtual, armas: [...fichaAtual.armas, novaArma] });
+          } else if (eq.tipo === 'Armadura' || eq.tipo === 'Escudo') {
+            const novaArmadura = converterArmaduraParaItem(eq);
+            onAtualizarFichaAtual({ ...fichaAtual, armaduras: [...fichaAtual.armaduras, novaArmadura] });
+          } else {
+            const novoItem = converterItemGeralParaItem(eq);
+            onAtualizarFichaAtual({ ...fichaAtual, itensGerais: [...fichaAtual.itensGerais, novoItem] });
+          }
+          return;
+        }
+      } else if (tipo === 'manobra') {
+        if (onAdicionarManobraAFicha) {
+          onAdicionarManobraAFicha(item as PosturaData | GolpeMarcialData);
+          return;
+        } else if (onAtualizarFichaAtual) {
+          const nova = converterManobraParaItem(item as PosturaData | GolpeMarcialData);
+          const manobrasAtuais = Array.isArray(fichaAtual.manobras) ? fichaAtual.manobras : [];
+          onAtualizarFichaAtual({ ...fichaAtual, manobras: [...manobrasAtuais, nova] });
+          return;
+        }
+      }
+      if (onAdicionarItemParaFichaEspecifica) {
         onAdicionarItemParaFichaEspecifica(fichaAtual.id, tipo, item);
       }
     } else if (todasFichas.length === 1 && onAdicionarItemParaFichaEspecifica) {
