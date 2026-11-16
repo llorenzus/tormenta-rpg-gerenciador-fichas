@@ -310,16 +310,16 @@ const styles = StyleSheet.create({
   },
   rowTop: {
     flexDirection: 'row',
-    alignItems: 'flex-start',
+    alignItems: 'flex-end',
     gap: 8,
   },
   colFlex: {
     flex: 1,
   },
   btnRemove: {
-    marginTop: 24,
-    width: 34,
-    height: 38,
+    marginBottom: 8,
+    width: 38,
+    height: 42,
     borderRadius: 6,
     backgroundColor: 'rgba(179,38,30,0.12)',
     alignItems: 'center',

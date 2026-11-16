@@ -523,6 +523,7 @@ const styles = StyleSheet.create({
   },
   row: {
     flexDirection: 'row',
+    alignItems: 'flex-end',
     gap: 10,
     marginTop: 6,
   },

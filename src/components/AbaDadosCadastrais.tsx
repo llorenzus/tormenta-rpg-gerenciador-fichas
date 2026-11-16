@@ -311,6 +311,7 @@ const styles = StyleSheet.create({
   },
   row: {
     flexDirection: 'row',
+    alignItems: 'flex-end',
     gap: 10,
     marginTop: 6,
   },
@@ -408,6 +409,7 @@ const styles = StyleSheet.create({
   },
   classeNivelWrap: {
     width: 130,
+    marginBottom: 4,
   },
   classeItemLabel: {
     fontSize: 11,
@@ -419,7 +421,7 @@ const styles = StyleSheet.create({
   seletorNivelRow: {
     flexDirection: 'row',
     alignItems: 'center',
-    height: 40,
+    height: 42,
     borderWidth: 1,
     borderColor: COLORS.border,
     borderRadius: 6,
@@ -453,7 +455,8 @@ const styles = StyleSheet.create({
   },
   btnRemoverClasse: {
     width: 36,
-    height: 40,
+    height: 42,
+    marginBottom: 4,
     backgroundColor: '#FBE8E8',
     borderRadius: 6,
     alignItems: 'center',

@@ -1,5 +1,6 @@
 import React, { useMemo, useState } from 'react';
 import {
+  Platform,
   StyleSheet,
   Text,
   TextInput,
@@ -180,7 +181,8 @@ const styles = StyleSheet.create({
     borderColor: COLORS.border,
     borderRadius: 6,
     paddingHorizontal: 10,
-    paddingVertical: 8,
+    paddingVertical: Platform.OS === 'android' ? 6 : 8,
+    height: 42,
     fontSize: 14,
     color: COLORS.text,
   },

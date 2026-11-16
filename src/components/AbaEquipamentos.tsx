@@ -396,7 +396,7 @@ export const AbaEquipamentos: React.FC<Props> = ({ ficha, onChange }) => {
                   {/* Outros Bônus e Dano */}
                   <View style={styles.row}>
                     <CampoInteiro
-                      label="Outros Bônus (Magia / Talentos)"
+                      label="Outros Bônus (Ataque)"
                       valor={Number(arma.outrosBonus) || 0}
                       onValorChange={atualizarOutrosBonus}
                       min={-99}
@@ -777,12 +777,13 @@ const styles = StyleSheet.create({
   },
   rowTop: {
     flexDirection: 'row',
-    alignItems: 'center',
+    alignItems: 'flex-end',
     gap: 8,
     marginTop: 6,
   },
   row: {
     flexDirection: 'row',
+    alignItems: 'flex-end',
     gap: 8,
     marginTop: 6,
   },
@@ -799,9 +800,9 @@ const styles = StyleSheet.create({
     flex: 0.8,
   },
   btnRemove: {
-    marginTop: 14,
-    width: 34,
-    height: 34,
+    marginBottom: 4,
+    width: 42,
+    height: 42,
     borderRadius: 8,
     backgroundColor: 'rgba(179,38,30,0.12)',
     alignItems: 'center',

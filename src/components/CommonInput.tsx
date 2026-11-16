@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import {
+  Platform,
   StyleSheet,
   Text,
   TextInput,
@@ -71,7 +72,9 @@ export const CampoTexto: React.FC<CampoTextoProps> = ({
       {hasHeader && (
         <View style={styles.labelRow}>
           {!!label && label.trim().length > 0 ? (
-            <Text style={styles.fieldLabel}>{label}</Text>
+            <Text style={styles.fieldLabel} numberOfLines={1} ellipsizeMode="tail">
+              {label}
+            </Text>
           ) : (
             <View />
           )}
@@ -99,21 +102,25 @@ export const CampoTexto: React.FC<CampoTextoProps> = ({
 
 interface CampoInteiroProps {
   label?: string;
+  rightAction?: React.ReactNode;
   valor: number;
   onValorChange: (novo: number) => void;
   min?: number;
   max?: number;
   style?: ViewStyle;
+  inputStyle?: TextStyle;
   compact?: boolean;
 }
 
 export const CampoInteiro: React.FC<CampoInteiroProps> = ({
   label,
+  rightAction,
   valor,
   onValorChange,
   min = -99,
   max = 9999,
   style,
+  inputStyle,
   compact = false,
 }) => {
   const [texto, setTexto] = useState(String(valor));
@@ -143,11 +150,29 @@ export const CampoInteiro: React.FC<CampoInteiroProps> = ({
     }
   };
 
+  const hasHeader = Boolean((label && label.trim().length > 0) || rightAction);
+
   return (
     <View style={[styles.fieldWrap, style]}>
-      {!!label && <Text style={styles.fieldLabel}>{label}</Text>}
+      {hasHeader && (
+        <View style={styles.labelRow}>
+          {!!label && label.trim().length > 0 ? (
+            <Text style={styles.fieldLabel} numberOfLines={1} ellipsizeMode="tail">
+              {label}
+            </Text>
+          ) : (
+            <View />
+          )}
+          {rightAction}
+        </View>
+      )}
       <TextInput
-        style={[styles.textInput, styles.numberInput, compact && styles.compactNumberInput]}
+        style={[
+          styles.textInput,
+          styles.numberInput,
+          compact && styles.compactNumberInput,
+          inputStyle,
+        ]}
         value={texto}
         onChangeText={handleChange}
         onBlur={handleBlur}
@@ -255,11 +280,13 @@ const styles = StyleSheet.create({
     borderColor: COLORS.border,
     borderRadius: 8,
     paddingHorizontal: 11,
-    paddingVertical: 9,
+    paddingVertical: Platform.OS === 'android' ? 6 : 9,
+    height: 42,
     fontSize: 14,
     color: COLORS.text,
   },
   textInputMultiline: {
+    height: undefined,
     minHeight: 80,
     textAlignVertical: 'top',
     lineHeight: 20,
@@ -270,9 +297,11 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
   compactNumberInput: {
-    paddingVertical: 6,
+    height: 32,
+    paddingVertical: 2,
     paddingHorizontal: 6,
     minWidth: 52,
+    fontSize: 13,
   },
   stepperRow: {
     flexDirection: 'row',

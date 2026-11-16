@@ -135,4 +135,32 @@ describe('Consistência de Layout, Temas e Plataformas (Android / Windows)', () 
       }
     }
   });
+
+  it('deve garantir alinhamento e consistência de inputs comuns e botões entre plataformas', () => {
+    // Valida estaticamente no código fonte do CommonInput e AbaEquipamentos os padrões de alinhamento
+    const fs = require('node:fs');
+    const path = require('node:path');
+
+    const commonInputSrc = fs.readFileSync(
+      path.resolve(__dirname, '../src/components/CommonInput.tsx'),
+      'utf8'
+    );
+    // CampoTexto e CampoInteiro devem possuir labelRow com minHeight e textInput padronizado com altura fixa
+    assert.ok(commonInputSrc.includes('styles.labelRow'), 'CampoInteiro e CampoTexto devem usar labelRow');
+    assert.ok(commonInputSrc.includes('height: 42'), 'Inputs devem ter altura padronizada de 42px');
+    assert.ok(commonInputSrc.includes('minHeight: 22'), 'labelRow deve ter minHeight consistente');
+
+    const abaEquipamentosSrc = fs.readFileSync(
+      path.resolve(__dirname, '../src/components/AbaEquipamentos.tsx'),
+      'utf8'
+    );
+    assert.ok(
+      abaEquipamentosSrc.includes('Outros Bônus (Ataque)'),
+      'Label da arma deve ser conciso e alinhado com Dano'
+    );
+    assert.ok(
+      abaEquipamentosSrc.includes("alignItems: 'flex-end'"),
+      'Linhas de equipamentos devem alinhar os campos pela base'
+    );
+  });
 });
