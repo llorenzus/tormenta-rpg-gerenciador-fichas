@@ -35,7 +35,7 @@ export const ModalSobre: React.FC<Props> = ({ visivel, onFechar }) => {
 
               <View style={styles.content}>
                 <Text style={styles.appTitle}>Tormenta RPG - Gerenciador de Fichas</Text>
-                <Text style={styles.versionText}>Versão 1.1.0 (Comunidade)</Text>
+                <Text style={styles.versionText}>Versão 1.2.0 (Comunidade)</Text>
 
                 <View style={styles.disclaimerBox}>
                   <Text style={styles.disclaimerTitle}>⚖️ Aviso Legal / Isenção de Vínculo</Text>
