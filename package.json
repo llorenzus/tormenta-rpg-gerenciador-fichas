@@ -68,7 +68,11 @@
       "oneClick": false,
       "allowToChangeInstallationDirectory": true,
       "createDesktopShortcut": true,
-      "createStartMenuShortcut": true
+      "createStartMenuShortcut": true,
+      "artifactName": "${productName}-Setup-v${version}.${ext}"
+    },
+    "portable": {
+      "artifactName": "${productName}-v${version}.${ext}"
     }
   },
   "private": true

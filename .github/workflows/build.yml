@@ -32,6 +32,12 @@ jobs:
       - name: Instalar dependências
         run: npm install
 
+      - name: Obter Versão do Pacote
+        run: |
+          APP_VER=$(node -p "require('./package.json').version")
+          echo "APP_VERSION=$APP_VER" >> $GITHUB_ENV
+          echo "Versão do App: $APP_VER"
+
       - name: Gerar projeto nativo Android (Expo Prebuild)
         run: npx expo prebuild --platform android --clean
 
@@ -39,14 +45,14 @@ jobs:
         working-directory: ./android
         run: ./gradlew assembleRelease --no-daemon
 
-      - name: Renomear arquivo APK
-        run: mv android/app/build/outputs/apk/release/app-release.apk android/app/build/outputs/apk/release/TRPG-Ficha-Android.apk
+      - name: Renomear arquivo APK com Tag de Versão
+        run: mv android/app/build/outputs/apk/release/app-release.apk "android/app/build/outputs/apk/release/TRPG-Ficha-Android-v${APP_VERSION}.apk"
 
       - name: Publicar APK nos Artifacts
         uses: actions/upload-artifact@v7
         with:
-          name: TRPG-Ficha-Android
-          path: android/app/build/outputs/apk/release/TRPG-Ficha-Android.apk
+          name: TRPG-Ficha-Android-v${{ env.APP_VERSION }}
+          path: android/app/build/outputs/apk/release/TRPG-Ficha-Android-v*.apk
 
   # ========================================================
   # JOB 2: Compilação do Executável Windows Desktop (.exe)
@@ -65,6 +71,13 @@ jobs:
           node-version: '22'
           cache: 'npm'
 
+      - name: Obter Versão do Pacote
+        shell: bash
+        run: |
+          APP_VER=$(node -p "require('./package.json').version")
+          echo "APP_VERSION=$APP_VER" >> $GITHUB_ENV
+          echo "Versão do App: $APP_VER"
+
       - name: Instalar dependências
         run: npm install
 
@@ -76,6 +89,6 @@ jobs:
       - name: Publicar Executáveis Windows nos Artifacts
         uses: actions/upload-artifact@v7
         with:
-          name: TRPG-Ficha-Windows
+          name: TRPG-Ficha-Windows-v${{ env.APP_VERSION }}
           path: dist-electron/*.exe
 
