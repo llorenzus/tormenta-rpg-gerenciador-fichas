@@ -720,97 +720,47 @@
     "tipo": "Basica",
     "pvInicial": 20,
     "pvPorNivel": 5,
-    "pmPorNivel": 2,
-    "bba": "1 por nível (total)",
-    "preRequisitos": "Força 13, devoção a divindade bélica (excluindo Lena, Marah, Sszzaas e Wynna).",
-    "proficiencias": "Todas as armas simples e marciais, todas as armaduras e todos os escudos.",
-    "descricao": "Sacerdotes combatentes treinados para guerra pesada, que marcham na vanguarda esmagando infiéis com a palavra e a lâmina sagrada.",
+    "pmPorNivel": 3,
+    "bba": "3/4 por nível",
+    "preRequisitos": "Força 13. Não há cruzados de Lena, Marah, Sszzaas e Wynna.",
+    "proficiencias": "Usar Armas Simples, Usar Armas Marciais, Usar Armaduras Leves, Usar Armaduras Médias, Usar Escudos, Fortitude Maior, Vontade de Ferro. (Ganha Usar Armas Marciais; perde Usar Armaduras Pesadas).",
     "livroFonte": "Manual do Devoto",
+    "descricao": "Os mais combativos e implacáveis sacerdotes de Arton, pertencentes à Congregação dos Cruzados. Treinados em templos que se assemelham a casernas, veem o combate como forma suprema de louvor à divindade, empunhando armas abençoadas presenteadas pelos deuses para expurgar a heresia.",
     "habilidades": [
       {
         "nivel": 1,
-        "nome": "Golpe Divino Bélico",
-        "descricao": "Pode gastar PM para desferir ataques corpo-a-corpo energizados com dano sagrado ou profano."
+        "nome": "Devoto",
+        "descricao": "Como um clérigo padrão, dedicado à sua divindade e recebendo seus poderes concedidos."
       },
       {
         "nivel": 1,
-        "nome": "Arma da Cruzada",
-        "descricao": "Sua arma favorita recebe bônus de foco e dano dobrado contra oponentes de fé inimiga."
+        "nome": "Canalizar Energia",
+        "descricao": "Como um clérigo padrão (1d6 no 1º nível, aumentando em +1d6 nos níveis 3, 5, 7, 9, 11, 13, 15, 17 e 19)."
+      },
+      {
+        "nivel": 1,
+        "nome": "Guerreiro Abençoado",
+        "descricao": "No 1º nível e a cada 5 níveis seguintes (5º, 10º, 15º e 20º nível), o cruzado recebe um talento de combate adicional da lista de talentos do guerreiro."
+      },
+      {
+        "nivel": 1,
+        "nome": "Magias Divinas",
+        "descricao": "Lança e prepara magias divinas normalmente através de orações com Sabedoria como habilidade-chave, aprendendo duas novas magias a cada nível."
       },
       {
         "nivel": 2,
-        "nome": "Canalizar Energia Bélica (1d6)",
-        "descricao": "Pode desferir canalização que atinge inimigos no momento do golpe de ataque."
-      },
-      {
-        "nivel": 3,
-        "nome": "Foco na Fé",
-        "descricao": "Recebe o talento Foco em Arma (arma sagrada da divindade)."
-      },
-      {
-        "nivel": 4,
-        "nome": "Golpe Divino Aprimorado",
-        "descricao": "O dano sagrado do golpe divino aumenta em +1d6."
-      },
-      {
-        "nivel": 5,
-        "nome": "Canalizar Energia Bélica (2d6)",
-        "descricao": "A canalização de combate aumenta para 2d6."
+        "nome": "Presente dos Deuses +1",
+        "descricao": "Sua arma sagrada é um presente divino: no 2º nível você recebe uma arma com bônus mágico de +1 (pode ser melhoria ou habilidade mágica especial de arma). A cada três níveis seguintes (5º, 8º, 11º, 14º, 17º e 20º), esse bônus mágico aumenta em +1, atingindo +7 no 20º nível. Se a arma for destruída ou perdida, um ritual de 24 horas e 100 TO por nível de personagem restaura uma nova arma sagrada."
       },
       {
         "nivel": 6,
-        "nome": "Zelo Fanático",
-        "descricao": "Imunidade completa a medo, intimidação e efeitos de fascinação mental."
-      },
-      {
-        "nivel": 7,
-        "nome": "Golpe Divino Devastador",
-        "descricao": "Dano do golpe divino aumenta em +2d6 e derruba o oponente se falhar em teste de Fortitude."
-      },
-      {
-        "nivel": 8,
-        "nome": "Canalizar Energia Bélica (3d6)",
-        "descricao": "A canalização de combate aumenta para 3d6."
-      },
-      {
-        "nivel": 10,
-        "nome": "Fúria Santa",
-        "descricao": "Entra em fervor santo recebendo bônus de ataque e dano e imunidade a dor."
-      },
-      {
-        "nivel": 10,
-        "nome": "Canalizar Energia Bélica (4d6)",
-        "descricao": "A canalização aumenta para 4d6."
+        "nome": "Prece de Combate",
+        "descricao": "No 6º nível, como uma ação livre, o cruzado pode gastar 1 ponto de magia para somar seu bônus de Sabedoria a todas as jogadas de ataque e dano com sua arma até o final da rodada."
       },
       {
         "nivel": 12,
-        "nome": "Canalizar Energia Bélica (5d6)",
-        "descricao": "A canalização aumenta para 5d6."
-      },
-      {
-        "nivel": 14,
-        "nome": "Vontade Blindada",
-        "descricao": "Soma mod. Sabedoria ou Carisma à Classe de Armadura contra conjuradores malignos."
-      },
-      {
-        "nivel": 14,
-        "nome": "Canalizar Energia Bélica (6d6)",
-        "descricao": "A canalização aumenta para 6d6."
-      },
-      {
-        "nivel": 16,
-        "nome": "Canalizar Energia Bélica (7d6)",
-        "descricao": "A canalização aumenta para 7d6."
-      },
-      {
-        "nivel": 18,
-        "nome": "Canalizar Energia Bélica (8d6)",
-        "descricao": "A canalização aumenta para 8d6."
-      },
-      {
-        "nivel": 20,
-        "nome": "Avatar da Guerra Santa",
-        "descricao": "BBA se torna máximo com margem de ameaça 18-20/x3 na arma sagrada e canalização 10d6."
+        "nome": "Fanatismo",
+        "descricao": "No 12º nível, o zelo fanático mantém o cruzado em pé: você pode continuar agindo normalmente mesmo se seus pontos de vida caírem entre 0 e -9. Você ainda morre caso atinja -10 PV (ou o valor negativo de Constituição)."
       }
     ]
   },
@@ -908,69 +858,54 @@
     "id": "clerigo_usurpador",
     "nome": "Clérigo Usurpador",
     "tipo": "Basica",
-    "pvInicial": 16,
-    "pvPorNivel": 4,
+    "pvInicial": 20,
+    "pvPorNivel": 5,
     "pmPorNivel": 3,
     "bba": "3/4 por nível",
-    "preRequisitos": "Tendência não Bondosa, sem devoção a deuses.",
-    "proficiencias": "Armas simples e armaduras leves.",
-    "descricao": "Heréticos e rebeldes metafísicos que aprenderam rituais ocultos para roubar e usurpar magias divinas dos deuses à força, sem rezar.",
+    "preRequisitos": "Tendência não Bondosa. Não pode possuir capacidade prévia de lançar magias divinas por outra classe.",
+    "proficiencias": "Usar Armas Simples, Usar Armaduras Leves, Usar Escudos, Fortitude Maior, Vontade de Ferro. (Perde Usar Armaduras Médias e Pesadas).",
     "livroFonte": "Manual do Devoto",
+    "descricao": "Hereges audaciosos da Congregação dos Usurpadores que descobriram os ritos proibidos para roubar o poder milagroso dos próprios deuses. Não servem a nenhum patrono, não seguem dogmas e são caçados por todas as igrejas de Arton, arrancando a magia sacra pelo Carisma e pura força de vontade.",
     "habilidades": [
       {
         "nivel": 1,
-        "nome": "Dreno de Fé",
-        "descricao": "Drena mana de clérigos e locais sagrados sem prestar oração ou serviço a nenhuma divindade."
+        "nome": "Inimigo dos Deuses",
+        "descricao": "O usurpador não recebe as habilidades Devoto, Canalizar Energia ou Poder Divino. Por desafiar as divindades, é afetado por qualquer canalização de energia sempre da forma nociva: se canalizarem energia positiva, sofre dano; se canalizarem energia negativa, também sofre dano."
       },
       {
         "nivel": 1,
-        "nome": "Roubo de Magia Divina",
-        "descricao": "Prepara e conjura magias divinas usurpando a energia dos domínios cósmicos."
+        "nome": "Má Reputação",
+        "descricao": "Por pilhar o poder sagrado de todos os deuses, o usurpador é hostilizado por qualquer devoto que descubra sua prática, atraindo perseguição ferrenha ou mandados de captura."
+      },
+      {
+        "nivel": 1,
+        "nome": "Usurpar Magia Divina",
+        "descricao": "O usurpador não conhece magias divinas previamente, mas acessa o conhecimento cósmico dos deuses. Pode tentar lançar qualquer magia divina existente gastando PM igual ao custo da magia (1 + mod. Car no 1º nível, +3 PM por nível) e realizando com sucesso um Teste de Usurpação (ação livre; 1d20 + nível de usurpador + mod. Carisma) contra CD 10 + (2 x nível da magia) [+5 em locais sagrados]. Se falhar, ainda perde os PM. Pode aplicar metamágicos somando o custo em PM antes do teste."
+      },
+      {
+        "nivel": 2,
+        "nome": "Discrição (Perícias +2)",
+        "descricao": "Para escapar da fúria dos templos, recebe +2 em testes de Enganação, Furtividade e Intuição. No 7º nível este bônus sobe para +4."
       },
       {
         "nivel": 3,
-        "nome": "Anulação Sagrada",
-        "descricao": "Pode dissipar auras e canalizações sagradas em área."
+        "nome": "Proteção Antidivina (+2)",
+        "descricao": "Recebe um bônus de +2 em todos os testes de resistência contra quaisquer magias divinas. Este bônus sobe para +4 no 8º nível, +6 no 13º e +8 no 18º nível."
       },
       {
         "nivel": 5,
-        "nome": "Rompimento Blasfemo",
-        "descricao": "Causa dano adicional extremo contra servos fiéis e clérigos devotados."
+        "nome": "Roubo de Poder Divino",
+        "descricao": "No 5º nível e a cada 5 níveis seguintes (10º, 15º e 20º nível), você rouba os segredos sagrados e recebe um talento de magia ou um talento de poder concedido de qualquer divindade à sua escolha."
       },
       {
-        "nivel": 7,
-        "nome": "Canalização Invertida (3d6)",
-        "descricao": "Libera pulsos blasfemos que causam dano a clérigos e servos divinos."
+        "nivel": 6,
+        "nome": "Autoconfiança",
+        "descricao": "Sua arrogância e a certeza inabalável de sua impunidade contra os deuses o blindam em batalha: você passa a somar seu modificador de Carisma à sua Classe de Armadura."
       },
       {
-        "nivel": 9,
-        "nome": "Aura de Herege",
-        "descricao": "Imune a detectar o mal, detectar divindade ou punições sagradas de deuses."
-      },
-      {
-        "nivel": 11,
-        "nome": "Roubo de Poder Concedido",
-        "descricao": "Pode roubar temporariamente um talento concedido de um clérigo inimigo ao tocá-lo."
-      },
-      {
-        "nivel": 13,
-        "nome": "Canalização Invertida (6d6)",
-        "descricao": "Pulsos de profanação causam 6d6 de dano."
-      },
-      {
-        "nivel": 15,
-        "nome": "Usurpar Domínio",
-        "descricao": "Pode canalizar energias opostas da divindade atacante para anular seus milagres."
-      },
-      {
-        "nivel": 17,
-        "nome": "Canalização Invertida (8d6)",
-        "descricao": "Pulsos blasfemos causam 8d6 de dano."
-      },
-      {
-        "nivel": 20,
-        "nome": "Tirano Sem Deuses",
-        "descricao": "Imunidade total a magias divinas de qualquer deus de Arton e canalização de 10d6."
+        "nivel": 12,
+        "nome": "Discrição (Imunidade a Adivinhação)",
+        "descricao": "Você se torna um verdadeiro fantasma para os olhos dos deuses: torna-se imune a qualquer magia ou habilidade mágica que revele sua posição, tendência ou características pessoais (embora ainda possa ser investigado por métodos mundanos de boataria e pesquisa)."
       }
     ]
   },
@@ -1097,70 +1032,70 @@
     "pvPorNivel": 5,
     "pmPorNivel": 3,
     "bba": "3/4 por nível",
-    "preRequisitos": "Tendência Neutra, Sabedoria 15.",
-    "proficiencias": "Armas simples, foice, cajado, armaduras de couro natural e escudos de madeira.",
-    "descricao": "Druidas reclusos e eremitas que vivem isolados nas regiões mais inóspitas, intocados pela civilização e dotados de imunidades brutas.",
+    "preRequisitos": "Tendência não Leal. Treinado em Conhecimento (natureza).",
+    "proficiencias": "Armas primitivas e de madeira/pedra. Armaduras leves e médias não metálicas, escudos de madeira. Fortitude Maior, Vontade de Ferro.",
     "livroFonte": "Manual do Devoto",
+    "descricao": "O mais recluso, primitivo e radical dos druidas, membro da Tradição dos Ermitões. Descarta completamente a civilização, o asseio e o convívio bípede, abrigando musgos e pequenas criaturas no próprio corpo. Guardião perpétuo de um sítio sagrado intocado, comanda espíritos com autoridade primordial e aprende três magias por nível.",
     "habilidades": [
       {
         "nivel": 1,
-        "nome": "Isolamento Primitivo",
-        "descricao": "Recebe +4 em testes de Sobrevivência e imunidade a desespero e solidão."
+        "nome": "Código de Conduta & Devoto",
+        "descricao": "Como um druida padrão (devoto de Allihanna, Megalokk ou Oceano; proibido de usar itens de metal)."
       },
       {
         "nivel": 1,
-        "nome": "Empatia Selvagem",
-        "descricao": "Comunica-se intuitivamente com feras e plantas selvagens."
+        "nome": "Empatia Selvagem Ermitã",
+        "descricao": "Como um druida padrão, mas você também pode se comunicar livremente com espíritos da natureza (fadas) e plantas inteligentes."
+      },
+      {
+        "nivel": 1,
+        "nome": "Vínculo Natural",
+        "descricao": "Como um druida padrão (escolhe entre companheiro animal ou item de poder druídico)."
+      },
+      {
+        "nivel": 1,
+        "nome": "Magias Selvagens Ampliadas",
+        "descricao": "Como um druida padrão (preparadas com Sabedoria), mas quando avança de nível o ermitão aprende três novas magias (em vez de duas). Não recebe a habilidade Forma Selvagem nem Mil Faces."
       },
       {
         "nivel": 2,
         "nome": "Caminho da Floresta",
-        "descricao": "Ignora terrenos acidentados naturais."
+        "descricao": "Como um druida padrão: pode atravessar terrenos difíceis naturais sem sofrer penalidade em seu deslocamento."
       },
       {
         "nivel": 3,
-        "nome": "Rastro Oculto",
-        "descricao": "Não deixa pegadas nem odores perceptíveis por faro."
+        "nome": "Rastro Invisível",
+        "descricao": "Como um druida padrão: não pode ser rastreado em terrenos naturais, a não ser que deseje."
+      },
+      {
+        "nivel": 3,
+        "nome": "Terreno Predileto",
+        "descricao": "Escolha um tipo de terreno entre deserto, floresta, montanha, pântano, planície, selva, tundra, aquático ou subterrâneo. Você recebe +2 na Classe de Armadura e em testes de Acrobacia, Atletismo, Furtividade, Percepção e Sobrevivência quando estiver nesse terreno."
       },
       {
         "nivel": 5,
-        "nome": "Forma Selvagem Ermitã",
-        "descricao": "Assume forma de feras solitárias dos ermos (corujas, texugos, ursos da caverna)."
+        "nome": "Sítio Sagrado",
+        "descricao": "Você se torna responsável por um local sagrado natural de sua divindade e uma área de 5km ao redor no seu terreno predileto. Todos os animais no sítio são Amistosos em relação a você (e Prestativo a partir do 10º nível). Espíritos e monstros passam a ter reação Amistosa no 10º nível e Prestativo no 15º nível. Criaturas prestativas obedecem suas ordens para defender o sítio sagrado."
       },
       {
-        "nivel": 7,
-        "nome": "Casca de Carvalho (RD 2)",
-        "descricao": "Sua pele rústica desenvolve redução de dano 2 permanente."
+        "nivel": 8,
+        "nome": "Comunhão com a Natureza (1/dia)",
+        "descricao": "Você pode lançar a magia comunhão com a natureza uma vez por dia sem gastar pontos de magia. A partir do 14º nível, você pode utilizá-la à vontade."
       },
       {
         "nivel": 9,
-        "nome": "Imunidade a Doenças e Venenos",
-        "descricao": "Imunidade completa a toxinas e pestes do mundo natural."
+        "nome": "Imunidade a Venenos",
+        "descricao": "Como um druida padrão: você se torna imune a todos os tipos de venenos naturais e mágicos."
       },
       {
         "nivel": 11,
-        "nome": "Comunhão da Terra",
-        "descricao": "Sente qualquer intruso a quilômetros de distância em seu território isolado."
-      },
-      {
-        "nivel": 14,
-        "nome": "Casca de Carvalho (RD 4)",
-        "descricao": "A redução de dano aumenta para 4."
+        "nome": "Temperado pelo Clima",
+        "descricao": "Seu corpo rústico adapta-se aos rigores do mundo: recebe resistência 10 a frio e fogo. No 17º nível, essa resistência aumenta para 20."
       },
       {
         "nivel": 15,
         "nome": "Corpo Atemporal",
-        "descricao": "Não envelhece biologicamente."
-      },
-      {
-        "nivel": 18,
-        "nome": "Espírito da Solidão",
-        "descricao": "Imunidade completa a efeitos mentais, possessão e ilusões."
-      },
-      {
-        "nivel": 20,
-        "nome": "Guardião dos Ermos Intocados",
-        "descricao": "Pode se fundir com os espíritos da terra e conjurar desastres naturais livremente."
+        "descricao": "Como um druida padrão: você não sofre mais nenhuma penalidade de envelhecimento em seus atributos físicos e não pode ser envelhecido por meios mágicos."
       }
     ]
   },
@@ -1168,164 +1103,169 @@
     "id": "druida_metamorfo",
     "nome": "Druida Metamorfo",
     "tipo": "Basica",
-    "pvInicial": 24,
-    "pvPorNivel": 6,
+    "pvInicial": 20,
+    "pvPorNivel": 5,
     "pmPorNivel": 0,
-    "bba": "1 por nível (total)",
-    "preRequisitos": "Força 15, tendência não Leal.",
-    "proficiencias": "Armas naturais e armas simples. Não usa armaduras nem conjura magias.",
-    "descricao": "A variante mais bestial e violenta dos druidas. Abre mão de conjurar magias divinas para se tornar um monstro predador perfeito de garras e carapaça.",
+    "bba": "3/4 por nível",
+    "preRequisitos": "Força 15.",
+    "proficiencias": "Armas primitivas de druida. Perde Usar Armaduras (não usa armaduras). Fortitude Maior, Vontade de Ferro.",
     "livroFonte": "Manual do Devoto",
+    "descricao": "O mais bestial, violento e temível dos druidas, pertencente à Tradição dos Metamorfos. Renuncia ao lançamento de magias em prol de um vínculo carnal supremo com as feras de Arton, desenvolvendo um repertório colossal de transformações físicas selvagens com garras titânicas, asas, carapaças e formas elementais.",
     "habilidades": [
       {
         "nivel": 1,
-        "nome": "Garras e Bocarra (1d6)",
-        "descricao": "Recebe ataques naturais de mordida e duas garras com dano 1d6 e crítico 20/x2."
+        "nome": "Código de Conduta & Devoto",
+        "descricao": "Como um druida padrão. Não pode lançar magias divinas nem recebe Vínculo Natural."
+      },
+      {
+        "nivel": 1,
+        "nome": "Empatia Selvagem Bestial",
+        "descricao": "Como druida padrão, mas você pode gastar um uso diário de forma selvagem para assumir o aspecto familiar da espécie animal-alvo, recebendo um bônus de +4 no teste de empatia."
+      },
+      {
+        "nivel": 1,
+        "nome": "Forma Selvagem (1 Habilidade)",
+        "descricao": "Pode assumir uma forma bestial como ação padrão um número de vezes por dia igual a 3 + modificador de Sabedoria (duração livre). Escolhe 1 habilidade da lista básica: Agilidade (+4 Des), Armadura Natural (+4 CA), Ataques Múltiplos, Bocarra (mordida equivalente a espada grande), Camuflagem (+8 Furtividade), Carapaça (RD 2), Cavar, Chifres, Escalar, Faro, Ferrão Venenoso, Força (+4 For), Garras e Presas, Membros Extras, Mordida, Natação, Pancada, Pinças (+2 agarrar e CA), Presas Venenosas, Prontidão (+4 Percepção e Iniciativa), Salto, Teia, Ver o Invisível, Visão no Escuro, Visão na Penumbra."
       },
       {
         "nivel": 2,
-        "nome": "Carapaça Natural (+2 CA)",
-        "descricao": "Ganha escamas ou placas ósseas sob a pele concedendo +2 na CA."
+        "nome": "Caminho da Floresta",
+        "descricao": "Como um druida padrão: move-se por terreno difícil natural sem penalidade no deslocamento."
       },
       {
         "nivel": 3,
-        "nome": "Brutalidade Feral (+2 For)",
-        "descricao": "Sua musculatura mutante se expande concedendo +2 permanente em Força."
-      },
-      {
-        "nivel": 4,
-        "nome": "Armadura Natural (+4 CA)",
-        "descricao": "O bônus de armadura natural aumenta para +4."
-      },
-      {
-        "nivel": 5,
-        "nome": "Forma Selvagem Bestial (1/dia)",
-        "descricao": "Transforma-se em aberração predadora causando dano dobrado com armas naturais."
+        "nome": "Forma Selvagem (2 Habilidades)",
+        "descricao": "Ao se transformar, pode escolher simultaneamente 2 habilidades da lista de forma selvagem."
       },
       {
         "nivel": 6,
-        "nome": "Presas Perfurantes",
-        "descricao": "O crítico da mordida se torna 19-20/x3 e impõe sangramento."
+        "nome": "Forma Selvagem (3 Habilidades)",
+        "descricao": "Pode escolher até 3 habilidades simultâneas da lista de forma selvagem ao se transformar."
       },
       {
         "nivel": 7,
-        "nome": "Redução de Dano 2",
-        "descricao": "Recebe RD 2 permanente."
+        "nome": "Forma Selvagem Aprimorada",
+        "descricao": "Destrava habilidades avançadas em sua lista: Agilidade Superior (+8 Des), Armas Naturais de Adamante ou Energia (+2 ataque/dano mágico), Bote (ataca com todas as armas ao investir), Força Superior (+8 For), Redução de Dano 5, Sopro (cone de 9m causando 6d6 de ácido, fogo, eletricidade ou frio), Tamanho Enorme (+8 For, -2 ataque e CA), Tamanho Pequeno (+1 ataque e CA, +4 Furtividade), Voo (deslocamento 18m)."
       },
       {
         "nivel": 8,
-        "nome": "Tamanho Grande Feral",
-        "descricao": "Na forma selvagem seu tamanho aumenta para Grande (+4 Força, alcance 3m)."
+        "nome": "Forma Selvagem Acelerada (Movimento)",
+        "descricao": "Ativar a forma selvagem passa a exigir apenas uma ação de movimento (em vez de ação padrão)."
+      },
+      {
+        "nivel": 9,
+        "nome": "Forma Selvagem (4 Habilidades)",
+        "descricao": "Pode escolher até 4 habilidades simultâneas da lista de forma selvagem."
       },
       {
         "nivel": 10,
-        "nome": "Regeneração Rápida (5 PV/rodada)",
-        "descricao": "Recupera 5 pontos de vida por rodada enquanto estiver em combate."
-      },
-      {
-        "nivel": 11,
-        "nome": "Brutalidade Feral (+4 For)",
-        "descricao": "O bônus permanente de Força aumenta para +4."
+        "nome": "Surto de Adrenalina",
+        "descricao": "Uma vez por combate, como uma ação livre no seu turno, o metamorfo pode realizar uma ação padrão ou uma ação de movimento adicional imediata."
       },
       {
         "nivel": 12,
-        "nome": "Redução de Dano 4",
-        "descricao": "RD aumenta para 4."
+        "nome": "Forma Selvagem (5 Habilidades)",
+        "descricao": "Pode escolher até 5 habilidades simultâneas da lista de forma selvagem."
+      },
+      {
+        "nivel": 13,
+        "nome": "Forma Selvagem Maior",
+        "descricao": "Destrava habilidades lendárias de metamorfose: Armas Perfeitas (dano de garras/mordida aumenta em duas categorias e margem de ameaça aumenta em +2), Elemental (água, ar, fogo ou terra ganhando imunidades e poderes temáticos), Raio de Energia (ataque à distância causando 6d8 de dano elemental), Regeneração 6 (cura acelerada 6 por 1 min), Tamanho Descomunal (+16 For, -4 ataque e CA), Tamanho Diminuto (+4 ataque e CA, +16 Furtividade), Presa Mágica Suprema (+3 nas jogadas de ataque e dano com armas naturais)."
       },
       {
         "nivel": 14,
-        "nome": "Carapaça Titânica (+6 CA, RD 6)",
-        "descricao": "Armadura natural atinge +6 e RD atinge 6."
+        "nome": "Forma Selvagem Acelerada (Livre)",
+        "descricao": "Ativar a forma selvagem torna-se uma ação livre."
       },
       {
-        "nivel": 16,
-        "nome": "Armas Naturais Perfeitas",
-        "descricao": "O dano de suas garras e mordida sobe para 2d8 com margem de ameaça 18-20/x3."
+        "nivel": 15,
+        "nome": "Forma Selvagem (6 Habilidades)",
+        "descricao": "Pode escolher até 6 habilidades simultâneas da lista ao ativar a forma selvagem."
       },
       {
         "nivel": 18,
-        "nome": "Fera Imortal (Regeneração 10)",
-        "descricao": "Regenera 10 PV por rodada e só pode ser morto se reduzido a –10 de Con."
+        "nome": "Forma Selvagem (7 Habilidades)",
+        "descricao": "Pode escolher até 7 habilidades simultâneas da lista de forma selvagem."
       },
       {
         "nivel": 20,
-        "nome": "Predador Alpha de Arton",
-        "descricao": "Tamanho Enorme permanente na forma feral, Força +8 e ataques naturais titânicos."
+        "nome": "Evolucionista",
+        "descricao": "No 20º nível, o druida metamorfo alcança a compreensão genética e física suprema: recebe permanentemente um bônus de +6 em Força, +6 em Destreza e +6 em Constituição, além de redução de dano 10/mágico mesmo em sua forma humanoide."
       }
     ]
   },
   {
-    "id": "druida_protetor_natureza",
-    "nome": "Druida Protetor da Natureza",
+    "id": "druida_senhor_das_feras",
+    "nome": "Druida Senhor das Feras",
     "tipo": "Basica",
     "pvInicial": 20,
     "pvPorNivel": 5,
     "pmPorNivel": 3,
     "bba": "3/4 por nível",
-    "preRequisitos": "Carisma 13, tendência Bondosa e Neutra.",
-    "proficiencias": "Armas de madeira, bordão, arco curto, armaduras leves ecológicas.",
-    "descricao": "Guardiões diplomáticos e defensores ferrenhos da fauna, amados pelos animais e capazes de comandar matilhas inteiras na proteção dos bosques.",
+    "preRequisitos": "Carisma 13.",
+    "proficiencias": "Armas primitivas de druida, armaduras leves e médias não metálicas, escudos de madeira, Fortitude Maior, Vontade de Ferro.",
     "livroFonte": "Manual do Devoto",
+    "descricao": "O mais carismático, afetuoso e amigável dos servos da natureza, membro da Tradição dos Senhores das Feras. Enxerga os animais não como feras inferiores, mas como irmãos e amigos com alma, cercado por uma matilha leal de múltiplos companheiros animais e familiares que obedecem a uma única palavra.",
     "habilidades": [
       {
         "nivel": 1,
-        "nome": "Dois Companheiros Animais",
-        "descricao": "Inicia sua jornada com dois animais guardiões leais em vez de apenas um."
+        "nome": "Código de Conduta & Devoto",
+        "descricao": "Como um druida padrão (Allihanna, Megalokk ou Oceano; não usa metal). Não recebe Forma Selvagem nem Mil Faces."
       },
       {
         "nivel": 1,
-        "nome": "Empatia dos Bosques",
-        "descricao": "Bônus de +4 em todos os testes de Adestrar Animais e Diplomacia com feras."
+        "nome": "Empatia Selvagem das Feras",
+        "descricao": "Como druida padrão, mas caso utilize empatia selvagem com um animal da mesma espécie de um de seus companheiros animais, recebe um bônus adicional de +4 no teste."
+      },
+      {
+        "nivel": 1,
+        "nome": "Senhor das Feras (1º Companheiro Animal)",
+        "descricao": "No 1º nível, você recebe um fiel companheiro animal como um druida padrão, que progride conforme você sobe de nível."
+      },
+      {
+        "nivel": 1,
+        "nome": "Magias Divinas da Tradição",
+        "descricao": "Lança magias divinas preparadas com Sabedoria normalmente, mas ao subir de nível aprende apenas 1 nova magia divina (em vez de duas)."
       },
       {
         "nivel": 2,
         "nome": "Caminho da Floresta",
-        "descricao": "Move-se sem penalidade por vegetação densa."
+        "descricao": "Como um druida padrão: move-se livremente por terrenos naturais acidentados sem redução em seu deslocamento."
       },
       {
         "nivel": 3,
-        "nome": "Vínculo da Matilha",
-        "descricao": "Seus animais recebem +2 em jogadas de ataque e dano ao flanquearem com você."
+        "nome": "Rastro Invisível",
+        "descricao": "Como um druida padrão: não pode ser rastreado em terrenos naturais a não ser que escolha deixar pistas."
       },
       {
         "nivel": 5,
-        "nome": "Forma Selvagem Guardiã",
-        "descricao": "Assume forma animal protetora com bônus de Defesa e proteção de aliados adjacentes."
+        "nome": "Senhor das Feras (2º Companheiro Animal)",
+        "descricao": "No 5º nível, você recebe um segundo companheiro animal completo. Você pode gastar uma única ação de movimento para emitir ordens para todos os seus companheiros animais simultaneamente (desde que executem a mesma ação, como todos atacarem)."
       },
       {
         "nivel": 7,
-        "nome": "Cura dos Animais",
-        "descricao": "Pode curar seus companheiros animais como ação livre compartilhando seus próprios PV."
+        "nome": "Senhor das Feras (1º Familiar)",
+        "descricao": "No 7º nível, você recebe um animal familiar (conforme a habilidade de mago), concedendo bônus nos testes e habilidades sensoriais compartilhadas."
       },
       {
         "nivel": 9,
-        "nome": "Terceiro Companheiro Animal",
-        "descricao": "Atrai um terceiro animal leal para o seu bando de protetores."
+        "nome": "Imunidade a Venenos",
+        "descricao": "Como um druida padrão: imunidade completa a qualquer veneno orgânico ou mágico."
       },
       {
-        "nivel": 11,
-        "nome": "Aura Calmante da Natureza",
-        "descricao": "Feras num raio de 18m não podem ser induzidas a atacar o grupo."
+        "nivel": 13,
+        "nome": "Senhor das Feras (3º Companheiro Animal)",
+        "descricao": "No 13º nível, você acolhe um terceiro companheiro animal completo sob sua liderança."
       },
       {
-        "nivel": 14,
-        "nome": "Vínculo da Matilha Aprimorado",
-        "descricao": "Bônus dos animais sobe para +4 no ataque e CA."
-      },
-      {
-        "nivel": 16,
-        "nome": "Forma Protetora Gigante",
-        "descricao": "Pode se transformar em animal Enorme para cobrir a fuga de filhotes e aliados."
-      },
-      {
-        "nivel": 18,
-        "nome": "Fúria de Allihanna",
-        "descricao": "Animais aliados recebem o talento Ataque Poderoso e bônus de fúria temporário."
+        "nivel": 15,
+        "nome": "Corpo Atemporal",
+        "descricao": "Como um druida padrão: não sofre mais nenhuma penalidade de envelhecimento nos atributos físicos."
       },
       {
         "nivel": 20,
-        "nome": "Patrono Sagrado da Fauna",
-        "descricao": "Pode convocar uma manada inteira de feras em auxílio e forma livre total."
+        "nome": "Senhor das Feras (2º Familiar)",
+        "descricao": "No 20º nível, você recebe um segundo familiar místico, completando sua corte suprema de criaturas leais."
       }
     ]
   },
@@ -2772,80 +2712,60 @@
     "pvPorNivel": 5,
     "pmPorNivel": 1,
     "bba": "1 por nível (total)",
-    "preRequisitos": "Devoto de divindade de combate às trevas ou à Tormenta.",
-    "proficiencias": "Armas simples e marciais, armaduras leves, médias e pesadas, escudos.",
-    "descricao": "Paladino especializado na erradicação de aberrações, lefeu da Tormenta e demônios abissais profanos.",
+    "preRequisitos": "Força 15, Destreza 15, Carisma 15, treinado em Sobrevivência. Não há caçadores de horrores de Allihanna, Lena, Marah e Tauron.",
+    "proficiencias": "Usar Armas Simples, Usar Armas Marciais, Usar Armaduras Leves, Usar Escudos, Reflexos Rápidos, Fortitude Maior, Vontade de Ferro. (Perde Armaduras Médias e Pesadas, ganha Reflexos Rápidos).",
     "livroFonte": "Manual do Devoto",
+    "descricao": "Campeões sagrados sombrios da Ordem dos Caçadores de Horrores que operam na calada da noite expurgando vampiros, liches, múmias, mortos-vivos e abominações. Trocam armaduras pesadas por agilidade letal e desferem Destruir o Mal com frequência duas vezes maior que outros paladinos.",
     "habilidades": [
       {
         "nivel": 1,
-        "nome": "Destruir a Aberração (1/dia)",
-        "descricao": "Aplica o bônus de Carisma ao ataque e nível no dano especificamente contra monstros da Tormenta e aberrações."
+        "nome": "Código de Conduta & Devoto",
+        "descricao": "Como um paladino padrão (tendência Leal e Bondosa). Não recebe Cura pelas Mãos, Saúde Divina nem Remover Condição."
       },
       {
         "nivel": 1,
-        "nome": "Sanidade Blindada",
-        "descricao": "Soma Carisma em testes de resistência contra insanidade, medo cósmico e corrupção da Tormenta."
+        "nome": "Detectar o Mal",
+        "descricao": "Como um paladino padrão: pode detectar a presença de auras malignas à vontade."
+      },
+      {
+        "nivel": 1,
+        "nome": "Destruir o Mal",
+        "descricao": "Como um paladino padrão (soma Carisma ao ataque e nível ao dano contra alvos Malignos), mas ganha um novo uso diário a cada DOIS níveis em vez de a cada três (1/dia no 1º nível, 2/dia no 3º, 3/dia no 5º, 4/dia no 7º, 5/dia no 9º, 6/dia no 11º, 7/dia no 13º, 8/dia no 15º, 9/dia no 17º e 10/dia no 19º nível)."
       },
       {
         "nivel": 2,
         "nome": "Graça Divina",
-        "descricao": "Soma mod Carisma em todos os testes de resistência."
+        "descricao": "Como um paladino padrão: você soma seu modificador de Carisma a todos os seus testes de resistência."
       },
       {
         "nivel": 2,
-        "nome": "Golpe Purificador",
-        "descricao": "Causa dano radiante extra que anula a regeneração de criaturas aberrantes."
+        "nome": "Perseguidor Implacável",
+        "descricao": "No 2º nível, você recebe o talento Rastrear e um bônus de +4 em testes de Sobrevivência para rastrear mortos-vivos. A partir do 10º nível, esse bônus de +4 também se aplica ao rastrear monstros."
       },
       {
         "nivel": 3,
-        "nome": "Aura de Purificação",
-        "descricao": "Imunidade a efeitos de náusea e contaminação de lefeu em raio de 3m."
+        "nome": "Aura de Coragem",
+        "descricao": "Como um paladino padrão: imune a medo, e aliados a até 3m recebem +4 em testes contra efeitos de medo."
       },
       {
         "nivel": 4,
-        "nome": "Cura pelas Mãos Especializada",
-        "descricao": "Cura ferimentos e anula níveis de matéria vermelha ou insanidade."
+        "nome": "Canalizar Energia Positiva (1d6)",
+        "descricao": "Como um paladino padrão: canaliza energia positiva em um raio de 9m curando aliados vivos ou ferindo mortos-vivos (1d6 no 4º nível, 2d6 no 8º, 3d6 no 12º, 4d6 no 16º e 5d6 no 20º nível). Usável 1 vez por dia + mod. Carisma."
       },
       {
         "nivel": 5,
-        "nome": "Destruir a Aberração (2/dia)",
-        "descricao": "Pode usar Destruir a Aberração duas vezes ao dia."
+        "nome": "Bênção da Justiça & Vínculo Divino",
+        "descricao": "No 5º nível você recebe o Vínculo Divino (como um paladino padrão, escolhendo arma sagrada ou montaria especial), mas não pode escolher o lançamento de magias divinas."
       },
       {
         "nivel": 6,
-        "nome": "Remover Corrupção",
-        "descricao": "Remove venenos, maldições e efeitos de matéria vermelha de aliados."
-      },
-      {
-        "nivel": 8,
-        "nome": "Olhar Revelador",
-        "descricao": "Detecta automaticamente a presença de simbiontes ou espiões lefeu ocultos."
+        "nome": "Proteção Positiva",
+        "descricao": "No 6º nível, você se torna completamente imune a quaisquer efeitos de dreno de energia e níveis negativos (como os ataques de vampiros e inumanos). Não protege contra os efeitos de uma área de Tormenta."
       },
       {
         "nivel": 10,
-        "nome": "Destruir a Aberração (3/dia)",
-        "descricao": "Pode usar Destruir a Aberração três vezes ao dia."
-      },
-      {
-        "nivel": 12,
-        "nome": "Exterminador de Lefeu",
-        "descricao": "Ganha crítico expandido e multiplica dano contra monstros aberrantes."
-      },
-      {
-        "nivel": 15,
-        "nome": "Destruir a Aberração (4/dia)",
-        "descricao": "Pode usar Destruir a Aberração quatro vezes ao dia."
-      },
-      {
-        "nivel": 18,
-        "nome": "Farol da Ordem Cósmica",
-        "descricao": "Gera uma zona radiante onde poderes da Tormenta e aberrações sofrem desvantagem severa."
-      },
-      {
-        "nivel": 20,
-        "nome": "Espada Purificadora de Arton",
-        "descricao": "Destruir a Aberração causa morte instantânea se o monstro falhar em Fortitude; ganha imunidade a corrupção."
+        "nome": "Evasão Santa",
+        "descricao": "No 10º nível, você recebe a habilidade Evasão: quando sofre um ataque que permite um teste de Reflexos para reduzir o dano à metade, não sofre nenhum dano se for bem-sucedido. Não funciona com armaduras médias ou pesadas, mas pode ser utilizada empunhando escudos."
       }
     ]
   },
@@ -2855,72 +2775,67 @@
     "tipo": "Basica",
     "pvInicial": 20,
     "pvPorNivel": 5,
-    "pmPorNivel": 2,
-    "bba": "3/4 por nível (médio)",
-    "preRequisitos": "Devoto fervoroso de divindade benigna, Voto de Pureza.",
-    "proficiencias": "Armas simples e marciais, armaduras leves e médias, escudos.",
-    "descricao": "Paladino investido de aura milagrosa, bênçãos de salvação, sacrifício altruísta e santidade divina tangível.",
+    "pmPorNivel": 1,
+    "bba": "1 por nível (total)",
+    "preRequisitos": "Carisma 17. Não há santos de Allihanna, Tanna-Toh e Tauron.",
+    "proficiencias": "Todas as armas simples e marciais, todas as armaduras e todos os escudos, Fortitude Maior, Vontade de Ferro.",
     "livroFonte": "Manual do Devoto",
+    "descricao": "O mais altruísta, puro e abnegado guerreiro sagrado de Arton, membro da Ordem dos Santos. Não deseja bens mundanos e abre mão de seu ego para tornar-se um instrumento vivo da divindade, entoando ladainhas de combate santas, operando curas milagrosas e oferecendo seu próprio corpo no sacrifício do martírio.",
     "habilidades": [
       {
         "nivel": 1,
-        "nome": "Aura de Santidade",
-        "descricao": "Aliados a até 6m recebem +2 na CA e em testes de resistência contra o mal."
+        "nome": "Código de Conduta & Devoto",
+        "descricao": "Como um paladino padrão. Não recebe Destruir o Mal, Cura pelas Mãos, Saúde Divina, Bênção da Justiça ou Canalizar Energia Positiva."
       },
       {
         "nivel": 1,
-        "nome": "Santo Curandeiro",
-        "descricao": "Cura pelas Mãos pode curar a distância como se fosse um raio sagrado de luz divina."
+        "nome": "Detectar o Mal",
+        "descricao": "Como um paladino padrão: detecta o mal à vontade."
+      },
+      {
+        "nivel": 1,
+        "nome": "Ladainha de Combate",
+        "descricao": "Antes de qualquer combate, o santo deve passar uma rodada inteira rezando ajoelhado (ficando desprevenido). Ao concluir a oração, entra em um transe de batalha sagrado: recebe +1 em ataques e dano, RD 2 e resistência a energia 2 até o fim da luta. No 4º nível recebe bônus da magia Velocidade (+2 ataque, CA, Reflexos e +9m deslocamento), RD 4 e resistência a energia 4. No 8º nível ataques tornam-se sagrados (furam RD/Bondosa e causam +2d6 contra criaturas Malignas). No 12º nível +2 ataque/dano, RD 6 e resistência 6. No 16º nível +3 ataque/dano, RD 10 e resistência 10. No 20º nível torna-se imune a acertos críticos e ganha RD 10 permanente."
       },
       {
         "nivel": 2,
         "nome": "Graça Divina",
-        "descricao": "Soma mod. Carisma em todos os testes de resistência."
+        "descricao": "Como um paladino padrão: soma seu modificador de Carisma a todos os testes de resistência."
+      },
+      {
+        "nivel": 2,
+        "nome": "Santo Curandeiro",
+        "descricao": "Como uma ação padrão, você ora e o aliado mais ferido a até 18m recupera uma quantidade de PV igual a 1d10 multiplicado pelo seu nível de santo. Você é curado apenas se for o personagem mais ferido. Usável 1 vez por dia + modificador de Carisma."
       },
       {
         "nivel": 3,
-        "nome": "Milagre do Mártir",
-        "descricao": "Pode transferir metade do dano sofrido por um aliado próximo diretamente para si."
+        "nome": "Aura de Coragem",
+        "descricao": "Como um paladino padrão: imune a medo, aliados a até 3m ganham +4 contra efeitos de medo."
       },
       {
-        "nivel": 4,
-        "nome": "Cura pelas Mãos Elevada",
-        "descricao": "Suas curas curam o dobro se o alvo estiver com menos de 0 PV."
+        "nivel": 3,
+        "nome": "Vaso do Espírito (Doenças)",
+        "descricao": "No 3º nível, a pureza corpórea torna-o imune a doenças mundanas. No 10º nível torna-se imune a venenos mundanos. No 17º nível torna-se imune a paralisia e metamorfose."
       },
       {
         "nivel": 5,
-        "nome": "Destruir o Mal Compassivo",
-        "descricao": "Pode aplicar o dano de Destruir o Mal como dano não-letal que paralisa demônios pacificando-os."
+        "nome": "Vínculo Divino",
+        "descricao": "Como um paladino padrão (arma sagrada ou montaria sagrada)."
       },
       {
         "nivel": 6,
-        "nome": "Toque da Purificação",
-        "descricao": "Cura cegueira, surdez, doenças e maldições instantaneamente."
+        "nome": "Remover Condição",
+        "descricao": "Como a habilidade de paladino padrão, mas ativada gastando usos de Santo Curandeiro (níveis 6, 9, 12, 15 e 18)."
       },
       {
-        "nivel": 8,
-        "nome": "Imunidade Sagrada",
-        "descricao": "Imune a paralisia, dreno de energia e magias de morte."
+        "nivel": 9,
+        "nome": "Pira Santa",
+        "descricao": "A partir do 9º nível, durante a Ladainha de Combate, você pode gastar um uso de Santo Curandeiro como ação padrão para queimar o oponente Maligno mais poderoso a até 18m com fogo divino: o inimigo sofre 1d12 pontos de dano para cada dois níveis de santo (Fortitude CD 10 + metade do nível + mod. Carisma reduz metade)."
       },
       {
-        "nivel": 10,
-        "nome": "Ressurreição Milagrosa",
-        "descricao": "Uma vez por semana, pode reviver um herói recém-caído sem perda de nível."
-      },
-      {
-        "nivel": 12,
-        "nome": "Aura Beatificada",
-        "descricao": "Inimigos malignos que tentem atacá-lo sofrem dano de retaliação sagrada automático."
-      },
-      {
-        "nivel": 15,
-        "nome": "Presença Angelical",
-        "descricao": "Manifesta asas de anjo radiantes concedendo voo e imunidade a dano elemental."
-      },
-      {
-        "nivel": 20,
-        "nome": "Ascensão Sagrada",
-        "descricao": "Torna-se um Santo celestial vivo; cura e ressuscita aliados em massa com uma única prece."
+        "nivel": 13,
+        "nome": "Mártir",
+        "descricao": "A partir do 13º nível, uma vez por rodada quando estiver adjacente a um aliado e não estiver desprevenido, você pode se jogar na frente de um ataque que atingiu o aliado, recebendo o dano no lugar dele. Além disso, sempre que um aliado a até 9m sofrer uma condição prejudicial (atordoado, cego, enjoado, exausto, fatigado, lento, paralisado, sangrando ou surdo), você pode escolher sofrer a condição no lugar dele."
       }
     ]
   },
@@ -2932,60 +2847,110 @@
     "pvPorNivel": 5,
     "pmPorNivel": 1,
     "bba": "1 por nível (total)",
-    "preRequisitos": "Serviço leal a um soberano nobre e a uma divindade protetora dos reinos.",
-    "proficiencias": "Todas as armas simples e marciais, todas as armaduras e escudos.",
-    "descricao": "Defensor da coroa e da ordem feudal sagrada, guardião dos juramentos e líder de tropas nobres.",
+    "preRequisitos": "Força 15 e Carisma 15. Não há vassalos de Allihanna, Lena e Marah.",
+    "proficiencias": "Todas as armas simples e marciais, todas as armaduras e todos os escudos, Fortitude Maior, Vontade de Ferro.",
     "livroFonte": "Manual do Devoto",
+    "descricao": "Cavaleiro sagrado da Ordem dos Vassalos leal a um suserano mundano e ao seu deus. Segue o clássico caminho da aristocracia feudal de Arton, evoluindo de um modesto pajem de estábulo para escudeiro, cavaleiro do reino, barão, conde e, em seu auge lendário, tornando-se imperador soberano.",
     "habilidades": [
       {
         "nivel": 1,
-        "nome": "Juramento de Lealdade",
-        "descricao": "Recebe bônus de +2 em testes de resistência e ataques quando lutando ao lado de seu senhor ou vassalos."
-      },
-      {
-        "nivel": 1,
-        "nome": "Destruir o Rebelde",
-        "descricao": "Soma Carisma no ataque e nível no dano contra traidores, anarquistas e usurpadores do reino."
+        "nome": "Pajem",
+        "descricao": "Inicia como servo nobre e recebe treinamento na perícia Adestrar Animais ou Ofício (metalurgia). Se já possuir ambas, recebe Foco em Perícia em uma delas. Possui Código de Conduta e Devoto como um paladino padrão."
       },
       {
         "nivel": 2,
-        "nome": "Graça Soberana",
-        "descricao": "Soma mod. Carisma nos testes de resistência de si e do senhor feudal se estiver adjacente."
+        "nome": "Valete",
+        "descricao": "Aprende etiqueta social de corte e recebe treinamento em Diplomacia ou Conhecimento (nobreza). Se já for treinado em ambas, recebe Foco em Perícia em uma delas."
       },
       {
         "nivel": 3,
-        "nome": "Estandarte Real",
-        "descricao": "Carrega o brasão de seu reino, inspirando tropas com +2 de moral em acerto e dano."
+        "nome": "Escudeiro",
+        "descricao": "Aprende a lutar a cavalo e portar armaduras de justa: recebe treinamento na perícia Cavalgar e o talento Foco em Armadura. Se já possuir Cavalgar, recebe Foco em Perícia (Cavalgar)."
+      },
+      {
+        "nivel": 4,
+        "nome": "Guarda do Castelo",
+        "descricao": "Treinado na vigília e disciplina dos castelos: recebe um talento de combate à sua escolha e treinamento na perícia Intuição (ou Foco em Perícia se já treinado)."
       },
       {
         "nivel": 5,
-        "nome": "Montaria de Guerra Real",
-        "descricao": "Recebe um cavalo de batalha com couraça imbuída de bravura heróica."
+        "nome": "Vigilante de Estradas",
+        "descricao": "Patrulha as rotas do reino: recebe uma Montaria Sagrada (como a habilidade de paladino) e treinamento em Percepção (ou Foco em Perícia correspondente)."
+      },
+      {
+        "nivel": 6,
+        "nome": "Cavaleiro do Reino",
+        "descricao": "Você é sagrado sir cavaleiro, atingindo a nobreza: recebe um escudeiro através do talento Liderança (parceiro) e uma arma ou escudo do seu reino com bônus mágico de +2."
       },
       {
         "nivel": 7,
-        "nome": "Escudo do Suserano",
-        "descricao": "Pode se interpor diante de qualquer golpe direcionado a um soberano ou nobre aliado."
+        "nome": "Sargento do Reino",
+        "descricao": "Oficial militar combatente: recebe um talento de combate à sua escolha e ganha a habilidade Cura pelas Mãos (no 7º nível cura 2d8+2 PV, aumentando +1d8+1 a cada 4 níveis; usável 1 vez por dia + mod. Carisma)."
+      },
+      {
+        "nivel": 8,
+        "nome": "Capitão do Reino",
+        "descricao": "Oficial prestigioso do exército: recebe o talento Liderança (seguidores) e a habilidade Destruir o Mal com 1 uso diário, ganhando um uso diário adicional a cada três níveis (11º, 14º, 17º e 20º)."
+      },
+      {
+        "nivel": 9,
+        "nome": "Lorde",
+        "descricao": "Ascende à nobreza territorial recebendo um feudo. Escolha entre seguir a carreira de General (ganha um talento de combate) ou Administrador (ganha treinamento em Ofício [administração] e Conhecimento [religião], ou Focos em Perícia)."
       },
       {
         "nivel": 10,
-        "nome": "Ordem Nobre",
-        "descricao": "Concede ataques adicionais por rodada aos seus comandados leais."
+        "nome": "Barão",
+        "descricao": "Passa a recolher impostos de suas terras: no início de cada mês ou aventura, faz um teste de Ofício (administração) e recebe Tibares de platina (TP) igual ao resultado do teste multiplicado pelo seu nível de vassalo."
+      },
+      {
+        "nivel": 11,
+        "nome": "Visconde",
+        "descricao": "Se escolheu a carreira de General, seus pontos de vida aumentam retroativamente para os de um Bárbaro de mesmo nível (24 PV iniciais, +6 PV por nível). Se escolheu Administrador, pode repetir um número de testes de perícia por dia igual a 1 + modificador de Inteligência ficando com o melhor resultado."
+      },
+      {
+        "nivel": 12,
+        "nome": "Conde",
+        "descricao": "Alto nobre de Arton com tesouro de guerra: no início de cada aventura, você recebe um orçamento militar de 100.000 TO em itens mágicos emprestados pelo reino (que devem ser devolvidos ao fim da aventura)."
+      },
+      {
+        "nivel": 13,
+        "nome": "Marquês",
+        "descricao": "Título régio avançado: se for General, recebe Redução de Dano 2; se for Administrador, recebe Resistência a Magia +4."
       },
       {
         "nivel": 14,
-        "nome": "Inabalável Fidelidade",
-        "descricao": "Imunidade total a qualquer forma de controle mental, ilusão de traição ou coação mágica."
+        "nome": "Duque",
+        "descricao": "Um dos mais altos títulos aristocráticos: recebe um castelo fortificado com servos e exército pessoal. O número de níveis de seguidores que você possui pelo talento Liderança é multiplicado por 10."
+      },
+      {
+        "nivel": 15,
+        "nome": "Arquiduque",
+        "descricao": "Atinge a aura sublime da alta nobreza: uma vez por dia, você pode ignorar completamente um ataque ou magia direcionada contra você (o ataque erra automaticamente ou a magia é anulada)."
+      },
+      {
+        "nivel": 16,
+        "nome": "Conselheiro Real",
+        "descricao": "Braço direito do monarca: escolha uma magia divina de até 7º nível. Você pode lançar esta magia como se fosse um clérigo um número de vezes por dia igual a 1 + modificador de Sabedoria."
+      },
+      {
+        "nivel": 17,
+        "nome": "Rei Mercenário",
+        "descricao": "Soberano de um território independente aliado à coroa: se for General, recebe 6 pontos de atributo para distribuir livremente entre Força, Destreza e Constituição; se for Administrador, recebe 6 pontos para distribuir entre Inteligência, Sabedoria e Carisma."
       },
       {
         "nivel": 18,
-        "nome": "Guarda Real Invencível",
-        "descricao": "Sua armadura ganha bônus maciço de fortificação contra acertos críticos."
+        "nome": "Rei",
+        "descricao": "Monarca de um reino estabelecido: acostumado a sobreviver a atentados e comandar frentes de batalha, você recebe Redução de Dano 10 e imunidade completa a todos os venenos."
+      },
+      {
+        "nivel": 19,
+        "nome": "Alto Rei",
+        "descricao": "Soberano máximo de múltiplos domínios e senhor de reis: seu orçamento militar de itens mágicos por aventura é elevado para 400.000 TO."
       },
       {
         "nivel": 20,
-        "nome": "Mão da Coroa",
-        "descricao": "Representante supremo da realeza e dos deuses; suas ordens de comando são irrevogáveis."
+        "nome": "Imperador",
+        "descricao": "No ápice do poder político e militar de Arton: escolha uma magia divina de até 9º nível. Você pode lançá-la como se fosse um clérigo um número de vezes por dia igual a 1 + seu modificador de Sabedoria."
       }
     ]
   },
@@ -4676,111 +4641,66 @@
     "pvInicial": 16,
     "pvPorNivel": 4,
     "pmPorNivel": 3,
-    "bba": "3/4 por nível (médio)",
-    "preRequisitos": "Devoto de uma das divindades do Panteão.",
-    "proficiencias": "Armas simples, arma favorita da divindade, armaduras leves e médias, escudos.",
-    "descricao": "Escolhido diretamente pelos deuses que manifesta milagres espontâneos por pura vocação espiritual e carisma sagrado.",
+    "bba": "3/4 por nível",
+    "preRequisitos": "Nenhum (qualquer tendência; recebe a bênção de um deus ao nascer, sem precisar seguir suas crenças ou restrições).",
+    "proficiencias": "Usar Armaduras (leves e médias), Usar Armas Simples, Usar Escudos, Fortitude Maior, Vontade de Ferro.",
     "livroFonte": "Manual do Devoto",
+    "descricao": "Indivíduos que nasceram com uma centelha de poder divino concedida diretamente por um dos deuses do Panteão. Atuam como 'feiticeiros divinos', canalizando milagres espontaneamente através do Carisma, sem necessidade de orações formais e sem necessitar seguir os dogmas de seu patrono.",
     "habilidades": [
       {
         "nivel": 1,
         "nome": "Centelha Divina",
-        "descricao": "Você foi tocado diretamente pela essência de sua divindade, tornando-se um conduto vivo de seu poder cósmico."
+        "descricao": "Você nasceu tocado pelo poder de um dos vinte deuses maiores do Panteão (à sua escolha) e recebe um poder concedido permanente de acordo com sua divindade patrona, independentemente de sua tendência: Allihanna (Empatia Selvagem), Azgher (+1 em ataques e perícias sob luz solar direta), Hyninn (testes de qualquer perícia como se fosse treinado), Kallyadranoch (CD +1 para resistir a suas magias), Keenn (arma preferida causa +1 de dano), Khalmyr (+1 em jogadas de ataque), Lena (+1 PV por nível de personagem), Lin-Wu (talento Coragem Total), Marah (+2 em Diplomacia e Enganação), Megalokk (mordida 1d6 perfuração ou garras 1d4 corte), Nimb (1/dia rola novamente um teste recém-realizado), Oceano (deslocamento de natação 9m e respirar sob a água), Ragnar (+1 em jogadas de dano), Sszzaas (+4 em Enganação e imune a magias de adivinhação), Tanna-Toh (conhecimento de bardo somando nível de abençoado + Int), Tauron (+2 em Força para carga, manobras e testes de Força), Tenebra (visão no escuro 18m e +2 em Furtividade), Thyatis (1/dia se sofrer dano suficiente para matá-lo, fica com 1 PV), Valkaria (+1 em testes de resistência) ou Wynna (aprende duas magias arcanas de níveis que possa lançar)."
       },
       {
         "nivel": 1,
-        "nome": "Magias Divinas Espontâneas (0º e 1º níveis)",
-        "descricao": "Você lança magias divinas baseadas em Carisma de maneira espontânea sem precisar rezar previamente."
+        "nome": "Magias Divinas Espontâneas",
+        "descricao": "O abençoado lança magias divinas através de canalização natural sem necessidade de preparação prévia. Sua habilidade-chave é Carisma. Conhece 4 preces (nível 0) e 1 + mod. Carisma magias de 1º nível. A cada nível seguinte aprende duas magias de qualquer nível que possa lançar. Possui 1 + mod. Carisma PM no 1º nível e ganha 3 PM por nível subsequente."
       },
       {
-        "nivel": 1,
-        "nome": "Poder Concedido Adicional",
-        "descricao": "Recebe um poder concedido de sua divindade padroeira sem cumprir pré-requisitos."
+        "nivel": 2,
+        "nome": "Aura de Energia",
+        "descricao": "Você pode gastar uma ação padrão para emanar uma aura mística de energia positiva (se seu patrono for Bondoso) ou negativa (se for Maligno; neutro escolhe no 2º nível). Todos os aliados a até 9m recebem +1 nas jogadas de ataque e dano (aura positiva), ou inimigos sofrem penalidade de -1 nas jogadas de ataque e dano (aura negativa; Vontade CD 10 + metade do nível + mod. Carisma anula). Dura 1 minuto. Usável 1 vez por dia + modificador de Carisma."
       },
       {
-        "nivel": 3,
-        "nome": "Magias Divinas ( nível)",
-        "descricao": "Acesso a magias divinas de  nível."
+        "nivel": 4,
+        "nome": "Redução de Dano 1/Tendência Oposta",
+        "descricao": "Seu corpo é protegido pelo favor divino, recebendo redução de dano 1 contra armas e ataques não alinhados à tendência oposta de sua divindade patrona (patrono Bondoso ganha RD 1/maligna; Maligno ganha RD 1/bondosa; Leal ganha RD 1/caótica; Caótico ganha RD 1/leal; Neutro escolhe uma tendência oposta no 4º nível). Esta RD aumenta para 2 no 8º nível, 3 no 12º e 4 no 16º nível."
       },
       {
-        "nivel": 3,
-        "nome": "Aura de Santidade (+1)",
-        "descricao": "Soma +1 na CA e testes de resistência de si e de aliados próximos."
+        "nivel": 6,
+        "nome": "Corpo Divino",
+        "descricao": "A energia divina que corre em suas veias purifica sua constituição, tornando-o completamente imune a todos os tipos de venenos e a todas as doenças (tanto mundanas quanto mágicas)."
       },
       {
-        "nivel": 5,
-        "nome": "Magias Divinas ( nível)",
-        "descricao": "Acesso a magias divinas de  nível."
-      },
-      {
-        "nivel": 5,
-        "nome": "Poder Concedido Adicional",
-        "descricao": "Recebe mais um poder concedido de seu deus."
-      },
-      {
-        "nivel": 7,
-        "nome": "Magias Divinas ( nível)",
-        "descricao": "Acesso a magias divinas de  nível."
-      },
-      {
-        "nivel": 7,
-        "nome": "Resistência dos Eleitos",
-        "descricao": "Recebe resistência a dano 5 contra energias elementais ou profanas associadas aos inimigos de seu culto."
-      },
-      {
-        "nivel": 9,
-        "nome": "Magias Divinas ( nível)",
-        "descricao": "Acesso a magias divinas de  nível."
+        "nivel": 8,
+        "nome": "Redução de Dano 2/Tendência Oposta",
+        "descricao": "Sua redução de dano sagrada/profana aumenta para 2 contra tudo que não seja da tendência oposta de seu patrono divino."
       },
       {
         "nivel": 10,
-        "nome": "Poder Concedido Adicional",
-        "descricao": "Recebe mais um poder concedido de seu deus."
+        "nome": "Aura de Energia Aprimorada",
+        "descricao": "O poder de sua aura divina se intensifica: o bônus concedido a aliados por aura de energia positiva sobe para +2 nas jogadas de ataque e dano, e a penalidade imposta a inimigos por aura de energia negativa aumenta para -2."
       },
       {
-        "nivel": 11,
-        "nome": "Magias Divinas ( nível)",
-        "descricao": "Acesso a magias divinas de  nível."
+        "nivel": 12,
+        "nome": "Redução de Dano 3/Tendência Oposta",
+        "descricao": "Sua redução de dano divina aumenta para 3/tendência oposta."
       },
       {
-        "nivel": 13,
-        "nome": "Magias Divinas ( nível)",
-        "descricao": "Acesso a magias divinas de  nível."
+        "nivel": 14,
+        "nome": "Alma Divina",
+        "descricao": "Sua alma transcende limitações mortais. Você se torna completamente imune a efeitos mágicos de sono e paralisia, não sofre mais nenhuma penalidade de envelhecimento nos atributos físicos e não pode ser envelhecido por magias ou maldições."
       },
       {
-        "nivel": 13,
-        "nome": "Resistência dos Eleitos Aprimorada",
-        "descricao": "Sua resistência a dano sagrada aumenta para 10."
-      },
-      {
-        "nivel": 15,
-        "nome": "Magias Divinas ( nível)",
-        "descricao": "Acesso a magias divinas de  nível."
-      },
-      {
-        "nivel": 15,
-        "nome": "Poder Concedido Adicional",
-        "descricao": "Recebe mais um poder concedido de seu deus."
-      },
-      {
-        "nivel": 17,
-        "nome": "Magias Divinas ( nível)",
-        "descricao": "Acesso ao sublime 9º nível de milagres divinos."
-      },
-      {
-        "nivel": 19,
-        "nome": "Resistência dos Eleitos Plena",
-        "descricao": "Sua resistência a dano sagrada sobe para 20."
+        "nivel": 16,
+        "nome": "Redução de Dano 4/Tendência Oposta",
+        "descricao": "Sua redução de dano divina atinge 4/tendência oposta."
       },
       {
         "nivel": 20,
-        "nome": "Avatar Vivo da Divindade",
-        "descricao": "Você se transforma em um avatar sagrado imortal de seu deus com imunidade a doenças, venenos, morte e dreno vital."
-      },
-      {
-        "nivel": 20,
-        "nome": "Poder Concedido Supremo",
-        "descricao": "Recebe todos os poderes concedidos existentes de sua divindade."
+        "nome": "União Divina",
+        "descricao": "No 20º nível, o abençoado alcança a apoteose com sua divindade patrona. Seu tipo de criatura muda permanentemente para Espírito (conferindo visão no escuro 18m). Você recebe redução de dano 10/tendência oposta e imunidade completa a acertos críticos, dano de habilidade e dreno de energia."
       }
     ]
   },
@@ -4792,105 +4712,90 @@
     "pvPorNivel": 4,
     "pmPorNivel": 3,
     "bba": "1/2 por nível (baixo)",
-    "preRequisitos": "Devoto de divindade de cura, Voto de Não-Violência.",
-    "proficiencias": "Armas simples de contusão (para legítima defesa não-letal), armaduras leves, médias e escudos.",
-    "descricao": "Curandeiro devoto lendário focado na preservação da vida, conforto dos moribundos e milagres de redenção pacífica.",
+    "preRequisitos": "Tendência Bondosa. Devoto de divindade Bondosa ou neutra protetora (Allihanna, Azgher, Hyninn, Khalmyr, Lena, Lin-Wu, Marah, Nimb, Oceano, Tanna-Toh, Tauron, Thyatis ou Valkaria).",
+    "proficiencias": "Usar Armaduras (leves, médias e pesadas), Usar Armas Simples, Usar Armas Marciais, Usar Escudos, Fortitude Maior, Vontade de Ferro, Foco em Perícia (Cura).",
     "livroFonte": "Manual do Devoto",
+    "descricao": "Sacerdotes devotados à cura milagrosa, ao alívio do sofrimento e à solução pacífica de conflitos. Proibidos de causar dor letal direta com lâminas ou feitiços ofensivos, canalizam uma torrente inigualável de energia positiva capaz de erguer os aliados mais castigados.",
     "habilidades": [
       {
         "nivel": 1,
-        "nome": "Voto de Não-Violência",
-        "descricao": "O samaritano nunca causa dano letal a criaturas vivas; suas energias são consagradas exclusivamente à cura e preservação da vida."
+        "nome": "Código de Conduta",
+        "descricao": "Samaritanos não podem usar armas cortantes ou perfurantes e não podem lançar magias que causem dano direto a outras criaturas. Caso viole seu código, perde todas as habilidades de classe até realizar uma penitência oficial."
       },
       {
         "nivel": 1,
-        "nome": "Canalizar Energia Positiva Plena",
-        "descricao": "Cura todos os aliados ao redor com dados maximizados ao canalizar energia divina de cura."
+        "nome": "Devoto",
+        "descricao": "Você deve escolher uma divindade padroeira dentre Allihanna, Azgher, Hyninn, Khalmyr, Lena, Lin-Wu, Marah, Nimb, Oceano, Tanna-Toh, Tauron, Thyatis ou Valkaria e atuar como seu devoto, obedecendo a seus preceitos e tendo acesso aos seus talentos de poderes concedidos."
       },
       {
         "nivel": 1,
-        "nome": "Aura de Paz",
-        "descricao": "Criaturas hostis devem passar em teste de Vontade para conseguir atacá-lo."
+        "nome": "Canalizar Energia Positiva",
+        "descricao": "O samaritano canaliza energia positiva em um raio de 9m curando criaturas vivas ou ferindo mortos-vivos (Vontade CD 10 + metade do nível + mod. Carisma reduz metade). Seus dados de cura são d8 em vez de d6: começa com 1d8 no 1º nível e aumenta em +1d8 a cada dois níveis seguintes (2d8 no 3º, 3d8 no 5º, 4d8 no 7º, 5d8 no 9º, 6d8 no 11º, 7d8 no 13º, 8d8 no 15º, 9d8 no 17º e 10d8 no 19º nível). Usável 1 vez por dia + mod. Carisma."
+      },
+      {
+        "nivel": 1,
+        "nome": "Magias Divinas",
+        "descricao": "Prepara e lança magias divinas através da oração diária matinal. Sua habilidade-chave é Sabedoria. Conhece 4 preces (nível 0) e 1 + mod. Sabedoria magias de 1º nível, aprendendo 2 magias novas de qualquer nível permitido a cada novo nível. Possui 1 + mod. Sabedoria PM no 1º nível e recebe 3 PM por nível seguinte."
       },
       {
         "nivel": 2,
-        "nome": "Mãos Abençoadas (+1)",
-        "descricao": "Soma +1 por dado rolado em qualquer efeito de cura lançado."
+        "nome": "Cura Gentil",
+        "descricao": "A compaixão pura do samaritano potencializa suas magias de cura: a partir do 2º nível, você soma seu modificador de Carisma a todos os pontos de vida restaurados por suas magias de cura."
       },
       {
         "nivel": 3,
-        "nome": "Bálsamo Espiritual",
-        "descricao": "Suas magias de cura também removem condições como abalado, fadigado ou atordoado."
-      },
-      {
-        "nivel": 4,
-        "nome": "Cura Estendida",
-        "descricao": "O alcance de seus toques de cura torna-se curto (9m) por pura irradiação sagrada."
+        "nome": "Ordem de Paz (1/dia)",
+        "descricao": "A partir do 3º nível, você pode lançar a magia imobilizar pessoa uma vez por dia sem gastar PM (CD 10 + metade do nível de samaritano + modificador de Carisma). Caso você ou seus aliados causem dano letal à criatura afetada, o efeito cessa imediatamente."
       },
       {
         "nivel": 5,
-        "nome": "Aura de Proteção Divina",
-        "descricao": "Concede +2 em testes de resistência e CA a todos os aliados a até 6m."
-      },
-      {
-        "nivel": 6,
-        "nome": "Mãos Abençoadas (+2)",
-        "descricao": "Bônus por dado de cura aumenta para +2 por dado."
+        "nome": "Cura Instantânea (1/dia)",
+        "descricao": "A partir do 5º nível, uma vez por dia você pode lançar qualquer magia de cura como uma ação livre (em vez de ação padrão)."
       },
       {
         "nivel": 7,
-        "nome": "Bálsamo Purificador",
-        "descricao": "Suas magias de cura removem venenos e cegueira automaticamente."
+        "nome": "Cura sem Esforço",
+        "descricao": "No 7º nível, você aprende a aplicar milagres de cura com fluidez perfeita: pode lançar magias de cura sem ficar desprevenido e sem provocar ataques de oportunidade."
       },
       {
         "nivel": 8,
-        "nome": "Salvação Instantânea",
-        "descricao": "Pode curar um aliado com PVs negativos como uma reação antes que ele morra."
-      },
-      {
-        "nivel": 9,
-        "nome": "Sopro da Vida",
-        "descricao": "Pode canalizar para ressuscitar criaturas mortas há menos de 1 minuto."
+        "nome": "Ordem de Paz (Qualquer Tipo, 2/dia)",
+        "descricao": "Você pode usar Ordem de Paz 2 vezes por dia e agora pode utilizá-la para afetar criaturas de qualquer tipo (não apenas humanoides)."
       },
       {
         "nivel": 10,
-        "nome": "Mãos Abençoadas (+3)",
-        "descricao": "Bônus por dado de cura aumenta para +3 por dado."
+        "nome": "Cura Instantânea (2/dia)",
+        "descricao": "Você pode usar sua habilidade de Cura Instantânea 2 vezes por dia como uma ação livre."
       },
       {
-        "nivel": 11,
-        "nome": "Bálsamo da Alma",
-        "descricao": "Remove dreno de energia e restaura níveis perdidos por necromancia."
+        "nivel": 12,
+        "nome": "Aura de Vida",
+        "descricao": "A partir do 12º nível, você emana uma aura contínua de energia positiva num raio de 3m. Qualquer aliado a até 3m que caia a 0 ou menos pontos de vida se estabiliza automaticamente. Afeta o próprio samaritano e funciona mesmo se ele estiver inconsciente."
       },
       {
         "nivel": 13,
-        "nome": "Santuário Inviolável",
-        "descricao": "Nenhum ataque de área ou projétil pode atingir aliados sob sua proteção na aura de paz."
-      },
-      {
-        "nivel": 14,
-        "nome": "Mãos Abençoadas (+4)",
-        "descricao": "Bônus por dado de cura aumenta para +4 por dado."
+        "nome": "Ordem de Paz (3/dia)",
+        "descricao": "Você ganha um uso diário adicional de Ordem de Paz (total de 3/dia)."
       },
       {
         "nivel": 15,
-        "nome": "Redenção Cósmica",
-        "descricao": "Inimigos que tentem causar dano mortal ao samaritano têm suas armas e magias dissolvidas em névoa pacífica."
+        "nome": "Cura Instantânea (3/dia)",
+        "descricao": "Você ganha um uso diário adicional de Cura Instantânea (total de 3/dia)."
       },
       {
         "nivel": 17,
-        "nome": "Bálsamo Sagrado Absoluto",
-        "descricao": "Remove qualquer maldição, petrificação ou efeito necrótico instantaneamente."
+        "nome": "Aura de Vida Aprimorada",
+        "descricao": "Sua aura de vida a até 3m torna-se incrivelmente forte: qualquer aliado dentro de seu alcance morrerá apenas se seus pontos de vida atingirem um valor negativo igual ao seu total máximo de PV. Funciona com o próprio samaritano e mesmo se estiver inconsciente."
       },
       {
         "nivel": 18,
-        "nome": "Mãos Abençoadas (+5)",
-        "descricao": "Bônus por dado de cura atinge +5 por dado."
+        "nome": "Ordem de Paz (Qualquer Número de Alvos, 4/dia)",
+        "descricao": "Você pode usar Ordem de Paz 4 vezes por dia e agora pode mirar qualquer número de criaturas que estejam simultaneamente dentro do alcance de 9m."
       },
       {
         "nivel": 20,
-        "nome": "Santo Redentor de Arton",
-        "descricao": "Suas curas tornam-se inesgotáveis; ao canalizar cura, cura o valor máximo absoluto de todos os alvos e anula toda a morte."
+        "nome": "Cura Instantânea (4/dia)",
+        "descricao": "No 20º nível, você pode lançar magias de cura como ação livre até 4 vezes por dia."
       }
     ]
   },
@@ -9418,124 +9323,64 @@
     "id": "clerigo_enclausurado",
     "nome": "Clérigo Enclausurado",
     "tipo": "Basica",
-    "pvInicial": 16,
-    "pvPorNivel": 4,
+    "pvInicial": 20,
+    "pvPorNivel": 5,
     "pmPorNivel": 3,
     "bba": "3/4 por nível",
-    "preRequisitos": "Tendência Leal, treinado em Conhecimento (religião).",
-    "proficiencias": "Armas simples. Não recebe proficiência com armaduras.",
-    "descricao": "Sacerdote contemplativo e acadêmico devotado aos mosteiros e bibliotecas divinas. Troca o vigor marcial pelo maior acervo de magias, erudição enciclopédica e liderança espiritual.",
+    "preRequisitos": "Tendência Leal. Treinado em Conhecimento (religião).",
+    "proficiencias": "Usar Armas Simples, Usar Escudos, Fortitude Maior, Vontade de Ferro. (Não ganha Usar Armaduras).",
     "livroFonte": "Manual do Devoto",
+    "descricao": "Sacerdotes reclusos da Congregação dos Enclausurados criados dentro de mosteiros e conventos fechados. Dedicam suas vidas à contemplação teológica, arquivos sacros e meditação. Possuem conhecimentos enciclopédicos e maestria incomparável quando operam dentro de templos sagrados.",
     "habilidades": [
       {
         "nivel": 1,
-        "nome": "Devoto, Canalizar Energia & Poder Divino",
-        "descricao": "Possui as obrigações e poderes da divindade, canalização de energia divina (1d6 a 10d6) e poderes divinos concedidos."
+        "nome": "Devoto & Poder Divino",
+        "descricao": "Como um clérigo padrão. Recebe talentos de poder concedido adicionais de sua divindade nos níveis 1, 5, 10, 15 e 20."
+      },
+      {
+        "nivel": 1,
+        "nome": "Canalizar Energia",
+        "descricao": "Como um clérigo padrão (1d6 no 1º nível, aumentando a cada dois níveis ímpares até 10d6 no 19º nível)."
+      },
+      {
+        "nivel": 1,
+        "nome": "Estudos Teológicos",
+        "descricao": "Devido à sua dedicação incansável aos textos sagrados, quando avança de nível o clérigo enclausurado aprende três magias novas (em vez de duas)."
       },
       {
         "nivel": 1,
         "nome": "Poço de Sabedoria",
-        "descricao": "Pode fazer testes de qualquer perícia de Conhecimento como se fosse treinado, somando seu nível de clérigo + mod. Inteligência."
-      },
-      {
-        "nivel": 1,
-        "nome": "Estudos Teológicos (3 Magias por Nível)",
-        "descricao": "Ao avançar de nível, aprende três magias divinas novas em vez de apenas duas."
+        "descricao": "Você pode fazer testes de qualquer perícia de Conhecimento como se fosse treinado nela, somando um bônus igual ao seu nível de classe + modificador de Inteligência."
       },
       {
         "nivel": 4,
         "nome": "Em Casa (Magia Gratuita)",
-        "descricao": "Quando está dentro de um templo ou santuário dedicado ao seu deus, pode lançar uma magia preparada por dia sem consumi-la."
+        "descricao": "Quando estiver dentro de um templo consagrado ao seu deus, uma vez por dia você pode lançar uma magia previamente preparada sem gastá-la de sua lista diária."
       },
       {
         "nivel": 6,
         "nome": "Gestor do Templo (+4 em uma Perícia)",
-        "descricao": "Responsável por um setor do templo (biblioteca, relicário, enfermaria), recebe abrigo e comida gratuitos e +4 em uma perícia à sua escolha."
+        "descricao": "A partir do 6º nível, você é responsável por um setor de um templo/mosteiro (biblioteca, relicário, enfermaria, etc.), dedicando 4 horas diárias a suas tarefas. Recebe abrigo e alimentação de graça e ganha um bônus de +4 em uma perícia à sua escolha relacionada às suas atribuições."
       },
       {
         "nivel": 11,
         "nome": "Em Casa (CD +2)",
-        "descricao": "No templo ou solo sagrado da divindade, a CD para resistir a todas as suas magias divinas aumenta em +2."
+        "descricao": "Quando estiver dentro de um templo consagrado à sua divindade, a Classe de Dificuldade (CD) para resistir a quaisquer de suas magias aumenta em +2."
       },
       {
         "nivel": 12,
         "nome": "Gestor do Templo (+4 em Perícias de Classe)",
-        "descricao": "Comanda uma pequena congregação com subalternos dedicados, recebendo bônus de +4 em todas as suas perícias de classe."
+        "descricao": "Você se torna responsável por uma capela própria com 6 a 20 seguidores subordinados e recebe um bônus permanente de +4 em todas as suas perícias de classe."
       },
       {
         "nivel": 18,
         "nome": "Gestor do Templo (Escolher 20)",
-        "descricao": "Administrador de um grande templo catedral; uma vez por dia pode escolher 20 em qualquer teste de perícia."
+        "descricao": "Você assume a administração de uma grande catedral/templo metropolitano com mais de 50 seguidores e equipes sob seu comando. Uma vez por dia, pode escolher 20 em qualquer teste de perícia."
       },
       {
         "nivel": 20,
         "nome": "Em Casa (Magias Gratuitas)",
-        "descricao": "No santuário de seu deus, pode lançar quaisquer magias preparadas sem perdê-las ou consumir recursos diários."
-      }
-    ]
-  },
-  {
-    "id": "druida_senhor_das_feras",
-    "nome": "Druida: Senhor das Feras",
-    "tipo": "Basica",
-    "pvInicial": 16,
-    "pvPorNivel": 4,
-    "pmPorNivel": 3,
-    "bba": "3/4 por nível",
-    "preRequisitos": "Carisma 13.",
-    "proficiencias": "Armas simples, clava, bordão, foice, dardo, lança; armaduras de couro e acolchoadas (sem metal).",
-    "descricao": "Guardião carismático da fauna e mestre amado pelos animais selvagens. Abre mão da forma selvagem para liderar uma matilha leal e permanente de múltiplos companheiros animais e familiares.",
-    "livroFonte": "Manual do Devoto",
-    "habilidades": [
-      {
-        "nivel": 1,
-        "nome": "Código de Conduta, Devoto & Empatia Selvagem",
-        "descricao": "Segue as diretrizes da natureza e canaliza empatia natural com animais e feras dos ermos."
-      },
-      {
-        "nivel": 1,
-        "nome": "Senhor das Feras (1º Companheiro Animal)",
-        "descricao": "Inicia sua jornada acompanhado por um animal guardião leal que evolui conforme seu nível."
-      },
-      {
-        "nivel": 2,
-        "nome": "Caminho da Floresta",
-        "descricao": "Move-se através de vegetação densa sem sofrer penalidades de movimento."
-      },
-      {
-        "nivel": 3,
-        "nome": "Rastro Invisível",
-        "descricao": "Não pode ser rastreado em terrenos naturais, a menos que deseje deixar rastros."
-      },
-      {
-        "nivel": 5,
-        "nome": "Senhor das Feras (2º Companheiro Animal)",
-        "descricao": "Atrai um segundo companheiro animal leal que passa a lutar e viajar ao seu lado."
-      },
-      {
-        "nivel": 7,
-        "nome": "Senhor das Feras (1º Familiar)",
-        "descricao": "Recebe uma criatura mágica protetora como familiar de mago, concedendo bônus de vínculo e sentidos compartilhados."
-      },
-      {
-        "nivel": 9,
-        "nome": "Imunidade a Venenos",
-        "descricao": "Torna-se completamente imune a todos os venenos naturais e químicos."
-      },
-      {
-        "nivel": 13,
-        "nome": "Senhor das Feras (3º Companheiro Animal)",
-        "descricao": "Sua matilha expande-se com um terceiro companheiro animal sob seu comando."
-      },
-      {
-        "nivel": 15,
-        "nome": "Corpo Atemporal",
-        "descricao": "Não sofre mais penalidades por envelhecimento e não pode ser envelhecido magicamente."
-      },
-      {
-        "nivel": 20,
-        "nome": "Senhor das Feras (2º Familiar)",
-        "descricao": "Atrai um segundo familiar protetor, completando um bando magnífico de feras e criaturas mágicas guardiãs."
+        "descricao": "No 20º nível, quando estiver dentro de um templo consagrado ao seu deus, você pode lançar quaisquer de suas magias preparadas sem perdê-las ou gastá-las. Magias com duração superior a instantânea se dissipam imediatamente se você sair do templo."
       }
     ]
   }

@@ -227,4 +227,36 @@ describe('Conversões e Consultas do Compêndio (TRPG)', () => {
     assert.strictEqual(posturasFiltradas.length > 0, true);
     assert.strictEqual(posturasFiltradas.every((p) => p.tipo === 'Postura'), true);
   });
+
+  it('deve conter e filtrar todas as 11 classes e variantes oficiais do Manual do Devoto', () => {
+    const classesDevoto = [
+      'Abençoado',
+      'Samaritano',
+      'Clérigo Cruzado',
+      'Clérigo Enclausurado',
+      'Clérigo Usurpador',
+      'Druida Ermitão',
+      'Druida Metamorfo',
+      'Druida Senhor das Feras',
+      'Paladino Caçador de Horrores',
+      'Paladino Santo',
+      'Paladino Vassalo',
+    ];
+
+    for (const nomeClasse of classesDevoto) {
+      const encontradas = filtrarClasses(nomeClasse);
+      assert.strictEqual(
+        encontradas.length > 0,
+        true,
+        `Classe do Manual do Devoto "${nomeClasse}" não foi encontrada no compêndio`
+      );
+      const exata = encontradas.find(
+        (c) => normalizarTexto(c.nome) === normalizarTexto(nomeClasse)
+      );
+      assert.ok(exata, `Classe exata "${nomeClasse}" deve existir`);
+      assert.strictEqual(exata.livroFonte, 'Manual do Devoto');
+      assert.strictEqual(exata.tipo, 'Basica');
+      assert.ok(exata.habilidades.length > 0, `Classe "${nomeClasse}" deve conter habilidades`);
+    }
+  });
 });
