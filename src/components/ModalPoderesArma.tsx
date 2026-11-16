@@ -35,6 +35,7 @@ export const ModalPoderesArma: React.FC<Props> = ({
 }) => {
   const [busca, setBusca] = useState('');
   const [abaModo, setAbaModo] = useState<'oficial' | 'personalizado'>('oficial');
+  const [bonusFiltro, setBonusFiltro] = useState<string>('Todos');
 
   // Campos para poder personalizado
   const [customNome, setCustomNome] = useState('');
@@ -48,15 +49,21 @@ export const ModalPoderesArma: React.FC<Props> = ({
 
   const poderesFiltrados = useMemo(() => {
     const termo = busca.trim().toLowerCase();
-    if (!termo) return poderesOficiais;
-    return poderesOficiais.filter(
-      (p) =>
-        p.nome.toLowerCase().includes(termo) ||
-        (p.descricao && p.descricao.toLowerCase().includes(termo)) ||
-        (p.subtipo && p.subtipo.toLowerCase().includes(termo)) ||
-        (p.bonusEquivalente && p.bonusEquivalente.toLowerCase().includes(termo))
-    );
-  }, [busca, poderesOficiais]);
+    let lista = poderesOficiais;
+    if (bonusFiltro !== 'Todos') {
+      lista = lista.filter((p) => (p.bonusEquivalente || '').includes(bonusFiltro));
+    }
+    if (termo) {
+      lista = lista.filter(
+        (p) =>
+          p.nome.toLowerCase().includes(termo) ||
+          (p.descricao && p.descricao.toLowerCase().includes(termo)) ||
+          (p.subtipo && p.subtipo.toLowerCase().includes(termo)) ||
+          (p.bonusEquivalente && p.bonusEquivalente.toLowerCase().includes(termo))
+      );
+    }
+    return [...lista].sort((a, b) => a.nome.localeCompare(b.nome, 'pt-BR'));
+  }, [busca, bonusFiltro, poderesOficiais]);
 
   const handleEscolherOficial = (poder: RegraData) => {
     // Normaliza nome removendo "Poder Especial: " se presente
@@ -159,6 +166,36 @@ export const ModalPoderesArma: React.FC<Props> = ({
                         <Text style={styles.btnClearSearchText}>✕</Text>
                       </TouchableOpacity>
                     )}
+                  </View>
+
+                  {/* Filtro por Nível de Bônus Mágico */}
+                  <View style={styles.bonusChipsWrap}>
+                    <ScrollView
+                      horizontal
+                      showsHorizontalScrollIndicator={false}
+                      contentContainerStyle={styles.bonusChipsScroll}
+                    >
+                      {(['Todos', '+1', '+2', '+3', '+4', '+5'] as const).map((b) => (
+                        <TouchableOpacity
+                          key={b}
+                          style={[
+                            styles.chipBonus,
+                            bonusFiltro === b && styles.chipBonusAtivo,
+                          ]}
+                          onPress={() => setBonusFiltro(b)}
+                          activeOpacity={0.8}
+                        >
+                          <Text
+                            style={[
+                              styles.chipBonusText,
+                              bonusFiltro === b && styles.chipBonusTextAtivo,
+                            ]}
+                          >
+                            {b === 'Todos' ? 'Todos os Bônus' : `Bônus ${b}`}
+                          </Text>
+                        </TouchableOpacity>
+                      ))}
+                    </ScrollView>
                   </View>
 
                   {/* Lista de Poderes Oficiais */}
@@ -402,6 +439,38 @@ const styles = StyleSheet.create({
   btnClearSearchText: {
     fontSize: 14,
     color: COLORS.textSecondary,
+    fontWeight: 'bold',
+  },
+  bonusChipsWrap: {
+    backgroundColor: COLORS.surfaceVariant,
+    paddingVertical: 6,
+    borderBottomWidth: 1,
+    borderBottomColor: COLORS.border,
+  },
+  bonusChipsScroll: {
+    paddingHorizontal: 12,
+    gap: 6,
+  },
+  chipBonus: {
+    paddingHorizontal: 10,
+    paddingVertical: 5,
+    borderRadius: 6,
+    backgroundColor: COLORS.surface,
+    borderWidth: 1,
+    borderColor: COLORS.border,
+    cursor: 'pointer' as any,
+  },
+  chipBonusAtivo: {
+    backgroundColor: COLORS.primary,
+    borderColor: COLORS.primary,
+  },
+  chipBonusText: {
+    fontSize: 12,
+    color: COLORS.textSecondary,
+    fontWeight: '600',
+  },
+  chipBonusTextAtivo: {
+    color: COLORS.white,
     fontWeight: 'bold',
   },
   scrollList: {

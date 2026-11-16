@@ -228,24 +228,26 @@ export const filtrarTalentos = ({
 }: FiltrosTalentos): TalentoData[] => {
   const normTermo = normalizarTexto(termo);
 
-  return talentos.filter((t) => {
-    if (categoria !== 'Todas' && t.categoria !== categoria) {
-      return false;
-    }
-    if (!normTermo) return true;
+  return talentos
+    .filter((t) => {
+      if (categoria !== 'Todas' && t.categoria !== categoria) {
+        return false;
+      }
+      if (!normTermo) return true;
 
-    const nomeNorm = normalizarTexto(t.nome);
-    const descNorm = normalizarTexto(t.descricao);
-    const benefNorm = normalizarTexto(t.beneficio);
-    const reqNorm = normalizarTexto(t.preRequisitos);
+      const nomeNorm = normalizarTexto(t.nome);
+      const descNorm = normalizarTexto(t.descricao);
+      const benefNorm = normalizarTexto(t.beneficio);
+      const reqNorm = normalizarTexto(t.preRequisitos);
 
-    return (
-      nomeNorm.includes(normTermo) ||
-      benefNorm.includes(normTermo) ||
-      descNorm.includes(normTermo) ||
-      reqNorm.includes(normTermo)
-    );
-  });
+      return (
+        nomeNorm.includes(normTermo) ||
+        benefNorm.includes(normTermo) ||
+        descNorm.includes(normTermo) ||
+        reqNorm.includes(normTermo)
+      );
+    })
+    .sort((a, b) => a.nome.localeCompare(b.nome, 'pt-BR'));
 };
 
 export interface FiltrosMagias {
@@ -265,58 +267,84 @@ export const filtrarMagias = ({
   const normTipo = normalizarTexto(tipo);
   const normEscola = normalizarTexto(escola);
 
-  return magias.filter((m) => {
-    if (nivel !== null && m.nivel !== nivel) {
-      return false;
-    }
-
-    if (tipo !== 'Todas') {
-      const tipoMagiaNorm = normalizarTexto(m.tipo);
-      if (!tipoMagiaNorm.includes(normTipo)) {
+  return magias
+    .filter((m) => {
+      if (nivel !== null && m.nivel !== nivel) {
         return false;
       }
-    }
 
-    if (escola !== 'Todas') {
-      const escolaMagiaNorm = normalizarTexto(m.escola);
-      if (!escolaMagiaNorm.includes(normEscola)) {
-        return false;
+      if (tipo !== 'Todas') {
+        const tipoMagiaNorm = normalizarTexto(m.tipo);
+        if (!tipoMagiaNorm.includes(normTipo)) {
+          return false;
+        }
       }
-    }
 
-    if (!normTermo) return true;
+      if (escola !== 'Todas') {
+        const escolaMagiaNorm = normalizarTexto(m.escola);
+        if (!escolaMagiaNorm.includes(normEscola)) {
+          return false;
+        }
+      }
 
-    const nomeNorm = normalizarTexto(m.nome);
-    const descNorm = normalizarTexto(m.descricao);
+      if (!normTermo) return true;
 
-    return nomeNorm.includes(normTermo) || descNorm.includes(normTermo);
-  });
+      const nomeNorm = normalizarTexto(m.nome);
+      const descNorm = normalizarTexto(m.descricao);
+
+      return nomeNorm.includes(normTermo) || descNorm.includes(normTermo);
+    })
+    .sort((a, b) => a.nome.localeCompare(b.nome, 'pt-BR'));
 };
 
-export const filtrarRacas = (termo = ''): RacaData[] => {
+export const filtrarRacas = (termo = '', manual = 'Todos'): RacaData[] => {
   const normTermo = normalizarTexto(termo);
-  if (!normTermo) return racas;
+  const normManual = normalizarTexto(manual);
 
-  return racas.filter((r) => {
-    const nomeNorm = normalizarTexto(r.nome);
-    const descNorm = normalizarTexto(r.descricao);
-    const traçosNorm = r.tracosRaciais.map((t) => normalizarTexto(t.nome + ' ' + t.descricao)).join(' ');
-    return nomeNorm.includes(normTermo) || descNorm.includes(normTermo) || traçosNorm.includes(normTermo);
-  });
+  return racas
+    .filter((r) => {
+      if (manual !== 'Todos') {
+        const livroNorm = normalizarTexto(r.livroFonte || '');
+        if (!livroNorm.includes(normManual)) {
+          return false;
+        }
+      }
+
+      if (!normTermo) return true;
+
+      const nomeNorm = normalizarTexto(r.nome);
+      const descNorm = normalizarTexto(r.descricao);
+      const traçosNorm = r.tracosRaciais.map((t) => normalizarTexto(t.nome + ' ' + t.descricao)).join(' ');
+      return nomeNorm.includes(normTermo) || descNorm.includes(normTermo) || traçosNorm.includes(normTermo);
+    })
+    .sort((a, b) => a.nome.localeCompare(b.nome, 'pt-BR'));
 };
 
-export const filtrarClasses = (termo = '', tipo: 'Todas' | 'Basica' | 'Prestigio' = 'Todas'): ClasseData[] => {
+export const filtrarClasses = (
+  termo = '',
+  tipo: 'Todas' | 'Basica' | 'Prestigio' = 'Todas',
+  manual = 'Todos'
+): ClasseData[] => {
   const normTermo = normalizarTexto(termo);
+  const normManual = normalizarTexto(manual);
 
-  return classes.filter((c) => {
-    if (tipo !== 'Todas' && c.tipo !== tipo) return false;
-    if (!normTermo) return true;
+  return classes
+    .filter((c) => {
+      if (tipo !== 'Todas' && c.tipo !== tipo) return false;
+      if (manual !== 'Todos') {
+        const livroNorm = normalizarTexto(c.livroFonte || '');
+        if (!livroNorm.includes(normManual)) {
+          return false;
+        }
+      }
+      if (!normTermo) return true;
 
-    const nomeNorm = normalizarTexto(c.nome);
-    const descNorm = normalizarTexto(c.descricao);
-    const habsNorm = c.habilidades.map((h) => normalizarTexto(h.nome + ' ' + h.descricao)).join(' ');
-    return nomeNorm.includes(normTermo) || descNorm.includes(normTermo) || habsNorm.includes(normTermo);
-  });
+      const nomeNorm = normalizarTexto(c.nome);
+      const descNorm = normalizarTexto(c.descricao);
+      const habsNorm = c.habilidades.map((h) => normalizarTexto(h.nome + ' ' + h.descricao)).join(' ');
+      return nomeNorm.includes(normTermo) || descNorm.includes(normTermo) || habsNorm.includes(normTermo);
+    })
+    .sort((a, b) => a.nome.localeCompare(b.nome, 'pt-BR'));
 };
 
 export const filtrarEquipamentos = (
@@ -325,15 +353,17 @@ export const filtrarEquipamentos = (
 ): EquipamentoData[] => {
   const normTermo = normalizarTexto(termo);
 
-  return equipamentos.filter((e) => {
-    if (tipo !== 'Todos' && e.tipo !== tipo) return false;
-    if (!normTermo) return true;
+  return equipamentos
+    .filter((e) => {
+      if (tipo !== 'Todos' && e.tipo !== tipo) return false;
+      if (!normTermo) return true;
 
-    const nomeNorm = normalizarTexto(e.nome);
-    const descNorm = normalizarTexto(e.descricao);
-    const catNorm = normalizarTexto(e.categoria);
-    return nomeNorm.includes(normTermo) || descNorm.includes(normTermo) || catNorm.includes(normTermo);
-  });
+      const nomeNorm = normalizarTexto(e.nome);
+      const descNorm = normalizarTexto(e.descricao);
+      const catNorm = normalizarTexto(e.categoria);
+      return nomeNorm.includes(normTermo) || descNorm.includes(normTermo) || catNorm.includes(normTermo);
+    })
+    .sort((a, b) => a.nome.localeCompare(b.nome, 'pt-BR'));
 };
 
 export const ESCOLAS_MAGIA = [
@@ -367,6 +397,35 @@ export const TIPOS_EQUIPAMENTO: Array<'Todos' | TipoEquipamento> = [
   'Item Geral',
 ];
 
+export const MANUAIS_CLASSES = [
+  'Todos',
+  'Manual Básico',
+  'Manual do Devoto',
+  'Manual do Arcano',
+  'Manual do Malandro',
+  'Manual do Combate',
+  'Reinos de Moreania',
+  'Guia da Trilogia',
+  'Guerras Táuricas',
+  'Império de Jade',
+] as const;
+
+export const MANUAIS_RACAS = [
+  'Todos',
+  'Manual Básico',
+  'Manual das Raças',
+  'Manual do Arcano',
+] as const;
+
+export const NIVEIS_BONUS_ARMAS_MAGICAS = [
+  'Todos',
+  '+1',
+  '+2',
+  '+3',
+  '+4',
+  '+5',
+] as const;
+
 export const TIPOS_REGRA = [
   'Todas',
   'Condições',
@@ -378,40 +437,52 @@ export type TipoRegraFiltro = (typeof TIPOS_REGRA)[number];
 
 export const filtrarRegras = (
   termo = '',
-  categoria: TipoRegraFiltro = 'Todas'
+  categoria: TipoRegraFiltro = 'Todas',
+  bonusArma = 'Todos'
 ): RegraData[] => {
   const normTermo = normalizarTexto(termo);
 
-  return todasRegras.filter((r) => {
-    if (categoria === 'Condições' && r.tipo !== 'Condição') return false;
-    if (categoria === 'Pontos de Ação' && r.tipo !== 'Pontos de Ação') return false;
-    if (categoria === 'Armas Mágicas' && r.tipo !== 'Armas Mágicas') return false;
+  return todasRegras
+    .filter((r) => {
+      if (categoria === 'Condições' && r.tipo !== 'Condição') return false;
+      if (categoria === 'Pontos de Ação' && r.tipo !== 'Pontos de Ação') return false;
+      if (categoria === 'Armas Mágicas' && r.tipo !== 'Armas Mágicas') return false;
 
-    if (!normTermo) return true;
+      if (categoria === 'Armas Mágicas' && bonusArma !== 'Todos') {
+        const bonus = r.bonusEquivalente || '';
+        if (!bonus.includes(bonusArma)) return false;
+      }
 
-    const nomeNorm = normalizarTexto(r.nome);
-    const descNorm = normalizarTexto(r.descricao);
-    const detNorm = r.detalhes ? normalizarTexto(r.detalhes) : '';
-    const subNorm = r.subtipo ? normalizarTexto(r.subtipo) : '';
+      if (!normTermo) return true;
 
-    return (
-      nomeNorm.includes(normTermo) ||
-      descNorm.includes(normTermo) ||
-      detNorm.includes(normTermo) ||
-      subNorm.includes(normTermo)
-    );
-  });
+      const nomeNorm = normalizarTexto(r.nome);
+      const descNorm = normalizarTexto(r.descricao);
+      const detNorm = r.detalhes ? normalizarTexto(r.detalhes) : '';
+      const subNorm = r.subtipo ? normalizarTexto(r.subtipo) : '';
+
+      return (
+        nomeNorm.includes(normTermo) ||
+        descNorm.includes(normTermo) ||
+        detNorm.includes(normTermo) ||
+        subNorm.includes(normTermo)
+      );
+    })
+    .sort((a, b) => a.nome.localeCompare(b.nome, 'pt-BR'));
 };
 
 export const filtrarCondicoes = (termo = ''): CondicaoData[] => {
   const normTermo = normalizarTexto(termo);
-  if (!normTermo) return condicoes;
+  if (!normTermo) {
+    return [...condicoes].sort((a, b) => a.nome.localeCompare(b.nome, 'pt-BR'));
+  }
 
-  return condicoes.filter((c) => {
-    const nomeNorm = normalizarTexto(c.nome);
-    const descNorm = normalizarTexto(c.descricao);
-    return nomeNorm.includes(normTermo) || descNorm.includes(normTermo);
-  });
+  return condicoes
+    .filter((c) => {
+      const nomeNorm = normalizarTexto(c.nome);
+      const descNorm = normalizarTexto(c.descricao);
+      return nomeNorm.includes(normTermo) || descNorm.includes(normTermo);
+    })
+    .sort((a, b) => a.nome.localeCompare(b.nome, 'pt-BR'));
 };
 
 export const filtrarManobras = (
@@ -424,19 +495,21 @@ export const filtrarManobras = (
     ...golpesMarciais,
   ];
 
-  return todasManobras.filter((m) => {
-    if (tipo !== 'Todas' && m.tipo !== tipo) return false;
-    if (!normTermo) return true;
+  return todasManobras
+    .filter((m) => {
+      if (tipo !== 'Todas' && m.tipo !== tipo) return false;
+      if (!normTermo) return true;
 
-    const nomeNorm = normalizarTexto(m.nome);
-    const descNorm = normalizarTexto(m.descricao);
-    const efeitoNorm = normalizarTexto(m.efeito);
-    return (
-      nomeNorm.includes(normTermo) ||
-      descNorm.includes(normTermo) ||
-      efeitoNorm.includes(normTermo)
-    );
-  });
+      const nomeNorm = normalizarTexto(m.nome);
+      const descNorm = normalizarTexto(m.descricao);
+      const efeitoNorm = normalizarTexto(m.efeito);
+      return (
+        nomeNorm.includes(normTermo) ||
+        descNorm.includes(normTermo) ||
+        efeitoNorm.includes(normTermo)
+      );
+    })
+    .sort((a, b) => a.nome.localeCompare(b.nome, 'pt-BR'));
 };
 
 export const buscarManobrasSugeridas = (

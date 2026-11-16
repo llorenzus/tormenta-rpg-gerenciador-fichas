@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import {
   ScrollView,
   StyleSheet,
@@ -7,9 +7,12 @@ import {
   View,
 } from 'react-native';
 import {
+  CATEGORIAS_TALENTO,
   converterTalentoParaItem,
   formatarDescricaoTalento,
+  normalizarTexto,
   TalentoData,
+  talentos,
 } from '../data';
 import {
   FichaPersonagem,
@@ -28,6 +31,36 @@ interface Props {
 
 export const AbaTalentos: React.FC<Props> = ({ ficha, onChange }) => {
   const [compendioVisivel, setCompendioVisivel] = useState(false);
+  const [categoriaFiltro, setCategoriaFiltro] = useState<string>('Todas');
+
+  const obterCategoriaDoTalento = (t: HabilidadeOuTalento): string => {
+    const comp = talentos.find(
+      (item) => normalizarTexto(item.nome) === normalizarTexto(t.nome)
+    );
+    if (comp) return comp.categoria;
+
+    const match = t.descricao.match(/^\[(.*?)\]/);
+    if (match) {
+      const tag = match[1].trim();
+      for (const cat of CATEGORIAS_TALENTO) {
+        if (cat !== 'Todas' && normalizarTexto(cat) === normalizarTexto(tag)) {
+          return cat;
+        }
+      }
+      return tag;
+    }
+
+    return 'Outros';
+  };
+
+  const talentosFiltrados = useMemo(() => {
+    if (categoriaFiltro === 'Todas') return ficha.talentos;
+    const normFiltro = normalizarTexto(categoriaFiltro);
+    return ficha.talentos.filter((t) => {
+      const cat = normalizarTexto(obterCategoriaDoTalento(t));
+      return cat === normFiltro;
+    });
+  }, [ficha.talentos, categoriaFiltro]);
 
   const abrirCompendioTalentos = () => {
     setCompendioVisivel(true);
@@ -95,7 +128,9 @@ export const AbaTalentos: React.FC<Props> = ({ ficha, onChange }) => {
               <Text style={styles.cardHeaderTitle}>Talentos</Text>
               <View style={styles.badgeQtd}>
                 <Text style={styles.badgeQtdText}>
-                  {ficha.talentos.length} {ficha.talentos.length === 1 ? 'talento' : 'talentos'}
+                  {categoriaFiltro === 'Todas'
+                    ? `${ficha.talentos.length} ${ficha.talentos.length === 1 ? 'talento' : 'talentos'}`
+                    : `${talentosFiltrados.length} de ${ficha.talentos.length}`}
                 </Text>
               </View>
             </View>
@@ -121,6 +156,36 @@ export const AbaTalentos: React.FC<Props> = ({ ficha, onChange }) => {
           </View>
         </View>
 
+        {/* BARRA DE FILTROS POR CATEGORIA/TIPO DE TALENTO */}
+        <View style={styles.filtrosWrap}>
+          <ScrollView
+            horizontal
+            showsHorizontalScrollIndicator={false}
+            contentContainerStyle={styles.chipsScroll}
+          >
+            {CATEGORIAS_TALENTO.map((cat) => (
+              <TouchableOpacity
+                key={cat}
+                style={[
+                  styles.chip,
+                  categoriaFiltro === cat && styles.chipAtivo,
+                ]}
+                onPress={() => setCategoriaFiltro(cat)}
+                activeOpacity={0.8}
+              >
+                <Text
+                  style={[
+                    styles.chipText,
+                    categoriaFiltro === cat && styles.chipTextAtivo,
+                  ]}
+                >
+                  {cat === 'Todas' ? 'Todos os Tipos' : cat}
+                </Text>
+              </TouchableOpacity>
+            ))}
+          </ScrollView>
+        </View>
+
         <View style={styles.cardBody}>
           {ficha.talentos.length === 0 ? (
             <View style={styles.emptyWrap}>
@@ -130,8 +195,16 @@ export const AbaTalentos: React.FC<Props> = ({ ficha, onChange }) => {
                 Toque em "📖 Compêndio de Talentos" para explorar todos os talentos de Tormenta RPG ou use "+ Manual" para criar um customizado.
               </Text>
             </View>
+          ) : talentosFiltrados.length === 0 ? (
+            <View style={styles.emptyWrap}>
+              <Text style={styles.emptyIcon}>🔍</Text>
+              <Text style={styles.emptyTitle}>Nenhum talento do tipo "{categoriaFiltro}"</Text>
+              <Text style={styles.emptyText}>
+                Nenhum dos {ficha.talentos.length} talentos da ficha pertence a esta categoria. Selecione "Todos os Tipos" para visualizar a lista completa.
+              </Text>
+            </View>
           ) : (
-            ficha.talentos.map((item) => (
+            talentosFiltrados.map((item) => (
               <View key={item.id} style={styles.itemSubCard}>
                 <View style={styles.rowTop}>
                   <View style={styles.colFlex}>
@@ -273,6 +346,38 @@ const styles = StyleSheet.create({
     color: COLORS.white,
     fontWeight: 'bold',
     fontSize: 12,
+  },
+  filtrosWrap: {
+    backgroundColor: COLORS.surfaceVariant,
+    paddingVertical: 8,
+    borderBottomWidth: 1,
+    borderBottomColor: COLORS.border,
+  },
+  chipsScroll: {
+    paddingHorizontal: 12,
+    gap: 6,
+  },
+  chip: {
+    paddingHorizontal: 10,
+    paddingVertical: 5,
+    borderRadius: 6,
+    backgroundColor: COLORS.surface,
+    borderWidth: 1,
+    borderColor: COLORS.border,
+    cursor: 'pointer' as any,
+  },
+  chipAtivo: {
+    backgroundColor: COLORS.primary,
+    borderColor: COLORS.primary,
+  },
+  chipText: {
+    fontSize: 12,
+    color: COLORS.textSecondary,
+    fontWeight: '600',
+  },
+  chipTextAtivo: {
+    color: COLORS.white,
+    fontWeight: 'bold',
   },
   cardBody: {
     padding: 12,

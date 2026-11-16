@@ -142,64 +142,6 @@ export const AbaAtributos: React.FC<Props> = ({ ficha, onChange }) => {
         <Text style={styles.bannerBuffsActionText}>Configurar ❯</Text>
       </TouchableOpacity>
 
-      {/* 1. ATRIBUTOS BÁSICOS E MODIFICADORES */}
-      <View style={styles.card}>
-        <SecaoHeader
-          titulo="Atributos Básicos"
-          subtitulo="Valores de atributos e seus respectivos modificadores"
-        />
-        <View style={styles.cardBody}>
-          {ATRIBUTOS_LISTA.map((atrib, idx) => {
-            const valorBase = ficha[atrib.campo];
-            const buff = buffs[atrib.campo];
-            const valorTotal = valorBase + buff;
-            const modTotal = calcularModificador(valorTotal);
-            const temBuff = buff !== 0;
-
-            return (
-              <View
-                key={atrib.sigla}
-                style={[
-                  styles.atributoRow,
-                  idx < ATRIBUTOS_LISTA.length - 1 && styles.atributoDivider,
-                ]}
-              >
-                <View style={styles.atributoLabelCol}>
-                  <Text style={styles.atributoSigla}>{atrib.sigla}</Text>
-                  <Text style={styles.atributoNome}>{atrib.nome}</Text>
-                  {temBuff && (
-                    <Text style={styles.atributoBaseNota}>Base: {valorBase}</Text>
-                  )}
-                </View>
-
-                <StepperValor
-                  valor={valorBase}
-                  onValorChange={(novo) => onChange({ ...ficha, [atrib.campo]: novo })}
-                  min={1}
-                  max={50}
-                />
-
-                <View style={[styles.modBadge, temBuff && styles.modBadgeAtivo]}>
-                  {temBuff ? (
-                    <>
-                      <Text style={styles.modBadgeLabelTotal}>
-                        TOTAL {valorTotal} ({formatarModificador(buff)})
-                      </Text>
-                      <Text style={styles.modBadgeValue}>{formatarModificador(modTotal)}</Text>
-                    </>
-                  ) : (
-                    <>
-                      <Text style={styles.modBadgeLabel}>MOD</Text>
-                      <Text style={styles.modBadgeValue}>{formatarModificador(modTotal)}</Text>
-                    </>
-                  )}
-                </View>
-              </View>
-            );
-          })}
-        </View>
-      </View>
-
       {/* 2. PONTOS DE VIDA, MAGIA, BBA, CA E RESISTÊNCIAS */}
       <View style={styles.card}>
         <SecaoHeader
@@ -498,6 +440,64 @@ export const AbaAtributos: React.FC<Props> = ({ ficha, onChange }) => {
               </View>
             ))}
           </View>
+        </View>
+      </View>
+
+      {/* 1. ATRIBUTOS BÁSICOS E MODIFICADORES */}
+      <View style={styles.card}>
+        <SecaoHeader
+          titulo="Atributos Básicos"
+          subtitulo="Valores de atributos e seus respectivos modificadores"
+        />
+        <View style={styles.cardBody}>
+          {ATRIBUTOS_LISTA.map((atrib, idx) => {
+            const valorBase = ficha[atrib.campo];
+            const buff = buffs[atrib.campo];
+            const valorTotal = valorBase + buff;
+            const modTotal = calcularModificador(valorTotal);
+            const temBuff = buff !== 0;
+
+            return (
+              <View
+                key={atrib.sigla}
+                style={[
+                  styles.atributoRow,
+                  idx < ATRIBUTOS_LISTA.length - 1 && styles.atributoDivider,
+                ]}
+              >
+                <View style={styles.atributoLabelCol}>
+                  <Text style={styles.atributoSigla}>{atrib.sigla}</Text>
+                  <Text style={styles.atributoNome}>{atrib.nome}</Text>
+                  {temBuff && (
+                    <Text style={styles.atributoBaseNota}>Base: {valorBase}</Text>
+                  )}
+                </View>
+
+                <StepperValor
+                  valor={valorBase}
+                  onValorChange={(novo) => onChange({ ...ficha, [atrib.campo]: novo })}
+                  min={1}
+                  max={50}
+                />
+
+                <View style={[styles.modBadge, temBuff && styles.modBadgeAtivo]}>
+                  {temBuff ? (
+                    <>
+                      <Text style={styles.modBadgeLabelTotal}>
+                        TOTAL {valorTotal} ({formatarModificador(buff)})
+                      </Text>
+                      <Text style={styles.modBadgeValue}>{formatarModificador(modTotal)}</Text>
+                    </>
+                  ) : (
+                    <>
+                      <Text style={styles.modBadgeLabel}>MOD</Text>
+                      <Text style={styles.modBadgeValue}>{formatarModificador(modTotal)}</Text>
+                    </>
+                  )}
+                </View>
+              </View>
+            );
+          })}
         </View>
       </View>
 

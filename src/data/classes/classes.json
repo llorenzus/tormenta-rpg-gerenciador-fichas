@@ -9383,5 +9383,110 @@
         "descricao": "No 20º nível, quando estiver dentro de um templo consagrado ao seu deus, você pode lançar quaisquer de suas magias preparadas sem perdê-las ou gastá-las. Magias com duração superior a instantânea se dissipam imediatamente se você sair do templo."
       }
     ]
+  },
+  {
+    "id": "artifice",
+    "nome": "Artífice",
+    "tipo": "Basica",
+    "pvInicial": 12,
+    "pvPorNivel": 3,
+    "pmPorNivel": 3,
+    "bba": "3/4 por nível",
+    "preRequisitos": "Nenhum.",
+    "proficiencias": "Usar Armaduras (leves e médias), Usar Armas Simples, Usar Escudos, Vontade de Ferro, Criar Obra-Prima.",
+    "livroFonte": "Reinos de Moreania",
+    "descricao": "Especialistas em engenhos arcanos, forja e tecnologia mágica. Em vez de lançar feitiços convencionais, o artífice infunde energias místicas em objetos, roupas e armaduras temporárias, comanda companheiros autômatos, fabrica itens mágicos em fração do tempo e sem custo de XP, e quebra o limite normal de itens mágicos equipados.",
+    "habilidades": [
+      {
+        "nivel": 1,
+        "nome": "Chave Sônica (+2)",
+        "descricao": "Todo artífice tem uma ferramenta mágica pessoal multiúso de funcionamento complicado. Substitui kits de ferramentas para testes de perícia. Com a chave em mãos, recebe +2 em testes de Ofício e de Ladinagem para abrir fechaduras, operar mecanismos e usar instrumentos mágicos (podendo fazer todos estes testes sem treinamento). O bônus muda para +4 no 4º nível e aumenta em +2 a cada três níveis (+6 no 7º, +8 no 10º, +10 no 13º, +12 no 16º e +14 no 19º nível). Se for perdida ou destruída, pode criar outra como um kit de artesão obra-prima."
+      },
+      {
+        "nivel": 1,
+        "nome": "Conhecimento de Artífice",
+        "descricao": "Ávido estudioso da manufatura de itens mágicos. Você pode fazer testes de qualquer perícia de Conhecimento como se fosse treinado sempre que relacionado a itens mágicos (reconhecer uma arma específica, saber onde encontrar minérios raros, etc.), recebendo um bônus igual ao seu nível nesta classe."
+      },
+      {
+        "nivel": 1,
+        "nome": "Fabricar Itens",
+        "descricao": "Perito em manufaturar itens mundanos: fabricar um item exige 1/4 do valor original em matérias-primas (1/6 no 5º nível, 1/8 no 10º nível e 1/10 no 16º nível). O tempo de fabricação é de 1 dia para cada 100 TO do item (em vez de 1 semana). Se falhar no teste de Ofício, pode gastar mais um dia para tentar de novo. Pode escolher 10 em ambiente seguro."
+      },
+      {
+        "nivel": 1,
+        "nome": "Infundir Magias",
+        "descricao": "O artífice infunde poder mágico temporário em roupas, armaduras e acessórios. Inteligência é a habilidade-chave. No 1º nível infunde magias de 1º nível; no 4º nível de 2º; no 7º de 3º; no 10º de 4º; no 13º de 5º; e no 16º de 6º nível. Conhece 1 + mod. Int magias no 1º nível e aprende 1 nova magia por nível. Só aprende magias de abjuração e transmutação com alvo pessoal, criatura ou objeto e duração diferente de instantânea/permanente/concentração. Possui 1 + mod. Int PM no 1º nível e ganha 3 PM por nível seguinte."
+      },
+      {
+        "nivel": 2,
+        "nome": "Criar Itens Mágicos (2d6+1 dias)",
+        "descricao": "Fabrica itens mágicos exigindo metade do valor em matérias-primas e sem custo de XP. O tempo de fabricação é de 2d6+1 dias, reduzindo para 1d10+1 no 6º nível, 1d8+1 no 10º nível, 1d6+1 no 14º nível e 1d4+1 no 18º nível."
+      },
+      {
+        "nivel": 2,
+        "nome": "Criar Varinhas",
+        "descricao": "Pode criar varinhas contendo qualquer magia de um nível que consiga lançar (até 6º nível), mesmo sem conhecê-la previamente."
+      },
+      {
+        "nivel": 3,
+        "nome": "Árvore de Natal",
+        "descricao": "No 3º nível, o artífice quebra as restrições anatômicas de sintonização: não está mais limitado a apenas quatro itens mágicos entre armaduras, escudos e acessórios. Pode equipar-se com qualquer número de itens mágicos simultaneamente."
+      },
+      {
+        "nivel": 3,
+        "nome": "Infundir Poderes",
+        "descricao": "Durante sua preparação matinal, pode gastar PM para infundir bônus mágico e poderes especiais em armas, armaduras e escudos comuns por um dia: +1 (1 PM), +2 (3 PM), +3 (6 PM), +4 (10 PM), +5 (15 PM). O bônus máximo é limitado ao nível máximo de magia que pode lançar."
+      },
+      {
+        "nivel": 4,
+        "nome": "Companheiro Autômato",
+        "descricao": "Recebe gratuitamente um companheiro autômato Pequeno ou Médio de 4º nível (conforme o talento Construir Autômato). Sempre que avança na classe, o autômato também ganha um nível sem custos. Pode ser alvo de infundir magias e poderes. Se for destruído, pode reconstruí-lo sem custos após 1 dia de trabalho por nível do autômato."
+      },
+      {
+        "nivel": 5,
+        "nome": "Criar Itens Maravilhosos (Acessórios Menores)",
+        "descricao": "Pode criar qualquer acessório menor (até 9.000 TO). No 11º nível pode criar acessórios médios (até 29.000 TO) e no 17º nível acessórios maiores (acima de 30.000 TO). Não cria elixires, tomos e manuais."
+      },
+      {
+        "nivel": 7,
+        "nome": "Ativação Metamágica",
+        "descricao": "Pode aplicar talentos metamágicos que possua a magias lançadas a partir de varinhas e cajados, gastando os PM armazenados no item."
+      },
+      {
+        "nivel": 8,
+        "nome": "Criar Armas e Armaduras Mágicas",
+        "descricao": "Pode criar armas, armaduras e escudos mágicos. O bônus total do item não pode ultrapassar metade de seu nível de artífice."
+      },
+      {
+        "nivel": 9,
+        "nome": "Economia de Recursos (1/3)",
+        "descricao": "A partir do 9º nível, fabrica itens mágicos por 1/3 do valor original em matérias-primas. No 16º nível, passa a precisar de apenas 1/4 do valor."
+      },
+      {
+        "nivel": 12,
+        "nome": "Reciclagem de Recursos",
+        "descricao": "Pode desmontar itens mágicos para pagar pelo valor de matérias-primas de novos itens do mesmo tipo. Se o valor do item desmontado for maior que o do novo item, o excedente é perdido."
+      },
+      {
+        "nivel": 13,
+        "nome": "Criar Cajados",
+        "descricao": "Pode criar qualquer cajado como se conhecesse todas as magias necessárias, desde que seu nível de artífice seja igual ou superior ao dobro do nível da magia mais poderosa no cajado."
+      },
+      {
+        "nivel": 15,
+        "nome": "Transfusão de Cargas",
+        "descricao": "Com uma ação completa, segurando duas varinhas ou cajados, pode transferir até 5 PM entre eles. Ao preparar magias, pode usar seus próprios PM matinais para recarregar varinhas e cajados."
+      },
+      {
+        "nivel": 19,
+        "nome": "Controlar Construtos",
+        "descricao": "Consegue acessar sistemas internos mecânicos e conjurar dominação total em construtos sem gastar PM, um número de vezes por dia igual a 1 + mod. Inteligência."
+      },
+      {
+        "nivel": 20,
+        "nome": "Artesão Lendário",
+        "descricao": "Ápice supremo da tecnologia arcana: não precisa de testes de Ofício para fabricar itens mundanos, pode forjar qualquer item mágico em apenas 1 dia e descobre todas as propriedades de qualquer item mágico instantaneamente apenas ao tocá-lo (como na magia identificação)."
+      }
+    ]
   }
 ]

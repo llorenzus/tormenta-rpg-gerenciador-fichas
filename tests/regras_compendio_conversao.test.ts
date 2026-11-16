@@ -10,8 +10,10 @@ import {
   filtrarMagias,
   filtrarTalentos,
   filtrarClasses,
+  filtrarRacas,
   filtrarEquipamentos,
   filtrarManobras,
+  filtrarRegras,
   normalizarTexto,
   MagiaData,
   TalentoData,
@@ -258,5 +260,72 @@ describe('Conversões e Consultas do Compêndio (TRPG)', () => {
       assert.strictEqual(exata.tipo, 'Basica');
       assert.ok(exata.habilidades.length > 0, `Classe "${nomeClasse}" deve conter habilidades`);
     }
+  });
+
+  it('deve conter a classe Artífice de Reinos de Moreania com todas as habilidades', () => {
+    const encontradas = filtrarClasses('Artífice');
+    const artifice = encontradas.find((c) => normalizarTexto(c.nome) === 'artifice');
+    assert.ok(artifice, 'Classe Artífice deve existir no compêndio');
+    assert.strictEqual(artifice.livroFonte, 'Reinos de Moreania');
+    assert.strictEqual(artifice.tipo, 'Basica');
+    assert.strictEqual(artifice.pvInicial, 12);
+    assert.strictEqual(artifice.pvPorNivel, 3);
+    assert.strictEqual(artifice.pmPorNivel, 3);
+    assert.strictEqual(artifice.bba, '3/4 por nível');
+
+    const nomesHabs = artifice.habilidades.map((h) => h.nome);
+    assert.ok(nomesHabs.some((n) => n.includes('Chave Sônica')));
+    assert.ok(nomesHabs.some((n) => n.includes('Infundir Magias')));
+    assert.ok(nomesHabs.some((n) => n.includes('Árvore de Natal')));
+    assert.ok(nomesHabs.some((n) => n.includes('Companheiro Autômato')));
+    assert.ok(nomesHabs.some((n) => n.includes('Artesão Lendário')));
+  });
+
+  it('deve filtrar classes e raças por manual de origem (livroFonte)', () => {
+    // Classes por manual
+    const classesDevoto = filtrarClasses('', 'Todas', 'Manual do Devoto');
+    assert.strictEqual(classesDevoto.length >= 11, true);
+    assert.strictEqual(classesDevoto.every((c) => c.livroFonte.includes('Manual do Devoto')), true);
+
+    const classesMoreania = filtrarClasses('', 'Todas', 'Reinos de Moreania');
+    assert.strictEqual(classesMoreania.length >= 1, true);
+    assert.ok(classesMoreania.some((c) => c.nome === 'Artífice'));
+
+    // Raças por manual
+    const racasBasico = filtrarRacas('', 'Manual Básico');
+    assert.strictEqual(racasBasico.length > 0, true);
+    assert.strictEqual(racasBasico.every((r) => r.livroFonte.includes('Manual Básico')), true);
+  });
+
+  it('deve manter listagens ordenadas em ordem alfabética', () => {
+    const classesTodas = filtrarClasses('', 'Todas', 'Todos');
+    for (let i = 0; i < classesTodas.length - 1; i++) {
+      const cmp = classesTodas[i].nome.localeCompare(classesTodas[i + 1].nome, 'pt-BR');
+      assert.strictEqual(
+        cmp <= 0,
+        true,
+        `Classes fora de ordem: "${classesTodas[i].nome}" antes de "${classesTodas[i + 1].nome}"`
+      );
+    }
+
+    const racasTodas = filtrarRacas('', 'Todos');
+    for (let i = 0; i < racasTodas.length - 1; i++) {
+      const cmp = racasTodas[i].nome.localeCompare(racasTodas[i + 1].nome, 'pt-BR');
+      assert.strictEqual(
+        cmp <= 0,
+        true,
+        `Raças fora de ordem: "${racasTodas[i].nome}" antes de "${racasTodas[i + 1].nome}"`
+      );
+    }
+  });
+
+  it('deve filtrar armas mágicas por nível de bônus equivalente', () => {
+    const armasBonus1 = filtrarRegras('', 'Armas Mágicas', '+1');
+    assert.strictEqual(armasBonus1.length > 0, true);
+    assert.strictEqual(armasBonus1.every((r) => (r.bonusEquivalente || '').includes('+1')), true);
+
+    const armasBonus2 = filtrarRegras('', 'Armas Mágicas', '+2');
+    assert.strictEqual(armasBonus2.length > 0, true);
+    assert.strictEqual(armasBonus2.every((r) => (r.bonusEquivalente || '').includes('+2')), true);
   });
 });

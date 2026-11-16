@@ -47,6 +47,9 @@ import {
   TIPOS_EQUIPAMENTO,
   TIPOS_REGRA,
   TipoRegraFiltro,
+  MANUAIS_CLASSES,
+  MANUAIS_RACAS,
+  NIVEIS_BONUS_ARMAS_MAGICAS,
   condicoes,
   todasRegras,
   posturas,
@@ -137,8 +140,12 @@ export const CompendioModal: React.FC<Props> = ({
   const [tipoMagiaSel, setTipoMagiaSel] = useState<'Todas' | 'Arcana' | 'Divina'>('Todas');
   const [escolaSel, setEscolaSel] = useState<string>('Todas');
 
+  // Filtros de Raças
+  const [manualRacaSel, setManualRacaSel] = useState<string>('Todos');
+
   // Filtros de Classes
   const [tipoClasseSel, setTipoClasseSel] = useState<'Todas' | 'Basica' | 'Prestigio'>('Todas');
+  const [manualClasseSel, setManualClasseSel] = useState<string>('Todos');
 
   // Filtros de Equipamentos
   const [tipoEquipSel, setTipoEquipSel] = useState<'Todos' | TipoEquipamento>('Todos');
@@ -148,6 +155,7 @@ export const CompendioModal: React.FC<Props> = ({
 
   // Filtros de Regras (Condições, Pontos de Ação, Armas Mágicas)
   const [tipoRegraSel, setTipoRegraSel] = useState<TipoRegraFiltro>('Todas');
+  const [bonusArmaMagicaSel, setBonusArmaMagicaSel] = useState<string>('Todos');
 
   // Controle de cards expandidos
   const [expandidos, setExpandidos] = useState<Record<string, boolean>>({});
@@ -190,13 +198,13 @@ export const CompendioModal: React.FC<Props> = ({
 
   const racasFiltradas = useMemo(() => {
     if (abaAtiva !== 'racas') return [];
-    return filtrarRacas(busca);
-  }, [abaAtiva, busca]);
+    return filtrarRacas(busca, manualRacaSel);
+  }, [abaAtiva, busca, manualRacaSel]);
 
   const classesFiltradas = useMemo(() => {
     if (abaAtiva !== 'classes') return [];
-    return filtrarClasses(busca, tipoClasseSel);
-  }, [abaAtiva, busca, tipoClasseSel]);
+    return filtrarClasses(busca, tipoClasseSel, manualClasseSel);
+  }, [abaAtiva, busca, tipoClasseSel, manualClasseSel]);
 
   const equipamentosFiltrados = useMemo(() => {
     if (abaAtiva !== 'equipamentos') return [];
@@ -210,8 +218,8 @@ export const CompendioModal: React.FC<Props> = ({
 
   const regrasFiltradas = useMemo(() => {
     if (abaAtiva !== 'regras') return [];
-    return filtrarRegras(busca, tipoRegraSel);
-  }, [abaAtiva, busca, tipoRegraSel]);
+    return filtrarRegras(busca, tipoRegraSel, bonusArmaMagicaSel);
+  }, [abaAtiva, busca, tipoRegraSel, bonusArmaMagicaSel]);
 
   const handleCliqueAdicionar = (
     tipo: 'talento' | 'magia' | 'raca' | 'classe' | 'equipamento' | 'manobra',
@@ -712,6 +720,36 @@ export const CompendioModal: React.FC<Props> = ({
             </View>
           )}
 
+          {abaAtiva === 'racas' && (
+            <View style={styles.filtrosContainer}>
+              <ScrollView
+                horizontal
+                showsHorizontalScrollIndicator={false}
+                contentContainerStyle={styles.chipsScroll}
+              >
+                {MANUAIS_RACAS.map((manual) => (
+                  <TouchableOpacity
+                    key={manual}
+                    style={[
+                      styles.chip,
+                      manualRacaSel === manual && styles.chipAtivo,
+                    ]}
+                    onPress={() => setManualRacaSel(manual)}
+                  >
+                    <Text
+                      style={[
+                        styles.chipText,
+                        manualRacaSel === manual && styles.chipTextAtivo,
+                      ]}
+                    >
+                      {manual === 'Todos' ? 'Todos os Manuais' : manual}
+                    </Text>
+                  </TouchableOpacity>
+                ))}
+              </ScrollView>
+            </View>
+          )}
+
           {abaAtiva === 'classes' && (
             <View style={styles.filtrosContainer}>
               <ScrollView
@@ -741,6 +779,31 @@ export const CompendioModal: React.FC<Props> = ({
                       ]}
                     >
                       {t.rotulo}
+                    </Text>
+                  </TouchableOpacity>
+                ))}
+              </ScrollView>
+              <ScrollView
+                horizontal
+                showsHorizontalScrollIndicator={false}
+                contentContainerStyle={[styles.chipsScroll, { marginTop: 6 }]}
+              >
+                {MANUAIS_CLASSES.map((manual) => (
+                  <TouchableOpacity
+                    key={manual}
+                    style={[
+                      styles.chip,
+                      manualClasseSel === manual && styles.chipAtivo,
+                    ]}
+                    onPress={() => setManualClasseSel(manual)}
+                  >
+                    <Text
+                      style={[
+                        styles.chipText,
+                        manualClasseSel === manual && styles.chipTextAtivo,
+                      ]}
+                    >
+                      {manual === 'Todos' ? 'Todos os Manuais' : manual}
                     </Text>
                   </TouchableOpacity>
                 ))}
@@ -841,6 +904,33 @@ export const CompendioModal: React.FC<Props> = ({
                   </TouchableOpacity>
                 ))}
               </ScrollView>
+              {tipoRegraSel === 'Armas Mágicas' && (
+                <ScrollView
+                  horizontal
+                  showsHorizontalScrollIndicator={false}
+                  contentContainerStyle={[styles.chipsScroll, { marginTop: 6 }]}
+                >
+                  {NIVEIS_BONUS_ARMAS_MAGICAS.map((bonus) => (
+                    <TouchableOpacity
+                      key={bonus}
+                      style={[
+                        styles.chip,
+                        bonusArmaMagicaSel === bonus && styles.chipAtivo,
+                      ]}
+                      onPress={() => setBonusArmaMagicaSel(bonus)}
+                    >
+                      <Text
+                        style={[
+                          styles.chipText,
+                          bonusArmaMagicaSel === bonus && styles.chipTextAtivo,
+                        ]}
+                      >
+                        {bonus === 'Todos' ? 'Todos os Bônus' : `Bônus ${bonus}`}
+                      </Text>
+                    </TouchableOpacity>
+                  ))}
+                </ScrollView>
+              )}
             </View>
           )}
 
