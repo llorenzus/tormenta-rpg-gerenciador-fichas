@@ -275,3 +275,4 @@ for (const item of novosItens) {
 
 fs.writeFileSync(path, JSON.stringify(equipamentos, null, 2), 'utf8');
 console.log(`Itens adicionados aos equipamentos: ${added}. Total: ${equipamentos.length}`);
+

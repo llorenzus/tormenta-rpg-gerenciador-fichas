@@ -1456,7 +1456,7 @@
   {
     "id": "elevar_magia",
     "beneficio": "Aumenta o nível real da magia em +1 por cada 1 PM extra pago, elevando a dificuldade da CD dos testes de resistência.",
-    "descricao": "Você sobrecarrega uma magia com potência de círculos superiores.",
+    "descricao": "Você sobrecarrega uma magia com potência de níveis superiores.",
     "nome": "Elevar Magia [metamágico]",
     "preRequisitos": "Nenhum.",
     "categoria": "Magia"
@@ -3975,7 +3975,7 @@
     "nome": "Preparar Poções",
     "categoria": "Criação de Item",
     "preRequisitos": "Capacidade de lançar magias arcanas ou divinas, nível de conjurador 1º.",
-    "beneficio": "Você pode criar poções de qualquer magia de até 3º círculo que você conheça e que tenha como alvo uma ou mais criaturas ou objetos. A poção custa metade do preço de mercado em ingredientes e 1/25 do preço em XP.",
+    "beneficio": "Você pode criar poções de qualquer magia de até 3º nível que você conheça e que tenha como alvo uma ou mais criaturas ou objetos. A poção custa metade do preço de mercado em ingredientes e 1/25 do preço em XP.",
     "descricao": "Você domina a arte da destilação mística, engarrafando encantamentos em elixires líquidos prontos para serem ingeridos.",
     "livroFonte": "Manual do Arcano / Manual Básico"
   },
@@ -3984,7 +3984,7 @@
     "nome": "Criar Varinhas",
     "categoria": "Criação de Item",
     "preRequisitos": "Capacidade de lançar magias arcanas ou divinas, nível de conjurador 5º.",
-    "beneficio": "Você pode fabricar varinhas contendo qualquer magia de até 4º círculo que conheça. A varinha é criada com 50 cargas completas, custando metade do preço de mercado em ouro e 1/25 em XP.",
+    "beneficio": "Você pode fabricar varinhas contendo qualquer magia de até 4º nível que conheça. A varinha é criada com 50 cargas completas, custando metade do preço de mercado em ouro e 1/25 em XP.",
     "descricao": "Você canaliza energias arcanas em pequenas varinhas de madeiras nobres, ossos ou cristais para descarregar feitiços rápidos.",
     "livroFonte": "Manual do Arcano / Manual Básico"
   },
@@ -4020,7 +4020,7 @@
     "nome": "Adaptabilidade Arcana",
     "categoria": "Magia",
     "preRequisitos": "Inteligência 15 ou Carisma 15, nível de conjurador 3º.",
-    "beneficio": "Uma vez por dia durante seu descanso longo, você pode trocar uma de suas magias conhecidas por outra magia do mesmo círculo da sua lista de classe.",
+    "beneficio": "Uma vez por dia, após um descanso pleno, você pode trocar uma de suas magias conhecidas por outra magia do mesmo nível da sua lista de classe.",
     "descricao": "Sua mente flexível permite reconfigurar seus padrões e conceitos mágicos com facilidade surpreendente.",
     "livroFonte": "Manual do Arcano"
   },
@@ -4038,7 +4038,7 @@
     "nome": "Canalizador de Mana",
     "categoria": "Magia",
     "preRequisitos": "Nível de conjurador 5º, Vontade de Ferro.",
-    "beneficio": "Uma vez por dia como ação completa, você pode meditar para recuperar um número de Pontos de Mana igual a 1d4 + modificador do atributo-chave de conjuração.",
+    "beneficio": "Uma vez por dia como ação completa, você pode meditar para recuperar um número de Pontos de Magia igual a 1d4 + modificador do atributo-chave de conjuração.",
     "descricao": "Você consegue abrir seus canais sutis de energia interior no meio de uma expedição para absorver as correntes místicas do ambiente.",
     "livroFonte": "Manual do Arcano"
   },
@@ -4056,7 +4056,7 @@
     "nome": "Contrafeitiço Aprimorado",
     "categoria": "Magia",
     "preRequisitos": "Identificar Magia 6 graduações.",
-    "beneficio": "Ao tentar anular uma magia com contramágica, você não precisa usar a mesma magia: pode usar qualquer magia da mesma escola que seja de mesmo círculo ou superior.",
+    "beneficio": "Ao tentar anular uma magia com contramágica, você não precisa usar a mesma magia: pode usar qualquer magia da mesma escola que seja de mesmo nível ou superior.",
     "descricao": "Você domina as correntes de cada escola arcana, quebrando o fluxo místico do rival com qualquer fórmula correspondente.",
     "livroFonte": "Manual do Arcano"
   },

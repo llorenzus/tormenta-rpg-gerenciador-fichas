@@ -42,3 +42,4 @@ for (const m of novasMagias) {
 
 fs.writeFileSync(path, JSON.stringify(magias, null, 2), 'utf8');
 console.log(`Magias adicionadas: ${addedCount}. Total: ${magias.length}`);
+

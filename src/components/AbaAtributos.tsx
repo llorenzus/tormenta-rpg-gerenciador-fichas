@@ -36,7 +36,7 @@ export const AbaAtributos: React.FC<Props> = ({ ficha, onChange }) => {
   const refTotal = meioNivel + modDes + refOutros;
   const vonTotal = meioNivel + modSab + vonOutros;
 
-  const handleDescansoLongo = () => {
+  const handleDescansoPleno = () => {
     onChange({
       ...ficha,
       pvAtual: ficha.pvTotal,
@@ -45,7 +45,7 @@ export const AbaAtributos: React.FC<Props> = ({ ficha, onChange }) => {
       pontosAcao: 1,
     });
     Alert.alert(
-      'Descanso Longo',
+      'Descanso Pleno',
       'Todos os seus recursos atuais (PV, PM, PE e Pontos de Ação) foram restaurados aos valores padrão!'
     );
   };
@@ -131,13 +131,13 @@ export const AbaAtributos: React.FC<Props> = ({ ficha, onChange }) => {
         />
         <View style={styles.cardBody}>
           <TouchableOpacity
-            style={styles.btnDescansoLongo}
-            onPress={handleDescansoLongo}
+            style={styles.btnDescansoPleno}
+            onPress={handleDescansoPleno}
             activeOpacity={0.85}
           >
-            <Text style={styles.btnDescansoLongoText}>Descanso Longo</Text>
-            <Text style={styles.btnDescansoLongoSub}>
-              Recuperar PV e PM atuais para os valores máximos
+            <Text style={styles.btnDescansoPlenoText}>Descanso Pleno</Text>
+            <Text style={styles.btnDescansoPlenoSub}>
+              Recuperar PV, PM e PE atuais para os valores máximos
             </Text>
           </TouchableOpacity>
 
@@ -527,7 +527,7 @@ const styles = StyleSheet.create({
     fontSize: 13,
     fontWeight: 'bold',
   },
-  btnDescansoLongo: {
+  btnDescansoPleno: {
     backgroundColor: COLORS.primary,
     borderWidth: 1.5,
     borderColor: COLORS.gold,
@@ -538,12 +538,12 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
-  btnDescansoLongoText: {
+  btnDescansoPlenoText: {
     color: COLORS.white,
     fontSize: 15,
     fontWeight: 'bold',
   },
-  btnDescansoLongoSub: {
+  btnDescansoPlenoSub: {
     color: 'rgba(255,255,255,0.85)',
     fontSize: 11,
     marginTop: 2,

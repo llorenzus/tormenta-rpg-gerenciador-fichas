@@ -1,4 +1,8 @@
-import { FichaPersonagem } from '../../models/ficha';
+import {
+  calcularGraduacaoPericia,
+  FichaPersonagem,
+  obterClassesFicha,
+} from '../../models/ficha';
 import talentosRaw from './talentos.json';
 import type { TalentoData } from './index';
 
@@ -26,6 +30,168 @@ function getTalentosRefOrdenados(): TalentoRef[] {
     );
   }
   return _talentosRefOrdenados;
+}
+
+/**
+ * Normaliza texto para comparações sem acento e em caixa baixa
+ */
+function normalizarTexto(txt: string): string {
+  return (txt || '')
+    .toLowerCase()
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .trim();
+}
+
+/**
+ * Retorna o maior nível que o personagem possui na classe solicitada (ex: 'guerreiro', 'mago', etc.)
+ */
+function obterNivelClasseFicha(ficha: FichaPersonagem, nomeClasseBuscada: string): number {
+  const normBuscada = normalizarTexto(nomeClasseBuscada);
+  const classes = obterClassesFicha(ficha);
+  let maiorNivel = 0;
+
+  for (const c of classes) {
+    const cNorm = normalizarTexto(c.nome);
+    if (cNorm && (cNorm === normBuscada || cNorm.includes(normBuscada) || normBuscada.includes(cNorm))) {
+      if ((c.nivel || 1) > maiorNivel) {
+        maiorNivel = c.nivel || 1;
+      }
+    }
+  }
+
+  // Se não achou na lista estruturada de classes, tenta checar a string textual ficha.classe
+  if (maiorNivel === 0 && ficha.classe) {
+    const fichaClasseNorm = normalizarTexto(ficha.classe);
+    if (fichaClasseNorm.includes(normBuscada)) {
+      const regex = new RegExp(`${normBuscada}\\s*(\\d+)`, 'i');
+      const match = fichaClasseNorm.match(regex);
+      maiorNivel = match ? parseInt(match[1], 10) || 1 : 1;
+    }
+  }
+
+  return maiorNivel;
+}
+
+/**
+ * Checa se o personagem possui uma habilidade de classe (ou poder/talento equivalente ou classe de origem)
+ */
+function possuiHabilidadeDeClasse(ficha: FichaPersonagem, nomeHabilidade: string): boolean {
+  const habNorm = normalizarTexto(nomeHabilidade);
+
+  // 1. Checa na lista de habilidades de classe / talentos / raça
+  const todasHabs = [
+    ...(ficha.habilidadesClasse || []),
+    ...(ficha.habilidadesRaca || []),
+    ...(ficha.talentos || []),
+  ];
+  const encontrada = todasHabs.some((h) => {
+    const n = normalizarTexto(h.nome);
+    return n.includes(habNorm) || habNorm.includes(n);
+  });
+  if (encontrada) return true;
+
+  // 2. Mapeamento de habilidades características por classe
+  const classesPersonagem = obterClassesFicha(ficha).map((c) => normalizarTexto(c.nome));
+  const temClasse = (classe: string) =>
+    classesPersonagem.some((c) => c.includes(classe) || classe.includes(c));
+
+  if (habNorm.includes('furia') && temClasse('barbaro')) return true;
+  if (
+    (habNorm.includes('musica de bardo') ||
+      habNorm.includes('cancao') ||
+      habNorm.includes('conhecimento de bardo')) &&
+    temClasse('bardo')
+  ) {
+    return true;
+  }
+  if (
+    habNorm.includes('canalizar energia') &&
+    (temClasse('clerigo') || temClasse('paladino'))
+  ) {
+    return true;
+  }
+  if (
+    (habNorm.includes('destruir o mal') ||
+      habNorm.includes('cura pelas maos') ||
+      habNorm.includes('detectar o mal')) &&
+    temClasse('paladino')
+  ) {
+    return true;
+  }
+  if (
+    (habNorm.includes('companheiro animal') || habNorm.includes('forma selvagem')) &&
+    temClasse('druida')
+  ) {
+    return true;
+  }
+  if (
+    habNorm.includes('empatia selvagem') &&
+    (temClasse('druida') || temClasse('ranger'))
+  ) {
+    return true;
+  }
+  if (
+    (habNorm.includes('inimigo predileto') || habNorm.includes('terreno predileto')) &&
+    temClasse('ranger')
+  ) {
+    return true;
+  }
+  if (
+    (habNorm.includes('tecnica ladina') || habNorm.includes('ataque furtivo')) &&
+    temClasse('ladino')
+  ) {
+    return true;
+  }
+  if (habNorm.includes('sortudo') && temClasse('swashbuckler')) return true;
+  if (habNorm.includes('familiar') && (temClasse('mago') || temClasse('feiticeiro'))) {
+    return true;
+  }
+
+  return false;
+}
+
+/**
+ * Verifica se o personagem é treinado em uma perícia
+ */
+function verificarPericiaTreinada(ficha: FichaPersonagem, nomePericia: string): boolean {
+  const pericias = ficha.pericias || [];
+  const normBuscada = normalizarTexto(nomePericia.replace(/perícia\s*\(|\)/gi, ''));
+
+  if (normBuscada.includes('escolhida') || normBuscada.includes('qualquer')) {
+    return pericias.some((p) => p.treinada);
+  }
+
+  return pericias.some((p) => {
+    const nomeNorm = normalizarTexto(p.nome);
+    const compNorm = normalizarTexto(p.complemento || '');
+    const combinado = `${nomeNorm} ${compNorm}`.trim();
+    return (
+      (combinado.includes(normBuscada) || normBuscada.includes(nomeNorm)) && p.treinada
+    );
+  });
+}
+
+/**
+ * Retorna as graduações do personagem em uma perícia
+ */
+function obterGraduacaoPericia(ficha: FichaPersonagem, nomePericia: string): number {
+  const pericias = ficha.pericias || [];
+  const normBuscada = normalizarTexto(nomePericia.replace(/perícia\s*\(|\)/gi, ''));
+
+  const pericia = pericias.find((p) => {
+    const nomeNorm = normalizarTexto(p.nome);
+    const compNorm = normalizarTexto(p.complemento || '');
+    const combinado = `${nomeNorm} ${compNorm}`.trim();
+    return combinado.includes(normBuscada) || normBuscada.includes(nomeNorm);
+  });
+
+  if (!pericia) {
+    const niv = Number(ficha.nivel) || 1;
+    return Math.floor(niv / 2);
+  }
+
+  return calcularGraduacaoPericia(ficha, pericia);
 }
 
 /**
@@ -84,7 +250,6 @@ export function verificarPreRequisitosCumpridos(
   }
 
   const pendencias: string[] = [];
-  const textoNorm = texto.toLowerCase();
 
   // 1. Checagem de Atributos
   // Força
@@ -159,19 +324,113 @@ export function verificarPreRequisitosCumpridos(
     }
   }
 
-  // 4. Checagem de Perícias Treinadas
-  const matchPericia = texto.match(/treinado em\s+([A-Za-zÀ-ÖØ-öø-ÿ\s]+?)(?:,|$|\.)/i);
-  if (matchPericia) {
-    const nomePericia = matchPericia[1].trim().toLowerCase();
-    const possuiTreino = (ficha.pericias || []).some(
-      (p) => p.nome.toLowerCase().includes(nomePericia) && p.treinada
-    );
-    if (!possuiTreino) {
-      pendencias.push(`Treinado em ${matchPericia[1].trim()}`);
+  // 4. Checagem de Classes e Níveis de Classe
+  // a) Classe <Nome> (ex: 'Classe mago.', 'Classe druida', 'Classe clérigo', 'Classe feiticeiro')
+  const classeApenasMatches = [
+    ...texto.matchAll(/(?<!habilidade\s+de\s+)(?:classe|classes)\s+([A-Za-zÀ-ÿ]+)/gi),
+  ];
+  for (const m of classeApenasMatches) {
+    const nomeClasse = m[1];
+    const nomeNorm = normalizarTexto(nomeClasse);
+    if (!['conjuradora', 'habilidade', 'prestigio', 'variante'].includes(nomeNorm)) {
+      const nivelNaClasse = obterNivelClasseFicha(ficha, nomeClasse);
+      if (nivelNaClasse < 1) {
+        pendencias.push(`Classe ${nomeClasse}`);
+      }
     }
   }
 
-  // 5. Checagem de Talentos Pré-Requisito
+  // b) <Classe> [de] <X>º nível (ex: 'guerreiro 4º nível', 'mago 4º nível', 'Artífice 1º nível')
+  const classeNivelMatches = [
+    ...texto.matchAll(/([A-Za-zÀ-ÿ]+)(?:\s+de)?\s+(\d+)º?\s*nível(?!\s+de\s+personagem)/gi),
+  ];
+  for (const m of classeNivelMatches) {
+    const nomeClasse = m[1];
+    const nomeNorm = normalizarTexto(nomeClasse);
+    if (
+      ![
+        'personagem',
+        'outro',
+        'outros',
+        'magias',
+        'magia',
+        'conjurador',
+        'divinas',
+        'arcanas',
+      ].includes(nomeNorm)
+    ) {
+      const nivelMin = parseInt(m[2], 10);
+      const nivelAtual = obterNivelClasseFicha(ficha, nomeClasse);
+      if (nivelAtual < nivelMin) {
+        pendencias.push(
+          `${nomeClasse} ${nivelMin}º nível (possui nível ${nivelAtual})`
+        );
+      }
+    }
+  }
+
+  // c) Habilidade de classe <Nome> ou <Nome> como habilidade de classe
+  const habClasseMatches = [
+    ...texto.matchAll(/habilidade\s+de\s+classe\s+([A-Za-zÀ-ÿ\s\/\(\)]+?)(?:,|$|\.|\se\s)/gi),
+  ];
+  for (const m of habClasseMatches) {
+    const nomeHab = m[1].trim();
+    if (!possuiHabilidadeDeClasse(ficha, nomeHab)) {
+      pendencias.push(`Habilidade de classe: ${nomeHab}`);
+    }
+  }
+
+  const comoHabMatches = [
+    ...texto.matchAll(/([A-Za-zÀ-ÿ\s]+?)\s+como\s+habilidade\s+de\s+classe/gi),
+  ];
+  for (const m of comoHabMatches) {
+    const nomeHab = m[1].trim();
+    if (!possuiHabilidadeDeClasse(ficha, nomeHab)) {
+      pendencias.push(`Habilidade de classe: ${nomeHab}`);
+    }
+  }
+
+  // 5. Checagem de Perícias
+  // a) <Perícia> <X> graduações
+  const gradMatches = [
+    ...texto.matchAll(/([A-Za-zÀ-ÿ\s\(\)]+?)\s+(\d+)\s+graduaç(?:ão|ões)/gi),
+  ];
+  for (const m of gradMatches) {
+    const nomePericia = m[1].replace(/^(?:e|ou|,)\s+/i, '').trim();
+    const minGrad = parseInt(m[2], 10);
+    const gradAtual = obterGraduacaoPericia(ficha, nomePericia);
+    if (gradAtual < minGrad) {
+      pendencias.push(`${nomePericia} ${minGrad} graduações (possui ${gradAtual})`);
+    }
+  }
+
+  // b) Treinado em <Perícia> (suporta múltiplas perícias com 'e' ou 'ou')
+  const treinadoMatches = [
+    ...texto.matchAll(/(?:treinad[oa]s?\s+em|treinad[oa]\s+na\s+perícia)\s+([^,.;]+)/gi),
+  ];
+  for (const tm of treinadoMatches) {
+    const raw = tm[1].trim();
+    if (/\s+ou\s+/i.test(raw)) {
+      const parts = raw.split(/\s+ou\s+/i).map((s) => s.trim());
+      const atendeAoMenosUma = parts.some((p) => verificarPericiaTreinada(ficha, p));
+      if (!atendeAoMenosUma) {
+        pendencias.push(`Treinado em ${parts.join(' ou ')}`);
+      }
+    } else if (/\s+e\s+/i.test(raw)) {
+      const parts = raw.split(/\s+e\s+/i).map((s) => s.trim());
+      for (const p of parts) {
+        if (!verificarPericiaTreinada(ficha, p)) {
+          pendencias.push(`Treinado em ${p}`);
+        }
+      }
+    } else {
+      if (!verificarPericiaTreinada(ficha, raw)) {
+        pendencias.push(`Treinado em ${raw}`);
+      }
+    }
+  }
+
+  // 6. Checagem de Talentos Pré-Requisito
   const talentosExigidos = identificarTalentosCitadosEmPreRequisitos(texto, talento.id);
   const talentosFichaNorm = (ficha.talentos || []).map((t) =>
     t.nome.replace(/\s*\[.*?\]/g, '').trim().toLowerCase()
@@ -195,4 +454,3 @@ export function verificarPreRequisitosCumpridos(
     pendencias,
   };
 }
-

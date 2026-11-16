@@ -34,12 +34,12 @@ export const AbaMagias: React.FC<Props> = ({ ficha, onChange }) => {
     setCompendioVisivel(true);
   };
 
-  const adicionarMagia = (nivelCirculo: number) => {
+  const adicionarMagia = (nivelMagia: number) => {
     const nova: MagiaItem = {
       id: gerarId(),
-      nivelCirculo,
+      nivelCirculo: nivelMagia,
       nome: '',
-      custoPm: nivelCirculo === 0 ? '0' : String(nivelCirculo),
+      custoPm: nivelMagia === 0 ? '0' : String(nivelMagia),
       descricao: '',
     };
     onChange({ ...ficha, magias: [...ficha.magias, nova] });
@@ -144,13 +144,13 @@ export const AbaMagias: React.FC<Props> = ({ ficha, onChange }) => {
         </View>
       </View>
 
-      {/* 2. GRIMÓRIO DE MAGIAS POR CÍRCULOS */}
+      {/* 2. GRIMÓRIO DE MAGIAS POR NÍVEL */}
       <View style={styles.card}>
         <View style={styles.cardHeaderWithAction}>
           <View style={styles.cardHeaderTitleCol}>
             <Text style={styles.cardHeaderTitle}>Grimório de Magias</Text>
             <Text style={styles.cardHeaderSubtitle}>
-              {ficha.magias.length} magias registradas • Círculos do 0º ao 9º nível
+              {ficha.magias.length} magias registradas • Magias do 0 ao 9º nível
             </Text>
           </View>
           <TouchableOpacity
@@ -173,7 +173,7 @@ export const AbaMagias: React.FC<Props> = ({ ficha, onChange }) => {
                     <Text style={styles.nivelMagiaTitulo}>
                       {nivel === 0
                         ? 'Nível 0 (Truques / Preces)'
-                        : `${nivel}º Círculo de Magia`}
+                        : `Magias de ${nivel}º Nível`}
                     </Text>
                     <View style={styles.badgeCustoPmFixo}>
                       <Text style={styles.badgeCustoPmFixoText}>

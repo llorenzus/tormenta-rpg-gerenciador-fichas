@@ -106,14 +106,22 @@ export const FichaDetalheScreen: React.FC<Props> = ({
     }
   }, []);
 
+  // Garante que a ordem reaja a mudanças externas na ficha
+  useEffect(() => {
+    if (Array.isArray(ficha.ordemAbas) && ficha.ordemAbas.length > 0) {
+      const salvas = ficha.ordemAbas.filter((k) => k in TODAS_AS_ABAS) as AbaKey[];
+      const faltantes = ORDEM_ABAS_PADRAO.filter((k) => !salvas.includes(k));
+      const completa = [...salvas, ...faltantes];
+      setOrdemAbas(completa);
+    }
+  }, [ficha.id, JSON.stringify(ficha.ordemAbas)]);
+
   // Estado das abas selecionadas por Chave
   const [abaMobile, setAbaMobile] = useState<AbaKey>('atributos');
   const [abaEsquerda, setAbaEsquerda] = useState<AbaKey>('atributos');
   const [abaDireita, setAbaDireita] = useState<AbaKey>('habilidades_classe');
 
-  // Drag & Drop HTML5 de abas
-  const [abaArrastando, setAbaArrastando] = useState<AbaKey | null>(null);
-  const [abaHoverAlvo, setAbaHoverAlvo] = useState<AbaKey | null>(null);
+  // Modal de Organização de Abas
   const [modalReordenarAberto, setModalReordenarAberto] = useState(false);
 
   // Split View no Desktop
@@ -122,18 +130,6 @@ export const FichaDetalheScreen: React.FC<Props> = ({
   const [isDragging, setIsDragging] = useState(false);
   const [containerWidth, setContainerWidth] = useState(1200);
   const [compendioGeralAberto, setCompendioGeralAberto] = useState(false);
-
-  const reordenarAbas = (deChave: AbaKey, paraChave: AbaKey) => {
-    if (deChave === paraChave) return;
-    const nova = [...ordemAbas];
-    const deIdx = nova.indexOf(deChave);
-    const paraIdx = nova.indexOf(paraChave);
-    if (deIdx !== -1 && paraIdx !== -1) {
-      nova.splice(deIdx, 1);
-      nova.splice(paraIdx, 0, deChave);
-      atualizarOrdemAbas(nova);
-    }
-  };
 
   const atualizarOrdemAbas = (novaOrdem: AbaKey[]) => {
     setOrdemAbas(novaOrdem);
@@ -323,7 +319,7 @@ export const FichaDetalheScreen: React.FC<Props> = ({
     }
   };
 
-  // Barra de abas reutilizável com Drag & Drop e botão de Organizar
+  // Barra de abas reutilizável com botão de Organizar
   const renderTabBar = (
     abaSelecionada: AbaKey,
     onSelecionar: (chave: AbaKey) => void,
@@ -336,6 +332,8 @@ export const FichaDetalheScreen: React.FC<Props> = ({
         horizontal
         showsHorizontalScrollIndicator={false}
         contentContainerStyle={styles.tabBarScroll}
+        keyboardShouldPersistTaps="handled"
+        style={styles.tabBarScrollView}
       >
         {rotuloPainel && (
           <View style={styles.paneIndicator}>
@@ -348,8 +346,6 @@ export const FichaDetalheScreen: React.FC<Props> = ({
           if (!info) return null;
           const selecionada = abaSelecionada === chave;
           const abertaNoOutro = splitAtivo && outroPainelAba === chave;
-          const isDraggingThis = abaArrastando === chave;
-          const isHoverTarget = abaHoverAlvo === chave;
 
           return (
             <TouchableOpacity
@@ -384,14 +380,17 @@ export const FichaDetalheScreen: React.FC<Props> = ({
             </TouchableOpacity>
           );
         })}
-
-        {/* Botão de Organizar Ordem das Abas */}
+        {/* Opção no final do scroll das abas */}
         <TouchableOpacity
-          style={styles.btnOrganizarAbas}
+          style={styles.tabItemOrganizar}
           onPress={() => setModalReordenarAberto(true)}
           activeOpacity={0.7}
+          hitSlop={{ top: 8, bottom: 8, left: 6, right: 6 }}
         >
-          <Text style={styles.btnOrganizarAbasText}>⚙️ Ordem</Text>
+          <View style={styles.tabItemContent}>
+            <Text style={styles.tabIcon}>⚙️</Text>
+            <Text style={styles.tabTextOrganizar}>Ordem das Abas</Text>
+          </View>
         </TouchableOpacity>
 
         {/* Botão de Fechar no Painel 2 */}
@@ -400,11 +399,23 @@ export const FichaDetalheScreen: React.FC<Props> = ({
             style={styles.btnFecharDivisao}
             onPress={onFecharPainel}
             activeOpacity={0.7}
+            hitSlop={{ top: 10, bottom: 10, left: 8, right: 8 }}
           >
             <Text style={styles.btnFecharDivisaoText}>✕ Fechar</Text>
           </TouchableOpacity>
         )}
       </ScrollView>
+
+      {/* Botão fixo no canto da listagem das abas para acesso rápido */}
+      <TouchableOpacity
+        style={styles.fixedTabOrganizarBtn}
+        onPress={() => setModalReordenarAberto(true)}
+        activeOpacity={0.7}
+        hitSlop={{ top: 8, bottom: 8, left: 6, right: 6 }}
+        accessibilityLabel="Organizar Ordem das Abas"
+      >
+        <Text style={styles.fixedTabOrganizarIcon}>⚙️</Text>
+      </TouchableOpacity>
     </View>
   );
 
@@ -421,10 +432,10 @@ export const FichaDetalheScreen: React.FC<Props> = ({
           </TouchableOpacity>
 
           <View style={styles.titleCol}>
-            <Text style={styles.titleText} numberOfLines={1}>
+            <Text style={styles.titleText} numberOfLines={1} ellipsizeMode="tail">
               {ficha.nomePersonagem?.trim() || 'Ficha de Personagem'}
             </Text>
-            <Text style={styles.subtitleText} numberOfLines={1}>
+            <Text style={styles.subtitleText} numberOfLines={1} ellipsizeMode="tail">
               {isDesktop
                 ? subtituloDesktop || 'Tormenta RPG'
                 : `PV ${ficha.pvAtual}/${ficha.pvTotal} • PM ${ficha.pmAtual}/${ficha.pmTotal} • CA ${caTotal}`}
@@ -437,7 +448,9 @@ export const FichaDetalheScreen: React.FC<Props> = ({
               onPress={() => setCompendioGeralAberto(true)}
               activeOpacity={0.8}
             >
-              <Text style={styles.compendioTopBtnText}>📖 Compêndio</Text>
+              <Text style={styles.compendioTopBtnText}>
+                {isDesktop ? '📖 Compêndio' : '📖'}
+              </Text>
             </TouchableOpacity>
 
             {/* Botão para Ativar/Desativar Split View no Desktop */}
@@ -568,8 +581,8 @@ const styles = StyleSheet.create({
     backgroundColor: COLORS.primary,
   },
   topBarMobile: {
-    paddingHorizontal: 12,
-    paddingVertical: 10,
+    paddingHorizontal: 10,
+    paddingVertical: 8,
   },
   topBarDesktop: {
     paddingHorizontal: 20,
@@ -580,7 +593,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'space-between',
     width: '100%',
-    gap: 8,
+    gap: 6,
   },
   desktopMaxWidth: {
     maxWidth: 1400,
@@ -588,7 +601,8 @@ const styles = StyleSheet.create({
   },
   backBtn: {
     paddingVertical: 6,
-    paddingRight: 6,
+    paddingRight: 4,
+    flexShrink: 0,
   },
   backBtnText: {
     color: COLORS.white,
@@ -597,30 +611,34 @@ const styles = StyleSheet.create({
   },
   titleCol: {
     flex: 1,
-    paddingHorizontal: 2,
+    minWidth: 0,
+    flexShrink: 1,
+    paddingHorizontal: 4,
   },
   titleText: {
     color: COLORS.white,
     fontWeight: 'bold',
-    fontSize: 16,
+    fontSize: 15,
   },
   subtitleText: {
     color: 'rgba(255,255,255,0.88)',
-    fontSize: 12,
+    fontSize: 11.5,
     marginTop: 1,
   },
   topRightActions: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 8,
+    gap: 6,
+    flexShrink: 0,
   },
   compendioTopBtn: {
     backgroundColor: 'rgba(255,255,255,0.18)',
     borderWidth: 1,
     borderColor: 'rgba(255,255,255,0.4)',
-    paddingHorizontal: 10,
+    paddingHorizontal: 8,
     paddingVertical: 6,
     borderRadius: 6,
+    flexShrink: 0,
   },
   compendioTopBtnText: {
     color: COLORS.white,
@@ -634,6 +652,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
     paddingVertical: 6,
     borderRadius: 6,
+    flexShrink: 0,
   },
   splitBtnActive: {
     backgroundColor: COLORS.gold,
@@ -651,9 +670,10 @@ const styles = StyleSheet.create({
     backgroundColor: 'rgba(255,255,255,0.18)',
     borderWidth: 1,
     borderColor: COLORS.gold,
-    paddingHorizontal: 10,
+    paddingHorizontal: 9,
     paddingVertical: 6,
     borderRadius: 6,
+    flexShrink: 0,
   },
   exportBtnText: {
     color: COLORS.white,
@@ -665,6 +685,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 12,
     paddingVertical: 6,
     borderRadius: 6,
+    flexShrink: 0,
   },
   saveBtnText: {
     color: '#1F1A17',
@@ -733,6 +754,12 @@ const styles = StyleSheet.create({
     backgroundColor: COLORS.surface,
     borderBottomWidth: 1,
     borderBottomColor: COLORS.border,
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingRight: 6,
+  },
+  tabBarScrollView: {
+    flex: 1,
   },
   tabBarScroll: {
     paddingHorizontal: 8,
@@ -762,13 +789,6 @@ const styles = StyleSheet.create({
   },
   tabItemNoOutro: {
     backgroundColor: 'rgba(200,157,60,0.08)',
-  },
-  tabItemDragging: {
-    opacity: 0.4,
-  },
-  tabItemHoverTarget: {
-    backgroundColor: 'rgba(200,157,60,0.22)',
-    borderBottomColor: COLORS.gold,
   },
   tabItemContent: {
     flexDirection: 'row',
@@ -801,19 +821,36 @@ const styles = StyleSheet.create({
     color: '#8A6414',
     fontWeight: 'bold',
   },
-  btnOrganizarAbas: {
-    paddingHorizontal: 8,
-    paddingVertical: 5,
-    borderRadius: 6,
-    backgroundColor: 'rgba(0,0,0,0.05)',
-    marginLeft: 8,
+  fixedTabOrganizarBtn: {
+    paddingHorizontal: 12,
+    paddingVertical: 10,
+    backgroundColor: 'rgba(139,30,30,0.06)',
+    borderLeftWidth: 1,
+    borderLeftColor: COLORS.border,
     alignItems: 'center',
     justifyContent: 'center',
+    flexShrink: 0,
   },
-  btnOrganizarAbasText: {
-    fontSize: 11,
+  fixedTabOrganizarIcon: {
+    fontSize: 15,
+  },
+  tabItemOrganizar: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 4,
+    paddingHorizontal: 10,
+    paddingVertical: 8,
+    marginVertical: 4,
+    marginHorizontal: 4,
+    borderRadius: 6,
+    backgroundColor: 'rgba(139,30,30,0.08)',
+    borderWidth: 1,
+    borderColor: 'rgba(139,30,30,0.2)',
+  },
+  tabTextOrganizar: {
+    fontSize: 12,
     fontWeight: 'bold',
-    color: COLORS.textSecondary,
+    color: COLORS.primaryDark,
   },
   btnFecharDivisao: {
     marginLeft: 10,

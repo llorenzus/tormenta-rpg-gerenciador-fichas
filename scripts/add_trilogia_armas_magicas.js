@@ -36,3 +36,4 @@ for (const item of novosPoderes) {
 
 fs.writeFileSync(path, JSON.stringify(armasMagicas, null, 2), 'utf8');
 console.log(`Poderes/Itens em armas_magicas adicionados: ${added}. Total: ${armasMagicas.length}`);
+

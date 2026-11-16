@@ -3113,7 +3113,7 @@
     "categoria": "Item Alquímico",
     "preco": "60 TO",
     "peso": "0,2Kg",
-    "descricao": "Líquido azul brilhante aromático. Como ação padrão ao bebê-lo, o usuário recupera instantaneamente 1d4 Pontos de Mana (PM). Máximo 1 uso benéfico por hora.",
+    "descricao": "Líquido azul brilhante aromático. Como ação padrão ao bebê-lo, o usuário recupera instantaneamente 1d4 Pontos de Magia (PM). Máximo 1 uso benéfico por hora.",
     "livroFonte": "Manual do Arcano"
   },
   {
@@ -3123,7 +3123,7 @@
     "categoria": "Item Alquímico",
     "preco": "250 TO",
     "peso": "0,2Kg",
-    "descricao": "Versão aprimorada do elixir místico. Como ação padrão ao bebê-lo, recupera instantaneamente 2d4 Pontos de Mana (PM).",
+    "descricao": "Versão aprimorada do elixir místico. Como ação padrão ao bebê-lo, recupera instantaneamente 2d4 Pontos de Magia (PM).",
     "livroFonte": "Manual do Arcano"
   },
   {
@@ -3133,7 +3133,7 @@
     "categoria": "Item Alquímico",
     "preco": "750 TO",
     "peso": "0,2Kg",
-    "descricao": "Poderosa infusão de mana destilada em laboratório arcano de alto grau. Bebê-lo recupera instantaneamente 4d4 Pontos de Mana (PM).",
+    "descricao": "Poderosa infusão de mana destilada em laboratório arcano de alto grau. Bebê-lo recupera instantaneamente 4d4 Pontos de Magia (PM).",
     "livroFonte": "Manual do Arcano"
   },
   {
@@ -3183,7 +3183,7 @@
     "categoria": "Item Alquímico",
     "preco": "120 TO",
     "peso": "0,2Kg",
-    "descricao": "Soprado em cone de 3m como ação padrão. Realiza teste de dissipação (1d20+5) contra todas as magias ativas de até 2º círculo na área.",
+    "descricao": "Soprado em cone de 3m como ação padrão. Realiza teste de dissipação (1d20+5) contra todas as magias ativas de até 2º nível na área.",
     "livroFonte": "Manual do Arcano"
   },
   {
@@ -3263,7 +3263,7 @@
     "categoria": "Item Mágico",
     "preco": "12.000 TO",
     "peso": "1,5Kg",
-    "descricao": "Bastão encimado por uma esfera de cristal flutuante. Uma vez por dia, permite lançar uma magia arcana qualquer de até 4º círculo sem gastar Pontos de Mana.",
+    "descricao": "Bastão encimado por uma esfera de cristal flutuante. Uma vez por dia, permite lançar uma magia arcana qualquer de até 4º nível sem gastar Pontos de Magia (PM).",
     "livroFonte": "Manual do Arcano"
   },
   {

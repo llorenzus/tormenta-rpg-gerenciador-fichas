@@ -446,7 +446,7 @@ export const AbaEquipamentos: React.FC<Props> = ({ ficha, onChange }) => {
                         style={[
                           styles.tipoChipText,
                           armadura.tipo === 'ARMADURA' &&
-                            styles.tipoChipTextSelected,
+                          styles.tipoChipTextSelected,
                         ]}
                       >
                         Armadura
@@ -465,7 +465,7 @@ export const AbaEquipamentos: React.FC<Props> = ({ ficha, onChange }) => {
                         style={[
                           styles.tipoChipText,
                           armadura.tipo === 'ESCUDO' &&
-                            styles.tipoChipTextSelected,
+                          styles.tipoChipTextSelected,
                         ]}
                       >
                         Escudo
@@ -550,10 +550,10 @@ export const AbaEquipamentos: React.FC<Props> = ({ ficha, onChange }) => {
         />
         <View style={styles.cardBody}>
           <CampoTexto
-            label="Tibares / Dinheiro (T$, TO, TP)"
+            label="Tibares / Riqueza (TO, TP, TC)"
             value={ficha.tibares}
             onChangeText={(v) => onChange({ ...ficha, tibares: v })}
-            placeholder="Ex: 150 T$, 10 TO"
+            placeholder="Ex: 150 TO, 20 TP, 5 TC"
           />
 
           {ficha.itensGerais.map((item) => (

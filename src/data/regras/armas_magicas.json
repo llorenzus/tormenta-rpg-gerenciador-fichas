@@ -504,7 +504,7 @@
     "subtipo": "Poder Especial de Arma Corpo a Corpo",
     "bonusEquivalente": "+2 de bônus",
     "descricao": "A arma ressoa com energias de drenagem espiritual que sugam a energia vital e mística de seus oponentes.",
-    "detalhes": "Ao confirmar um acerto crítico contra uma criatura com capacidade mágica, a arma drena 1 Ponto de Mana (PM) do alvo e transfere imediatamente para a reserva de mana do usuário (não pode ultrapassar o máximo normal do usuário).",
+    "detalhes": "Ao confirmar um acerto crítico contra uma criatura com capacidade mágica, a arma drena 1 Ponto de Magia (PM) do alvo e transfere imediatamente para a reserva de PM do usuário (não pode ultrapassar o máximo normal do usuário).",
     "livroFonte": "Manual do Arcano"
   },
   {

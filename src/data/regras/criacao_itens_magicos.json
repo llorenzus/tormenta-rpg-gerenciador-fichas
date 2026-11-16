@@ -14,7 +14,7 @@
     "tipo": "Criação de Itens Mágicos",
     "subtipo": "Poções e Óleos",
     "descricao": "Regras e fórmulas para destilar poções bebíveis e óleos de unção.",
-    "detalhes": "• Talento Necessário: Preparar Poções.\n• Limite de Círculo: Apenas magias de até 3º círculo com alvo \"uma criatura ou objeto\" podem ser transformadas em poções ou óleos.\n• Preço de Mercado: Nível da magia × nível do conjurador × 50 TO (uma magia de 0º círculo conta como nível 1/2, custando 25 TO).\n• Custo de Matérias-Primas: Metade do preço de mercado (ex.: Poção de Curar Ferimentos Leves [1º nv × conjurador 1º × 50 = 50 TO] custa 25 TO em matérias-primas).\n• Custo em XP: 1/25 do preço de mercado (ex.: Curar Ferimentos Leves consome 2 XP).\n• Tempo: 1 dia para qualquer poção com preço de até 250 TO; acima disso, 1 dia por 1.000 TO.",
+    "detalhes": "• Talento Necessário: Preparar Poções.\n• Limite de Nível: Apenas magias de até 3º nível com alvo \"uma criatura ou objeto\" podem ser transformadas em poções ou óleos.\n• Preço de Mercado: Nível da magia × nível do conjurador × 50 TO (uma magia de nível 0 (truque ou prece) conta como nível 1/2, custando 25 TO).\n• Custo de Matérias-Primas: Metade do preço de mercado (ex.: Poção de Curar Ferimentos Leves [1º nv × conjurador 1º × 50 = 50 TO] custa 25 TO em matérias-primas).\n• Custo em XP: 1/25 do preço de mercado (ex.: Curar Ferimentos Leves consome 2 XP).\n• Tempo: 1 dia para qualquer poção com preço de até 250 TO; acima disso, 1 dia por 1.000 TO.",
     "livroFonte": "Manual do Arcano"
   },
   {
@@ -23,7 +23,7 @@
     "tipo": "Criação de Itens Mágicos",
     "subtipo": "Pergaminhos",
     "descricao": "Regras para inscrever fórmulas mágicas em pergaminhos prontos para serem ativados por leitura.",
-    "detalhes": "• Talento Necessário: Escrever Pergaminhos.\n• Magias Permitidas: Qualquer magia arcana ou divina conhecida ou preparada pelo conjurador, de qualquer círculo (1º ao 9º).\n• Preço de Mercado: Nível da magia × nível do conjurador × 25 TO (magia de 0º círculo conta como 12,5 TO).\n• Custo de Matérias-Primas: Metade do preço de mercado em tintas raras, pós metálicos e peles de pergaminho tratadas.\n• Custo em XP: 1/25 do preço de mercado.\n• Tempo de Escrita: 1 dia para pergaminhos de até 250 TO; pergaminhos mais valiosos levam 1 dia por 1.000 TO.",
+    "detalhes": "• Talento Necessário: Escrever Pergaminhos.\n• Magias Permitidas: Qualquer magia arcana ou divina conhecida ou preparada pelo conjurador, de qualquer nível (1º ao 9º).\n• Preço de Mercado: Nível da magia × nível do conjurador × 25 TO (magia de nível 0 (truque ou prece) conta como 12,5 TO).\n• Custo de Matérias-Primas: Metade do preço de mercado em tintas raras, pós metálicos e peles de pergaminho tratadas.\n• Custo em XP: 1/25 do preço de mercado.\n• Tempo de Escrita: 1 dia para pergaminhos de até 250 TO; pergaminhos mais valiosos levam 1 dia por 1.000 TO.",
     "livroFonte": "Manual do Arcano"
   },
   {
@@ -32,7 +32,7 @@
     "tipo": "Criação de Itens Mágicos",
     "subtipo": "Varinhas",
     "descricao": "Regras para encantar varinhas mágicas capazes de armazenar 50 cargas de um único feitiço.",
-    "detalhes": "• Talento Necessário: Criar Varinhas.\n• Limite de Círculo: Magias de até 4º círculo.\n• Preço de Mercado (50 cargas completas): Nível da magia × nível do conjurador × 750 TO.\n• Custo de Matérias-Primas: Metade do preço de mercado + o custo da varinha base (madeira nobre, osso ou metal).\n• Custo em XP: 1/25 do preço de mercado da varinha.\n• Tempo: 1 dia por 1.000 TO de preço de mercado.\n• Ativação: Varinhas são ativadas por palavra de comando (ação padrão) e utilizam a CD e o nível de conjurador com que foram fabricadas.",
+    "detalhes": "• Talento Necessário: Criar Varinhas.\n• Limite de Nível: Magias de até 4º nível.\n• Preço de Mercado (50 cargas completas): Nível da magia × nível do conjurador × 750 TO.\n• Custo de Matérias-Primas: Metade do preço de mercado + o custo da varinha base (madeira nobre, osso ou metal).\n• Custo em XP: 1/25 do preço de mercado da varinha.\n• Tempo: 1 dia por 1.000 TO de preço de mercado.\n• Ativação: Varinhas são ativadas por palavra de comando (ação padrão) e utilizam a CD e o nível de conjurador com que foram fabricadas.",
     "livroFonte": "Manual do Arcano"
   },
   {
@@ -50,7 +50,7 @@
     "tipo": "Criação de Itens Mágicos",
     "subtipo": "Cajados e Bastões",
     "descricao": "Fabricação de bastões metamágicos e cajados arcanos contendo múltiplas magias com cargas.",
-    "detalhes": "• Talentos Necessários: Criar Bastões (nível 9º de conjurador) ou Criar Cajados (nível 12º de conjurador).\n• Cajados Mágicos: Armazenam até 50 cargas compartilhadas entre várias magias de círculos diversos. A magia mais poderosa define a base do preço (nível da magia × nível de conjurador × 750 TO), com magias adicionais somando 75% e 50% de seus respectivos custos.\n• Nível e CD: Os cajados usam o modificador de habilidade e o nível de conjurador do usuário caso estes sejam superiores aos do próprio cajado.\n• Custo de Criação: Metade do preço de mercado em materiais e 1/25 do preço em XP.",
+    "detalhes": "• Talentos Necessários: Criar Bastões (nível 9º de conjurador) ou Criar Cajados (nível 12º de conjurador).\n• Cajados Mágicos: Armazenam até 50 cargas compartilhadas entre várias magias de níveis diversos. A magia mais poderosa define a base do preço (nível da magia × nível de conjurador × 750 TO), com magias adicionais somando 75% e 50% de seus respectivos custos.\n• Nível e CD: Os cajados usam o modificador de habilidade e o nível de conjurador do usuário caso estes sejam superiores aos do próprio cajado.\n• Custo de Criação: Metade do preço de mercado em materiais e 1/25 do preço em XP.",
     "livroFonte": "Manual do Arcano"
   },
   {

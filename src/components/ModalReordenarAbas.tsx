@@ -5,6 +5,7 @@ import {
   StyleSheet,
   Text,
   TouchableOpacity,
+  useWindowDimensions,
   View,
 } from 'react-native';
 import { COLORS } from '../theme/colors';
@@ -63,27 +64,45 @@ export const ModalReordenarAbas: React.FC<Props> = ({
   onFechar,
   onSalvarOrdem,
 }) => {
+  const { height: windowHeight } = useWindowDimensions();
+  const [listaOrdem, setListaOrdem] = React.useState<AbaKey[]>(ordemAtual);
+
+  React.useEffect(() => {
+    if (visivel && Array.isArray(ordemAtual) && ordemAtual.length > 0) {
+      setListaOrdem(ordemAtual);
+    }
+  }, [visivel, JSON.stringify(ordemAtual)]);
+
   const moverParaCima = (index: number) => {
     if (index <= 0) return;
-    const nova = [...ordemAtual];
-    const item = nova[index];
-    nova[index] = nova[index - 1];
-    nova[index - 1] = item;
-    onSalvarOrdem(nova);
+    setListaOrdem((prev) => {
+      const nova = [...prev];
+      const item = nova[index];
+      nova[index] = nova[index - 1];
+      nova[index - 1] = item;
+      onSalvarOrdem(nova);
+      return nova;
+    });
   };
 
   const moverParaBaixo = (index: number) => {
-    if (index >= ordemAtual.length - 1) return;
-    const nova = [...ordemAtual];
-    const item = nova[index];
-    nova[index] = nova[index + 1];
-    nova[index + 1] = item;
-    onSalvarOrdem(nova);
+    setListaOrdem((prev) => {
+      if (index >= prev.length - 1) return prev;
+      const nova = [...prev];
+      const item = nova[index];
+      nova[index] = nova[index + 1];
+      nova[index + 1] = item;
+      onSalvarOrdem(nova);
+      return nova;
+    });
   };
 
   const restaurarPadrao = () => {
+    setListaOrdem(ORDEM_ABAS_PADRAO);
     onSalvarOrdem(ORDEM_ABAS_PADRAO);
   };
+
+  const modalBoxHeight = Math.min(windowHeight * 0.85, 640);
 
   return (
     <Modal
@@ -91,15 +110,16 @@ export const ModalReordenarAbas: React.FC<Props> = ({
       transparent
       animationType="fade"
       onRequestClose={onFechar}
+      statusBarTranslucent
     >
       <View style={styles.overlay}>
-        <View style={styles.modalBox}>
+        <View style={[styles.modalBox, { height: modalBoxHeight, maxHeight: windowHeight * 0.9 }]}>
           {/* Cabeçalho */}
           <View style={styles.header}>
             <View style={styles.headerInfo}>
               <Text style={styles.titulo}>⚙️ Organizar Ordem das Abas</Text>
               <Text style={styles.subtitulo}>
-                Personalize a sequência das abas conforme seu estilo de jogo. Você também pode arrastar e soltar as abas diretamente na barra superior!
+                Personalize a sequência das abas utilizando os botões Subir e Descer.
               </Text>
             </View>
             <TouchableOpacity style={styles.btnFechar} onPress={onFechar}>
@@ -108,12 +128,16 @@ export const ModalReordenarAbas: React.FC<Props> = ({
           </View>
 
           {/* Lista Reordenável */}
-          <ScrollView style={styles.listaScroll} contentContainerStyle={styles.listaContent}>
-            {ordemAtual.map((chave, index) => {
+          <ScrollView
+            style={styles.listaScroll}
+            contentContainerStyle={styles.listaContent}
+            keyboardShouldPersistTaps="handled"
+          >
+            {listaOrdem.map((chave, index) => {
               const info = TODAS_AS_ABAS[chave];
               if (!info) return null;
               const isFirst = index === 0;
-              const isLast = index === ordemAtual.length - 1;
+              const isLast = index === listaOrdem.length - 1;
 
               return (
                 <View key={chave} style={styles.itemRow}>
@@ -128,11 +152,11 @@ export const ModalReordenarAbas: React.FC<Props> = ({
                   <View style={styles.infoCol}>
                     <Text style={styles.abaNomeText}>{info.titulo}</Text>
                     <Text style={styles.abaSubText}>
-                      {chave === 'atributos' ? 'PV, PM, CA, Força, Destreza...' : ''}
+                      {chave === 'atributos' ? 'PV, PM, PA, CA, Atributos e Resistências' : ''}
                       {chave === 'manobras' ? 'Posturas e Golpes Marciais (PE)' : ''}
-                      {chave === 'habilidades_classe' ? 'Poderes e Características (PA)' : ''}
+                      {chave === 'habilidades_classe' ? 'Habilidades e características de classe' : ''}
                       {chave === 'talentos' ? 'Talentos de combate, perícia, etc.' : ''}
-                      {chave === 'magias' ? 'Grimório de Magias (Círculos 0-9)' : ''}
+                      {chave === 'magias' ? 'Grimório de Magias (Níveis 0 a 9)' : ''}
                       {chave === 'equipamentos' ? 'Armas, Armaduras, Escudos e Tibares' : ''}
                       {chave === 'pericias' ? 'Lista completa de perícias do Tormenta' : ''}
                       {chave === 'dados_cadastrais' ? 'Nome, Classe, Raça, Nível...' : ''}
@@ -146,7 +170,8 @@ export const ModalReordenarAbas: React.FC<Props> = ({
                       style={[styles.btnMover, isFirst && styles.btnMoverDisabled]}
                       onPress={() => moverParaCima(index)}
                       disabled={isFirst}
-                      activeOpacity={0.7}
+                      activeOpacity={0.6}
+                      hitSlop={{ top: 8, bottom: 8, left: 6, right: 6 }}
                     >
                       <Text style={[styles.btnMoverText, isFirst && styles.btnMoverTextDisabled]}>
                         ▲ Subir
@@ -157,7 +182,8 @@ export const ModalReordenarAbas: React.FC<Props> = ({
                       style={[styles.btnMover, isLast && styles.btnMoverDisabled]}
                       onPress={() => moverParaBaixo(index)}
                       disabled={isLast}
-                      activeOpacity={0.7}
+                      activeOpacity={0.6}
+                      hitSlop={{ top: 8, bottom: 8, left: 6, right: 6 }}
                     >
                       <Text style={[styles.btnMoverText, isLast && styles.btnMoverTextDisabled]}>
                         ▼ Descer
@@ -199,12 +225,11 @@ const styles = StyleSheet.create({
     backgroundColor: 'rgba(0,0,0,0.65)',
     justifyContent: 'center',
     alignItems: 'center',
-    padding: 16,
+    padding: 12,
   },
   modalBox: {
     width: '100%',
-    maxWidth: 680,
-    maxHeight: '90%',
+    maxWidth: 620,
     backgroundColor: COLORS.surface,
     borderRadius: 12,
     borderWidth: 1,
@@ -265,15 +290,15 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     backgroundColor: COLORS.surfaceVariant,
     borderRadius: 8,
-    padding: 10,
+    padding: 8,
     borderWidth: 1,
     borderColor: COLORS.border,
-    gap: 10,
+    gap: 8,
   },
   posicaoBadge: {
-    width: 28,
-    height: 28,
-    borderRadius: 14,
+    width: 26,
+    height: 26,
+    borderRadius: 13,
     backgroundColor: 'rgba(200,157,60,0.2)',
     alignItems: 'center',
     justifyContent: 'center',
@@ -284,7 +309,7 @@ const styles = StyleSheet.create({
     color: '#8A6414',
   },
   iconeBox: {
-    width: 32,
+    width: 28,
     alignItems: 'center',
     justifyContent: 'center',
   },
@@ -293,14 +318,15 @@ const styles = StyleSheet.create({
   },
   infoCol: {
     flex: 1,
+    marginRight: 4,
   },
   abaNomeText: {
-    fontSize: 14,
+    fontSize: 13.5,
     fontWeight: 'bold',
     color: COLORS.text,
   },
   abaSubText: {
-    fontSize: 11,
+    fontSize: 10.5,
     color: COLORS.textSecondary,
     marginTop: 1,
   },
@@ -308,14 +334,19 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     gap: 6,
+    flexShrink: 0,
   },
   btnMover: {
-    paddingHorizontal: 9,
-    paddingVertical: 6,
+    paddingHorizontal: 10,
+    paddingVertical: 8,
     borderRadius: 6,
     backgroundColor: COLORS.surface,
     borderWidth: 1,
     borderColor: COLORS.border,
+    minHeight: 36,
+    minWidth: 40,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   btnMoverDisabled: {
     opacity: 0.35,

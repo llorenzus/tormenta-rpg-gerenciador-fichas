@@ -121,7 +121,7 @@ export function gerarHtmlFichaPdf(ficha: FichaPersonagem): string {
             const magiasNivel = ficha.magias.filter((m) => m.nivelCirculo === lvl);
             if (magiasNivel.length === 0) return '';
             return `
-            <div class="nivel-magia-header">${lvl === 0 ? 'Nível 0 (Truques)' : `${lvl}º Círculo / Nível`}</div>
+            <div class="nivel-magia-header">${lvl === 0 ? 'Nível 0 (Truques / Preces)' : `Magias de ${lvl}º Nível`}</div>
             ${magiasNivel
               .map(
                 (m) => `
@@ -431,7 +431,7 @@ export function gerarHtmlFichaPdf(ficha: FichaPersonagem): string {
 
         <div class="bloco-combate-status">
           <div class="card-status"><div class="status-label">PV (Vida)</div><div class="status-val">${ficha.pvAtual}/${ficha.pvTotal}</div></div>
-          <div class="card-status"><div class="status-label">PM (Mana)</div><div class="status-val">${ficha.pmAtual}/${ficha.pmTotal}</div></div>
+          <div class="card-status"><div class="status-label">PM (Magia)</div><div class="status-val">${ficha.pmAtual}/${ficha.pmTotal}</div></div>
           <div class="card-status"><div class="status-label">CA Total</div><div class="status-val">${caTotal}</div></div>
           <div class="card-status"><div class="status-label">Fortitude</div><div class="status-val">+${fortTotal}</div></div>
           <div class="card-status"><div class="status-label">Reflexos</div><div class="status-val">+${reflTotal}</div></div>

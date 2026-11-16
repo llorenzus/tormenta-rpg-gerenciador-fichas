@@ -55,7 +55,7 @@ import {
   PosturaData,
   GolpeMarcialData,
 } from '../data';
-import { FichaPersonagem, gerarId, HabilidadeOuTalento } from '../models/ficha';
+import { FichaPersonagem, gerarId, HabilidadeOuTalento, obterClassesFicha } from '../models/ficha';
 import { COLORS } from '../theme/colors';
 
 export type AbaCompendio =
@@ -252,23 +252,41 @@ export const CompendioModal: React.FC<Props> = ({
   ): boolean => {
     if (!fichaAtual) return false;
     const nomeNorm = nome.trim().toLowerCase();
+    const limpo = (s: string) => s.replace(/\s*\[.*?\]/g, '').trim().toLowerCase();
+    const nomeLimpo = limpo(nome);
 
     if (tipo === 'talento') {
-      return fichaAtual.talentos.some(
-        (t) => t.nome.trim().toLowerCase() === nomeNorm
+      return (
+        fichaAtual.talentos.some((t) => {
+          const tLimpo = limpo(t.nome);
+          return tLimpo === nomeLimpo || t.nome.trim().toLowerCase() === nomeNorm;
+        }) ||
+        (fichaAtual.habilidadesRaca || []).some((h) => {
+          const hLimpo = limpo(h.nome);
+          return hLimpo.includes(nomeLimpo) || nomeLimpo.includes(hLimpo);
+        }) ||
+        (fichaAtual.habilidadesClasse || []).some((h) => {
+          const hLimpo = limpo(h.nome);
+          return hLimpo.includes(nomeLimpo) || nomeLimpo.includes(hLimpo);
+        })
       );
     } else if (tipo === 'magia') {
       return fichaAtual.magias.some(
-        (m) => m.nome.trim().toLowerCase() === nomeNorm
+        (m) => m.nome.trim().toLowerCase() === nomeNorm || limpo(m.nome) === nomeLimpo
       );
     } else if (tipo === 'raca') {
       return fichaAtual.raca?.trim().toLowerCase() === nomeNorm;
     } else if (tipo === 'classe') {
+      const classesAtuais = obterClassesFicha(fichaAtual);
       return (
-        fichaAtual.classe?.trim().toLowerCase().includes(nomeNorm) || false
+        classesAtuais.some(
+          (c) => c.nome.trim().toLowerCase() === nomeNorm || c.nome.toLowerCase().includes(nomeNorm)
+        ) || (fichaAtual.classe?.trim().toLowerCase().includes(nomeNorm) || false)
       );
     } else if (tipo === 'manobra') {
+      const manobrasAtuais = Array.isArray(fichaAtual.manobras) ? fichaAtual.manobras : [];
       return (
+        manobrasAtuais.some((m) => m.nome.trim().toLowerCase() === nomeNorm || limpo(m.nome) === nomeLimpo) ||
         fichaAtual.habilidadesClasse.some((h) => h.nome.trim().toLowerCase().includes(nomeNorm)) ||
         fichaAtual.talentos.some((t) => t.nome.trim().toLowerCase().includes(nomeNorm))
       );
@@ -860,8 +878,13 @@ export const CompendioModal: React.FC<Props> = ({
                         ]}
                         onPress={() => handleCliqueAdicionar('talento', item)}
                       >
-                        <Text style={styles.btnAdicionarText}>
-                          {fichaAtual ? '+ Adicionar' : '+ Personagem'}
+                        <Text
+                          style={[
+                            styles.btnAdicionarText,
+                            jaPossui && styles.btnAdicionarSecundarioText,
+                          ]}
+                        >
+                          {jaPossui ? '✓ Adicionado' : (fichaAtual ? '+ Adicionar' : '+ Personagem')}
                         </Text>
                       </TouchableOpacity>
                     </TouchableOpacity>
@@ -986,8 +1009,13 @@ export const CompendioModal: React.FC<Props> = ({
                         ]}
                         onPress={() => handleCliqueAdicionar('magia', item)}
                       >
-                        <Text style={styles.btnAdicionarText}>
-                          {fichaAtual ? '+ Adicionar' : '+ Personagem'}
+                        <Text
+                          style={[
+                            styles.btnAdicionarText,
+                            jaPossui && styles.btnAdicionarSecundarioText,
+                          ]}
+                        >
+                          {jaPossui ? '✓ Adicionado' : (fichaAtual ? '+ Adicionar' : '+ Personagem')}
                         </Text>
                       </TouchableOpacity>
                     </TouchableOpacity>
@@ -1136,8 +1164,13 @@ export const CompendioModal: React.FC<Props> = ({
                         ]}
                         onPress={() => handleCliqueAdicionar('raca', item)}
                       >
-                        <Text style={styles.btnAdicionarText}>
-                          {fichaAtual ? '+ Aplicar' : '+ Personagem'}
+                        <Text
+                          style={[
+                            styles.btnAdicionarText,
+                            jaPossui && styles.btnAdicionarSecundarioText,
+                          ]}
+                        >
+                          {jaPossui ? '✓ Adicionado' : (fichaAtual ? '+ Aplicar' : '+ Personagem')}
                         </Text>
                       </TouchableOpacity>
                     </TouchableOpacity>
@@ -1279,8 +1312,13 @@ export const CompendioModal: React.FC<Props> = ({
                         ]}
                         onPress={() => handleCliqueAdicionar('classe', item)}
                       >
-                        <Text style={styles.btnAdicionarText}>
-                          {fichaAtual ? '+ Escolher' : '+ Personagem'}
+                        <Text
+                          style={[
+                            styles.btnAdicionarText,
+                            jaPossui && styles.btnAdicionarSecundarioText,
+                          ]}
+                        >
+                          {jaPossui ? '✓ Adicionado' : (fichaAtual ? '+ Escolher' : '+ Personagem')}
                         </Text>
                       </TouchableOpacity>
                     </TouchableOpacity>
@@ -1438,8 +1476,13 @@ export const CompendioModal: React.FC<Props> = ({
                         ]}
                         onPress={() => handleCliqueAdicionar('equipamento', item)}
                       >
-                        <Text style={styles.btnAdicionarText}>
-                          {fichaAtual ? '+ Adicionar' : '+ Personagem'}
+                        <Text
+                          style={[
+                            styles.btnAdicionarText,
+                            jaPossui && styles.btnAdicionarSecundarioText,
+                          ]}
+                        >
+                          {jaPossui ? '✓ Adicionado' : (fichaAtual ? '+ Adicionar' : '+ Personagem')}
                         </Text>
                       </TouchableOpacity>
                     </TouchableOpacity>
@@ -1612,8 +1655,13 @@ export const CompendioModal: React.FC<Props> = ({
                           onPress={() => handleCliqueAdicionar('manobra', item)}
                           disabled={jaPossui}
                         >
-                          <Text style={styles.btnAdicionarText}>
-                            {jaPossui ? '✓ Na Ficha' : '+ À Ficha'}
+                          <Text
+                            style={[
+                              styles.btnAdicionarText,
+                              jaPossui && styles.btnAdicionarSecundarioText,
+                            ]}
+                          >
+                            {jaPossui ? '✓ Adicionado' : '+ À Ficha'}
                           </Text>
                         </TouchableOpacity>
                       )}
@@ -1941,9 +1989,20 @@ export const CompendioModal: React.FC<Props> = ({
                         handleCliqueAdicionar('talento', talentoDetalheModal);
                         setTalentoDetalheModal(null);
                       }}
+                      disabled={estaNaListaFicha('talento', talentoDetalheModal.nome)}
                     >
-                      <Text style={styles.btnAdicionarText}>
-                        {fichaAtual ? '+ Adicionar à Ficha' : '+ Personagem'}
+                      <Text
+                        style={[
+                          styles.btnAdicionarText,
+                          estaNaListaFicha('talento', talentoDetalheModal.nome) &&
+                            styles.btnAdicionarSecundarioText,
+                        ]}
+                      >
+                        {estaNaListaFicha('talento', talentoDetalheModal.nome)
+                          ? '✓ Adicionado'
+                          : fichaAtual
+                          ? '+ Adicionar à Ficha'
+                          : '+ Personagem'}
                       </Text>
                     </TouchableOpacity>
                   </View>
@@ -2296,7 +2355,13 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   btnAdicionarSecundario: {
-    backgroundColor: COLORS.success,
+    backgroundColor: '#EBE5DC',
+    borderWidth: 1,
+    borderColor: '#D4C9BC',
+  },
+  btnAdicionarSecundarioText: {
+    color: '#6F6357',
+    fontWeight: 'bold',
   },
   btnAdicionarText: {
     color: COLORS.white,

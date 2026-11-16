@@ -112,23 +112,21 @@ export const AbaDadosCadastrais: React.FC<Props> = ({ ficha, onChange }) => {
               placeholder="Ex: Seu Nome"
               style={styles.col}
             />
-            <View style={styles.col}>
-              <View style={styles.labelWithActionRow}>
-                <Text style={styles.fieldLabel}>Raça</Text>
+            <CampoTexto
+              label="Raça"
+              value={ficha.raca}
+              onChangeText={(v) => onChange({ ...ficha, raca: v })}
+              placeholder="Ex: Humano"
+              style={styles.col}
+              rightAction={
                 <TouchableOpacity
                   style={styles.btnMiniCompendio}
                   onPress={() => abrirCompendio('racas')}
                 >
                   <Text style={styles.btnMiniCompendioText}>📖 Compêndio</Text>
                 </TouchableOpacity>
-              </View>
-              <CampoTexto
-                label=""
-                value={ficha.raca}
-                onChangeText={(v) => onChange({ ...ficha, raca: v })}
-                placeholder="Ex: Humano"
-              />
-            </View>
+              }
+            />
           </View>
 
           {/* ======================================================== */}
@@ -136,7 +134,7 @@ export const AbaDadosCadastrais: React.FC<Props> = ({ ficha, onChange }) => {
           {/* ======================================================== */}
           <View style={styles.multiclasseContainer}>
             <View style={styles.multiclasseHeader}>
-              <View>
+              <View style={styles.multiclasseHeaderTitleCol}>
                 <Text style={styles.multiclasseTitulo}>Classes & Níveis</Text>
                 <Text style={styles.multiclasseSubtitulo}>
                   Adicione e gerencie classes para progressão individual e multiclasse
@@ -151,11 +149,8 @@ export const AbaDadosCadastrais: React.FC<Props> = ({ ficha, onChange }) => {
             {classesAtuais.map((item, index) => (
               <View key={item.id || index} style={styles.classeItemRow}>
                 <View style={styles.classeNomeWrap}>
-                  <Text style={styles.classeItemLabel}>
-                    {classesAtuais.length > 1 ? `Classe ${index + 1}` : 'Classe Principal'}
-                  </Text>
                   <CampoTexto
-                    label=""
+                    label={classesAtuais.length > 1 ? `Classe ${index + 1}` : 'Classe Principal'}
                     value={item.nome}
                     onChangeText={(text) => handleAlterarNomeClasse(index, text)}
                     placeholder="Ex: Samurai, Mago, Guerreiro..."
@@ -321,20 +316,8 @@ const styles = StyleSheet.create({
   col: {
     flex: 1,
   },
-  labelWithActionRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    marginBottom: 4,
-  },
-  fieldLabel: {
-    fontSize: 12,
-    fontWeight: '600',
-    color: COLORS.textSecondary,
-    textTransform: 'uppercase',
-  },
   btnMiniCompendio: {
-    paddingHorizontal: 6,
+    paddingHorizontal: 8,
     paddingVertical: 2,
     borderRadius: 4,
     backgroundColor: 'rgba(139,30,30,0.1)',
@@ -362,6 +345,11 @@ const styles = StyleSheet.create({
     paddingBottom: 8,
     borderBottomWidth: 1,
     borderBottomColor: '#E8DEC8',
+    gap: 8,
+  },
+  multiclasseHeaderTitleCol: {
+    flex: 1,
+    paddingRight: 8,
   },
   multiclasseTitulo: {
     fontSize: 14,
@@ -374,27 +362,34 @@ const styles = StyleSheet.create({
     fontSize: 11,
     color: COLORS.textSecondary,
     marginTop: 2,
+    lineHeight: 15,
   },
   badgeNivelTotal: {
     backgroundColor: COLORS.primary,
     paddingHorizontal: 12,
-    paddingVertical: 4,
+    paddingVertical: 6,
     borderRadius: 8,
     alignItems: 'center',
     justifyContent: 'center',
-    minWidth: 80,
+    minWidth: 84,
+    flexShrink: 0,
+    alignSelf: 'center',
   },
   badgeNivelTotalLabel: {
     fontSize: 9,
     fontWeight: 'bold',
     color: '#FFE2A0',
     letterSpacing: 0.5,
+    textAlign: 'center',
+    includeFontPadding: false,
   },
   badgeNivelTotalValor: {
     fontSize: 20,
     fontWeight: 'bold',
     color: '#FFFFFF',
-    lineHeight: 24,
+    textAlign: 'center',
+    includeFontPadding: false,
+    marginTop: 1,
   },
   classeItemRow: {
     flexDirection: 'row',
