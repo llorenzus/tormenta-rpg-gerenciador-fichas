@@ -14,11 +14,14 @@ import {
   temBuffsAtivos,
   contarBuffsAtivos,
   zerarBuffsTemporarios,
+  calcularPmInicialTexto,
+  aplicarClasseNaFicha,
   FichaPersonagem,
   ArmaduraEquipamento,
   ArmaItem,
   PericiaItem,
 } from '../src/models/ficha';
+import { calcularSugestoesClasses } from '../src/data/consultaUtils';
 
 const criarFichaBase = (): FichaPersonagem => ({
   id: 'test-1',
@@ -289,5 +292,87 @@ describe('Regras do Tormenta RPG - Cálculos e Modificadores', () => {
     assert.strictEqual(obterModAtributo(fichaDescansada, 'DES'), 2);
     assert.strictEqual(calcularCaTotal(fichaDescansada), 14);
     assert.strictEqual(calcularResistencia(fichaDescansada, 'fortitude'), 4);
+  });
+
+  it('deve calcular corretamente o PM inicial a partir do texto oficial de pmInicial', () => {
+    const ficha = criarFichaBase();
+    ficha.inteligencia = 16; // mod +3
+    ficha.carisma = 14;     // mod +2
+    ficha.sabedoria = 18;   // mod +4
+
+    // Mago: 1 + mod. Inteligência
+    assert.strictEqual(calcularPmInicialTexto('1 + mod. Inteligência', ficha, 1), 4);
+
+    // Feiticeiro: 3 + mod. Carisma
+    assert.strictEqual(calcularPmInicialTexto('3 + mod. Carisma', ficha, 1), 5);
+
+    // Clérigo: 1 + mod. Sabedoria
+    assert.strictEqual(calcularPmInicialTexto('1 + mod. Sabedoria', ficha, 1), 5);
+
+    // Guerreiro / Bárbaro: 0
+    assert.strictEqual(calcularPmInicialTexto('0', ficha, 1), 0);
+
+    // Ranger: 0 (1 + mod. Sabedoria a partir do 4º nível)
+    assert.strictEqual(calcularPmInicialTexto('0 (1 + mod. Sabedoria a partir do 4º nível)', ficha, 3), 0);
+    assert.strictEqual(calcularPmInicialTexto('0 (1 + mod. Sabedoria a partir do 4º nível)', ficha, 4), 5);
+  });
+
+  it('deve calcular sugestões oficiais de PV, PM e BBA para classes e multiclasse', () => {
+    const ficha = criarFichaBase();
+    ficha.constituicao = 14; // mod +2
+    ficha.inteligencia = 16; // mod +3
+
+    // Caso 1: Guerreiro nível 5 (PV inicial 20, 5/nv; BBA total; PM 0)
+    ficha.classes = [{ id: 'c1', nome: 'Guerreiro', nivel: 5 }];
+    ficha.classe = 'Guerreiro 5';
+    const sugGuerreiro = calcularSugestoesClasses(ficha);
+    assert.ok(sugGuerreiro);
+    // PV = 20 + 2 (1º nv) + 4 * (5 + 2) = 22 + 28 = 50
+    assert.strictEqual(sugGuerreiro!.pvTotal, 50);
+    assert.strictEqual(sugGuerreiro!.pmTotal, 0);
+    assert.strictEqual(sugGuerreiro!.bba, 5);
+
+    // Caso 2: Mago nível 3 (PV inicial 8, 2/nv; BBA 1/2; PM inicial 1+mod.INT, +3/nv)
+    ficha.classes = [{ id: 'c2', nome: 'Mago', nivel: 3 }];
+    ficha.classe = 'Mago 3';
+    const sugMago = calcularSugestoesClasses(ficha);
+    assert.ok(sugMago);
+    // PV = 8 + 2 (1º nv) + 2 * (2 + 2) = 10 + 8 = 18
+    assert.strictEqual(sugMago!.pvTotal, 18);
+    // PM = (1 + 3) + 2 * 3 = 10
+    assert.strictEqual(sugMago!.pmTotal, 10);
+    // BBA = floor(3 * 0.5) = 1
+    assert.strictEqual(sugMago!.bba, 1);
+  });
+
+  it('deve inicializar PV e PM automaticamente ao aplicar primeira classe em ficha nova', () => {
+    const fichaNova = criarFichaBase();
+    fichaNova.classes = [];
+    fichaNova.classe = '';
+    fichaNova.pvTotal = 10;
+    fichaNova.pvAtual = 10;
+    fichaNova.pmTotal = 0;
+    fichaNova.pmAtual = 0;
+    fichaNova.constituicao = 14; // mod +2
+    fichaNova.inteligencia = 16; // mod +3
+
+    const classeMago = {
+      nome: 'Mago',
+      pvInicial: 8,
+      pvPorNivel: 2,
+      pmInicial: '1 + mod. Inteligência',
+      pmPorNivel: 3,
+      bba: '1/2 por nível (baixo)',
+      habilidades: [{ nivel: 1, nome: 'Magias', descricao: 'Lança magias arcanas.' }],
+    };
+
+    const fichaAtualizada = aplicarClasseNaFicha(fichaNova, classeMago);
+    // PV = 8 + 2 (CON) = 10
+    assert.strictEqual(fichaAtualizada.pvTotal, 10);
+    assert.strictEqual(fichaAtualizada.pvAtual, 10);
+    // PM = 1 + 3 (INT) = 4
+    assert.strictEqual(fichaAtualizada.pmTotal, 4);
+    assert.strictEqual(fichaAtualizada.pmAtual, 4);
+    assert.strictEqual(fichaAtualizada.habilidadesClasse.length, 1);
   });
 });

@@ -1449,8 +1449,7 @@ export const CompendioModal: React.FC<Props> = ({
                         <Text style={styles.cardItemNome}>{item.nome}</Text>
 
                         <Text style={styles.cardItemResumo}>
-                          PV Inicial: {item.pvInicial} (+{item.pvPorNivel}/nv) •
-                          PM: +{item.pmPorNivel}/nv • BBA: {item.bba}
+                          PV: {item.pvInicial} (+{item.pvPorNivel}/nv) • PM: {item.pmInicial && item.pmInicial !== '0' ? `${item.pmInicial} (+${item.pmPorNivel}/nv)` : `+${item.pmPorNivel}/nv`} • BBA: {item.bba}
                         </Text>
 
                         {item.preRequisitos && (
@@ -1504,6 +1503,18 @@ export const CompendioModal: React.FC<Props> = ({
                         <Text style={styles.cardItemDescricaoFlavor}>
                           "{item.descricao}"
                         </Text>
+
+                        <View style={styles.atributosRow}>
+                          <Text style={styles.attrTag}>
+                            PV: <Text style={styles.attrTagVal}>{item.pvInicial} (+{item.pvPorNivel}/nv)</Text>
+                          </Text>
+                          <Text style={styles.attrTag}>
+                            PM: <Text style={styles.attrTagVal}>{item.pmInicial && item.pmInicial !== '0' ? `${item.pmInicial} (+${item.pmPorNivel}/nv)` : `+${item.pmPorNivel}/nv`}</Text>
+                          </Text>
+                          <Text style={styles.attrTag}>
+                            BBA: <Text style={styles.attrTagVal}>{item.bba}</Text>
+                          </Text>
+                        </View>
 
                         {item.proficiencias ? (
                           <View style={styles.proficienciasBox}>

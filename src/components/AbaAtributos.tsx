@@ -15,6 +15,7 @@ import {
   obterModAtributo,
   temBuffsAtivos,
 } from '../models/ficha';
+import { calcularSugestoesClasses } from '../data';
 import { COLORS } from '../theme/colors';
 import { BarraDeProgressoRecurso } from './BarraDeProgressoRecurso';
 import { CampoInteiro, SecaoHeader, StepperValor } from './CommonInput';
@@ -31,6 +32,8 @@ export const AbaAtributos: React.FC<Props> = ({ ficha, onChange }) => {
   const buffs = obterBuffsTemporarios(ficha);
   const temBuffs = temBuffsAtivos(ficha);
   const qtdBuffs = contarBuffsAtivos(ficha);
+
+  const sugestao = React.useMemo(() => calcularSugestoesClasses(ficha), [ficha]);
 
   const meioNivel = obterMeioNivel(ficha.nivel);
   const modDes = obterModAtributo(ficha, 'DES');
@@ -205,6 +208,30 @@ export const AbaAtributos: React.FC<Props> = ({ ficha, onChange }) => {
                 style={styles.col}
               />
             </View>
+            {sugestao && (
+              <View style={styles.sugestaoRow}>
+                <Text style={styles.sugestaoTexto} numberOfLines={2}>
+                  💡 Sugerido por classe: <Text style={styles.sugestaoValor}>{sugestao.pvTotal} PV</Text> ({sugestao.explicacaoPv})
+                </Text>
+                {ficha.pvTotal !== sugestao.pvTotal && (
+                  <TouchableOpacity
+                    style={styles.btnAplicarSugestao}
+                    onPress={() =>
+                      onChange({
+                        ...ficha,
+                        pvTotal: sugestao.pvTotal,
+                        pvAtual:
+                          ficha.pvAtual === ficha.pvTotal
+                            ? sugestao.pvTotal
+                            : Math.min(ficha.pvAtual, sugestao.pvTotal),
+                      })
+                    }
+                  >
+                    <Text style={styles.btnAplicarSugestaoTexto}>Aplicar</Text>
+                  </TouchableOpacity>
+                )}
+              </View>
+            )}
           </View>
 
           {/* PM - Azul */}
@@ -240,6 +267,30 @@ export const AbaAtributos: React.FC<Props> = ({ ficha, onChange }) => {
                 style={styles.col}
               />
             </View>
+            {sugestao && (
+              <View style={styles.sugestaoRow}>
+                <Text style={styles.sugestaoTexto} numberOfLines={2}>
+                  💡 Sugerido por classe: <Text style={styles.sugestaoValor}>{sugestao.pmTotal} PM</Text> ({sugestao.explicacaoPm})
+                </Text>
+                {ficha.pmTotal !== sugestao.pmTotal && (
+                  <TouchableOpacity
+                    style={styles.btnAplicarSugestao}
+                    onPress={() =>
+                      onChange({
+                        ...ficha,
+                        pmTotal: sugestao.pmTotal,
+                        pmAtual:
+                          ficha.pmAtual === ficha.pmTotal
+                            ? sugestao.pmTotal
+                            : Math.min(ficha.pmAtual, sugestao.pmTotal),
+                      })
+                    }
+                  >
+                    <Text style={styles.btnAplicarSugestaoTexto}>Aplicar</Text>
+                  </TouchableOpacity>
+                )}
+              </View>
+            )}
           </View>
 
           {/* PE - Amarelo */}
@@ -306,6 +357,21 @@ export const AbaAtributos: React.FC<Props> = ({ ficha, onChange }) => {
               style={styles.col}
             />
           </View>
+          {sugestao && (
+            <View style={styles.sugestaoRow}>
+              <Text style={styles.sugestaoTexto} numberOfLines={2}>
+                💡 Sugerido por classe: <Text style={styles.sugestaoValor}>+{sugestao.bba}</Text> ({sugestao.explicacaoBba})
+              </Text>
+              {ficha.bba !== sugestao.bba && (
+                <TouchableOpacity
+                  style={styles.btnAplicarSugestao}
+                  onPress={() => onChange({ ...ficha, bba: sugestao.bba })}
+                >
+                  <Text style={styles.btnAplicarSugestaoTexto}>Aplicar</Text>
+                </TouchableOpacity>
+              )}
+            </View>
+          )}
           <Text style={styles.helperText}>
             Metade do Nível (1/2 nível) = +{meioNivel}
           </Text>
@@ -927,6 +993,37 @@ const styles = StyleSheet.create({
     backgroundColor: 'rgba(46, 107, 62, 0.2)',
     borderColor: 'rgba(46, 107, 62, 0.4)',
     borderWidth: 1,
+  },
+  sugestaoRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    backgroundColor: 'rgba(255, 255, 255, 0.05)',
+    paddingHorizontal: 8,
+    paddingVertical: 5,
+    borderRadius: 6,
+    marginTop: 6,
+    gap: 8,
+  },
+  sugestaoTexto: {
+    flex: 1,
+    fontSize: 11,
+    color: COLORS.textSecondary,
+  },
+  sugestaoValor: {
+    fontWeight: 'bold',
+    color: COLORS.primary,
+  },
+  btnAplicarSugestao: {
+    backgroundColor: COLORS.primary,
+    paddingHorizontal: 8,
+    paddingVertical: 4,
+    borderRadius: 4,
+  },
+  btnAplicarSugestaoTexto: {
+    color: '#FFF',
+    fontSize: 11,
+    fontWeight: 'bold',
   },
 });
 

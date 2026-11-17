@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
-import { ClasseData, RacaData } from '../data';
+import { ClasseData, getClassePorNome, RacaData } from '../data';
 import {
   aplicarClasseNaFicha,
   atualizarClassesFicha,
@@ -146,7 +146,9 @@ export const AbaDadosCadastrais: React.FC<Props> = ({ ficha, onChange }) => {
               </View>
             </View>
 
-            {classesAtuais.map((item, index) => (
+            {classesAtuais.map((item, index) => {
+              const classeInfo = getClassePorNome(item.nome);
+              return (
               <View key={item.id || index} style={styles.classeItemRow}>
                 <View style={styles.classeNomeWrap}>
                   <CampoTexto
@@ -155,6 +157,11 @@ export const AbaDadosCadastrais: React.FC<Props> = ({ ficha, onChange }) => {
                     onChangeText={(text) => handleAlterarNomeClasse(index, text)}
                     placeholder="Ex: Samurai, Mago, Guerreiro..."
                   />
+                  {classeInfo && (
+                    <Text style={styles.classeInfoSubtext}>
+                      PV: {classeInfo.pvInicial} (+{classeInfo.pvPorNivel}/nv) • PM: {classeInfo.pmInicial && classeInfo.pmInicial !== '0' ? `${classeInfo.pmInicial} (+${classeInfo.pmPorNivel}/nv)` : `+${classeInfo.pmPorNivel}/nv`} • BBA: {classeInfo.bba}
+                    </Text>
+                  )}
                 </View>
 
                 {/* Seletor do nível desta classe */}
@@ -197,7 +204,8 @@ export const AbaDadosCadastrais: React.FC<Props> = ({ ficha, onChange }) => {
                 )}
 
               </View>
-            ))}
+            );
+          })}
 
             {/* Ações de Classes */}
             <View style={styles.acoesClassesRow}>
@@ -505,6 +513,12 @@ const styles = StyleSheet.create({
     fontSize: 12,
     fontWeight: 'bold',
     color: COLORS.primary,
+  },
+  classeInfoSubtext: {
+    fontSize: 10.5,
+    color: COLORS.textSecondary,
+    marginTop: 2,
+    paddingHorizontal: 2,
   },
 });
 

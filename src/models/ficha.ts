@@ -42,6 +42,7 @@ export interface MagiaItem {
   nome: string;
   custoPm: string;
   descricao: string;
+  tipo?: string; // 'Arcana' | 'Divina'
 }
 
 export interface HabilidadeMagicaArma {
@@ -610,9 +611,48 @@ export function atualizarClassesFicha(
   };
 }
 
+export function calcularPmInicialTexto(
+  pmInicial: string | undefined,
+  ficha: FichaPersonagem,
+  nivelClasse: number = 1
+): number {
+  if (!pmInicial || pmInicial === '0') return 0;
+
+  // Checa restrição de nível mínimo (ex: "0 (1 + mod. Sabedoria a partir do 4º nível)")
+  const nivelReqMatch = pmInicial.match(/a partir do (\d+)º nível/i);
+  if (nivelReqMatch) {
+    const nivelReq = parseInt(nivelReqMatch[1], 10);
+    if (nivelClasse < nivelReq) return 0;
+  }
+
+  const match = pmInicial.match(/(\d+)\s*\+\s*mod\.?\s*([A-Za-zçã]+)/i);
+  if (match) {
+    const base = parseInt(match[1], 10);
+    const attrNome = match[2].toLowerCase();
+    let mod = 0;
+    if (attrNome.startsWith('int')) mod = obterModAtributo(ficha, 'INT');
+    else if (attrNome.startsWith('sab')) mod = obterModAtributo(ficha, 'SAB');
+    else if (attrNome.startsWith('car')) mod = obterModAtributo(ficha, 'CAR');
+    else if (attrNome.startsWith('for')) mod = obterModAtributo(ficha, 'FOR');
+    else if (attrNome.startsWith('des')) mod = obterModAtributo(ficha, 'DES');
+    else if (attrNome.startsWith('con')) mod = obterModAtributo(ficha, 'CON');
+    return Math.max(0, base + mod);
+  }
+
+  return 0;
+}
+
 export function aplicarClasseNaFicha(
   ficha: FichaPersonagem,
-  classe: { nome: string; habilidades?: Array<{ nivel?: number; nome: string; descricao: string }> }
+  classe: {
+    nome: string;
+    pvInicial?: number;
+    pvPorNivel?: number;
+    pmInicial?: string;
+    pmPorNivel?: number;
+    bba?: string;
+    habilidades?: Array<{ nivel?: number; nome: string; descricao: string }>;
+  }
 ): FichaPersonagem {
   const classesAtuais = obterClassesFicha(ficha);
   let novasClasses = [...classesAtuais];
@@ -621,13 +661,17 @@ export function aplicarClasseNaFicha(
   );
 
   let nivelAlvo = 1;
+  const isPrimeiraClasse =
+    classesAtuais.length === 0 ||
+    (classesAtuais.length === 1 && !classesAtuais[0].nome.trim());
+
   if (indexExistente >= 0) {
     nivelAlvo = novasClasses[indexExistente].nivel + 1;
     novasClasses[indexExistente] = {
       ...novasClasses[indexExistente],
       nivel: nivelAlvo,
     };
-  } else if (novasClasses.length === 1 && !novasClasses[0].nome.trim()) {
+  } else if (isPrimeiraClasse) {
     novasClasses[0] = {
       ...novasClasses[0],
       nome: classe.nome,
@@ -655,8 +699,31 @@ export function aplicarClasseNaFicha(
   const habsFiltradas = novasHabs.filter((h) => !nomesExistentes.has(h.nome));
 
   const fichaComClasses = atualizarClassesFicha(ficha, novasClasses);
+
+  let novoPvTotal = fichaComClasses.pvTotal;
+  let novoPvAtual = fichaComClasses.pvAtual;
+  let novoPmTotal = fichaComClasses.pmTotal;
+  let novoPmAtual = fichaComClasses.pmAtual;
+
+  // Se a ficha é recém-criada e ainda possui os valores padrões genéricos (PV <= 10, PM == 0)
+  if (isPrimeiraClasse && ficha.pvTotal <= 10 && classe.pvInicial) {
+    const modCon = obterModAtributo(ficha, 'CON');
+    novoPvTotal = Math.max(1, classe.pvInicial + modCon);
+    novoPvAtual = novoPvTotal;
+
+    if (classe.pmInicial) {
+      const pmInit = calcularPmInicialTexto(classe.pmInicial, ficha, 1);
+      novoPmTotal = pmInit;
+      novoPmAtual = pmInit;
+    }
+  }
+
   return {
     ...fichaComClasses,
+    pvTotal: novoPvTotal,
+    pvAtual: novoPvAtual,
+    pmTotal: novoPmTotal,
+    pmAtual: novoPmAtual,
     habilidadesClasse: [...fichaComClasses.habilidadesClasse, ...habsFiltradas],
   };
 }

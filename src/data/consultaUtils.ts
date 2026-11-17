@@ -1,10 +1,14 @@
 import {
   ArmaItem,
   ArmaduraEquipamento,
+  FichaPersonagem,
   gerarId,
   HabilidadeOuTalento,
   ItemGeral,
   MagiaItem,
+  obterClassesFicha,
+  obterModAtributo,
+  calcularPmInicialTexto,
 } from '../models/ficha';
 import { ClasseData, classes } from './classes';
 import { EquipamentoData, equipamentos, TipoEquipamento } from './equipamentos';
@@ -81,6 +85,7 @@ export const converterMagiaParaItem = (magia: MagiaData): MagiaItem => {
     nome: magia.nome,
     custoPm: magia.nivel === 0 ? '0' : String(magia.nivel),
     descricao: formatarDescricaoMagia(magia),
+    tipo: magia.tipo,
   };
 };
 
@@ -543,6 +548,121 @@ export const converterManobraParaItem = (
     id: gerarId(),
     nome: `${manobra.nome} [${manobra.tipo}]`,
     descricao: formatarDescricaoManobra(manobra),
+  };
+};
+
+export interface SugestaoClasses {
+  pvTotal: number;
+  explicacaoPv: string;
+  pmTotal: number;
+  explicacaoPm: string;
+  bba: number;
+  explicacaoBba: string;
+}
+
+export const calcularSugestoesClasses = (
+  ficha: FichaPersonagem
+): SugestaoClasses | null => {
+  const classesFicha = obterClassesFicha(ficha).filter(
+    (c) => c.nome && c.nome.trim().length > 0 && c.nivel > 0
+  );
+  if (classesFicha.length === 0) return null;
+
+  const modCon = obterModAtributo(ficha, 'CON');
+  let pvTotal = 0;
+  let pmTotal = 0;
+  let bbaTotal = 0;
+
+  const partesPv: string[] = [];
+  const partesPm: string[] = [];
+  const partesBba: string[] = [];
+
+  classesFicha.forEach((c, idx) => {
+    const nomeNorm = normalizarTexto(c.nome);
+    const classeData = classes.find((cd) => normalizarTexto(cd.nome) === nomeNorm);
+
+    if (!classeData) {
+      return;
+    }
+
+    // --- CÁLCULO DE PV ---
+    if (idx === 0) {
+      const pvPrimeiroNivel = Math.max(1, classeData.pvInicial + modCon);
+      let pvAdicional = 0;
+      if (c.nivel > 1) {
+        pvAdicional = (c.nivel - 1) * Math.max(1, classeData.pvPorNivel + modCon);
+      }
+      const pvClasse = pvPrimeiroNivel + pvAdicional;
+      pvTotal += pvClasse;
+      partesPv.push(
+        c.nivel === 1
+          ? `${c.nome}: ${classeData.pvInicial}+Con (${pvClasse} PV)`
+          : `${c.nome} ${c.nivel}: ${pvPrimeiroNivel} nv 1 + ${c.nivel - 1}x(${classeData.pvPorNivel}+Con) (${pvClasse} PV)`
+      );
+    } else {
+      const pvClasse = c.nivel * Math.max(1, classeData.pvPorNivel + modCon);
+      pvTotal += pvClasse;
+      partesPv.push(
+        `${c.nome} ${c.nivel}: ${c.nivel}x(${classeData.pvPorNivel}+Con) (${pvClasse} PV)`
+      );
+    }
+
+    // --- CÁLCULO DE PM ---
+    const pmi = classeData.pmInicial || '0';
+    const pmn = classeData.pmPorNivel || 0;
+    if (pmi !== '0' || pmn > 0) {
+      const matchApt = pmi.match(/a partir do (\d+)º nível/i);
+      if (matchApt) {
+        const nivelReq = parseInt(matchApt[1], 10);
+        if (c.nivel >= nivelReq) {
+          const pmInit = calcularPmInicialTexto(pmi, ficha, c.nivel);
+          const pmAdic = (c.nivel - nivelReq) * pmn;
+          const pmClasse = pmInit + pmAdic;
+          pmTotal += pmClasse;
+          partesPm.push(`${c.nome} ${c.nivel}: ${pmInit} inicial + ${pmAdic} (${pmClasse} PM)`);
+        }
+      } else if (pmi.toLowerCase().includes('conforme classe')) {
+        const pmClasse = c.nivel * pmn;
+        pmTotal += pmClasse;
+        partesPm.push(`${c.nome} ${c.nivel}: ${c.nivel}x${pmn} (${pmClasse} PM)`);
+      } else {
+        const pmInit = calcularPmInicialTexto(pmi, ficha, c.nivel);
+        const pmAdic = (c.nivel - 1) * pmn;
+        const pmClasse = pmInit + pmAdic;
+        pmTotal += pmClasse;
+        partesPm.push(
+          c.nivel === 1
+            ? `${c.nome}: ${pmi} (${pmClasse} PM)`
+            : `${c.nome} ${c.nivel}: ${pmInit} inicial + ${c.nivel - 1}x${pmn} (${pmClasse} PM)`
+        );
+      }
+    }
+
+    // --- CÁLCULO DE BBA ---
+    const bbaDesc = classeData.bba || '';
+    let bbaClasse = 0;
+    if (bbaDesc.includes('1 por nível') || bbaDesc.includes('total')) {
+      bbaClasse = c.nivel;
+      partesBba.push(`${c.nome}: +${bbaClasse}`);
+    } else if (bbaDesc.includes('3/4')) {
+      bbaClasse = Math.floor(c.nivel * 0.75);
+      partesBba.push(`${c.nome}: +${bbaClasse}`);
+    } else {
+      bbaClasse = Math.floor(c.nivel * 0.5);
+      partesBba.push(`${c.nome}: +${bbaClasse}`);
+    }
+    bbaTotal += bbaClasse;
+  });
+
+  if (partesPv.length === 0) return null;
+
+  return {
+    pvTotal,
+    explicacaoPv: partesPv.join(' + '),
+    pmTotal,
+    explicacaoPm: partesPm.length > 0 ? partesPm.join(' + ') : 'Nenhuma classe conjuradora (0 PM)',
+    bba: bbaTotal,
+    explicacaoBba: partesBba.join(' + '),
   };
 };
 

@@ -12,6 +12,7 @@ export interface ClasseData {
   tipo: 'Basica' | 'Prestigio';
   pvInicial: number;
   pvPorNivel: number;
+  pmInicial?: string;
   pmPorNivel: number;
   periciasIniciais?: string;
   periciasDeClasse?: string[];
