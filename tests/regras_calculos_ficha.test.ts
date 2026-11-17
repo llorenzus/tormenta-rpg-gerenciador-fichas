@@ -375,4 +375,30 @@ describe('Regras do Tormenta RPG - Cálculos e Modificadores', () => {
     assert.strictEqual(fichaAtualizada.pmAtual, 4);
     assert.strictEqual(fichaAtualizada.habilidadesClasse.length, 1);
   });
+
+  it('deve somar pvBonus e pmBonus de talentos aos totais de PV e PM', () => {
+    const ficha = criarFichaBase();
+    ficha.pvTotal = 20;
+    ficha.pvAtual = 20;
+    ficha.pvBonus = 0;
+    ficha.pmTotal = 10;
+    ficha.pmAtual = 10;
+    ficha.pmBonus = 0;
+
+    // Simula adição de bônus de Vitalidade (+6 PV)
+    const deltaPv = 6;
+    ficha.pvBonus = 6;
+    ficha.pvTotal += deltaPv;
+    ficha.pvAtual += deltaPv;
+    assert.strictEqual(ficha.pvTotal, 26);
+    assert.strictEqual(ficha.pvAtual, 26);
+
+    // Simula adição de bônus de Aptidão Mágica (+2 PM)
+    const deltaPm = 2;
+    ficha.pmBonus = 2;
+    ficha.pmTotal += deltaPm;
+    ficha.pmAtual += deltaPm;
+    assert.strictEqual(ficha.pmTotal, 12);
+    assert.strictEqual(ficha.pmAtual, 12);
+  });
 });

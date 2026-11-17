@@ -200,6 +200,28 @@ export const AbaAtributos: React.FC<Props> = ({ ficha, onChange }) => {
                 style={styles.col}
               />
               <CampoInteiro
+                label="Bônus"
+                valor={Number(ficha.pvBonus) || 0}
+                onValorChange={(novoBonus) => {
+                  const antigoBonus = Number(ficha.pvBonus) || 0;
+                  const delta = novoBonus - antigoBonus;
+                  const novoTotal = Math.max(1, (ficha.pvTotal || 10) + delta);
+                  const novoAtual =
+                    ficha.pvAtual === ficha.pvTotal
+                      ? novoTotal
+                      : Math.max(0, ficha.pvAtual + delta);
+                  onChange({
+                    ...ficha,
+                    pvBonus: novoBonus,
+                    pvTotal: novoTotal,
+                    pvAtual: novoAtual,
+                  });
+                }}
+                min={-999}
+                max={9999}
+                style={styles.col}
+              />
+              <CampoInteiro
                 label="PV Totais"
                 valor={ficha.pvTotal}
                 onValorChange={(v) => onChange({ ...ficha, pvTotal: v })}
@@ -208,30 +230,40 @@ export const AbaAtributos: React.FC<Props> = ({ ficha, onChange }) => {
                 style={styles.col}
               />
             </View>
-            {sugestao && (
-              <View style={styles.sugestaoRow}>
-                <Text style={styles.sugestaoTexto} numberOfLines={2}>
-                  💡 Sugerido por classe: <Text style={styles.sugestaoValor}>{sugestao.pvTotal} PV</Text> ({sugestao.explicacaoPv})
-                </Text>
-                {ficha.pvTotal !== sugestao.pvTotal && (
-                  <TouchableOpacity
-                    style={styles.btnAplicarSugestao}
-                    onPress={() =>
-                      onChange({
-                        ...ficha,
-                        pvTotal: sugestao.pvTotal,
-                        pvAtual:
-                          ficha.pvAtual === ficha.pvTotal
-                            ? sugestao.pvTotal
-                            : Math.min(ficha.pvAtual, sugestao.pvTotal),
-                      })
-                    }
-                  >
-                    <Text style={styles.btnAplicarSugestaoTexto}>Aplicar</Text>
-                  </TouchableOpacity>
-                )}
-              </View>
-            )}
+            {sugestao && (() => {
+              const pvBonus = Number(ficha.pvBonus) || 0;
+              const pvTotalSugerido = Math.max(1, sugestao.pvTotal + pvBonus);
+              const explicacaoFormatada =
+                pvBonus !== 0
+                  ? `${sugestao.explicacaoPv} + ${pvBonus > 0 ? `+${pvBonus}` : pvBonus} bônus`
+                  : sugestao.explicacaoPv;
+
+              return (
+                <View style={styles.sugestaoRow}>
+                  <Text style={styles.sugestaoTexto} numberOfLines={2}>
+                    💡 Sugerido por classe: <Text style={styles.sugestaoValor}>{pvTotalSugerido} PV</Text>{' '}
+                    ({explicacaoFormatada})
+                  </Text>
+                  {ficha.pvTotal !== pvTotalSugerido && (
+                    <TouchableOpacity
+                      style={styles.btnAplicarSugestao}
+                      onPress={() =>
+                        onChange({
+                          ...ficha,
+                          pvTotal: pvTotalSugerido,
+                          pvAtual:
+                            ficha.pvAtual === ficha.pvTotal
+                              ? pvTotalSugerido
+                              : Math.min(ficha.pvAtual, pvTotalSugerido),
+                        })
+                      }
+                    >
+                      <Text style={styles.btnAplicarSugestaoTexto}>Aplicar</Text>
+                    </TouchableOpacity>
+                  )}
+                </View>
+              );
+            })()}
           </View>
 
           {/* PM - Azul */}
@@ -259,6 +291,28 @@ export const AbaAtributos: React.FC<Props> = ({ ficha, onChange }) => {
                 style={styles.col}
               />
               <CampoInteiro
+                label="Bônus"
+                valor={Number(ficha.pmBonus) || 0}
+                onValorChange={(novoBonus) => {
+                  const antigoBonus = Number(ficha.pmBonus) || 0;
+                  const delta = novoBonus - antigoBonus;
+                  const novoTotal = Math.max(0, (ficha.pmTotal || 0) + delta);
+                  const novoAtual =
+                    ficha.pmAtual === ficha.pmTotal
+                      ? novoTotal
+                      : Math.max(0, ficha.pmAtual + delta);
+                  onChange({
+                    ...ficha,
+                    pmBonus: novoBonus,
+                    pmTotal: novoTotal,
+                    pmAtual: novoAtual,
+                  });
+                }}
+                min={-999}
+                max={9999}
+                style={styles.col}
+              />
+              <CampoInteiro
                 label="PM Totais"
                 valor={ficha.pmTotal}
                 onValorChange={(v) => onChange({ ...ficha, pmTotal: v })}
@@ -267,30 +321,40 @@ export const AbaAtributos: React.FC<Props> = ({ ficha, onChange }) => {
                 style={styles.col}
               />
             </View>
-            {sugestao && (
-              <View style={styles.sugestaoRow}>
-                <Text style={styles.sugestaoTexto} numberOfLines={2}>
-                  💡 Sugerido por classe: <Text style={styles.sugestaoValor}>{sugestao.pmTotal} PM</Text> ({sugestao.explicacaoPm})
-                </Text>
-                {ficha.pmTotal !== sugestao.pmTotal && (
-                  <TouchableOpacity
-                    style={styles.btnAplicarSugestao}
-                    onPress={() =>
-                      onChange({
-                        ...ficha,
-                        pmTotal: sugestao.pmTotal,
-                        pmAtual:
-                          ficha.pmAtual === ficha.pmTotal
-                            ? sugestao.pmTotal
-                            : Math.min(ficha.pmAtual, sugestao.pmTotal),
-                      })
-                    }
-                  >
-                    <Text style={styles.btnAplicarSugestaoTexto}>Aplicar</Text>
-                  </TouchableOpacity>
-                )}
-              </View>
-            )}
+            {sugestao && (() => {
+              const pmBonus = Number(ficha.pmBonus) || 0;
+              const pmTotalSugerido = Math.max(0, sugestao.pmTotal + pmBonus);
+              const explicacaoFormatada =
+                pmBonus !== 0
+                  ? `${sugestao.explicacaoPm} + ${pmBonus > 0 ? `+${pmBonus}` : pmBonus} bônus`
+                  : sugestao.explicacaoPm;
+
+              return (
+                <View style={styles.sugestaoRow}>
+                  <Text style={styles.sugestaoTexto} numberOfLines={2}>
+                    💡 Sugerido por classe: <Text style={styles.sugestaoValor}>{pmTotalSugerido} PM</Text>{' '}
+                    ({explicacaoFormatada})
+                  </Text>
+                  {ficha.pmTotal !== pmTotalSugerido && (
+                    <TouchableOpacity
+                      style={styles.btnAplicarSugestao}
+                      onPress={() =>
+                        onChange({
+                          ...ficha,
+                          pmTotal: pmTotalSugerido,
+                          pmAtual:
+                            ficha.pmAtual === ficha.pmTotal
+                              ? pmTotalSugerido
+                              : Math.min(ficha.pmAtual, pmTotalSugerido),
+                        })
+                      }
+                    >
+                      <Text style={styles.btnAplicarSugestaoTexto}>Aplicar</Text>
+                    </TouchableOpacity>
+                  )}
+                </View>
+              );
+            })()}
           </View>
 
           {/* PE - Amarelo */}

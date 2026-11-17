@@ -721,11 +721,6 @@
         "nivel": 20,
         "nome": "Poder Divino Máximo",
         "descricao": "Ganha o poder supremo de sua divindade padroeira."
-      },
-      {
-        "nivel": 20,
-        "nome": "Apoteose Sagrada",
-        "descricao": "Torna-se um emissário direto do seu deus, imune a envelhecimento, veneno e dreno de energia."
       }
     ],
     "pmInicial": "1 + mod. Sabedoria"

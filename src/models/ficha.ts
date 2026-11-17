@@ -135,8 +135,10 @@ export interface FichaPersonagem {
   // Status de Combate: PV, PM, PE, Pontos de Ação, BBA, CA e Resistências (campos manuais)
   pvTotal: number;
   pvAtual: number;
+  pvBonus?: number; // Bônus adicionais de PV (Talentos como Vitalidade, itens ou outros)
   pmTotal: number;
   pmAtual: number;
+  pmBonus?: number; // Bônus adicionais de PM (Talentos como Aptidão Mágica, itens ou outros)
   pontosAcao?: number; // Pontos de Ação (PA)
   peTotal?: number;    // Pontos de Energia Totais (PE)
   peAtual?: number;    // Pontos de Energia Atuais (PE)
@@ -523,8 +525,10 @@ export function criarNovaFichaPadrao(): FichaPersonagem {
     carisma: 10,
     pvTotal: 10,
     pvAtual: 10,
+    pvBonus: 0,
     pmTotal: 0,
     pmAtual: 0,
+    pmBonus: 0,
     pontosAcao: 1,
     peTotal: 0,
     peAtual: 0,
@@ -708,13 +712,15 @@ export function aplicarClasseNaFicha(
   // Se a ficha é recém-criada e ainda possui os valores padrões genéricos (PV <= 10, PM == 0)
   if (isPrimeiraClasse && ficha.pvTotal <= 10 && classe.pvInicial) {
     const modCon = obterModAtributo(ficha, 'CON');
-    novoPvTotal = Math.max(1, classe.pvInicial + modCon);
+    const pvBonus = Number(ficha.pvBonus) || 0;
+    novoPvTotal = Math.max(1, classe.pvInicial + modCon + pvBonus);
     novoPvAtual = novoPvTotal;
 
     if (classe.pmInicial) {
+      const pmBonus = Number(ficha.pmBonus) || 0;
       const pmInit = calcularPmInicialTexto(classe.pmInicial, ficha, 1);
-      novoPmTotal = pmInit;
-      novoPmAtual = pmInit;
+      novoPmTotal = pmInit + pmBonus;
+      novoPmAtual = novoPmTotal;
     }
   }
 
