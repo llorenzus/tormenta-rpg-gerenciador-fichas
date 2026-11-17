@@ -3899,11 +3899,6 @@
       },
       {
         "nivel": 20,
-        "nome": "Mestre da Magia Suprema",
-        "descricao": "Você pode lançar qualquer magia que conheça sem precisar prepará-la previamente no grimório, com custo de PM reduzido em -1."
-      },
-      {
-        "nivel": 20,
         "nome": "Mistério Arcano (20º nível)",
         "descricao": "Recebe mais um talento de magia ou metamágico adicional."
       }
@@ -3957,11 +3952,6 @@
         "nivel": 15,
         "nome": "Mistério Arcano (15º nível)",
         "descricao": "Pode escolher um talento de magia/metamágico OU uma das habilidades exclusivas de sua especialização:\n• Gadanho Negro: Foice negra mágica que causa 2d4 (19-20/x4), bônus mágico +1 (+1 a cada 5 níveis) e cura metade do dano em PV.\n• Armadura de Ossos: Gasta 1 PM para criar armadura de ossos (+4 CA, +1 CA extra por PM adicional até +1/3 do nível de necromante).\n• Carisma Mortal: Permite usar Diplomacia/Enganação com mortos-vivos sem penalidade na primeira rodada (Pré-req: 10º nível, Língua dos Mortos).\n• Carrasco dos Mortos: Recebe Inimigo Predileto (mortos-vivos) de ranger (+2 nas jogadas de dano e testes).\n• Ceifador de Almas: Abate com gadanho negro recupera PV total do dano e lança Drenar Força Vital sem custo de PM (Pré-req: 10º nível, Gadanho Negro).\n• Horda Cinzenta: Controla o dobro da quantidade normal de níveis de mortos-vivos.\n• Lacaio Funesto: Cria ou adquire um servo esquelético inteligente permanente.\n• Lich: Transcende a mortalidade através de um filactério e torna-se um lich morto-vivo (Pré-req: 15º nível).\n• Língua dos Mortos: Pode se comunicar com qualquer criatura morta-viva.\n• Mais Forte que a Morte: Testes de Fortitude para resistir à morte recebem bônus de +4.\n• Montaria Esquelética: Invoca um corcel esquelético dócil para transporte rápido.\n• Morte Insistente: Magias de necromancia ignoram imunidade a dano negativo de criaturas vivas.\n• Necropotência: Magias de necromancia têm sua CD aumentada em +2.\n• Proteção Positiva: Reduz a metade todo dano sofrido por energia positiva.\n• Seguidores Funestos: Mortos-vivos sob seu comando recebem +2 em ataques e resistências."
-      },
-      {
-        "nivel": 20,
-        "nome": "Mestre da Magia Suprema",
-        "descricao": "Você atinge o ápice de sua especialização arcana, lançando suas magias de forma impecável."
       },
       {
         "nivel": 20,
@@ -4021,11 +4011,6 @@
       },
       {
         "nivel": 20,
-        "nome": "Mestre da Magia Suprema",
-        "descricao": "Você atinge o ápice de sua especialização arcana, lançando suas magias de forma impecável."
-      },
-      {
-        "nivel": 20,
         "nome": "Mistério Arcano (20º nível)",
         "descricao": "Pode escolher um talento de magia/metamágico OU uma das habilidades exclusivas de sua especialização:\n• Ilusões Econômicas: Magias de ilusão custam -1 PM (mínimo 1 PM).\n• Detectar Amadorismo: Vê através de qualquer ilusão conjurada por conjurador de nível inferior.\n• Ilusões de Grandeza: Suas ilusões podem abranger áreas monumentais sem custo extra de PM.\n• Ilusões Poderosas: Aumenta a CD para desacreditar de suas ilusões em +2.\n• Invisibilidade Suprema: Invisibilidade não é dissipada ao atacar ou conjurar magias ofensivas.\n• Modelador de Sombras: Converte porcentagem de suas ilusões em dano físico real de sombra.\n• Não Fui Eu: Pode trocar de lugar com uma réplica ilusória ao ser alvejado por ataque.\n• Resíduo Ilusório: Deixa um clone falso que distrai oponentes ao se movimentar."
       }
@@ -4079,11 +4064,6 @@
         "nivel": 15,
         "nome": "Mistério Arcano (15º nível)",
         "descricao": "Pode escolher um talento de magia/metamágico OU uma das habilidades exclusivas de sua especialização:\n• Celeridade Arcana: Pode realizar uma ação de movimento adicional por rodada gastando 1 PM.\n• Elixir da Juventude: Prepara uma beberagem alquímica que rejuvenesce o consumidor (Pré-req: 10º nível, Ofício Alquimia).\n• Exílio Cósmico: Retira-se voluntariamente do espaço-tempo por anos sem sofrer envelhecimento.\n• Lentidão Maior: Magia lentidão impõe penalidade dobrada e afeta o dobro de alvos.\n• Magias Duradouras: Dobra a duração de magias temporais sem custo adicional de PM.\n• Mestre do Tempo: Uma vez por dia pode re-rolar uma rodada completa de combate.\n• Piscadela: Teletransporta-se até 9m como reação a um ataque recebido.\n• Teletransporte Defensivo: Quando atacado, teleporta 3m evitando o ataque completamente.\n• Velocidade Maior: Aliados sob velocidade recebem duas ações padrão em vez de uma."
-      },
-      {
-        "nivel": 20,
-        "nome": "Mestre da Magia Suprema",
-        "descricao": "Você atinge o ápice de sua especialização arcana, lançando suas magias de forma impecável."
       },
       {
         "nivel": 20,
@@ -5439,11 +5419,6 @@
       },
       {
         "nivel": 20,
-        "nome": "Mestre da Magia Suprema",
-        "descricao": "Você atinge o ápice de sua especialização arcana, lançando suas magias de forma impecável."
-      },
-      {
-        "nivel": 20,
         "nome": "Mistério Arcano (20º nível)",
         "descricao": "Pode escolher um talento de magia/metamágico OU uma das habilidades exclusivas de sua especialização:\n• Abjurações Econômicas: Magias de abjuração custam -1 PM (mínimo 1 PM).\n• Armadura Protetora: Magia armadura arcana concede bônus de CA adicional de +2.\n• Barreira Mística: Pode criar uma cúpula de força protetora ao redor dos aliados.\n• Campo de Força Pessoal: Adquire resistência a dano contínua enquanto tiver PM disponível.\n• Contramágica Aprimorada: Pode anular magias inimigas como uma reação gastando PMs equivalentes.\n• Proteção contra Lefeu: Proteção contra o mal em área de Tormenta dura 1 dia e não pode ser dissipada (Pré-req: 10º nível).\n• Proteção contra Magias: Recebe +2 em todos os testes de resistência contra magias e nenhum efeito se passar (Pré-req: 15º nível)."
       }
@@ -5497,11 +5472,6 @@
         "nivel": 15,
         "nome": "Mistério Arcano (15º nível)",
         "descricao": "Pode escolher um talento de magia/metamágico OU uma das habilidades exclusivas de sua especialização:\n• Adivinhações Econômicas: Todas as suas magias de adivinhação custam -1 PM (mínimo 1 PM).\n• Bisbilhoteiro Mental: Usa detectar pensamentos em conjunto com vidência sem ação adicional e +2 na CD (Pré-req: 5º nível).\n• Ler a Sorte: Concede bônus de sorte de +2 para um aliado em sua próxima rolagem.\n• Mestre da Concentração: Pode rolar novamente qualquer teste de concentração com sucesso garantido.\n• Mestre Vidente: Alcance e duração de magias de vidência são duplicados.\n• Olhos Atrás da Cabeça: Não pode ser surpreendido nem ficar desprevenido contra ataques normais.\n• Precognição em Combate: Adiciona modificador de Inteligência na Classe de Armadura.\n• Profeta: Pode conjurar magias de adivinhação como se possuísse o talento Acelerar Magia.\n• Sentidos Aguçados: Ganha bônus de +4 em testes de Percepção e Iniciativa."
-      },
-      {
-        "nivel": 20,
-        "nome": "Mestre da Magia Suprema",
-        "descricao": "Você atinge o ápice de sua especialização arcana, lançando suas magias de forma impecável."
       },
       {
         "nivel": 20,
@@ -5561,11 +5531,6 @@
       },
       {
         "nivel": 20,
-        "nome": "Mestre da Magia Suprema",
-        "descricao": "Você atinge o ápice de sua especialização arcana, lançando suas magias de forma impecável."
-      },
-      {
-        "nivel": 20,
         "nome": "Mistério Arcano (20º nível)",
         "descricao": "Pode escolher um talento de magia/metamágico OU uma das habilidades exclusivas de sua especialização:\n• Caldeirão do Bruxo: Prepara poções na metade do tempo e por metade do custo em TO.\n• Maldição da Visão Turva: Alvo a até 9m tem visão prejudicada (20% chance de erro) por 1 minuto (Pré-req: 5º nível).\n• Maldição do Corpo Aberto: Teste oposto de Identificar Magia vs Vontade deixa o alvo vulnerável a dano dobrado (Pré-req: 5º nível).\n• Maldição do Corpo Fechado: Ganha resistência a dano e bônus contra venenos.\n• Maldição da Magia Minguada: Inimigo amaldiçoado gasta +1 PM em cada magia conjurada.\n• Maldição da Miséria: Inimigo amaldiçoado perde bônus de equipamentos mágicos temporariamente.\n• Maldição do Parasita: Drena vida de um alvo amaldiçoado toda rodada para curar o bruxo.\n• Maldição do Traidor: O alvo não consegue distinguir aliados e ataca quem estiver mais perto.\n• Rogar Maldição Suprema: Rogar maldição não pode ser dissipada sem desejo ou milagre."
       }
@@ -5619,11 +5584,6 @@
         "nivel": 15,
         "nome": "Mistério Arcano (15º nível)",
         "descricao": "Pode escolher um talento de magia/metamágico OU uma das habilidades exclusivas de sua especialização:\n• Encantamentos Econômicos: Magias de encantamento custam -1 PM (mínimo 1 PM).\n• Amigo de Todos: Reações de NPCs começam um passo mais amigáveis em relação a você.\n• Encantador de Cães: Magias mentais funcionam normalmente em animais e monstros sem mente.\n• Encantador de Golens: Permite afetar construtos com magias de encantamento gastando +2 PM.\n• Encantamentos Poderosos: Aumenta a CD de suas magias de encantamento em +2.\n• Manipulador Ultrajante: Vítimas de encantamento não percebem que foram enfeitiçadas após o término.\n• Multidão do Encantador: Pode afetar alvos extras sem custo adicional de PM.\n• Vontade Suprema: Ganha bônus de +4 em testes de Vontade contra efeitos mentais."
-      },
-      {
-        "nivel": 20,
-        "nome": "Mestre da Magia Suprema",
-        "descricao": "Você atinge o ápice de sua especialização arcana, lançando suas magias de forma impecável."
       },
       {
         "nivel": 20,
@@ -5683,11 +5643,6 @@
       },
       {
         "nivel": 20,
-        "nome": "Mestre da Magia Suprema",
-        "descricao": "Você atinge o ápice de sua especialização arcana, lançando suas magias de forma impecável."
-      },
-      {
-        "nivel": 20,
         "nome": "Mistério Arcano (20º nível)",
         "descricao": "Pode escolher um talento de magia/metamágico OU uma das habilidades exclusivas de sua especialização:\n• Evocações Econômicas: Magias de evocação custam -1 PM (mínimo 1 PM).\n• Acumular Energia: Gasta ação completa para carregar magia de dano, aumentando em +1 o dano por dado.\n• Dicotomia Elemental: Pode dividir o dano da magia entre dois elementos diferentes.\n• Evocações Poderosas: Aumenta a CD de todas as suas magias de evocação em +2.\n• Força Bruta: Quando rola dano de evocação, dados com resultado 1 podem ser re-rolados.\n• Magia Incendiária: Alvos que sofrem dano de fogo continuam queimando nas rodadas seguintes.\n• Magia Inescapável: Magias de área impõem metade do dano mesmo em alvos com Evasão.\n• Magia Inevitável: Ignora até 10 pontos de resistência elemental do alvo."
       }
@@ -5741,11 +5696,6 @@
         "nivel": 15,
         "nome": "Mistério Arcano (15º nível)",
         "descricao": "Pode escolher um talento de magia/metamágico OU uma das habilidades exclusivas de sua especialização:\n• Ataque Elemental: O servo elemental desfere golpes causando dano elemental adicional.\n• Camaleão Ambiental: O servo elemental adapta-se ao terreno concedendo camuflagem ao geomante.\n• Comunhão Arcana: Pode lançar magias de toque através de seu servo elemental.\n• Servo Atirador: O servo elemental realiza ataques de projétil elemental à distância.\n• Servo Durão: Aumenta PV e resistências do servo elemental consideravelmente.\n• Servo Lutador: O servo elemental ganha tamanho Médio e bônus em manobras de combate.\n• Uno com Arton: Ganha sentido sísmico 18m e deslocamento de escavação."
-      },
-      {
-        "nivel": 20,
-        "nome": "Mestre da Magia Suprema",
-        "descricao": "Você atinge o ápice de sua especialização arcana, lançando suas magias de forma impecável."
       },
       {
         "nivel": 20,
@@ -5805,11 +5755,6 @@
       },
       {
         "nivel": 20,
-        "nome": "Mestre da Magia Suprema",
-        "descricao": "Você atinge o ápice de sua especialização arcana, lançando suas magias de forma impecável."
-      },
-      {
-        "nivel": 20,
         "nome": "Mistério Arcano (20º nível)",
         "descricao": "Pode escolher um talento de magia/metamágico OU uma das habilidades exclusivas de sua especialização:\n• Invocações Econômicas: Magias de invocação custam -1 PM (mínimo 1 PM).\n• Esconjurar: Pode banir criaturas invocadas inimigas com facilidade incomparável.\n• Estudos Extracurriculares: Adiciona opções exóticas e poderosas à lista de Invocar Monstro.\n• Invocação Apressada: Conjura magias de invocar monstro como ação padrão em vez de rodada completa.\n• Invocações Poderosas: Criaturas invocadas ganham +2 em Força e Constituição e +1 PV por dado.\n• Invocações Teimosas: Criaturas invocadas permanecem por 1 rodada a mais por nível.\n• Mestre do Teletransporte: Pode se teleportar como ação de movimento e levar aliados adjacentes."
       }
@@ -5863,11 +5808,6 @@
         "nivel": 15,
         "nome": "Mistério Arcano (15º nível)",
         "descricao": "Pode escolher um talento de magia/metamágico OU uma das habilidades exclusivas de sua especialização:\n• Transmutações Econômicas: Magias de transmutação custam -1 PM (mínimo 1 PM).\n• Aprimorar a Vida: Magias de aumento de atributo (como Força do Touro) concedem +6 em vez de +4.\n• Criar Pedra Filosofal: Cria a lendária pedra filosofal capaz de transmutar metais em ouro.\n• Fortitude Suprema: 1x/dia gasta 1 PM para transformar falha em Fortitude em sucesso.\n• Mago Construtor: Adiciona moldar madeira e pedra à lista sem custo extra de aprendizado.\n• Memória Mutável: Pode alterar uma magia preparada durante o dia com 10 minutos de estudo.\n• Transmutações Poderosas: Aumenta a CD de magias de polimorfia e transmutação em +2.\n• Uno com o Universo: Ganha imunidade a paralisia, sono mágico e metamorfose involuntária."
-      },
-      {
-        "nivel": 20,
-        "nome": "Mestre da Magia Suprema",
-        "descricao": "Você atinge o ápice de sua especialização arcana, lançando suas magias de forma impecável."
       },
       {
         "nivel": 20,
