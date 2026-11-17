@@ -127,6 +127,15 @@ export const CompendioModal: React.FC<Props> = ({
 }) => {
   const [abaAtiva, setAbaAtiva] = useState<AbaCompendio>(abaInicial);
   const [busca, setBusca] = useState('');
+  const [buscaDebounced, setBuscaDebounced] = useState('');
+
+  // Debounce na busca para digitação suave no teclado do celular
+  React.useEffect(() => {
+    const timer = setTimeout(() => {
+      setBuscaDebounced(busca);
+    }, 150);
+    return () => clearTimeout(timer);
+  }, [busca]);
 
   // Filtros de Talentos
   const [categoriaSel, setCategoriaSel] = useState<CategoriaTalento | 'Todas'>(
@@ -176,50 +185,50 @@ export const CompendioModal: React.FC<Props> = ({
     setExpandidos((prev) => ({ ...prev, [id]: !prev[id] }));
   };
 
-  // Listas filtradas
+  // Listas filtradas com proteção quando invisível e busca com debounce
   const talentosFiltrados = useMemo(() => {
-    if (abaAtiva !== 'talentos') return [];
-    let lista = filtrarTalentos({ termo: busca, categoria: categoriaSel });
+    if ((!visivel && !standalone) || abaAtiva !== 'talentos') return [];
+    let lista = filtrarTalentos({ termo: buscaDebounced, categoria: categoriaSel });
     if (apenasRequisitosCumpridos && fichaAtual) {
       lista = lista.filter((t) => verificarPreRequisitosCumpridos(fichaAtual, t).cumpre);
     }
     return lista;
-  }, [abaAtiva, busca, categoriaSel, apenasRequisitosCumpridos, fichaAtual]);
+  }, [visivel, standalone, abaAtiva, buscaDebounced, categoriaSel, apenasRequisitosCumpridos, fichaAtual]);
 
   const magiasFiltradas = useMemo(() => {
-    if (abaAtiva !== 'magias') return [];
+    if ((!visivel && !standalone) || abaAtiva !== 'magias') return [];
     return filtrarMagias({
-      termo: busca,
+      termo: buscaDebounced,
       nivel: nivelSel,
       tipo: tipoMagiaSel,
       escola: escolaSel,
     });
-  }, [abaAtiva, busca, nivelSel, tipoMagiaSel, escolaSel]);
+  }, [visivel, standalone, abaAtiva, buscaDebounced, nivelSel, tipoMagiaSel, escolaSel]);
 
   const racasFiltradas = useMemo(() => {
-    if (abaAtiva !== 'racas') return [];
-    return filtrarRacas(busca, manualRacaSel);
-  }, [abaAtiva, busca, manualRacaSel]);
+    if ((!visivel && !standalone) || abaAtiva !== 'racas') return [];
+    return filtrarRacas(buscaDebounced, manualRacaSel);
+  }, [visivel, standalone, abaAtiva, buscaDebounced, manualRacaSel]);
 
   const classesFiltradas = useMemo(() => {
-    if (abaAtiva !== 'classes') return [];
-    return filtrarClasses(busca, tipoClasseSel, manualClasseSel);
-  }, [abaAtiva, busca, tipoClasseSel, manualClasseSel]);
+    if ((!visivel && !standalone) || abaAtiva !== 'classes') return [];
+    return filtrarClasses(buscaDebounced, tipoClasseSel, manualClasseSel);
+  }, [visivel, standalone, abaAtiva, buscaDebounced, tipoClasseSel, manualClasseSel]);
 
   const equipamentosFiltrados = useMemo(() => {
-    if (abaAtiva !== 'equipamentos') return [];
-    return filtrarEquipamentos(busca, tipoEquipSel);
-  }, [abaAtiva, busca, tipoEquipSel]);
+    if ((!visivel && !standalone) || abaAtiva !== 'equipamentos') return [];
+    return filtrarEquipamentos(buscaDebounced, tipoEquipSel);
+  }, [visivel, standalone, abaAtiva, buscaDebounced, tipoEquipSel]);
 
   const manobrasFiltradas = useMemo(() => {
-    if (abaAtiva !== 'manobras') return [];
-    return filtrarManobras(busca, tipoManobraSel);
-  }, [abaAtiva, busca, tipoManobraSel]);
+    if ((!visivel && !standalone) || abaAtiva !== 'manobras') return [];
+    return filtrarManobras(buscaDebounced, tipoManobraSel);
+  }, [visivel, standalone, abaAtiva, buscaDebounced, tipoManobraSel]);
 
   const regrasFiltradas = useMemo(() => {
-    if (abaAtiva !== 'regras') return [];
-    return filtrarRegras(busca, tipoRegraSel, bonusArmaMagicaSel);
-  }, [abaAtiva, busca, tipoRegraSel, bonusArmaMagicaSel]);
+    if ((!visivel && !standalone) || abaAtiva !== 'regras') return [];
+    return filtrarRegras(buscaDebounced, tipoRegraSel, bonusArmaMagicaSel);
+  }, [visivel, standalone, abaAtiva, buscaDebounced, tipoRegraSel, bonusArmaMagicaSel]);
 
   const fichaEfetiva = fichaAtual || (todasFichas.length === 1 ? todasFichas[0] : null);
 
@@ -373,45 +382,87 @@ export const CompendioModal: React.FC<Props> = ({
     setItemParaAdicionar(null);
   };
 
-  // Checa se o item já está na ficha atual
+  // Mapeamento em Sets pré-calculado para busca O(1) instantânea (elimina gargalo de rolagem e renders múltiplos)
+  const setsFicha = useMemo(() => {
+    if (!fichaEfetiva) return null;
+    const limpo = (s: string) => s.replace(/\s*\[.*?\]/g, '').trim().toLowerCase();
+
+    const talentosSet = new Set<string>();
+    (fichaEfetiva.talentos || []).forEach((t) => {
+      talentosSet.add(t.nome.trim().toLowerCase());
+      talentosSet.add(limpo(t.nome));
+    });
+
+    const magiasSet = new Set<string>();
+    (fichaEfetiva.magias || []).forEach((m) => {
+      magiasSet.add(m.nome.trim().toLowerCase());
+      magiasSet.add(limpo(m.nome));
+    });
+
+    const racaSet = new Set<string>();
+    if (fichaEfetiva.raca) {
+      racaSet.add(fichaEfetiva.raca.trim().toLowerCase());
+      racaSet.add(limpo(fichaEfetiva.raca));
+    }
+
+    const classesSet = new Set<string>();
+    if (fichaEfetiva.classe) {
+      classesSet.add(fichaEfetiva.classe.trim().toLowerCase());
+      classesSet.add(limpo(fichaEfetiva.classe));
+    }
+    obterClassesFicha(fichaEfetiva).forEach((c) => {
+      classesSet.add(c.nome.trim().toLowerCase());
+      classesSet.add(limpo(c.nome));
+    });
+
+    const manobrasSet = new Set<string>();
+    if (Array.isArray(fichaEfetiva.manobras)) {
+      fichaEfetiva.manobras.forEach((m) => {
+        manobrasSet.add(m.nome.trim().toLowerCase());
+        manobrasSet.add(limpo(m.nome));
+      });
+    }
+
+    const equipSet = new Set<string>();
+    (fichaEfetiva.armas || []).forEach((a) => {
+      equipSet.add(a.nome.trim().toLowerCase());
+      equipSet.add(limpo(a.nome));
+    });
+    (fichaEfetiva.armaduras || []).forEach((a) => {
+      equipSet.add(a.nome.trim().toLowerCase());
+      equipSet.add(limpo(a.nome));
+    });
+    (fichaEfetiva.itensGerais || []).forEach((i) => {
+      equipSet.add(i.nome.trim().toLowerCase());
+      equipSet.add(limpo(i.nome));
+    });
+
+    return { talentosSet, magiasSet, racaSet, classesSet, manobrasSet, equipSet };
+  }, [fichaEfetiva]);
+
+  // Checa em tempo O(1) se o item já está na ficha atual
   const estaNaListaFicha = (
     tipo: 'talento' | 'magia' | 'raca' | 'classe' | 'equipamento' | 'manobra',
     nome: string
   ): boolean => {
-    if (!fichaEfetiva) return false;
+    if (!setsFicha) return false;
     const nomeNorm = nome.trim().toLowerCase();
     const limpo = (s: string) => s.replace(/\s*\[.*?\]/g, '').trim().toLowerCase();
     const nomeLimpo = limpo(nome);
 
-    if (tipo === 'talento') {
-      return (fichaEfetiva.talentos || []).some((t) => {
-        const tLimpo = limpo(t.nome);
-        return tLimpo === nomeLimpo || t.nome.trim().toLowerCase() === nomeNorm;
-      });
-    } else if (tipo === 'magia') {
-      return (fichaEfetiva.magias || []).some(
-        (m) => m.nome.trim().toLowerCase() === nomeNorm || limpo(m.nome) === nomeLimpo
-      );
-    } else if (tipo === 'raca') {
-      return limpo(fichaEfetiva.raca || '') === nomeLimpo;
-    } else if (tipo === 'classe') {
-      const classesAtuais = obterClassesFicha(fichaEfetiva);
-      return (
-        classesAtuais.some(
-          (c) => c.nome.trim().toLowerCase() === nomeNorm || limpo(c.nome) === nomeLimpo
-        ) || (limpo(fichaEfetiva.classe || '') === nomeLimpo)
-      );
-    } else if (tipo === 'manobra') {
-      const manobrasAtuais = Array.isArray(fichaEfetiva.manobras) ? fichaEfetiva.manobras : [];
-      return manobrasAtuais.some(
-        (m) => m.nome.trim().toLowerCase() === nomeNorm || limpo(m.nome) === nomeLimpo
-      );
-    } else {
-      return (
-        (fichaEfetiva.armas || []).some((a) => a.nome.trim().toLowerCase() === nomeNorm || limpo(a.nome) === nomeLimpo) ||
-        (fichaEfetiva.armaduras || []).some((a) => a.nome.trim().toLowerCase() === nomeNorm || limpo(a.nome) === nomeLimpo) ||
-        (fichaEfetiva.itensGerais || []).some((i) => i.nome.trim().toLowerCase() === nomeNorm || limpo(i.nome) === nomeLimpo)
-      );
+    switch (tipo) {
+      case 'talento':
+        return setsFicha.talentosSet.has(nomeNorm) || setsFicha.talentosSet.has(nomeLimpo);
+      case 'magia':
+        return setsFicha.magiasSet.has(nomeNorm) || setsFicha.magiasSet.has(nomeLimpo);
+      case 'raca':
+        return setsFicha.racaSet.has(nomeNorm) || setsFicha.racaSet.has(nomeLimpo);
+      case 'classe':
+        return setsFicha.classesSet.has(nomeNorm) || setsFicha.classesSet.has(nomeLimpo);
+      case 'manobra':
+        return setsFicha.manobrasSet.has(nomeNorm) || setsFicha.manobrasSet.has(nomeLimpo);
+      default:
+        return setsFicha.equipSet.has(nomeNorm) || setsFicha.equipSet.has(nomeLimpo);
     }
   };
 
@@ -452,6 +503,11 @@ export const CompendioModal: React.FC<Props> = ({
         return `${regrasFiltradas.length} regras encontradas`;
     }
   };
+
+  // Se o modal estiver fechado e não for janela separada, desmonta a árvore interna para liberar memória RAM e CPU do celular
+  if (!visivel && !standalone) {
+    return null;
+  }
 
   const conteudoCompendio = (
     <SafeAreaView style={styles.container}>
@@ -612,7 +668,10 @@ export const CompendioModal: React.FC<Props> = ({
             {busca.length > 0 && (
               <TouchableOpacity
                 style={styles.btnLimparBusca}
-                onPress={() => setBusca('')}
+                onPress={() => {
+                  setBusca('');
+                  setBuscaDebounced('');
+                }}
               >
                 <Text style={styles.btnLimparBuscaText}>✕</Text>
               </TouchableOpacity>
@@ -947,6 +1006,8 @@ export const CompendioModal: React.FC<Props> = ({
                 <ScrollView
                   horizontal
                   showsHorizontalScrollIndicator={false}
+                  nestedScrollEnabled={true}
+                  keyboardShouldPersistTaps="handled"
                   contentContainerStyle={[styles.chipsScroll, { marginTop: 6 }]}
                 >
                   {NIVEIS_BONUS_ARMAS_MAGICAS.map((bonus) => (
@@ -985,10 +1046,14 @@ export const CompendioModal: React.FC<Props> = ({
             <FlatList
               data={talentosFiltrados}
               keyExtractor={(item) => item.id}
+              style={styles.flatList}
               contentContainerStyle={styles.listContent}
-              initialNumToRender={15}
-              maxToRenderPerBatch={20}
-              windowSize={10}
+              initialNumToRender={10}
+              maxToRenderPerBatch={10}
+              windowSize={5}
+              updateCellsBatchingPeriod={50}
+              nestedScrollEnabled={true}
+              removeClippedSubviews={Platform.OS === 'android'}
               ListEmptyComponent={
                 <View style={styles.emptyWrap}>
                   <Text style={styles.emptyText}>
@@ -1145,10 +1210,14 @@ export const CompendioModal: React.FC<Props> = ({
             <FlatList
               data={magiasFiltradas}
               keyExtractor={(item) => item.id}
+              style={styles.flatList}
               contentContainerStyle={styles.listContent}
-              initialNumToRender={15}
-              maxToRenderPerBatch={20}
-              windowSize={10}
+              initialNumToRender={10}
+              maxToRenderPerBatch={10}
+              windowSize={5}
+              updateCellsBatchingPeriod={50}
+              nestedScrollEnabled={true}
+              removeClippedSubviews={Platform.OS === 'android'}
               ListEmptyComponent={
                 <View style={styles.emptyWrap}>
                   <Text style={styles.emptyText}>
@@ -1304,10 +1373,14 @@ export const CompendioModal: React.FC<Props> = ({
             <FlatList
               data={racasFiltradas}
               keyExtractor={(item) => item.id}
+              style={styles.flatList}
               contentContainerStyle={styles.listContent}
-              initialNumToRender={12}
-              maxToRenderPerBatch={15}
-              windowSize={10}
+              initialNumToRender={10}
+              maxToRenderPerBatch={10}
+              windowSize={5}
+              updateCellsBatchingPeriod={50}
+              nestedScrollEnabled={true}
+              removeClippedSubviews={Platform.OS === 'android'}
               ListEmptyComponent={
                 <View style={styles.emptyWrap}>
                   <Text style={styles.emptyText}>
@@ -1429,10 +1502,14 @@ export const CompendioModal: React.FC<Props> = ({
             <FlatList
               data={classesFiltradas}
               keyExtractor={(item) => item.id}
+              style={styles.flatList}
               contentContainerStyle={styles.listContent}
-              initialNumToRender={15}
-              maxToRenderPerBatch={20}
-              windowSize={10}
+              initialNumToRender={10}
+              maxToRenderPerBatch={10}
+              windowSize={5}
+              updateCellsBatchingPeriod={50}
+              nestedScrollEnabled={true}
+              removeClippedSubviews={Platform.OS === 'android'}
               ListEmptyComponent={
                 <View style={styles.emptyWrap}>
                   <Text style={styles.emptyText}>
@@ -1599,10 +1676,14 @@ export const CompendioModal: React.FC<Props> = ({
             <FlatList
               data={equipamentosFiltrados}
               keyExtractor={(item) => item.id}
+              style={styles.flatList}
               contentContainerStyle={styles.listContent}
-              initialNumToRender={15}
-              maxToRenderPerBatch={20}
-              windowSize={10}
+              initialNumToRender={10}
+              maxToRenderPerBatch={10}
+              windowSize={5}
+              updateCellsBatchingPeriod={50}
+              nestedScrollEnabled={true}
+              removeClippedSubviews={Platform.OS === 'android'}
               ListEmptyComponent={
                 <View style={styles.emptyWrap}>
                   <Text style={styles.emptyText}>
@@ -1791,10 +1872,14 @@ export const CompendioModal: React.FC<Props> = ({
             <FlatList
               data={manobrasFiltradas}
               keyExtractor={(item) => item.id}
+              style={styles.flatList}
               contentContainerStyle={styles.listContent}
-              initialNumToRender={15}
-              maxToRenderPerBatch={20}
-              windowSize={10}
+              initialNumToRender={10}
+              maxToRenderPerBatch={10}
+              windowSize={5}
+              updateCellsBatchingPeriod={50}
+              nestedScrollEnabled={true}
+              removeClippedSubviews={Platform.OS === 'android'}
               ListEmptyComponent={
                 <View style={styles.emptyWrap}>
                   <Text style={styles.emptyText}>
@@ -1938,10 +2023,14 @@ export const CompendioModal: React.FC<Props> = ({
             <FlatList
               data={regrasFiltradas}
               keyExtractor={(item) => item.id}
+              style={styles.flatList}
               contentContainerStyle={styles.listContent}
-              initialNumToRender={15}
-              maxToRenderPerBatch={20}
-              windowSize={10}
+              initialNumToRender={10}
+              maxToRenderPerBatch={10}
+              windowSize={5}
+              updateCellsBatchingPeriod={50}
+              nestedScrollEnabled={true}
+              removeClippedSubviews={Platform.OS === 'android'}
               ListEmptyComponent={
                 <View style={styles.emptyWrap}>
                   <Text style={styles.emptyText}>
@@ -2249,6 +2338,9 @@ const styles = StyleSheet.create({
     maxWidth: 1100,
     alignSelf: 'center',
     backgroundColor: COLORS.background,
+  },
+  flatList: {
+    flex: 1,
   },
   header: {
     flexDirection: 'row',

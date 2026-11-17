@@ -1,5 +1,6 @@
 import React, { useMemo, useState } from 'react';
 import {
+  FlatList,
   Modal,
   Platform,
   ScrollView,
@@ -7,7 +8,6 @@ import {
   Text,
   TextInput,
   TouchableOpacity,
-  TouchableWithoutFeedback,
   View,
 } from 'react-native';
 import { armasMagicas, RegraData } from '../data';
@@ -97,228 +97,237 @@ export const ModalPoderesArma: React.FC<Props> = ({
       animationType="fade"
       onRequestClose={onFechar}
     >
-      <TouchableWithoutFeedback onPress={onFechar}>
-        <View style={styles.modalOverlay}>
-          <TouchableWithoutFeedback>
-            <View style={styles.modalCard}>
-              {/* Header */}
-              <View style={styles.header}>
-                <View style={styles.headerTitleWrap}>
-                  <Text style={styles.title}>✨ Habilidades Especiais Mágicas</Text>
-                  <Text style={styles.subtitle} numberOfLines={1}>
-                    Encantamento para: {armaNome || 'Arma'}
-                  </Text>
-                </View>
-                <TouchableOpacity onPress={onFechar} style={styles.btnClose}>
-                  <Text style={styles.btnCloseText}>✕</Text>
-                </TouchableOpacity>
+      <View style={styles.modalOverlay}>
+        <TouchableOpacity
+          style={StyleSheet.absoluteFill}
+          activeOpacity={1}
+          onPress={onFechar}
+        />
+        <View style={styles.modalCard}>
+          {/* Header */}
+          <View style={styles.header}>
+            <View style={styles.headerTitleWrap}>
+              <Text style={styles.title}>✨ Habilidades Especiais Mágicas</Text>
+              <Text style={styles.subtitle} numberOfLines={1}>
+                Encantamento para: {armaNome || 'Arma'}
+              </Text>
+            </View>
+            <TouchableOpacity onPress={onFechar} style={styles.btnClose}>
+              <Text style={styles.btnCloseText}>✕</Text>
+            </TouchableOpacity>
+          </View>
+
+          {/* Seletor de Modo: Lista Oficial vs Personalizado */}
+          <View style={styles.tabsRow}>
+            <TouchableOpacity
+              style={[styles.tabBtn, abaModo === 'oficial' && styles.tabBtnAtivo]}
+              onPress={() => setAbaModo('oficial')}
+              activeOpacity={0.8}
+            >
+              <Text
+                style={[
+                  styles.tabBtnText,
+                  abaModo === 'oficial' && styles.tabBtnTextAtivo,
+                ]}
+              >
+                📜 Lista Oficial TRPG ({poderesOficiais.length})
+              </Text>
+            </TouchableOpacity>
+
+            <TouchableOpacity
+              style={[styles.tabBtn, abaModo === 'personalizado' && styles.tabBtnAtivo]}
+              onPress={() => setAbaModo('personalizado')}
+              activeOpacity={0.8}
+            >
+              <Text
+                style={[
+                  styles.tabBtnText,
+                  abaModo === 'personalizado' && styles.tabBtnTextAtivo,
+                ]}
+              >
+                ✏️ Personalizado
+              </Text>
+            </TouchableOpacity>
+          </View>
+
+          {abaModo === 'oficial' ? (
+            <>
+              {/* Campo de Busca */}
+              <View style={styles.searchWrap}>
+                <TextInput
+                  style={styles.searchInput}
+                  value={busca}
+                  onChangeText={setBusca}
+                  placeholder="🔍 Buscar poder mágico (ex: Flamejante, Afiada, Sagrada...)"
+                  placeholderTextColor="#9D8E80"
+                />
+                {!!busca && (
+                  <TouchableOpacity
+                    style={styles.btnClearSearch}
+                    onPress={() => setBusca('')}
+                  >
+                    <Text style={styles.btnClearSearchText}>✕</Text>
+                  </TouchableOpacity>
+                )}
               </View>
 
-              {/* Seletor de Modo: Lista Oficial vs Personalizado */}
-              <View style={styles.tabsRow}>
-                <TouchableOpacity
-                  style={[styles.tabBtn, abaModo === 'oficial' && styles.tabBtnAtivo]}
-                  onPress={() => setAbaModo('oficial')}
-                  activeOpacity={0.8}
-                >
-                  <Text
-                    style={[
-                      styles.tabBtnText,
-                      abaModo === 'oficial' && styles.tabBtnTextAtivo,
-                    ]}
-                  >
-                    📜 Lista Oficial TRPG ({poderesOficiais.length})
-                  </Text>
-                </TouchableOpacity>
-
-                <TouchableOpacity
-                  style={[styles.tabBtn, abaModo === 'personalizado' && styles.tabBtnAtivo]}
-                  onPress={() => setAbaModo('personalizado')}
-                  activeOpacity={0.8}
-                >
-                  <Text
-                    style={[
-                      styles.tabBtnText,
-                      abaModo === 'personalizado' && styles.tabBtnTextAtivo,
-                    ]}
-                  >
-                    ✏️ Personalizado
-                  </Text>
-                </TouchableOpacity>
-              </View>
-
-              {abaModo === 'oficial' ? (
-                <>
-                  {/* Campo de Busca */}
-                  <View style={styles.searchWrap}>
-                    <TextInput
-                      style={styles.searchInput}
-                      value={busca}
-                      onChangeText={setBusca}
-                      placeholder="🔍 Buscar poder mágico (ex: Flamejante, Afiada, Sagrada...)"
-                      placeholderTextColor="#9D8E80"
-                    />
-                    {!!busca && (
-                      <TouchableOpacity
-                        style={styles.btnClearSearch}
-                        onPress={() => setBusca('')}
-                      >
-                        <Text style={styles.btnClearSearchText}>✕</Text>
-                      </TouchableOpacity>
-                    )}
-                  </View>
-
-                  {/* Filtro por Nível de Bônus Mágico */}
-                  <View style={styles.bonusChipsWrap}>
-                    <ScrollView
-                      horizontal
-                      showsHorizontalScrollIndicator={false}
-                      contentContainerStyle={styles.bonusChipsScroll}
-                    >
-                      {(['Todos', '+1', '+2', '+3', '+4', '+5'] as const).map((b) => (
-                        <TouchableOpacity
-                          key={b}
-                          style={[
-                            styles.chipBonus,
-                            bonusFiltro === b && styles.chipBonusAtivo,
-                          ]}
-                          onPress={() => setBonusFiltro(b)}
-                          activeOpacity={0.8}
-                        >
-                          <Text
-                            style={[
-                              styles.chipBonusText,
-                              bonusFiltro === b && styles.chipBonusTextAtivo,
-                            ]}
-                          >
-                            {b === 'Todos' ? 'Todos os Bônus' : `Bônus ${b}`}
-                          </Text>
-                        </TouchableOpacity>
-                      ))}
-                    </ScrollView>
-                  </View>
-
-                  {/* Lista de Poderes Oficiais */}
-                  <ScrollView
-                    style={styles.scrollList}
-                    contentContainerStyle={styles.scrollContent}
-                    keyboardShouldPersistTaps="handled"
-                  >
-                    {poderesFiltrados.length === 0 ? (
-                      <View style={styles.emptyWrap}>
-                        <Text style={styles.emptyText}>
-                          Nenhum poder especial mágico encontrado para "{busca}".
-                        </Text>
-                      </View>
-                    ) : (
-                      poderesFiltrados.map((poder) => {
-                        const nomeFormatado = poder.nome.replace(/^Poder Especial:\s*/i, '');
-                        return (
-                          <View key={poder.id} style={styles.poderItemCard}>
-                            <View style={styles.poderItemHeader}>
-                              <View style={styles.poderItemNomeRow}>
-                                <Text style={styles.poderItemNome}>
-                                  {nomeFormatado}
-                                </Text>
-                                {!!poder.bonusEquivalente && (
-                                  <View style={styles.badgeBonus}>
-                                    <Text style={styles.badgeBonusText}>
-                                      {poder.bonusEquivalente}
-                                    </Text>
-                                  </View>
-                                )}
-                                {!!poder.subtipo && (
-                                  <View style={styles.badgeSubtipo}>
-                                    <Text style={styles.badgeSubtipoText}>
-                                      {poder.subtipo}
-                                    </Text>
-                                  </View>
-                                )}
-                              </View>
-
-                              <TouchableOpacity
-                                style={styles.btnAdicionarPoder}
-                                onPress={() => handleEscolherOficial(poder)}
-                                activeOpacity={0.8}
-                              >
-                                <Text style={styles.btnAdicionarPoderText}>
-                                  + Adicionar
-                                </Text>
-                              </TouchableOpacity>
-                            </View>
-
-                            <Text style={styles.poderItemDesc}>
-                              {poder.descricao}
-                            </Text>
-
-                            {!!poder.detalhes && (
-                              <Text style={styles.poderItemDetalhes}>
-                                {poder.detalhes}
-                              </Text>
-                            )}
-                          </View>
-                        );
-                      })
-                    )}
-                  </ScrollView>
-                </>
-              ) : (
-                /* Modo Personalizado */
+              {/* Filtro por Nível de Bônus Mágico */}
+              <View style={styles.bonusChipsWrap}>
                 <ScrollView
-                  style={styles.scrollList}
-                  contentContainerStyle={styles.scrollCustomContent}
+                  horizontal
+                  showsHorizontalScrollIndicator={false}
+                  contentContainerStyle={styles.bonusChipsScroll}
+                  nestedScrollEnabled={true}
                   keyboardShouldPersistTaps="handled"
                 >
-                  <View style={styles.customBox}>
-                    <Text style={styles.customBoxTitle}>Criar Habilidade Especial Própria</Text>
-                    <Text style={styles.customBoxSub}>
-                      Ideal para armas de mestre, relíquias divinas ou poderes customizados do seu cenário.
-                    </Text>
-
-                    <CampoTexto
-                      label="Nome da Habilidade Mágica *"
-                      value={customNome}
-                      onChangeText={setCustomNome}
-                      placeholder="Ex: Matadora de Aberrações, Lâmina Sombria..."
-                    />
-
-                    <CampoTexto
-                      label="Bônus Equivalente ou Custo (Opcional)"
-                      value={customBonus}
-                      onChangeText={setCustomBonus}
-                      placeholder="Ex: +1, +2, +3 ou Fixo"
-                    />
-
-                    <CampoTexto
-                      label="Efeito Mecânico / Descrição"
-                      value={customDesc}
-                      onChangeText={setCustomDesc}
-                      placeholder="Ex: Causa +2d6 de dano contra licantropos e emana uma luz prateada a até 9m."
-                      multiline
-                      minHeight={80}
-                      numberOfLines={3}
-                    />
-
+                  {(['Todos', '+1', '+2', '+3', '+4', '+5'] as const).map((b) => (
                     <TouchableOpacity
+                      key={b}
                       style={[
-                        styles.btnSalvarCustom,
-                        !customNome.trim() && styles.btnSalvarCustomDisabled,
+                        styles.chipBonus,
+                        bonusFiltro === b && styles.chipBonusAtivo,
                       ]}
-                      onPress={handleAdicionarCustomizado}
-                      disabled={!customNome.trim()}
-                      activeOpacity={0.85}
+                      onPress={() => setBonusFiltro(b)}
+                      activeOpacity={0.8}
                     >
-                      <Text style={styles.btnSalvarCustomText}>
-                        + Adicionar Esta Habilidade à Arma
+                      <Text
+                        style={[
+                          styles.chipBonusText,
+                          bonusFiltro === b && styles.chipBonusTextAtivo,
+                        ]}
+                      >
+                        {b === 'Todos' ? 'Todos os Bônus' : `Bônus ${b}`}
                       </Text>
                     </TouchableOpacity>
-                  </View>
+                  ))}
                 </ScrollView>
-              )}
-            </View>
-          </TouchableWithoutFeedback>
+              </View>
+
+              {/* Lista de Poderes Oficiais com FlatList para rolagem fluída no celular */}
+              <FlatList
+                data={poderesFiltrados}
+                keyExtractor={(poder) => poder.id}
+                style={styles.scrollList}
+                contentContainerStyle={styles.scrollContent}
+                keyboardShouldPersistTaps="handled"
+                nestedScrollEnabled={true}
+                removeClippedSubviews={Platform.OS === 'android'}
+                initialNumToRender={10}
+                maxToRenderPerBatch={10}
+                windowSize={5}
+                ListEmptyComponent={
+                  <View style={styles.emptyWrap}>
+                    <Text style={styles.emptyText}>
+                      Nenhum poder especial mágico encontrado para "{busca}".
+                    </Text>
+                  </View>
+                }
+                renderItem={({ item: poder }) => {
+                  const nomeFormatado = poder.nome.replace(/^Poder Especial:\s*/i, '');
+                  return (
+                    <View style={styles.poderItemCard}>
+                      <View style={styles.poderItemHeader}>
+                        <View style={styles.poderItemNomeRow}>
+                          <Text style={styles.poderItemNome}>
+                            {nomeFormatado}
+                          </Text>
+                          {!!poder.bonusEquivalente && (
+                            <View style={styles.badgeBonus}>
+                              <Text style={styles.badgeBonusText}>
+                                {poder.bonusEquivalente}
+                              </Text>
+                            </View>
+                          )}
+                          {!!poder.subtipo && (
+                            <View style={styles.badgeSubtipo}>
+                              <Text style={styles.badgeSubtipoText}>
+                                {poder.subtipo}
+                              </Text>
+                            </View>
+                          )}
+                        </View>
+
+                        <TouchableOpacity
+                          style={styles.btnAdicionarPoder}
+                          onPress={() => handleEscolherOficial(poder)}
+                          activeOpacity={0.8}
+                        >
+                          <Text style={styles.btnAdicionarPoderText}>
+                            + Adicionar
+                          </Text>
+                        </TouchableOpacity>
+                      </View>
+
+                      <Text style={styles.poderItemDesc}>
+                        {poder.descricao}
+                      </Text>
+
+                      {!!poder.detalhes && (
+                        <Text style={styles.poderItemDetalhes}>
+                          {poder.detalhes}
+                        </Text>
+                      )}
+                    </View>
+                  );
+                }}
+              />
+            </>
+          ) : (
+            /* Modo Personalizado */
+            <ScrollView
+              style={styles.scrollList}
+              contentContainerStyle={styles.scrollCustomContent}
+              keyboardShouldPersistTaps="handled"
+              nestedScrollEnabled={true}
+            >
+              <View style={styles.customBox}>
+                <Text style={styles.customBoxTitle}>Criar Habilidade Especial Própria</Text>
+                <Text style={styles.customBoxSub}>
+                  Ideal para armas de mestre, relíquias divinas ou poderes customizados do seu cenário.
+                </Text>
+
+                <CampoTexto
+                  label="Nome da Habilidade Mágica *"
+                  value={customNome}
+                  onChangeText={setCustomNome}
+                  placeholder="Ex: Matadora de Aberrações, Lâmina Sombria..."
+                />
+
+                <CampoTexto
+                  label="Bônus Equivalente ou Custo (Opcional)"
+                  value={customBonus}
+                  onChangeText={setCustomBonus}
+                  placeholder="Ex: +1, +2, +3 ou Fixo"
+                />
+
+                <CampoTexto
+                  label="Efeito Mecânico / Descrição"
+                  value={customDesc}
+                  onChangeText={setCustomDesc}
+                  placeholder="Ex: Causa +2d6 de dano contra licantropos e emana uma luz prateada a até 9m."
+                  multiline
+                  minHeight={80}
+                  numberOfLines={3}
+                />
+
+                <TouchableOpacity
+                  style={[
+                    styles.btnSalvarCustom,
+                    !customNome.trim() && styles.btnSalvarCustomDisabled,
+                  ]}
+                  onPress={handleAdicionarCustomizado}
+                  disabled={!customNome.trim()}
+                  activeOpacity={0.85}
+                >
+                  <Text style={styles.btnSalvarCustomText}>
+                    + Adicionar Esta Habilidade à Arma
+                  </Text>
+                </TouchableOpacity>
+              </View>
+            </ScrollView>
+          )}
         </View>
-      </TouchableWithoutFeedback>
+      </View>
     </Modal>
   );
 };

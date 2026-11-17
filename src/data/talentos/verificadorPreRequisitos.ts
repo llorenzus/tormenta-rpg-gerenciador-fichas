@@ -194,6 +194,9 @@ function obterGraduacaoPericia(ficha: FichaPersonagem, nomePericia: string): num
   return calcularGraduacaoPericia(ficha, pericia);
 }
 
+// Cache para busca rápida e única de talentos citados em pré-requisitos (elimina dezenas de milhares de loops O(N²))
+const cacheTalentosCitados = new Map<string, TalentoData[]>();
+
 /**
  * Identifica talentos que são citados como pré-requisito no texto
  */
@@ -201,8 +204,20 @@ export function identificarTalentosCitadosEmPreRequisitos(
   preReqTexto: string,
   talentoAtualId?: string
 ): TalentoData[] {
-  if (!preReqTexto || preReqTexto.trim() === 'Nenhum.' || preReqTexto.trim() === 'Nenhum') {
+  if (
+    !preReqTexto ||
+    preReqTexto.trim() === 'Nenhum.' ||
+    preReqTexto.trim() === 'Nenhum' ||
+    preReqTexto.trim() === '—' ||
+    preReqTexto.trim() === '-'
+  ) {
     return [];
+  }
+
+  const cacheKey = `${talentoAtualId || ''}:::${preReqTexto}`;
+  const emCache = cacheTalentosCitados.get(cacheKey);
+  if (emCache) {
+    return emCache;
   }
 
   const textoNorm = preReqTexto.toLowerCase();
@@ -223,6 +238,7 @@ export function identificarTalentosCitadosEmPreRequisitos(
     }
   }
 
+  cacheTalentosCitados.set(cacheKey, encontrados);
   return encontrados;
 }
 

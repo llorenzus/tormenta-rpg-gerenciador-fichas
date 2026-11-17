@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import {
   Alert,
   BackHandler,
@@ -56,6 +56,19 @@ export default function App() {
   const [compendioGeralAberto, setCompendioGeralAberto] = useState(false);
   const [fichaParaExportar, setFichaParaExportar] = useState<FichaPersonagem | null>(null);
 
+  // Debounce e ref para persistência assíncrona fluída no mobile sem travar a thread JS
+  const salvarDebounceRef = useRef<NodeJS.Timeout | null>(null);
+  const fichaPendenteSalvarRef = useRef<FichaPersonagem | null>(null);
+
+  // Limpa timer se desmontar
+  useEffect(() => {
+    return () => {
+      if (salvarDebounceRef.current) {
+        clearTimeout(salvarDebounceRef.current);
+      }
+    };
+  }, []);
+
   useEffect(() => {
     carregarFichasLocais().then(setFichas);
 
@@ -99,21 +112,29 @@ export default function App() {
   }, []);
 
   const handleVoltarDaFicha = async () => {
-    if (!fichaAberta) {
+    if (salvarDebounceRef.current) {
+      clearTimeout(salvarDebounceRef.current);
+      salvarDebounceRef.current = null;
+    }
+
+    const fichaAlvo = fichaPendenteSalvarRef.current || fichaAberta;
+    fichaPendenteSalvarRef.current = null;
+
+    if (!fichaAlvo) {
       setFichaAberta(null);
       return;
     }
 
-    const nomeTrim = fichaAberta.nomePersonagem?.trim();
+    const nomeTrim = fichaAlvo.nomePersonagem?.trim();
 
     // Se o nome ficou vazio ao sair, gera o próximo nome padrão
     if (!nomeTrim) {
-      const nomePadrao = gerarProximoNomePadrao(fichas, fichaAberta.id);
-      const fichaSalva = { ...fichaAberta, nomePersonagem: nomePadrao };
+      const nomePadrao = gerarProximoNomePadrao(fichas, fichaAlvo.id);
+      const fichaSalva = { ...fichaAlvo, nomePersonagem: nomePadrao };
       const listaAtualizada = await salvarFichaLocal(fichaSalva);
       setFichas(listaAtualizada);
     } else {
-      const listaAtualizada = await salvarFichaLocal(fichaAberta);
+      const listaAtualizada = await salvarFichaLocal(fichaAlvo);
       setFichas(listaAtualizada);
     }
 
@@ -149,25 +170,46 @@ export default function App() {
     setFichaAberta(nova);
   };
 
-  const handleAtualizarFicha = async (editada: FichaPersonagem) => {
+  const handleAtualizarFicha = (editada: FichaPersonagem) => {
+    // 1. Atualização imediata em memória para digitação e cliques fluidos a 60 FPS
     setFichaAberta(editada);
-    // Persistência contínua dos dados
-    const listaAtualizada = await salvarFichaLocal(editada);
-    setFichas(listaAtualizada);
+    fichaPendenteSalvarRef.current = editada;
+
+    // 2. Gravação no AsyncStorage com debounce de 600ms para evitar travar o SQLite e a bridge nativa
+    if (salvarDebounceRef.current) {
+      clearTimeout(salvarDebounceRef.current);
+    }
+    salvarDebounceRef.current = setTimeout(async () => {
+      salvarDebounceRef.current = null;
+      if (fichaPendenteSalvarRef.current) {
+        const fichaParaSalvar = fichaPendenteSalvarRef.current;
+        fichaPendenteSalvarRef.current = null;
+        const listaAtualizada = await salvarFichaLocal(fichaParaSalvar);
+        setFichas(listaAtualizada);
+      }
+    }, 600);
   };
 
   const handleSalvarManual = async (): Promise<boolean> => {
-    if (!fichaAberta) return false;
+    if (salvarDebounceRef.current) {
+      clearTimeout(salvarDebounceRef.current);
+      salvarDebounceRef.current = null;
+    }
+
+    const fichaAlvo = fichaPendenteSalvarRef.current || fichaAberta;
+    fichaPendenteSalvarRef.current = null;
+
+    if (!fichaAlvo) return false;
 
     let fichaFinal: FichaPersonagem;
-    const nomeTrim = fichaAberta.nomePersonagem?.trim();
+    const nomeTrim = fichaAlvo.nomePersonagem?.trim();
 
     // Se o nome não foi alterado (está vazio), atribui 'Novo Personagem', 'Novo Personagem 2'...
     if (!nomeTrim) {
-      const nomePadrao = gerarProximoNomePadrao(fichas, fichaAberta.id);
-      fichaFinal = { ...fichaAberta, nomePersonagem: nomePadrao };
+      const nomePadrao = gerarProximoNomePadrao(fichas, fichaAlvo.id);
+      fichaFinal = { ...fichaAlvo, nomePersonagem: nomePadrao };
     } else {
-      fichaFinal = { ...fichaAberta, nomePersonagem: nomeTrim };
+      fichaFinal = { ...fichaAlvo, nomePersonagem: nomeTrim };
     }
 
     setFichaAberta(fichaFinal);
