@@ -3,7 +3,12 @@ name: Compilar Aplicativo (Android e Windows)
 on:
   push:
     branches: [ main, aplicacao-windows, 'feat/**' ]
+    tags:
+      - 'v*'
   workflow_dispatch:
+
+permissions:
+  contents: write
 
 jobs:
   # ========================================================
@@ -97,4 +102,38 @@ jobs:
         with:
           name: TRPG-Ficha-Windows-v${{ env.APP_VERSION }}
           path: dist-electron/*.exe
+
+  # ========================================================
+  # JOB 3: Publicação da Release no GitHub (Apenas em Tags)
+  # ========================================================
+  release:
+    name: Publicar GitHub Release
+    needs: [build-android, build-windows]
+    if: startsWith(github.ref, 'refs/tags/v')
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: Baixar todos os artefatos compilados
+        uses: actions/download-artifact@v7
+        with:
+          path: release-assets
+          merge-multiple: true
+
+      - name: Listar arquivos para a Release
+        run: ls -la release-assets
+
+      - name: Publicar GitHub Release com APK e Executáveis
+        uses: softprops/action-gh-release@v2
+        with:
+          files: |
+            release-assets/**/*.apk
+            release-assets/**/*.exe
+          name: Versão ${{ github.ref_name }}
+          generate_release_notes: true
+          draft: false
+          prerelease: false
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
