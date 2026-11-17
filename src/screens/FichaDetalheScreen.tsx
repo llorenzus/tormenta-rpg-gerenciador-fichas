@@ -571,6 +571,7 @@ export const FichaDetalheScreen: React.FC<Props> = ({
         onFechar={() => setCompendioGeralAberto(false)}
         abaInicial="talentos"
         fichaAtual={ficha}
+        onAtualizarFichaAtual={onChange}
         onAdicionarTalentoAFicha={handleAdicionarTalento}
         onAdicionarMagiaAFicha={handleAdicionarMagia}
         onAplicarRacaAFicha={handleAplicarRaca}

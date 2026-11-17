@@ -59,6 +59,22 @@ export default function App() {
   useEffect(() => {
     carregarFichasLocais().then(setFichas);
 
+    // Sincroniza fichas entre janelas no Windows/Web (Electron e browser)
+    const sincronizarFichas = () => {
+      carregarFichasLocais().then((lista) => {
+        setFichas(lista);
+        setFichaAberta((atual) => {
+          if (!atual) return atual;
+          return lista.find((f) => f.id === atual.id) || atual;
+        });
+      });
+    };
+
+    if (Platform.OS === 'web' && typeof window !== 'undefined') {
+      window.addEventListener('storage', sincronizarFichas);
+      window.addEventListener('focus', sincronizarFichas);
+    }
+
     // No Windows Desktop (Electron) e Web, garante o cursor de mãozinha (pointer) em abas e botões
     if (Platform.OS === 'web' && typeof document !== 'undefined') {
       const styleId = 'trpg-pointer-cursor-fix';
@@ -73,6 +89,13 @@ export default function App() {
         document.head.appendChild(style);
       }
     }
+
+    return () => {
+      if (Platform.OS === 'web' && typeof window !== 'undefined') {
+        window.removeEventListener('storage', sincronizarFichas);
+        window.removeEventListener('focus', sincronizarFichas);
+      }
+    };
   }, []);
 
   const handleVoltarDaFicha = async () => {
@@ -269,19 +292,51 @@ export default function App() {
     const alvo = fichas.find((f) => f.id === fichaId);
     if (!alvo) return;
 
+    const limpo = (s: string) => s.replace(/\s*\[.*?\]/g, '').trim().toLowerCase();
+    const nomeLimpo = limpo(item.nome);
+    const nomeNorm = item.nome.trim().toLowerCase();
+
     let fichaModificada: FichaPersonagem;
+    let foiRemovido = false;
+
     if (tipo === 'talento') {
-      const novoTalento = converterTalentoParaItem(item as TalentoData);
-      fichaModificada = {
-        ...alvo,
-        talentos: [...alvo.talentos, novoTalento],
-      };
+      const existe = (alvo.talentos || []).some(
+        (t) => limpo(t.nome) === nomeLimpo || t.nome.trim().toLowerCase() === nomeNorm
+      );
+      if (existe) {
+        fichaModificada = {
+          ...alvo,
+          talentos: (alvo.talentos || []).filter(
+            (t) => limpo(t.nome) !== nomeLimpo && t.nome.trim().toLowerCase() !== nomeNorm
+          ),
+        };
+        foiRemovido = true;
+      } else {
+        const novoTalento = converterTalentoParaItem(item as TalentoData);
+        fichaModificada = {
+          ...alvo,
+          talentos: [...alvo.talentos, novoTalento],
+        };
+      }
     } else if (tipo === 'magia') {
-      const novaMagia = converterMagiaParaItem(item as MagiaData);
-      fichaModificada = {
-        ...alvo,
-        magias: [...alvo.magias, novaMagia],
-      };
+      const existe = (alvo.magias || []).some(
+        (m) => limpo(m.nome) === nomeLimpo || m.nome.trim().toLowerCase() === nomeNorm
+      );
+      if (existe) {
+        fichaModificada = {
+          ...alvo,
+          magias: (alvo.magias || []).filter(
+            (m) => limpo(m.nome) !== nomeLimpo && m.nome.trim().toLowerCase() !== nomeNorm
+          ),
+        };
+        foiRemovido = true;
+      } else {
+        const novaMagia = converterMagiaParaItem(item as MagiaData);
+        fichaModificada = {
+          ...alvo,
+          magias: [...alvo.magias, novaMagia],
+        };
+      }
     } else if (tipo === 'raca') {
       const raca = item as RacaData;
       const novosTracos: HabilidadeOuTalento[] = raca.tracosRaciais.map((t) => ({
@@ -301,32 +356,84 @@ export default function App() {
       fichaModificada = aplicarClasseNaFicha(alvo, classe);
     } else if (tipo === 'manobra') {
       const manobra = item as PosturaData | GolpeMarcialData;
-      const novaManobra = converterManobraParaItem(manobra);
-      fichaModificada = {
-        ...alvo,
-        habilidadesClasse: [...alvo.habilidadesClasse, novaManobra],
-      };
+      const manobrasAtuais = Array.isArray(alvo.manobras) ? alvo.manobras : [];
+      const existe = manobrasAtuais.some(
+        (m) => limpo(m.nome) === nomeLimpo || m.nome.trim().toLowerCase() === nomeNorm
+      );
+      if (existe) {
+        fichaModificada = {
+          ...alvo,
+          manobras: manobrasAtuais.filter(
+            (m) => limpo(m.nome) !== nomeLimpo && m.nome.trim().toLowerCase() !== nomeNorm
+          ),
+        };
+        foiRemovido = true;
+      } else {
+        const novaManobra = converterManobraParaItem(manobra);
+        fichaModificada = {
+          ...alvo,
+          manobras: [...manobrasAtuais, novaManobra],
+        };
+      }
     } else {
-
       const equip = item as EquipamentoData;
       if (equip.tipo === 'Arma') {
-        const novaArma = converterArmaParaItem(equip);
-        fichaModificada = {
-          ...alvo,
-          armas: [...alvo.armas, novaArma],
-        };
+        const existe = (alvo.armas || []).some(
+          (a) => limpo(a.nome) === nomeLimpo || a.nome.trim().toLowerCase() === nomeNorm
+        );
+        if (existe) {
+          fichaModificada = {
+            ...alvo,
+            armas: (alvo.armas || []).filter(
+              (a) => limpo(a.nome) !== nomeLimpo && a.nome.trim().toLowerCase() !== nomeNorm
+            ),
+          };
+          foiRemovido = true;
+        } else {
+          const novaArma = converterArmaParaItem(equip);
+          fichaModificada = {
+            ...alvo,
+            armas: [...alvo.armas, novaArma],
+          };
+        }
       } else if (equip.tipo === 'Armadura' || equip.tipo === 'Escudo') {
-        const novaArmadura = converterArmaduraParaItem(equip);
-        fichaModificada = {
-          ...alvo,
-          armaduras: [...alvo.armaduras, novaArmadura],
-        };
+        const existe = (alvo.armaduras || []).some(
+          (a) => limpo(a.nome) === nomeLimpo || a.nome.trim().toLowerCase() === nomeNorm
+        );
+        if (existe) {
+          fichaModificada = {
+            ...alvo,
+            armaduras: (alvo.armaduras || []).filter(
+              (a) => limpo(a.nome) !== nomeLimpo && a.nome.trim().toLowerCase() !== nomeNorm
+            ),
+          };
+          foiRemovido = true;
+        } else {
+          const novaArmadura = converterArmaduraParaItem(equip);
+          fichaModificada = {
+            ...alvo,
+            armaduras: [...alvo.armaduras, novaArmadura],
+          };
+        }
       } else {
-        const novoItem = converterItemGeralParaItem(equip);
-        fichaModificada = {
-          ...alvo,
-          itensGerais: [...alvo.itensGerais, novoItem],
-        };
+        const existe = (alvo.itensGerais || []).some(
+          (i) => limpo(i.nome) === nomeLimpo || i.nome.trim().toLowerCase() === nomeNorm
+        );
+        if (existe) {
+          fichaModificada = {
+            ...alvo,
+            itensGerais: (alvo.itensGerais || []).filter(
+              (i) => limpo(i.nome) !== nomeLimpo && i.nome.trim().toLowerCase() !== nomeNorm
+            ),
+          };
+          foiRemovido = true;
+        } else {
+          const novoItem = converterItemGeralParaItem(equip);
+          fichaModificada = {
+            ...alvo,
+            itensGerais: [...alvo.itensGerais, novoItem],
+          };
+        }
       }
     }
 
@@ -337,8 +444,10 @@ export default function App() {
     }
 
     Alert.alert(
-      'Registrado com Sucesso!',
-      `"${item.nome}" foi aplicado à ficha de "${alvo.nomePersonagem || 'Personagem'}".`
+      foiRemovido ? 'Removido da Ficha' : 'Registrado com Sucesso!',
+      foiRemovido
+        ? `"${item.nome}" foi removido da ficha de "${alvo.nomePersonagem || 'Personagem'}".`
+        : `"${item.nome}" foi aplicado à ficha de "${alvo.nomePersonagem || 'Personagem'}".`
     );
   };
 
@@ -361,6 +470,8 @@ export default function App() {
               }
             }}
             todasFichas={fichas}
+            fichaAtual={fichaAberta || (fichas.length === 1 ? fichas[0] : null)}
+            onAtualizarFichaAtual={handleAtualizarFicha}
             onAdicionarItemParaFichaEspecifica={handleAdicionarItemParaFichaEspecifica}
             standalone={true}
           />

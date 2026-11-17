@@ -329,4 +329,32 @@ describe('Conversões e Consultas do Compêndio (TRPG)', () => {
     assert.strictEqual(armasBonus2.length > 0, true);
     assert.strictEqual(armasBonus2.every((r) => (r.bonusEquivalente || '').includes('+2')), true);
   });
+
+  it('deve refletir adição e posterior exclusão de itens da ficha sem falsos positivos', () => {
+    const limpo = (s: string) => s.replace(/\s*\[.*?\]/g, '').trim().toLowerCase();
+    const checarPossuiTalento = (talentos: Array<{ nome: string }>, nomeTalento: string) => {
+      const nomeNorm = nomeTalento.trim().toLowerCase();
+      const nomeLimpo = limpo(nomeTalento);
+      return talentos.some((t) => limpo(t.nome) === nomeLimpo || t.nome.trim().toLowerCase() === nomeNorm);
+    };
+
+    let listaTalentos: Array<{ id: string; nome: string; descricao: string }> = [];
+
+    // Adiciona o talento
+    const talentoItem = converterTalentoParaItem({
+      id: 't-1',
+      nome: 'Ataque Poderoso',
+      categoria: 'Combate',
+      descricao: 'Você pode trocar precisão por dano bruto.',
+      livroFonte: 'Manual Básico',
+    });
+    listaTalentos.push(talentoItem);
+    assert.strictEqual(checarPossuiTalento(listaTalentos, 'Ataque Poderoso'), true);
+
+    // Exclui o talento da ficha
+    listaTalentos = listaTalentos.filter((t) => t.id !== talentoItem.id);
+
+    // O status deve voltar para falso (botão volta para + Adicionar vermelho)
+    assert.strictEqual(checarPossuiTalento(listaTalentos, 'Ataque Poderoso'), false);
+  });
 });

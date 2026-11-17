@@ -221,10 +221,61 @@ export const CompendioModal: React.FC<Props> = ({
     return filtrarRegras(busca, tipoRegraSel, bonusArmaMagicaSel);
   }, [abaAtiva, busca, tipoRegraSel, bonusArmaMagicaSel]);
 
+  const fichaEfetiva = fichaAtual || (todasFichas.length === 1 ? todasFichas[0] : null);
+
   const handleCliqueAdicionar = (
     tipo: 'talento' | 'magia' | 'raca' | 'classe' | 'equipamento' | 'manobra',
     item: TalentoData | MagiaData | RacaData | ClasseData | EquipamentoData | PosturaData | GolpeMarcialData
   ) => {
+    const jaPossui = estaNaListaFicha(tipo, item.nome);
+    const alvo = fichaEfetiva;
+
+    // Se já possui o item na ficha, o clique alterna e remove o item, voltando o botão para adicionar
+    if (jaPossui && alvo) {
+      const nomeNorm = item.nome.trim().toLowerCase();
+      const limpo = (s: string) => s.replace(/\s*\[.*?\]/g, '').trim().toLowerCase();
+      const nomeLimpo = limpo(item.nome);
+
+      let novaFicha = { ...alvo };
+      if (tipo === 'talento') {
+        novaFicha.talentos = (novaFicha.talentos || []).filter(
+          (t) => limpo(t.nome) !== nomeLimpo && t.nome.trim().toLowerCase() !== nomeNorm
+        );
+      } else if (tipo === 'magia') {
+        novaFicha.magias = (novaFicha.magias || []).filter(
+          (m) => limpo(m.nome) !== nomeLimpo && m.nome.trim().toLowerCase() !== nomeNorm
+        );
+      } else if (tipo === 'manobra') {
+        const manobrasAtuais = Array.isArray(novaFicha.manobras) ? novaFicha.manobras : [];
+        novaFicha.manobras = manobrasAtuais.filter(
+          (m) => limpo(m.nome) !== nomeLimpo && m.nome.trim().toLowerCase() !== nomeNorm
+        );
+      } else if (tipo === 'equipamento') {
+        novaFicha.armas = (novaFicha.armas || []).filter(
+          (a) => limpo(a.nome) !== nomeLimpo && a.nome.trim().toLowerCase() !== nomeNorm
+        );
+        novaFicha.armaduras = (novaFicha.armaduras || []).filter(
+          (a) => limpo(a.nome) !== nomeLimpo && a.nome.trim().toLowerCase() !== nomeNorm
+        );
+        novaFicha.itensGerais = (novaFicha.itensGerais || []).filter(
+          (i) => limpo(i.nome) !== nomeLimpo && i.nome.trim().toLowerCase() !== nomeNorm
+        );
+      } else if (tipo === 'classe') {
+        const classesRestantes = obterClassesFicha(novaFicha).filter(
+          (c) => limpo(c.nome) !== nomeLimpo && c.nome.trim().toLowerCase() !== nomeNorm
+        );
+        novaFicha = atualizarClassesFicha(novaFicha, classesRestantes);
+      }
+
+      if (onAtualizarFichaAtual) {
+        onAtualizarFichaAtual(novaFicha);
+        return;
+      } else if (onAdicionarItemParaFichaEspecifica) {
+        onAdicionarItemParaFichaEspecifica(alvo.id, tipo, item);
+        return;
+      }
+    }
+
     if (fichaAtual) {
       if (tipo === 'talento') {
         if (onAdicionarTalentoAFicha) {
@@ -327,51 +378,39 @@ export const CompendioModal: React.FC<Props> = ({
     tipo: 'talento' | 'magia' | 'raca' | 'classe' | 'equipamento' | 'manobra',
     nome: string
   ): boolean => {
-    if (!fichaAtual) return false;
+    if (!fichaEfetiva) return false;
     const nomeNorm = nome.trim().toLowerCase();
     const limpo = (s: string) => s.replace(/\s*\[.*?\]/g, '').trim().toLowerCase();
     const nomeLimpo = limpo(nome);
 
     if (tipo === 'talento') {
-      return (
-        fichaAtual.talentos.some((t) => {
-          const tLimpo = limpo(t.nome);
-          return tLimpo === nomeLimpo || t.nome.trim().toLowerCase() === nomeNorm;
-        }) ||
-        (fichaAtual.habilidadesRaca || []).some((h) => {
-          const hLimpo = limpo(h.nome);
-          return hLimpo.includes(nomeLimpo) || nomeLimpo.includes(hLimpo);
-        }) ||
-        (fichaAtual.habilidadesClasse || []).some((h) => {
-          const hLimpo = limpo(h.nome);
-          return hLimpo.includes(nomeLimpo) || nomeLimpo.includes(hLimpo);
-        })
-      );
+      return (fichaEfetiva.talentos || []).some((t) => {
+        const tLimpo = limpo(t.nome);
+        return tLimpo === nomeLimpo || t.nome.trim().toLowerCase() === nomeNorm;
+      });
     } else if (tipo === 'magia') {
-      return fichaAtual.magias.some(
+      return (fichaEfetiva.magias || []).some(
         (m) => m.nome.trim().toLowerCase() === nomeNorm || limpo(m.nome) === nomeLimpo
       );
     } else if (tipo === 'raca') {
-      return fichaAtual.raca?.trim().toLowerCase() === nomeNorm;
+      return limpo(fichaEfetiva.raca || '') === nomeLimpo;
     } else if (tipo === 'classe') {
-      const classesAtuais = obterClassesFicha(fichaAtual);
+      const classesAtuais = obterClassesFicha(fichaEfetiva);
       return (
         classesAtuais.some(
-          (c) => c.nome.trim().toLowerCase() === nomeNorm || c.nome.toLowerCase().includes(nomeNorm)
-        ) || (fichaAtual.classe?.trim().toLowerCase().includes(nomeNorm) || false)
+          (c) => c.nome.trim().toLowerCase() === nomeNorm || limpo(c.nome) === nomeLimpo
+        ) || (limpo(fichaEfetiva.classe || '') === nomeLimpo)
       );
     } else if (tipo === 'manobra') {
-      const manobrasAtuais = Array.isArray(fichaAtual.manobras) ? fichaAtual.manobras : [];
-      return (
-        manobrasAtuais.some((m) => m.nome.trim().toLowerCase() === nomeNorm || limpo(m.nome) === nomeLimpo) ||
-        fichaAtual.habilidadesClasse.some((h) => h.nome.trim().toLowerCase().includes(nomeNorm)) ||
-        fichaAtual.talentos.some((t) => t.nome.trim().toLowerCase().includes(nomeNorm))
+      const manobrasAtuais = Array.isArray(fichaEfetiva.manobras) ? fichaEfetiva.manobras : [];
+      return manobrasAtuais.some(
+        (m) => m.nome.trim().toLowerCase() === nomeNorm || limpo(m.nome) === nomeLimpo
       );
     } else {
       return (
-        fichaAtual.armas.some((a) => a.nome.trim().toLowerCase() === nomeNorm) ||
-        fichaAtual.armaduras.some((a) => a.nome.trim().toLowerCase() === nomeNorm) ||
-        fichaAtual.itensGerais.some((i) => i.nome.trim().toLowerCase() === nomeNorm)
+        (fichaEfetiva.armas || []).some((a) => a.nome.trim().toLowerCase() === nomeNorm || limpo(a.nome) === nomeLimpo) ||
+        (fichaEfetiva.armaduras || []).some((a) => a.nome.trim().toLowerCase() === nomeNorm || limpo(a.nome) === nomeLimpo) ||
+        (fichaEfetiva.itensGerais || []).some((i) => i.nome.trim().toLowerCase() === nomeNorm || limpo(i.nome) === nomeLimpo)
       );
     }
   };
@@ -2159,7 +2198,6 @@ export const CompendioModal: React.FC<Props> = ({
                         handleCliqueAdicionar('talento', talentoDetalheModal);
                         setTalentoDetalheModal(null);
                       }}
-                      disabled={estaNaListaFicha('talento', talentoDetalheModal.nome)}
                     >
                       <Text
                         style={[
@@ -2169,7 +2207,7 @@ export const CompendioModal: React.FC<Props> = ({
                         ]}
                       >
                         {estaNaListaFicha('talento', talentoDetalheModal.nome)
-                          ? '✓ Adicionado'
+                          ? '✓ Adicionado (Toque para Remover)'
                           : fichaAtual
                           ? '+ Adicionar à Ficha'
                           : '+ Personagem'}
