@@ -118,10 +118,10 @@ export const AbaPericias: React.FC<Props> = ({ ficha, onChange }) => {
     const novaLista = ficha.pericias.map((p) =>
       p.id === periciaId
         ? {
-            ...p,
-            complemento,
-            nome: montarNomeComComplemento(nomeBase, complemento),
-          }
+          ...p,
+          complemento,
+          nome: montarNomeComComplemento(nomeBase, complemento),
+        }
         : p
     );
     onChange({ ...ficha, pericias: novaLista });
@@ -193,7 +193,7 @@ export const AbaPericias: React.FC<Props> = ({ ficha, onChange }) => {
       >
         <View style={styles.card}>
           <SecaoHeader
-            titulo="3. Perícias"
+            titulo="Perícias"
             subtitulo="Total = Graduação + Mod. Habilidade + Outros Bônus"
             acaoTexto="Nova Especialização"
             onAcaoPress={() => abrirModalParaTipo('Ofício')}
