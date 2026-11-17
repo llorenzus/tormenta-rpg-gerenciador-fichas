@@ -197,6 +197,90 @@ function obterGraduacaoPericia(ficha: FichaPersonagem, nomePericia: string): num
 // Cache para busca rápida e única de talentos citados em pré-requisitos (elimina dezenas de milhares de loops O(N²))
 const cacheTalentosCitados = new Map<string, TalentoData[]>();
 
+export interface RacaConfig {
+  id: string;
+  nome: string;
+  aliases: string[];
+}
+
+export const RACAS_CONHECIDAS: RacaConfig[] = [
+  { id: 'aggelus', nome: 'Aggelus', aliases: ['aggelus'] },
+  { id: 'anao', nome: 'Anão', aliases: ['anao', 'ana', 'anoes', 'anas'] },
+  { id: 'bugbear', nome: 'Bugbear', aliases: ['bugbear', 'bugbears'] },
+  { id: 'centauro', nome: 'Centauro', aliases: ['centauro', 'centaura', 'centauros', 'centauras'] },
+  { id: 'elfo-do-ceu', nome: 'Elfo-do-Céu', aliases: ['elfo-do-ceu', 'elfa-do-ceu', 'elfos-do-ceu', 'elfas-do-ceu'] },
+  { id: 'elfo-do-mar', nome: 'Elfo-do-mar', aliases: ['elfo-do-mar', 'elfa-do-mar', 'elfos-do-mar', 'elfas-do-mar'] },
+  { id: 'elfo', nome: 'Elfo', aliases: ['elfo', 'elfa', 'elfos', 'elfas'] },
+  { id: 'finntroll', nome: 'Finntroll', aliases: ['finntroll', 'finntrolls'] },
+  { id: 'gnoll', nome: 'Gnoll', aliases: ['gnoll', 'gnolls'] },
+  { id: 'gnomo', nome: 'Gnomo', aliases: ['gnomo', 'gnoma', 'gnomos', 'gnomas'] },
+  { id: 'goblin', nome: 'Goblin', aliases: ['goblin', 'goblins'] },
+  { id: 'halfling', nome: 'Halfling', aliases: ['halfling', 'halflings'] },
+  { id: 'hobgoblin', nome: 'Hobgoblin', aliases: ['hobgoblin', 'hobgoblins'] },
+  { id: 'humano', nome: 'Humano', aliases: ['humano', 'humana', 'humanos', 'humanas'] },
+  { id: 'lefou', nome: 'Lefou', aliases: ['lefou', 'lefous'] },
+  { id: 'medusa', nome: 'Medusa', aliases: ['medusa', 'medusas'] },
+  { id: 'meio-driade', nome: 'Meio-Dríade', aliases: ['meio-driade', 'meio-driades'] },
+  { id: 'meio-elfo', nome: 'Meio-Elfo', aliases: ['meio-elfo', 'meio-elfa', 'meio-elfos', 'meio-elfas'] },
+  { id: 'meio-orc', nome: 'Meio-Orc', aliases: ['meio-orc', 'meio-orca', 'meio-orcs', 'meio-orcas'] },
+  { id: 'minauro', nome: 'Minauro', aliases: ['minauro', 'minaura', 'minauros', 'minauras'] },
+  { id: 'minotauro', nome: 'Minotauro', aliases: ['minotauro', 'minotaura', 'minotauros', 'minotauras'] },
+  { id: 'nagah', nome: 'Nagah', aliases: ['nagah', 'nagahs'] },
+  { id: 'orc', nome: 'Orc', aliases: ['orc', 'orca', 'orcs', 'orcas'] },
+  { id: 'qareen', nome: 'Qareen', aliases: ['qareen', 'qareens'] },
+  { id: 'sprite', nome: 'Sprite', aliases: ['sprite', 'sprites'] },
+  { id: 'sulfure', nome: 'Sulfure', aliases: ['sulfure', 'sulfures'] },
+  { id: 'trog', nome: 'Trog', aliases: ['trog', 'trogs'] },
+];
+
+/**
+ * Verifica se a raça do personagem corresponde à raça exigida
+ */
+export function personagemEdaRaca(racaPersonagem: string | undefined, racaId: string): boolean {
+  if (!racaPersonagem) return false;
+  const normPers = normalizarTexto(racaPersonagem);
+  const racaInfo = RACAS_CONHECIDAS.find((r) => r.id === racaId);
+  if (!racaInfo) {
+    return normPers === normalizarTexto(racaId);
+  }
+
+  // Se a raça exigida for 'elfo', meio-elfo não qualifica
+  if (racaId === 'elfo' && normPers.startsWith('meio-elf')) return false;
+  // Se a raça exigida for 'orc', meio-orc não qualifica
+  if (racaId === 'orc' && normPers.startsWith('meio-orc')) return false;
+
+  return racaInfo.aliases.some((alias) => normPers === alias || normPers.startsWith(alias + ' '));
+}
+
+/**
+ * Formata lista de raças para exibição (ex: "Elfo ou Qareen", "Anão, Goblin ou Hobgoblin")
+ */
+export function formatarListaRacas(racas: { nome: string }[]): string {
+  if (racas.length === 0) return '';
+  if (racas.length === 1) return racas[0].nome;
+  if (racas.length === 2) return `${racas[0].nome} ou ${racas[1].nome}`;
+  const nomes = racas.map((r) => r.nome);
+  return `${nomes.slice(0, -1).join(', ')} ou ${nomes[nomes.length - 1]}`;
+}
+
+/**
+ * Extrai as raças citadas como pré-requisito no texto
+ */
+export function extrairRacasPreRequisito(texto: string): { id: string; nome: string }[] {
+  if (!texto) return [];
+  const normTexto = normalizarTexto(texto);
+  const encontradas: { id: string; nome: string }[] = [];
+
+  for (const r of RACAS_CONHECIDAS) {
+    const re = new RegExp('(^|[^a-z0-9\\-])' + r.id + '([^a-z0-9\\-]|$)', 'i');
+    if (re.test(normTexto)) {
+      encontradas.push({ id: r.id, nome: r.nome });
+    }
+  }
+
+  return encontradas;
+}
+
 /**
  * Identifica talentos que são citados como pré-requisito no texto
  */
@@ -323,11 +407,21 @@ export function verificarPreRequisitosCumpridos(
   }
 
   // 2. Checagem de BBA (Bônus Base de Ataque)
-  const matchBba = texto.match(/(?:bônus base de ataque|bba)\s*\+?(\d+)/i);
-  if (matchBba) {
-    const minBba = parseInt(matchBba[1], 10);
-    if ((Number(ficha.bba) || 0) < minBba) {
-      pendencias.push(`BBA +${minBba} (possui +${ficha.bba || 0})`);
+  const matchRacaOuBba = texto.match(/anão\s+ou\s+(?:bônus base de ataque|bba)\s*\+?(\d+)/i);
+  if (matchRacaOuBba) {
+    const minBba = parseInt(matchRacaOuBba[1], 10);
+    const atende =
+      personagemEdaRaca(ficha.raca, 'anao') || (Number(ficha.bba) || 0) >= minBba;
+    if (!atende) {
+      pendencias.push(`Anão ou BBA +${minBba}`);
+    }
+  } else {
+    const matchBba = texto.match(/(?:bônus base de ataque|bba)\s*\+?(\d+)/i);
+    if (matchBba) {
+      const minBba = parseInt(matchBba[1], 10);
+      if ((Number(ficha.bba) || 0) < minBba) {
+        pendencias.push(`BBA +${minBba} (possui +${ficha.bba || 0})`);
+      }
     }
   }
 
@@ -485,12 +579,27 @@ export function verificarPreRequisitosCumpridos(
   }
 
   // 6. Checagem de Talentos Pré-Requisito
+  const matchGnollOuHeranca = /gnoll\s+ou\s+herança da hiena/i.test(texto);
+  const atendeGnollOuHeranca =
+    matchGnollOuHeranca &&
+    (personagemEdaRaca(ficha.raca, 'gnoll') ||
+      (ficha.talentos || []).some((t) =>
+        normalizarTexto(t.nome).includes('heranca da hiena')
+      ));
+
   const talentosExigidos = identificarTalentosCitadosEmPreRequisitos(texto, talento.id);
   const talentosFichaNorm = (ficha.talentos || []).map((t) =>
     t.nome.replace(/\s*\[.*?\]/g, '').trim().toLowerCase()
   );
 
   for (const exigido of talentosExigidos) {
+    if (
+      matchGnollOuHeranca &&
+      atendeGnollOuHeranca &&
+      normalizarTexto(exigido.nome).includes('heranca da hiena')
+    ) {
+      continue;
+    }
     const exigidoNomeBusca = exigido.nome.replace(/\s*\[.*?\]/g, '').trim().toLowerCase();
     const possui = talentosFichaNorm.some(
       (nomeFicha) =>
@@ -500,6 +609,25 @@ export function verificarPreRequisitosCumpridos(
     );
     if (!possui) {
       pendencias.push(`Talento: ${exigido.nome}`);
+    }
+  }
+
+  // 7. Checagem de Raça
+  if (!matchRacaOuBba) {
+    if (matchGnollOuHeranca) {
+      if (!atendeGnollOuHeranca) {
+        pendencias.push('Raça: Gnoll ou talento Herança da Hiena');
+      }
+    } else {
+      const racasExigidas = extrairRacasPreRequisito(texto);
+      if (racasExigidas.length > 0) {
+        const atendeRaca = racasExigidas.some((r) =>
+          personagemEdaRaca(ficha.raca, r.id)
+        );
+        if (!atendeRaca) {
+          pendencias.push(`Raça: ${formatarListaRacas(racasExigidas)}`);
+        }
+      }
     }
   }
 

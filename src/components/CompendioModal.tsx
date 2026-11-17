@@ -1940,25 +1940,22 @@ export const CompendioModal: React.FC<Props> = ({
                         <Text style={styles.cardItemNome}>{item.nome}</Text>
                       </View>
 
-                      {(fichaAtual || todasFichas.length > 0) && (
-                        <TouchableOpacity
+                      <TouchableOpacity
+                        style={[
+                          styles.btnAdicionar,
+                          jaPossui && styles.btnAdicionarSecundario,
+                        ]}
+                        onPress={() => handleCliqueAdicionar('manobra', item)}
+                      >
+                        <Text
                           style={[
-                            styles.btnAdicionar,
-                            jaPossui && styles.btnAdicionarSecundario,
+                            styles.btnAdicionarText,
+                            jaPossui && styles.btnAdicionarSecundarioText,
                           ]}
-                          onPress={() => handleCliqueAdicionar('manobra', item)}
-                          disabled={jaPossui}
                         >
-                          <Text
-                            style={[
-                              styles.btnAdicionarText,
-                              jaPossui && styles.btnAdicionarSecundarioText,
-                            ]}
-                          >
-                            {jaPossui ? '✓ Adicionado' : '+ À Ficha'}
-                          </Text>
-                        </TouchableOpacity>
-                      )}
+                          {jaPossui ? '✓ Adicionado' : (fichaAtual ? '+ Adicionar' : '+ Personagem')}
+                        </Text>
+                      </TouchableOpacity>
                     </TouchableOpacity>
 
                     {/* Prévia quando recolhido */}

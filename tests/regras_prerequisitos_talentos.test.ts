@@ -311,4 +311,142 @@ describe('Verificador de Pré-Requisitos de Talentos (TRPG)', () => {
     assert.strictEqual(resMago.cumpre, true);
     assert.strictEqual(resMago.pendencias.length, 0);
   });
+
+  it('deve validar pré-requisitos raciais (ex: Arcano Completo exige Elfo ou Qareen)', () => {
+    const { getTalentoPorId } = require('../src/data/talentos');
+    const arcanoCompleto = getTalentoPorId('arcano_completo');
+    assert.ok(arcanoCompleto, 'Talento Arcano Completo deve existir');
+
+    // 1. Humano não deve cumprir
+    const humano = criarFichaTeste();
+    humano.raca = 'Humano';
+    const resHumano = verificarPreRequisitosCumpridos(humano, arcanoCompleto);
+    assert.strictEqual(resHumano.cumpre, false);
+    assert.ok(
+      resHumano.pendencias.includes('Raça: Elfo ou Qareen'),
+      'Deve acusar pendência da raça Elfo ou Qareen'
+    );
+
+    // 2. Elfo deve cumprir
+    const elfo = criarFichaTeste();
+    elfo.raca = 'Elfo';
+    const resElfo = verificarPreRequisitosCumpridos(elfo, arcanoCompleto);
+    assert.strictEqual(resElfo.cumpre, true);
+    assert.strictEqual(resElfo.pendencias.length, 0);
+
+    // 3. Elfa (variação de gênero) deve cumprir
+    const elfa = criarFichaTeste();
+    elfa.raca = 'Elfa';
+    const resElfa = verificarPreRequisitosCumpridos(elfa, arcanoCompleto);
+    assert.strictEqual(resElfa.cumpre, true);
+
+    // 4. Qareen deve cumprir
+    const qareen = criarFichaTeste();
+    qareen.raca = 'Qareen';
+    const resQareen = verificarPreRequisitosCumpridos(qareen, arcanoCompleto);
+    assert.strictEqual(resQareen.cumpre, true);
+
+    // 5. Meio-Elfo não deve cumprir talento exclusivo de Elfo puro
+    const meioElfo = criarFichaTeste();
+    meioElfo.raca = 'Meio-Elfo';
+    const resMeioElfo = verificarPreRequisitosCumpridos(meioElfo, arcanoCompleto);
+    assert.strictEqual(resMeioElfo.cumpre, false);
+    assert.ok(resMeioElfo.pendencias.includes('Raça: Elfo ou Qareen'));
+
+    // 6. Personagem sem raça definida não deve cumprir
+    const semRaca = criarFichaTeste();
+    semRaca.raca = '';
+    const resSemRaca = verificarPreRequisitosCumpridos(semRaca, arcanoCompleto);
+    assert.strictEqual(resSemRaca.cumpre, false);
+    assert.ok(resSemRaca.pendencias.includes('Raça: Elfo ou Qareen'));
+  });
+
+  it('deve validar pré-requisitos com múltiplas raças e variações (Alma de Pedra, Foco em Pólvora)', () => {
+    const { getTalentoPorId } = require('../src/data/talentos');
+    const almaDePedra = getTalentoPorId('alma_de_pedra');
+    assert.ok(almaDePedra, 'Talento Alma de Pedra deve existir');
+
+    const anao = criarFichaTeste();
+    anao.raca = 'Anão';
+    assert.strictEqual(verificarPreRequisitosCumpridos(anao, almaDePedra).cumpre, true);
+
+    const nagah = criarFichaTeste();
+    nagah.raca = 'Nagah';
+    assert.strictEqual(verificarPreRequisitosCumpridos(nagah, almaDePedra).cumpre, true);
+
+    const elfo = criarFichaTeste();
+    elfo.raca = 'Elfo';
+    const resElfo = verificarPreRequisitosCumpridos(elfo, almaDePedra);
+    assert.strictEqual(resElfo.cumpre, false);
+    assert.ok(resElfo.pendencias.includes('Raça: Anão ou Nagah'));
+
+    const focoPolvora = getTalentoPorId('foco_em_polvora');
+    assert.ok(focoPolvora, 'Talento Foco em Pólvora deve existir');
+
+    const goblin = criarFichaTeste();
+    goblin.raca = 'Goblin';
+    assert.strictEqual(verificarPreRequisitosCumpridos(goblin, focoPolvora).cumpre, true);
+
+    const hobgoblin = criarFichaTeste();
+    hobgoblin.raca = 'Hobgoblin';
+    assert.strictEqual(verificarPreRequisitosCumpridos(hobgoblin, focoPolvora).cumpre, true);
+
+    const humano = criarFichaTeste();
+    humano.raca = 'Humano';
+    const resHumano = verificarPreRequisitosCumpridos(humano, focoPolvora);
+    assert.strictEqual(resHumano.cumpre, false);
+    assert.ok(resHumano.pendencias.includes('Raça: Anão, Goblin ou Hobgoblin'));
+  });
+
+  it('deve validar talentos com alternativas de raça ou outros atributos (Arma Amada, Mandíbula de Aço)', () => {
+    const { getTalentoPorId } = require('../src/data/talentos');
+    const armaAmada = getTalentoPorId('arma_amada');
+    assert.ok(armaAmada, 'Talento Arma Amada deve existir');
+
+    // Anão com BBA 1 pode pegar Arma Amada
+    const anaoBba1 = criarFichaTeste();
+    anaoBba1.raca = 'Anão';
+    anaoBba1.bba = 1;
+    assert.strictEqual(verificarPreRequisitosCumpridos(anaoBba1, armaAmada).cumpre, true);
+
+    // Humano com BBA 5 pode pegar Arma Amada
+    const humanoBba5 = criarFichaTeste();
+    humanoBba5.raca = 'Humano';
+    humanoBba5.bba = 5;
+    assert.strictEqual(verificarPreRequisitosCumpridos(humanoBba5, armaAmada).cumpre, true);
+
+    // Humano com BBA 2 não pode pegar Arma Amada
+    const humanoBba2 = criarFichaTeste();
+    humanoBba2.raca = 'Humano';
+    humanoBba2.bba = 2;
+    const resHumanoBba2 = verificarPreRequisitosCumpridos(humanoBba2, armaAmada);
+    assert.strictEqual(resHumanoBba2.cumpre, false);
+    assert.ok(resHumanoBba2.pendencias.includes('Anão ou BBA +5'));
+
+    // Mandíbula de Aço: Gnoll ou Herança da Hiena, bônus base de ataque +2
+    const mandibulaDeAco = getTalentoPorId('mandibula_de_aco');
+    assert.ok(mandibulaDeAco, 'Talento Mandíbula de Aço deve existir');
+
+    // Gnoll com BBA 2 cumpre
+    const gnoll = criarFichaTeste();
+    gnoll.raca = 'Gnoll';
+    gnoll.bba = 2;
+    assert.strictEqual(verificarPreRequisitosCumpridos(gnoll, mandibulaDeAco).cumpre, true);
+
+    // Humano com Herança da Hiena e BBA 2 cumpre
+    const humanoComHeranca = criarFichaTeste();
+    humanoComHeranca.raca = 'Humano';
+    humanoComHeranca.bba = 2;
+    humanoComHeranca.talentos = [{ id: 't-hiena', nome: 'Herança da Hiena', descricao: '' }];
+    assert.strictEqual(verificarPreRequisitosCumpridos(humanoComHeranca, mandibulaDeAco).cumpre, true);
+
+    // Humano sem Herança da Hiena e BBA 2 falha
+    const humanoSemHeranca = criarFichaTeste();
+    humanoSemHeranca.raca = 'Humano';
+    humanoSemHeranca.bba = 2;
+    humanoSemHeranca.talentos = [];
+    const resSemHeranca = verificarPreRequisitosCumpridos(humanoSemHeranca, mandibulaDeAco);
+    assert.strictEqual(resSemHeranca.cumpre, false);
+    assert.ok(resSemHeranca.pendencias.includes('Raça: Gnoll ou talento Herança da Hiena'));
+  });
 });
