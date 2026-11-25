@@ -2,7 +2,6 @@
   "expo": {
     "name": "Fichas Tormenta RPG",
     "slug": "ficha-tormenta-rpg",
-    "version": "1.2.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",

@@ -9,6 +9,7 @@ import {
   View,
 } from 'react-native';
 import { CompendioModal } from './src/components/CompendioModal';
+import { ModalAtualizacao } from './src/components/ModalAtualizacao';
 import { ModalExportarFicha } from './src/components/ModalExportarFicha';
 import {
   ClasseData,
@@ -48,6 +49,7 @@ import {
   salvarPdfNoAparelho,
 } from './src/storage/fichaStorage';
 import { COLORS } from './src/theme/colors';
+import { checarAtualizacaoOnline, InfoAtualizacao } from './src/utils/updateChecker';
 
 export default function App() {
   const [iniciado, setIniciado] = useState(false);
@@ -55,6 +57,8 @@ export default function App() {
   const [fichaAberta, setFichaAberta] = useState<FichaPersonagem | null>(null);
   const [compendioGeralAberto, setCompendioGeralAberto] = useState(false);
   const [fichaParaExportar, setFichaParaExportar] = useState<FichaPersonagem | null>(null);
+  const [infoAtualizacao, setInfoAtualizacao] = useState<InfoAtualizacao | null>(null);
+  const [modalAtualizacaoVisivel, setModalAtualizacaoVisivel] = useState(false);
 
   // Debounce e ref para persistência assíncrona fluída no mobile sem travar a thread JS
   const salvarDebounceRef = useRef<NodeJS.Timeout | null>(null);
@@ -71,6 +75,16 @@ export default function App() {
 
   useEffect(() => {
     carregarFichasLocais().then(setFichas);
+
+    // Checa discretamente se há uma nova versão online ao iniciar (intervalo de 24h)
+    checarAtualizacaoOnline(false)
+      .then((info) => {
+        if (info && info.temAtualizacao) {
+          setInfoAtualizacao(info);
+          setModalAtualizacaoVisivel(true);
+        }
+      })
+      .catch(() => {});
 
     // Sincroniza fichas entre janelas no Windows/Web (Electron e browser)
     const sincronizarFichas = () => {
@@ -565,6 +579,12 @@ export default function App() {
           onCompartilharPdf={handleCompartilharPdf}
           onCompartilharJson={handleCompartilharJson}
           onImprimirDireto={handleImprimirDireto}
+        />
+
+        <ModalAtualizacao
+          visivel={modalAtualizacaoVisivel}
+          info={infoAtualizacao}
+          onFechar={() => setModalAtualizacaoVisivel(false)}
         />
       </View>
     </SafeAreaView>

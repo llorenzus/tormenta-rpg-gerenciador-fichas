@@ -1,6 +1,6 @@
 {
   "name": "trpg-gerenciador-fichas",
-  "version": "1.2.0",
+  "version": "1.2.1",
   "description": "Aplicativo para gerenciamento de fichas de personagem do sistema Tormenta RPG (TRPG)",
   "repository": {
     "type": "git",
@@ -18,7 +18,7 @@
     "web": "node -r ./polyfill-node.js node_modules/expo/bin/cli start --web",
     "export:web": "node -r ./polyfill-node.js node_modules/expo/bin/cli export -p web",
     "electron": "node electron/run.js",
-    "test": "tsx --test tests/layout_consistencia_plataformas.test.ts tests/regras_calculos_ficha.test.ts tests/regras_compendio_conversao.test.ts tests/regras_prerequisitos_talentos.test.ts",
+    "test": "tsx --test tests/layout_consistencia_plataformas.test.ts tests/regras_calculos_ficha.test.ts tests/regras_compendio_conversao.test.ts tests/regras_prerequisitos_talentos.test.ts tests/updateChecker.test.ts",
     "build:windows": "node -r ./polyfill-node.js node_modules/expo/bin/cli export -p web && electron-builder --win --x64 --publish never"
   },
   "dependencies": {
