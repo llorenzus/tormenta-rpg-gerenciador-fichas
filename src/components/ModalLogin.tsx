@@ -17,10 +17,14 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { User } from 'firebase/auth';
 import {
   cadastrarComEmail,
+  cancelarConfirmacaoPendente,
   fazerLogout,
   loginComEmail,
   loginComGoogle,
+  obterUsuarioPendenteVerificacao,
   redefinirSenha,
+  reenviarEmailVerificacao,
+  verificarSeEmailConfirmado,
 } from '../services/authService';
 import { isFirebaseConfigured } from '../services/firebase';
 import { exportarBackupCompletoLocal } from '../storage/fichaStorage';
@@ -46,7 +50,7 @@ const GOOGLE_ICON_DATA_URI =
     </svg>`
   );
 
-type ModoAba = 'login' | 'cadastro' | 'recuperar';
+type ModoAba = 'login' | 'cadastro' | 'recuperar' | 'confirmacao';
 
 export const ModalLogin: React.FC<Props> = ({
   visivel,
@@ -60,6 +64,10 @@ export const ModalLogin: React.FC<Props> = ({
   const [email, setEmail] = useState('');
   const [senha, setSenha] = useState('');
   const [carregando, setCarregando] = useState(false);
+  const [usuarioPendente, setUsuarioPendente] = useState<User | null>(null);
+  const [emailPendente, setEmailPendente] = useState('');
+  const [verificandoEmail, setVerificandoEmail] = useState(false);
+  const [reenviandoEmail, setReenviandoEmail] = useState(false);
   const [mensagemErro, setMensagemErro] = useState<string | null>(null);
   const [mensagemSucesso, setMensagemSucesso] = useState<string | null>(null);
   const [exportandoBackup, setExportandoBackup] = useState(false);
@@ -82,6 +90,10 @@ export const ModalLogin: React.FC<Props> = ({
     setUsername('');
     setEmail('');
     setSenha('');
+    setUsuarioPendente(null);
+    setEmailPendente('');
+    setVerificandoEmail(false);
+    setReenviandoEmail(false);
     setMensagemErro(null);
     setMensagemSucesso(null);
     setMensagemBackup(null);
@@ -105,7 +117,10 @@ export const ModalLogin: React.FC<Props> = ({
     }
   };
 
-  const handleFechar = () => {
+  const handleFechar = async () => {
+    if (modo === 'confirmacao') {
+      await cancelarConfirmacaoPendente();
+    }
     resetForm();
     onFechar();
   };
@@ -121,6 +136,13 @@ export const ModalLogin: React.FC<Props> = ({
           handleLogout();
           return;
         }
+        if (modo === 'confirmacao') {
+          e.preventDefault();
+          if (!verificandoEmail && !reenviandoEmail) {
+            handleChecarConfirmacao();
+          }
+          return;
+        }
         if (!carregando && !usuarioAtual) {
           e.preventDefault();
           handleSubmeter();
@@ -130,7 +152,7 @@ export const ModalLogin: React.FC<Props> = ({
 
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [visivel, carregando, confirmandoLogout, usuarioAtual, modo, username, email, senha, manterConectado]);
+  }, [visivel, carregando, confirmandoLogout, usuarioAtual, modo, username, email, senha, manterConectado, usuarioPendente, verificandoEmail, reenviandoEmail]);
 
   const handleSubmeter = async () => {
     setMensagemErro(null);
@@ -151,6 +173,12 @@ export const ModalLogin: React.FC<Props> = ({
           resetForm();
           if (onLoginSucesso) onLoginSucesso(userLogado);
           onFechar();
+        } else if (res.precisaConfirmarEmail && res.usuario) {
+          setUsuarioPendente(res.usuario);
+          setEmailPendente(email.trim());
+          setModo('confirmacao');
+          setMensagemErro(null);
+          setMensagemSucesso('Conta localizada! Confirme seu e-mail para ativar sua conta na nuvem.');
         } else {
           setMensagemErro(res.erro || 'Falha ao entrar.');
         }
@@ -167,10 +195,18 @@ export const ModalLogin: React.FC<Props> = ({
 
         const res = await cadastrarComEmail(email, senha, usernameTrim);
         if (res.sucesso && res.usuario) {
-          const userLogado = res.usuario;
-          resetForm();
-          if (onLoginSucesso) onLoginSucesso(userLogado);
-          onFechar();
+          if (res.precisaConfirmarEmail) {
+            setUsuarioPendente(res.usuario);
+            setEmailPendente(email.trim());
+            setModo('confirmacao');
+            setMensagemErro(null);
+            setMensagemSucesso('Conta criada! Enviamos um link de confirmação para o seu e-mail.');
+          } else {
+            const userLogado = res.usuario;
+            resetForm();
+            if (onLoginSucesso) onLoginSucesso(userLogado);
+            onFechar();
+          }
         } else {
           setMensagemErro(res.erro || 'Falha ao criar conta.');
         }
@@ -187,6 +223,58 @@ export const ModalLogin: React.FC<Props> = ({
     } finally {
       setCarregando(false);
     }
+  };
+
+  const handleChecarConfirmacao = async () => {
+    setMensagemErro(null);
+    setMensagemSucesso(null);
+    setVerificandoEmail(true);
+
+    try {
+      const res = await verificarSeEmailConfirmado(usuarioPendente);
+      if (res.confirmado && res.usuario) {
+        setMensagemSucesso('✅ E-mail confirmado com sucesso! Bem-vindo.');
+        const userPronto = res.usuario;
+        setTimeout(() => {
+          resetForm();
+          if (onLoginSucesso) onLoginSucesso(userPronto);
+          onFechar();
+        }, 800);
+      } else {
+        setMensagemErro(
+          res.erro ||
+            'Seu e-mail ainda não consta como confirmado. Por favor, acesse o link enviado para sua caixa de entrada e tente novamente.'
+        );
+      }
+    } finally {
+      setVerificandoEmail(false);
+    }
+  };
+
+  const handleReenviarEmail = async () => {
+    setMensagemErro(null);
+    setMensagemSucesso(null);
+    setReenviandoEmail(true);
+
+    try {
+      const res = await reenviarEmailVerificacao(usuarioPendente);
+      if (res.sucesso) {
+        setMensagemSucesso('📧 Novo e-mail de confirmação enviado! Verifique sua caixa de entrada e pasta de spam.');
+      } else {
+        setMensagemErro(res.erro || 'Não foi possível reenviar o e-mail de confirmação.');
+      }
+    } finally {
+      setReenviandoEmail(false);
+    }
+  };
+
+  const handleVoltarDoConfirmacao = async () => {
+    await cancelarConfirmacaoPendente();
+    setUsuarioPendente(null);
+    setEmailPendente('');
+    setModo('login');
+    setMensagemErro(null);
+    setMensagemSucesso(null);
   };
 
   const handleGoogle = async () => {
@@ -340,170 +428,258 @@ export const ModalLogin: React.FC<Props> = ({
                 ) : (
                   /* CENÁRIO 2: USUÁRIO NÃO ESTÁ CONECTADO */
                   <View style={styles.sessaoDeslogada}>
-                    <Text style={styles.modoLocalDesc}>
-                      Acesse sua conta para visualizar e sincronizar suas fichas. Qualquer ficha
-                      já criada nesta máquina será transferida automaticamente para a sua conta!
-                    </Text>
+                    {modo === 'confirmacao' ? (
+                      /* TELA DE CONFIRMAÇÃO DE E-MAIL (OPÇÃO BLOQUEANTE) */
+                      <View style={styles.confirmacaoContainer}>
+                        <View style={styles.confirmacaoIconRow}>
+                          <Text style={styles.confirmacaoIcon}>✉️</Text>
+                          <Text style={styles.confirmacaoTitle}>Confirme seu E-mail</Text>
+                        </View>
 
-                    {/* Abas de Navegação (Entrar / Cadastrar) */}
-                    <View style={styles.tabNav}>
-                      <TouchableOpacity
-                        style={[styles.tabBtn, modo === 'login' && styles.tabBtnAtivo]}
-                        onPress={() => {
-                          setModo('login');
-                          setMensagemErro(null);
-                        }}
-                      >
-                        <Text
-                          style={[
-                            styles.tabBtnText,
-                            modo === 'login' && styles.tabBtnTextAtivo,
-                          ]}
-                        >
-                          Entrar
+                        <Text style={styles.confirmacaoDesc}>
+                          Para sua segurança e para utilizar os recursos de nuvem, enviamos um link de confirmação para:
                         </Text>
-                      </TouchableOpacity>
 
-                      <TouchableOpacity
-                        style={[styles.tabBtn, modo === 'cadastro' && styles.tabBtnAtivo]}
-                        onPress={() => {
-                          setModo('cadastro');
-                          setMensagemErro(null);
-                        }}
-                      >
-                        <Text
-                          style={[
-                            styles.tabBtnText,
-                            modo === 'cadastro' && styles.tabBtnTextAtivo,
-                          ]}
-                        >
-                          Criar Conta
-                        </Text>
-                      </TouchableOpacity>
-
-                      <TouchableOpacity
-                        style={[styles.tabBtn, modo === 'recuperar' && styles.tabBtnAtivo]}
-                        onPress={() => {
-                          setModo('recuperar');
-                          setMensagemErro(null);
-                        }}
-                      >
-                        <Text
-                          style={[
-                            styles.tabBtnText,
-                            modo === 'recuperar' && styles.tabBtnTextAtivo,
-                          ]}
-                        >
-                          Esqueci Senha
-                        </Text>
-                      </TouchableOpacity>
-                    </View>
-
-                    {/* Mensagens de Feedback */}
-                    {mensagemErro && (
-                      <View style={styles.erroBox}>
-                        <Text style={styles.erroText}>{mensagemErro}</Text>
-                      </View>
-                    )}
-
-                    {mensagemSucesso && (
-                      <View style={styles.sucessoBox}>
-                        <Text style={styles.sucessoText}>{mensagemSucesso}</Text>
-                      </View>
-                    )}
-
-                    {/* Campos de Formulário */}
-                    <View style={styles.formContainer}>
-                      {modo === 'cadastro' && (
-                        <>
-                          <Text style={styles.inputLabel}>
-                            Nome de Usuário (Username) <Text style={styles.labelObrigatorio}>*</Text>
+                        <View style={styles.emailPendenteBox}>
+                          <Text style={styles.emailPendenteText}>
+                            {emailPendente || email || usuarioPendente?.email || 'seu-email@exemplo.com'}
                           </Text>
-                          <TextInput
-                            style={styles.input}
-                            placeholder="Ex: MestreValkaria, ArtonHero..."
-                            placeholderTextColor={COLORS.textSecondary}
-                            autoCapitalize="words"
-                            value={username}
-                            onChangeText={setUsername}
-                            onSubmitEditing={handleSubmeter}
-                            returnKeyType="go"
-                          />
-                        </>
-                      )}
+                        </View>
 
-                      <Text style={styles.inputLabel}>E-mail</Text>
-                      <TextInput
-                        style={styles.input}
-                        placeholder="seu-email@exemplo.com"
-                        placeholderTextColor={COLORS.textSecondary}
-                        keyboardType="email-address"
-                        autoCapitalize="none"
-                        autoCorrect={false}
-                        value={email}
-                        onChangeText={setEmail}
-                        onSubmitEditing={handleSubmeter}
-                        returnKeyType="go"
-                      />
+                        <Text style={styles.confirmacaoInstrucao}>
+                          Abra sua caixa de entrada (ou pasta de spam/lixeira) e clique no link de ativação da conta.
+                        </Text>
 
-                      {modo !== 'recuperar' && (
-                        <>
-                          <Text style={styles.inputLabel}>Senha</Text>
-                          <TextInput
-                            style={styles.input}
-                            placeholder="Mínimo de 6 caracteres"
-                            placeholderTextColor={COLORS.textSecondary}
-                            secureTextEntry
-                            value={senha}
-                            onChangeText={setSenha}
-                            onSubmitEditing={handleSubmeter}
-                            returnKeyType="go"
-                          />
-                        </>
-                      )}
-
-                      {/* Opção para persistir o login (Lembrar neste computador) */}
-                      {(modo === 'login' || modo === 'cadastro') && (
-                        <TouchableOpacity
-                          style={styles.checkboxRow}
-                          onPress={() => setManterConectado((v) => !v)}
-                          activeOpacity={0.75}
-                        >
-                          <View
-                            style={[
-                              styles.checkboxBox,
-                              manterConectado && styles.checkboxBoxChecked,
-                            ]}
-                          >
-                            {manterConectado && (
-                              <Text style={styles.checkboxCheckmark}>✓</Text>
-                            )}
+                        {/* Mensagens de Feedback */}
+                        {mensagemErro && (
+                          <View style={styles.erroBox}>
+                            <Text style={styles.erroText}>{mensagemErro}</Text>
                           </View>
-                          <Text style={styles.checkboxLabel}>
-                            Permanecer conectado neste dispositivo
-                          </Text>
-                        </TouchableOpacity>
-                      )}
-
-                      <TouchableOpacity
-                        style={[styles.btnSubmeter, carregando && styles.btnSubmeterDisabled]}
-                        onPress={handleSubmeter}
-                        disabled={carregando}
-                        activeOpacity={0.85}
-                      >
-                        {carregando ? (
-                          <ActivityIndicator color={COLORS.white} size="small" />
-                        ) : (
-                          <Text style={styles.btnSubmeterText}>
-                            {modo === 'login'
-                              ? '🔑 Entrar'
-                              : modo === 'cadastro'
-                              ? '✨ Criar Conta'
-                              : '📩 Enviar Link'}
-                          </Text>
                         )}
-                      </TouchableOpacity>
-                    </View>
+
+                        {mensagemSucesso && (
+                          <View style={styles.sucessoBox}>
+                            <Text style={styles.sucessoText}>{mensagemSucesso}</Text>
+                          </View>
+                        )}
+
+                        <View style={styles.confirmacaoBotoesArea}>
+                          <TouchableOpacity
+                            style={[
+                              styles.btnJaConfirmei,
+                              verificandoEmail && styles.btnSubmeterDisabled,
+                            ]}
+                            onPress={handleChecarConfirmacao}
+                            disabled={verificandoEmail || reenviandoEmail}
+                            activeOpacity={0.85}
+                          >
+                            {verificandoEmail ? (
+                              <ActivityIndicator color={COLORS.white} size="small" />
+                            ) : (
+                              <Text style={styles.btnJaConfirmeiText}>
+                                ✅ Já confirmei meu e-mail
+                              </Text>
+                            )}
+                          </TouchableOpacity>
+
+                          <TouchableOpacity
+                            style={[
+                              styles.btnReenviarEmail,
+                              reenviandoEmail && styles.btnSubmeterDisabled,
+                            ]}
+                            onPress={handleReenviarEmail}
+                            disabled={verificandoEmail || reenviandoEmail}
+                            activeOpacity={0.85}
+                          >
+                            {reenviandoEmail ? (
+                              <ActivityIndicator color={COLORS.primary} size="small" />
+                            ) : (
+                              <Text style={styles.btnReenviarEmailText}>
+                                🔄 Reenviar link de confirmação
+                              </Text>
+                            )}
+                          </TouchableOpacity>
+
+                          <TouchableOpacity
+                            style={styles.btnVoltarConfirmacao}
+                            onPress={handleVoltarDoConfirmacao}
+                            disabled={verificandoEmail || reenviandoEmail}
+                            activeOpacity={0.7}
+                          >
+                            <Text style={styles.btnVoltarConfirmacaoText}>
+                              ← Voltar para o Login
+                            </Text>
+                          </TouchableOpacity>
+                        </View>
+                      </View>
+                    ) : (
+                      <>
+                        <Text style={styles.modoLocalDesc}>
+                          Acesse sua conta para visualizar e sincronizar suas fichas. Qualquer ficha
+                          já criada nesta máquina será transferida automaticamente para a sua conta!
+                        </Text>
+
+                        {/* Abas de Navegação (Entrar / Cadastrar) */}
+                        <View style={styles.tabNav}>
+                          <TouchableOpacity
+                            style={[styles.tabBtn, modo === 'login' && styles.tabBtnAtivo]}
+                            onPress={() => {
+                              setModo('login');
+                              setMensagemErro(null);
+                            }}
+                          >
+                            <Text
+                              style={[
+                                styles.tabBtnText,
+                                modo === 'login' && styles.tabBtnTextAtivo,
+                              ]}
+                            >
+                              Entrar
+                            </Text>
+                          </TouchableOpacity>
+
+                          <TouchableOpacity
+                            style={[styles.tabBtn, modo === 'cadastro' && styles.tabBtnAtivo]}
+                            onPress={() => {
+                              setModo('cadastro');
+                              setMensagemErro(null);
+                            }}
+                          >
+                            <Text
+                              style={[
+                                styles.tabBtnText,
+                                modo === 'cadastro' && styles.tabBtnTextAtivo,
+                              ]}
+                            >
+                              Criar Conta
+                            </Text>
+                          </TouchableOpacity>
+
+                          <TouchableOpacity
+                            style={[styles.tabBtn, modo === 'recuperar' && styles.tabBtnAtivo]}
+                            onPress={() => {
+                              setModo('recuperar');
+                              setMensagemErro(null);
+                            }}
+                          >
+                            <Text
+                              style={[
+                                styles.tabBtnText,
+                                modo === 'recuperar' && styles.tabBtnTextAtivo,
+                              ]}
+                            >
+                              Esqueci Senha
+                            </Text>
+                          </TouchableOpacity>
+                        </View>
+
+                        {/* Mensagens de Feedback */}
+                        {mensagemErro && (
+                          <View style={styles.erroBox}>
+                            <Text style={styles.erroText}>{mensagemErro}</Text>
+                          </View>
+                        )}
+
+                        {mensagemSucesso && (
+                          <View style={styles.sucessoBox}>
+                            <Text style={styles.sucessoText}>{mensagemSucesso}</Text>
+                          </View>
+                        )}
+
+                        {/* Campos de Formulário */}
+                        <View style={styles.formContainer}>
+                          {modo === 'cadastro' && (
+                            <>
+                              <Text style={styles.inputLabel}>
+                                Nome de Usuário (Username) <Text style={styles.labelObrigatorio}>*</Text>
+                              </Text>
+                              <TextInput
+                                style={styles.input}
+                                placeholder="Ex: MestreValkaria, ArtonHero..."
+                                placeholderTextColor={COLORS.textSecondary}
+                                autoCapitalize="words"
+                                value={username}
+                                onChangeText={setUsername}
+                                onSubmitEditing={handleSubmeter}
+                                returnKeyType="go"
+                              />
+                            </>
+                          )}
+
+                          <Text style={styles.inputLabel}>E-mail</Text>
+                          <TextInput
+                            style={styles.input}
+                            placeholder="seu-email@exemplo.com"
+                            placeholderTextColor={COLORS.textSecondary}
+                            keyboardType="email-address"
+                            autoCapitalize="none"
+                            autoCorrect={false}
+                            value={email}
+                            onChangeText={setEmail}
+                            onSubmitEditing={handleSubmeter}
+                            returnKeyType="go"
+                          />
+
+                          {modo !== 'recuperar' && (
+                            <>
+                              <Text style={styles.inputLabel}>Senha</Text>
+                              <TextInput
+                                style={styles.input}
+                                placeholder="Mínimo de 6 caracteres"
+                                placeholderTextColor={COLORS.textSecondary}
+                                secureTextEntry
+                                value={senha}
+                                onChangeText={setSenha}
+                                onSubmitEditing={handleSubmeter}
+                                returnKeyType="go"
+                              />
+                            </>
+                          )}
+
+                          {/* Opção para persistir o login (Lembrar neste computador) */}
+                          {(modo === 'login' || modo === 'cadastro') && (
+                            <TouchableOpacity
+                              style={styles.checkboxRow}
+                              onPress={() => setManterConectado((v) => !v)}
+                              activeOpacity={0.75}
+                            >
+                              <View
+                                style={[
+                                  styles.checkboxBox,
+                                  manterConectado && styles.checkboxBoxChecked,
+                                ]}
+                              >
+                                {manterConectado && (
+                                  <Text style={styles.checkboxCheckmark}>✓</Text>
+                                )}
+                              </View>
+                              <Text style={styles.checkboxLabel}>
+                                Permanecer conectado neste dispositivo
+                              </Text>
+                            </TouchableOpacity>
+                          )}
+
+                          <TouchableOpacity
+                            style={[styles.btnSubmeter, carregando && styles.btnSubmeterDisabled]}
+                            onPress={handleSubmeter}
+                            disabled={carregando}
+                            activeOpacity={0.85}
+                          >
+                            {carregando ? (
+                              <ActivityIndicator color={COLORS.white} size="small" />
+                            ) : (
+                              <Text style={styles.btnSubmeterText}>
+                                {modo === 'login'
+                                  ? '🔑 Entrar'
+                                  : modo === 'cadastro'
+                                  ? '✨ Criar Conta'
+                                  : '📩 Enviar Link'}
+                              </Text>
+                            )}
+                          </TouchableOpacity>
+                        </View>
+                      </>
+                    )}
                   </View>
                 )}
 
@@ -878,6 +1054,100 @@ const styles = StyleSheet.create({
     color: '#2E7D32',
     lineHeight: 17,
   },
+  // Estilos da Tela de Confirmação de E-mail
+  confirmacaoContainer: {
+    paddingVertical: 8,
+    alignItems: 'center',
+    width: '100%',
+  },
+  confirmacaoIconRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 8,
+    gap: 8,
+  },
+  confirmacaoIcon: {
+    fontSize: 26,
+  },
+  confirmacaoTitle: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    color: COLORS.primaryDark,
+  },
+  confirmacaoDesc: {
+    fontSize: 13,
+    color: COLORS.text,
+    textAlign: 'center',
+    marginBottom: 10,
+    lineHeight: 18,
+  },
+  emailPendenteBox: {
+    backgroundColor: COLORS.surfaceVariant,
+    paddingVertical: 10,
+    paddingHorizontal: 16,
+    borderRadius: 8,
+    borderWidth: 1,
+    borderColor: COLORS.gold,
+    marginBottom: 10,
+    width: '100%',
+    alignItems: 'center',
+  },
+  emailPendenteText: {
+    fontSize: 15,
+    fontWeight: 'bold',
+    color: COLORS.primary,
+  },
+  confirmacaoInstrucao: {
+    fontSize: 12,
+    color: COLORS.textSecondary,
+    textAlign: 'center',
+    marginBottom: 16,
+    lineHeight: 17,
+  },
+  confirmacaoBotoesArea: {
+    width: '100%',
+    gap: 10,
+    marginTop: 4,
+  },
+  btnJaConfirmei: {
+    backgroundColor: '#1E7E34',
+    borderRadius: 8,
+    paddingVertical: 12,
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderWidth: 1,
+    borderColor: '#155724',
+  },
+  btnJaConfirmeiText: {
+    color: COLORS.white,
+    fontSize: 14,
+    fontWeight: 'bold',
+  },
+  btnReenviarEmail: {
+    backgroundColor: COLORS.surfaceVariant,
+    borderRadius: 8,
+    paddingVertical: 11,
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderWidth: 1,
+    borderColor: COLORS.primary,
+  },
+  btnReenviarEmailText: {
+    color: COLORS.primary,
+    fontSize: 13.5,
+    fontWeight: 'bold',
+  },
+  btnVoltarConfirmacao: {
+    paddingVertical: 8,
+    alignItems: 'center',
+    marginTop: 4,
+  },
+  btnVoltarConfirmacaoText: {
+    fontSize: 12.5,
+    color: COLORS.textSecondary,
+    textDecorationLine: 'underline',
+  },
+
   formContainer: {
     gap: 8,
   },

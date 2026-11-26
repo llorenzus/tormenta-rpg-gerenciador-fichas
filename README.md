@@ -42,8 +42,9 @@ Repositório Oficial: [https://github.com/llorenzus/tormenta-rpg-gerenciador-fic
 8. **✨ Magias (Grimório)**: Organização clara por círculos/níveis de magia (**0 ao 9º nível**), identificação de escola, tipo (Arcana/Divina), tempo de execução, alcance, duração e custo em PM.
 9. **🎒 Equipamentos**: Armas com cálculo dinâmico de Acerto Total e dano, armaduras e escudos com aplicação direta na CA, itens gerais e controle financeiro em Tibares (**TO, TP, TC**).
 
-### 2. Sincronização em Nuvem e Compartilhamento de Fichas (v1.3.0)
-- **Autenticação e Nuvem**: Login com e-mail/senha integrado ao Firebase com sincronização em nuvem e resolução de conflitos offline/online.
+### 2. Sincronização em Nuvem e Compartilhamento de Fichas (v1.3.1)
+- **Autenticação Segura com Validação de E-mail**: Cadastro com e-mail/senha com envio automático de link de verificação, garantindo apenas contas válidas na nuvem.
+- **Sincronização em Nuvem**: Sincronização automática com Firebase Firestore e resolução de conflitos offline-first.
 - **Compartilhamento de Fichas**: Compartilhe suas fichas diretamente com outros jogadores através do nome de usuário ou e-mail cadastrado.
 - **Abas Separadas na Home**:
   - **Meus Personagens**: Gerenciamento e edição completa dos personagens da sua conta.
