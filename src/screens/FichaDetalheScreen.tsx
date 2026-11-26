@@ -52,9 +52,13 @@ import {
 } from '../models/ficha';
 import { COLORS } from '../theme/colors';
 import { abrirCompendioEmJanelaSeparada } from '../utils/janelaCompendio';
+import { ModalCompartilharFicha } from '../components/ModalCompartilharFicha';
+import { User } from 'firebase/auth';
 
 interface Props {
   ficha: FichaPersonagem;
+  somenteLeitura?: boolean;
+  usuarioAtual?: User | null;
   onChange: (nova: FichaPersonagem) => void;
   onSalvarManual: () => Promise<boolean> | boolean;
   onExportar: () => void;
@@ -65,6 +69,8 @@ const STORAGE_KEY_ORDEM_PREFERIDA = '@trpg_ordem_abas_preferida';
 
 export const FichaDetalheScreen: React.FC<Props> = ({
   ficha,
+  somenteLeitura = false,
+  usuarioAtual,
   onChange,
   onSalvarManual,
   onExportar,
@@ -72,6 +78,52 @@ export const FichaDetalheScreen: React.FC<Props> = ({
 }) => {
   const { width } = useWindowDimensions();
   const isDesktop = width >= 850;
+  const isReadOnly = !!somenteLeitura || !!ficha.isCompartilhadaComigo;
+
+  const [modalCompartilharAberto, setModalCompartilharAberto] = useState(false);
+
+  // Wrapper seguro para evitar mutações em fichas de somente leitura
+  const handleSafeChange = (nova: FichaPersonagem) => {
+    if (isReadOnly) return;
+    onChange(nova);
+  };
+
+  // Bloqueio rigoroso de edição em modo somente leitura no Web e Electron Desktop
+  useEffect(() => {
+    if (Platform.OS === 'web' && typeof document !== 'undefined') {
+      const styleId = 'trpg-readonly-mode-lock';
+      let tag = document.getElementById(styleId);
+      if (isReadOnly) {
+        if (!tag) {
+          tag = document.createElement('style');
+          tag.id = styleId;
+          tag.innerHTML = `
+            .trpg-readonly-mode input,
+            .trpg-readonly-mode textarea,
+            .trpg-readonly-mode select,
+            .trpg-readonly-mode [contenteditable="true"] {
+              pointer-events: none !important;
+              background-color: rgba(0, 0, 0, 0.04) !important;
+              cursor: not-allowed !important;
+              user-select: text !important;
+            }
+            .trpg-readonly-mode [role="button"]:not(.trpg-allow-click),
+            .trpg-readonly-mode button:not(.trpg-allow-click) {
+              opacity: 0.75 !important;
+              pointer-events: none !important;
+              cursor: not-allowed !important;
+            }
+          `;
+          document.head.appendChild(tag);
+        }
+      } else if (tag) {
+        tag.remove();
+      }
+      return () => {
+        if (tag) tag.remove();
+      };
+    }
+  }, [isReadOnly]);
 
   // Ordem reordenável das abas (com persistência na ficha e em preferência geral)
   const [ordemAbas, setOrdemAbas] = useState<AbaKey[]>(() => {
@@ -138,24 +190,24 @@ export const FichaDetalheScreen: React.FC<Props> = ({
 
   const atualizarOrdemAbas = (novaOrdem: AbaKey[]) => {
     setOrdemAbas(novaOrdem);
-    onChange({ ...ficha, ordemAbas: novaOrdem });
+    handleSafeChange({ ...ficha, ordemAbas: novaOrdem });
     AsyncStorage.setItem(STORAGE_KEY_ORDEM_PREFERIDA, JSON.stringify(novaOrdem)).catch(() => { });
   };
 
   const handleAdicionarTalento = (talento: TalentoData) => {
     const novo = converterTalentoParaItem(talento);
-    onChange({ ...ficha, talentos: [...ficha.talentos, novo] });
+    handleSafeChange({ ...ficha, talentos: [...ficha.talentos, novo] });
   };
 
   const handleAdicionarMagia = (magia: MagiaData) => {
     const nova = converterMagiaParaItem(magia);
-    onChange({ ...ficha, magias: [...ficha.magias, nova] });
+    handleSafeChange({ ...ficha, magias: [...ficha.magias, nova] });
   };
 
   const handleAdicionarManobra = (manobra: PosturaData | GolpeMarcialData) => {
     const nova = converterManobraParaItem(manobra);
     const manobrasAtuais = Array.isArray(ficha.manobras) ? ficha.manobras : [];
-    onChange({ ...ficha, manobras: [...manobrasAtuais, nova] });
+    handleSafeChange({ ...ficha, manobras: [...manobrasAtuais, nova] });
   };
 
   const handleAplicarRaca = (raca: RacaData) => {
@@ -164,7 +216,7 @@ export const FichaDetalheScreen: React.FC<Props> = ({
       nome: `${t.nome} (${raca.nome})`,
       descricao: t.descricao,
     }));
-    onChange({
+    handleSafeChange({
       ...ficha,
       raca: raca.nome,
       tamanho: raca.tamanho,
@@ -174,19 +226,19 @@ export const FichaDetalheScreen: React.FC<Props> = ({
   };
 
   const handleAplicarClasse = (classe: ClasseData) => {
-    onChange(aplicarClasseNaFicha(ficha, classe));
+    handleSafeChange(aplicarClasseNaFicha(ficha, classe));
   };
 
   const handleAdicionarEquipamento = (equip: EquipamentoData) => {
     if (equip.tipo === 'Arma') {
       const novaArma = converterArmaParaItem(equip);
-      onChange({ ...ficha, armas: [...ficha.armas, novaArma] });
+      handleSafeChange({ ...ficha, armas: [...ficha.armas, novaArma] });
     } else if (equip.tipo === 'Armadura' || equip.tipo === 'Escudo') {
       const novaArmadura = converterArmaduraParaItem(equip);
-      onChange({ ...ficha, armaduras: [...ficha.armaduras, novaArmadura] });
+      handleSafeChange({ ...ficha, armaduras: [...ficha.armaduras, novaArmadura] });
     } else {
       const novoItem = converterItemGeralParaItem(equip);
-      onChange({ ...ficha, itensGerais: [...ficha.itensGerais, novoItem] });
+      handleSafeChange({ ...ficha, itensGerais: [...ficha.itensGerais, novoItem] });
     }
   };
 
@@ -303,28 +355,58 @@ export const FichaDetalheScreen: React.FC<Props> = ({
 
   // Renderizador centralizado do conteúdo de qualquer aba por chave
   const renderConteudoAba = (chave: AbaKey) => {
+    let conteudo = null;
     switch (chave) {
       case 'dados_cadastrais':
-        return <AbaDadosCadastrais ficha={ficha} onChange={onChange} />;
+        conteudo = <AbaDadosCadastrais ficha={ficha} onChange={handleSafeChange} />;
+        break;
       case 'atributos':
-        return <AbaAtributos ficha={ficha} onChange={onChange} />;
+        conteudo = <AbaAtributos ficha={ficha} onChange={handleSafeChange} />;
+        break;
       case 'pericias':
-        return <AbaPericias ficha={ficha} onChange={onChange} />;
+        conteudo = <AbaPericias ficha={ficha} onChange={handleSafeChange} />;
+        break;
       case 'habilidades_raca':
-        return <AbaHabilidadesRaca ficha={ficha} onChange={onChange} />;
+        conteudo = <AbaHabilidadesRaca ficha={ficha} onChange={handleSafeChange} />;
+        break;
       case 'habilidades_classe':
-        return <AbaHabilidadesClasse ficha={ficha} onChange={onChange} />;
+        conteudo = <AbaHabilidadesClasse ficha={ficha} onChange={handleSafeChange} />;
+        break;
       case 'manobras':
-        return <AbaManobras ficha={ficha} onChange={onChange} />;
+        conteudo = <AbaManobras ficha={ficha} onChange={handleSafeChange} />;
+        break;
       case 'talentos':
-        return <AbaTalentos ficha={ficha} onChange={onChange} />;
+        conteudo = <AbaTalentos ficha={ficha} onChange={handleSafeChange} />;
+        break;
       case 'magias':
-        return <AbaMagias ficha={ficha} onChange={onChange} />;
+        conteudo = <AbaMagias ficha={ficha} onChange={handleSafeChange} />;
+        break;
       case 'equipamentos':
-        return <AbaEquipamentos ficha={ficha} onChange={onChange} />;
+        conteudo = <AbaEquipamentos ficha={ficha} onChange={handleSafeChange} />;
+        break;
       default:
         return null;
     }
+
+    return (
+      <View
+        style={[styles.abaConteudoWrapper, isReadOnly && styles.abaConteudoReadOnly]}
+        // @ts-ignore
+        className={isReadOnly ? 'trpg-readonly-mode' : undefined}
+      >
+        {isReadOnly && (
+          <View style={styles.bannerReadOnlyAba}>
+            <Text style={styles.bannerReadOnlyAbaIcon}>🔒</Text>
+            <Text style={styles.bannerReadOnlyAbaText}>
+              Ficha em modo somente leitura (Dono:{' '}
+              <Text style={styles.bannerReadOnlyAbaBold}>{ficha.donoNome || 'Outro Jogador'}</Text>
+              ). Edição desabilitada.
+            </Text>
+          </View>
+        )}
+        {conteudo}
+      </View>
+    );
   };
 
   // Barra de abas reutilizável com botão de Organizar e botões de rolagem lateral rápida
@@ -493,9 +575,18 @@ export const FichaDetalheScreen: React.FC<Props> = ({
           </TouchableOpacity>
 
           <View style={styles.titleCol}>
-            <Text style={styles.titleText} numberOfLines={1} ellipsizeMode="tail">
-              {ficha.nomePersonagem?.trim() || 'Ficha de Personagem'}
-            </Text>
+            <View style={styles.titleWithBadgeRow}>
+              <Text style={styles.titleText} numberOfLines={1} ellipsizeMode="tail">
+                {ficha.nomePersonagem?.trim() || 'Ficha de Personagem'}
+              </Text>
+              {isReadOnly && (
+                <View style={styles.badgeReadOnlyHeader}>
+                  <Text style={styles.badgeReadOnlyHeaderText} numberOfLines={1}>
+                    👁️ Somente Leitura (Dono: {ficha.donoNome || 'Outro Jogador'})
+                  </Text>
+                </View>
+              )}
+            </View>
             <Text style={styles.subtitleText} numberOfLines={1} ellipsizeMode="tail">
               {isDesktop
                 ? subtituloDesktop || 'Tormenta RPG'
@@ -533,12 +624,27 @@ export const FichaDetalheScreen: React.FC<Props> = ({
               </TouchableOpacity>
             )}
 
+            {!isReadOnly && usuarioAtual && (
+              <TouchableOpacity
+                style={styles.btnCompartilharTop}
+                onPress={() => setModalCompartilharAberto(true)}
+                activeOpacity={0.8}
+              >
+                <Text style={styles.btnCompartilharTopText}>
+                  {isDesktop ? '👥 Compartilhar' : '👥'}
+                </Text>
+              </TouchableOpacity>
+            )}
+
             <TouchableOpacity style={styles.exportBtn} onPress={onExportar} activeOpacity={0.8}>
               <Text style={styles.exportBtnText}>Exportar</Text>
             </TouchableOpacity>
-            <TouchableOpacity style={styles.saveBtn} onPress={handleSalvarClick} activeOpacity={0.8}>
-              <Text style={styles.saveBtnText}>Salvar</Text>
-            </TouchableOpacity>
+
+            {!isReadOnly && (
+              <TouchableOpacity style={styles.saveBtn} onPress={handleSalvarClick} activeOpacity={0.8}>
+                <Text style={styles.saveBtnText}>Salvar</Text>
+              </TouchableOpacity>
+            )}
           </View>
         </View>
       </View>
@@ -628,13 +734,24 @@ export const FichaDetalheScreen: React.FC<Props> = ({
         onFechar={() => setCompendioGeralAberto(false)}
         abaInicial="talentos"
         fichaAtual={ficha}
-        onAtualizarFichaAtual={onChange}
+        onAtualizarFichaAtual={handleSafeChange}
         onAdicionarTalentoAFicha={handleAdicionarTalento}
         onAdicionarMagiaAFicha={handleAdicionarMagia}
         onAplicarRacaAFicha={handleAplicarRaca}
         onAplicarClasseAFicha={handleAplicarClasse}
         onAdicionarEquipamentoAFicha={handleAdicionarEquipamento}
         onAdicionarManobraAFicha={handleAdicionarManobra}
+      />
+
+      {/* Modal de Compartilhamento de Ficha */}
+      <ModalCompartilharFicha
+        visivel={modalCompartilharAberto}
+        ficha={ficha}
+        usuarioAtual={usuarioAtual || null}
+        onFechar={() => setModalCompartilharAberto(false)}
+        onFichaAtualizada={(fAtualizada) => {
+          onChange(fAtualizada);
+        }}
       />
     </KeyboardAvoidingView>
   );
@@ -683,10 +800,29 @@ const styles = StyleSheet.create({
     flexShrink: 1,
     paddingHorizontal: 4,
   },
+  titleWithBadgeRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
+    flexWrap: 'wrap',
+  },
   titleText: {
     color: COLORS.white,
     fontWeight: 'bold',
     fontSize: 15,
+  },
+  badgeReadOnlyHeader: {
+    backgroundColor: 'rgba(59, 130, 246, 0.25)',
+    borderWidth: 1,
+    borderColor: '#60A5FA',
+    borderRadius: 4,
+    paddingHorizontal: 6,
+    paddingVertical: 1,
+  },
+  badgeReadOnlyHeaderText: {
+    color: '#BFDBFE',
+    fontSize: 11,
+    fontWeight: 'bold',
   },
   subtitleText: {
     color: 'rgba(255,255,255,0.88)',
@@ -698,6 +834,20 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     gap: 6,
     flexShrink: 0,
+  },
+  btnCompartilharTop: {
+    backgroundColor: 'rgba(217, 119, 6, 0.25)',
+    borderWidth: 1,
+    borderColor: '#F59E0B',
+    paddingHorizontal: 9,
+    paddingVertical: 6,
+    borderRadius: 6,
+    flexShrink: 0,
+  },
+  btnCompartilharTopText: {
+    color: '#FDE68A',
+    fontWeight: 'bold',
+    fontSize: 12,
   },
   compendioTopBtn: {
     backgroundColor: 'rgba(255,255,255,0.18)',
@@ -967,5 +1117,38 @@ const styles = StyleSheet.create({
   },
   contentWrap: {
     flex: 1,
+  },
+  abaConteudoWrapper: {
+    flex: 1,
+  },
+  abaConteudoReadOnly: {
+    opacity: 0.96,
+  },
+  bannerReadOnlyAba: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
+    backgroundColor: '#EFF6FF',
+    borderWidth: 1,
+    borderColor: '#93C5FD',
+    borderRadius: 8,
+    paddingHorizontal: 14,
+    paddingVertical: 10,
+    marginHorizontal: 16,
+    marginTop: 12,
+    marginBottom: 4,
+  },
+  bannerReadOnlyAbaIcon: {
+    fontSize: 16,
+  },
+  bannerReadOnlyAbaText: {
+    flex: 1,
+    fontSize: 13,
+    color: '#1E40AF',
+    fontWeight: '500',
+  },
+  bannerReadOnlyAbaBold: {
+    fontWeight: 'bold',
+    color: '#1E3A8A',
   },
 });

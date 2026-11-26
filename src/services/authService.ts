@@ -12,6 +12,7 @@ import {
   User,
 } from 'firebase/auth';
 import { auth, firebaseConfig, isFirebaseConfigured } from './firebase';
+import { registrarPerfilUsuario } from './sharingService';
 
 function isWebEnvironment(): boolean {
   try {
@@ -124,6 +125,7 @@ export async function loginComEmail(email: string, pass: string): Promise<Respos
 
   try {
     const credencial = await signInWithEmailAndPassword(auth, emailTrim, pass);
+    registrarPerfilUsuario(credencial.user).catch(() => {});
     return { sucesso: true, usuario: credencial.user };
   } catch (error: any) {
     return {
@@ -186,6 +188,7 @@ export async function cadastrarComEmail(
     } catch {
       // Fallback pontual caso updateProfile falhe
     }
+    registrarPerfilUsuario(credencial.user, usernameTrim).catch(() => {});
     return { sucesso: true, usuario: credencial.user };
   } catch (error: any) {
     return {

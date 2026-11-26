@@ -28,7 +28,7 @@ Repositório Oficial: [https://github.com/llorenzus/tormenta-rpg-gerenciador-fic
 ## 📋 Funcionalidades Principais
 
 ### 1. Ficha Completa de Personagem (9 Abas Customizáveis)
-1. **📋 Dados Cadastrais**: Nome do Personagem, Jogador, Raça, Multiclasse dinâmica (múltiplas classes com nível individual e cálculo do Nível Total), Tendência, Divindade, Tamanho e Deslocamento.
+1. **📋 Dados Cadastrais**: Nome do Personagem, Jogador, Campanha / Mesa, Raça, Multiclasse dinâmica (múltiplas classes com nível individual e cálculo do Nível Total), Tendência, Divindade, Tamanho e Deslocamento.
 2. **🛡️ Atributos & Combate**:
    - Força, Destreza, Constituição, Inteligência, Sabedoria e Carisma com cálculo automático de modificadores oficiais.
    - Recursos vitais: PV (Pontos de Vida), PM (Pontos de Magia), PE (Pontos de Energia) e PA (Pontos de Ação).
@@ -42,7 +42,16 @@ Repositório Oficial: [https://github.com/llorenzus/tormenta-rpg-gerenciador-fic
 8. **✨ Magias (Grimório)**: Organização clara por círculos/níveis de magia (**0 ao 9º nível**), identificação de escola, tipo (Arcana/Divina), tempo de execução, alcance, duração e custo em PM.
 9. **🎒 Equipamentos**: Armas com cálculo dinâmico de Acerto Total e dano, armaduras e escudos com aplicação direta na CA, itens gerais e controle financeiro em Tibares (**TO, TP, TC**).
 
-### 2. Compêndio Oficial Integrado
+### 2. Sincronização em Nuvem e Compartilhamento de Fichas (v1.3.0)
+- **Autenticação e Nuvem**: Login com e-mail/senha integrado ao Firebase com sincronização em nuvem e resolução de conflitos offline/online.
+- **Compartilhamento de Fichas**: Compartilhe suas fichas diretamente com outros jogadores através do nome de usuário ou e-mail cadastrado.
+- **Abas Separadas na Home**:
+  - **Meus Personagens**: Gerenciamento e edição completa dos personagens da sua conta.
+  - **Personagens Compartilhados**: Acesso às fichas compartilhadas por outros jogadores da sua mesa.
+- **Modo Somente Leitura Dinâmico**: Fichas compartilhadas sincronizam alterações feitas pelo dono (como dano, perda de PV/PM ou novos itens) mantendo a edição desabilitada para os demais jogadores.
+- **Filtro Avançado de Fichas**: Filtre personagens compartilhados por nome do personagem, jogador/dono ou nome da campanha em tempo real.
+
+### 3. Compêndio Oficial Integrado
 Consulta rápida e adição com 1 clique de itens dos manuais oficiais:
 - 📕 **Tormenta RPG – Edição Básica Revisada**
 - 🔮 **Manual do Arcano**
@@ -50,7 +59,7 @@ Consulta rápida e adição com 1 clique de itens dos manuais oficiais:
 - ⚖️ **Manual do Devoto**
 - 🐉 **Guia da Trilogia**
 
-### 3. Recursos de Usabilidade
+### 4. Recursos de Usabilidade
 - **Reordenação Livre de Abas**: Alterne a sequência das abas da ficha para priorizar o que você mais consulta na sua classe (ex: Magias na frente para conjuradores ou Manobras para combatentes).
 - **Exportação para PDF e Backup**: Geração de arquivo PDF estilizado para impressão e compartilhamento, além de exportação/importação de arquivos JSON para backup das fichas.
 

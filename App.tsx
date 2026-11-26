@@ -65,6 +65,10 @@ import {
   enviarFichaParaNuvem,
   excluirFichaDaNuvem,
 } from './src/services/syncService';
+import {
+  observarFichasCompartilhadasComigo,
+  registrarPerfilUsuario,
+} from './src/services/sharingService';
 
 const obterNomeJogadorAtual = (user: User | null): string => {
   if (!user) return '';
@@ -74,6 +78,7 @@ const obterNomeJogadorAtual = (user: User | null): string => {
 export default function App() {
   const [iniciado, setIniciado] = useState(false);
   const [fichas, setFichas] = useState<FichaPersonagem[]>([]);
+  const [fichasCompartilhadas, setFichasCompartilhadas] = useState<FichaPersonagem[]>([]);
   const [fichaAberta, setFichaAberta] = useState<FichaPersonagem | null>(null);
   const [compendioGeralAberto, setCompendioGeralAberto] = useState(false);
   const [fichaParaExportar, setFichaParaExportar] = useState<FichaPersonagem | null>(null);
@@ -267,6 +272,36 @@ export default function App() {
     };
   }, []);
 
+  // Escuta em tempo real fichas compartilhadas com o usuário logado
+  useEffect(() => {
+    if (!usuarioAtual) {
+      setFichasCompartilhadas([]);
+      return;
+    }
+
+    // Registra perfil público para busca por outros usuários
+    registrarPerfilUsuario(usuarioAtual).catch(() => {});
+
+    // Listener Firestore onSnapshot em tempo real
+    const unsubShared = observarFichasCompartilhadasComigo(
+      usuarioAtual.uid,
+      (listaShared) => {
+        setFichasCompartilhadas(listaShared);
+        // Sincronização em tempo real: se a ficha compartilhada estiver aberta na tela,
+        // atualiza os PVs e dados imediatamente quando o dono alterar e salvar!
+        setFichaAberta((atual) => {
+          if (!atual || !atual.isCompartilhadaComigo) return atual;
+          const atualizada = listaShared.find((s) => s.id === atual.id);
+          return atualizada || atual;
+        });
+      }
+    );
+
+    return () => {
+      unsubShared();
+    };
+  }, [usuarioAtual]);
+
   const handleVoltarDaFicha = async () => {
     if (salvarDebounceRef.current) {
       clearTimeout(salvarDebounceRef.current);
@@ -282,6 +317,12 @@ export default function App() {
     fichaPendenteNuvemRef.current = null;
 
     if (!fichaAlvo) {
+      setFichaAberta(null);
+      return;
+    }
+
+    // Se a ficha é compartilhada (somente leitura), apenas fecha sem sobrescrever fichas locais
+    if (fichaAlvo.isCompartilhadaComigo) {
       setFichaAberta(null);
       return;
     }
@@ -348,6 +389,11 @@ export default function App() {
   };
 
   const handleAtualizarFicha = (editada: FichaPersonagem) => {
+    // Fichas compartilhadas por outros jogadores são estritamente somente leitura
+    if (editada.isCompartilhadaComigo) {
+      return;
+    }
+
     const user = usuarioAtual || obterUsuarioAtual();
     if (user?.uid && !editada.userId) {
       editada.userId = user.uid;
@@ -414,6 +460,7 @@ export default function App() {
     fichaPendenteNuvemRef.current = null;
 
     if (!fichaAlvo) return false;
+    if (fichaAlvo.isCompartilhadaComigo) return true;
 
     let fichaFinal: FichaPersonagem;
     const nomeTrim = fichaAlvo.nomePersonagem?.trim();
@@ -777,6 +824,8 @@ export default function App() {
         ) : fichaAberta ? (
           <FichaDetalheScreen
             ficha={fichaAberta}
+            somenteLeitura={!!fichaAberta.isCompartilhadaComigo}
+            usuarioAtual={usuarioAtual}
             onChange={handleAtualizarFicha}
             onSalvarManual={handleSalvarManual}
             onExportar={() => handleExportarFicha(fichaAberta)}
@@ -785,17 +834,22 @@ export default function App() {
         ) : (
           <ListaFichasScreen
             fichas={fichas}
+            fichasCompartilhadas={fichasCompartilhadas}
             usuarioAtual={usuarioAtual}
             onAbrirConta={() => setModalContaVisivel(true)}
             onCriarNova={handleCriarNova}
             onImportarFicha={handleImportarFicha}
             onExportarFicha={handleExportarFicha}
             onAbrirFicha={(f) => {
-              const user = usuarioAtual || obterUsuarioAtual();
-              const nomeJogador = obterNomeJogadorAtual(user);
-              const fichaComJogador =
-                nomeJogador && f.jogador !== nomeJogador ? { ...f, jogador: nomeJogador } : f;
-              setFichaAberta(fichaComJogador);
+              if (f.isCompartilhadaComigo) {
+                setFichaAberta(f);
+              } else {
+                const user = usuarioAtual || obterUsuarioAtual();
+                const nomeJogador = obterNomeJogadorAtual(user);
+                const fichaComJogador =
+                  nomeJogador && f.jogador !== nomeJogador ? { ...f, jogador: nomeJogador } : f;
+                setFichaAberta(fichaComJogador);
+              }
             }}
             onExcluirFicha={handleExcluirFicha}
             onAbrirCompendio={() => setCompendioGeralAberto(true)}
