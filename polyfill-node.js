@@ -8,3 +8,8 @@ if (typeof URL !== 'undefined' && typeof URL.parse !== 'function') {
     }
   };
 }
+
+if (typeof globalThis.__DEV__ === 'undefined') {
+  globalThis.__DEV__ = false;
+}
+

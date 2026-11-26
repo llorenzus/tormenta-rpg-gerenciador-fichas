@@ -10,6 +10,7 @@ import {
 } from 'react-native';
 import { CompendioModal } from './src/components/CompendioModal';
 import { ModalAtualizacao } from './src/components/ModalAtualizacao';
+import { ModalContaNuvem } from './src/components/ModalContaNuvem';
 import { ModalExportarFicha } from './src/components/ModalExportarFicha';
 import {
   ClasseData,
@@ -50,6 +51,13 @@ import {
 } from './src/storage/fichaStorage';
 import { COLORS } from './src/theme/colors';
 import { checarAtualizacaoOnline, InfoAtualizacao } from './src/utils/updateChecker';
+import { User } from 'firebase/auth';
+import { observarEstadoAuth } from './src/services/authService';
+import {
+  sincronizarPrimeiroLogin,
+  enviarFichaParaNuvem,
+  excluirFichaDaNuvem,
+} from './src/services/syncService';
 
 export default function App() {
   const [iniciado, setIniciado] = useState(false);
@@ -59,16 +67,25 @@ export default function App() {
   const [fichaParaExportar, setFichaParaExportar] = useState<FichaPersonagem | null>(null);
   const [infoAtualizacao, setInfoAtualizacao] = useState<InfoAtualizacao | null>(null);
   const [modalAtualizacaoVisivel, setModalAtualizacaoVisivel] = useState(false);
+  const [usuarioAtual, setUsuarioAtual] = useState<User | null>(null);
+  const [modalContaVisivel, setModalContaVisivel] = useState(false);
 
   // Debounce e ref para persistência assíncrona fluída no mobile sem travar a thread JS
   const salvarDebounceRef = useRef<NodeJS.Timeout | null>(null);
   const fichaPendenteSalvarRef = useRef<FichaPersonagem | null>(null);
 
-  // Limpa timer se desmontar
+  // Debounce de 2.5s para economizar as 20.000 escritas diárias gratuitas do Cloud Firestore
+  const salvarNuvemDebounceRef = useRef<NodeJS.Timeout | null>(null);
+  const fichaPendenteNuvemRef = useRef<FichaPersonagem | null>(null);
+
+  // Limpa timers se desmontar
   useEffect(() => {
     return () => {
       if (salvarDebounceRef.current) {
         clearTimeout(salvarDebounceRef.current);
+      }
+      if (salvarNuvemDebounceRef.current) {
+        clearTimeout(salvarNuvemDebounceRef.current);
       }
     };
   }, []);
@@ -102,6 +119,25 @@ export default function App() {
       window.addEventListener('focus', sincronizarFichas);
     }
 
+    // Observa o estado de autenticação do usuário (login/logout)
+    const unsubAuth = observarEstadoAuth((user) => {
+      setUsuarioAtual(user);
+      if (user) {
+        // Executa a primeira sincronização / merge seguro sem apagar fichas locais
+        sincronizarPrimeiroLogin(user.uid)
+          .then((listaConsolidada) => {
+            setFichas(listaConsolidada);
+            setFichaAberta((atual) => {
+              if (!atual) return atual;
+              return listaConsolidada.find((f) => f.id === atual.id) || atual;
+            });
+          })
+          .catch((err) => {
+            console.warn('Erro ao mesclar dados com a nuvem:', err);
+          });
+      }
+    });
+
     // No Windows Desktop (Electron) e Web, garante o cursor de mãozinha (pointer) em abas e botões
     if (Platform.OS === 'web' && typeof document !== 'undefined') {
       const styleId = 'trpg-pointer-cursor-fix';
@@ -118,6 +154,7 @@ export default function App() {
     }
 
     return () => {
+      unsubAuth();
       if (Platform.OS === 'web' && typeof window !== 'undefined') {
         window.removeEventListener('storage', sincronizarFichas);
         window.removeEventListener('focus', sincronizarFichas);
@@ -130,9 +167,14 @@ export default function App() {
       clearTimeout(salvarDebounceRef.current);
       salvarDebounceRef.current = null;
     }
+    if (salvarNuvemDebounceRef.current) {
+      clearTimeout(salvarNuvemDebounceRef.current);
+      salvarNuvemDebounceRef.current = null;
+    }
 
     const fichaAlvo = fichaPendenteSalvarRef.current || fichaAberta;
     fichaPendenteSalvarRef.current = null;
+    fichaPendenteNuvemRef.current = null;
 
     if (!fichaAlvo) {
       setFichaAberta(null);
@@ -140,16 +182,22 @@ export default function App() {
     }
 
     const nomeTrim = fichaAlvo.nomePersonagem?.trim();
+    let fichaFinal: FichaPersonagem;
 
     // Se o nome ficou vazio ao sair, gera o próximo nome padrão
     if (!nomeTrim) {
       const nomePadrao = gerarProximoNomePadrao(fichas, fichaAlvo.id);
-      const fichaSalva = { ...fichaAlvo, nomePersonagem: nomePadrao };
-      const listaAtualizada = await salvarFichaLocal(fichaSalva);
-      setFichas(listaAtualizada);
+      fichaFinal = { ...fichaAlvo, nomePersonagem: nomePadrao };
     } else {
-      const listaAtualizada = await salvarFichaLocal(fichaAlvo);
-      setFichas(listaAtualizada);
+      fichaFinal = fichaAlvo;
+    }
+
+    const listaAtualizada = await salvarFichaLocal(fichaFinal);
+    setFichas(listaAtualizada);
+
+    // Se logado, envia a versão final imediata para o Firestore
+    if (usuarioAtual) {
+      enviarFichaParaNuvem(usuarioAtual.uid, fichaFinal).catch(() => {});
     }
 
     setFichaAberta(null);
@@ -202,6 +250,22 @@ export default function App() {
         setFichas(listaAtualizada);
       }
     }, 600);
+
+    // 3. Envio para a nuvem no Firestore com debounce de 2.5s para economizar cota diária
+    if (usuarioAtual) {
+      fichaPendenteNuvemRef.current = editada;
+      if (salvarNuvemDebounceRef.current) {
+        clearTimeout(salvarNuvemDebounceRef.current);
+      }
+      salvarNuvemDebounceRef.current = setTimeout(async () => {
+        salvarNuvemDebounceRef.current = null;
+        if (fichaPendenteNuvemRef.current && usuarioAtual) {
+          const alvoNuvem = fichaPendenteNuvemRef.current;
+          fichaPendenteNuvemRef.current = null;
+          await enviarFichaParaNuvem(usuarioAtual.uid, alvoNuvem);
+        }
+      }, 2500);
+    }
   };
 
   const handleSalvarManual = async (): Promise<boolean> => {
@@ -209,9 +273,14 @@ export default function App() {
       clearTimeout(salvarDebounceRef.current);
       salvarDebounceRef.current = null;
     }
+    if (salvarNuvemDebounceRef.current) {
+      clearTimeout(salvarNuvemDebounceRef.current);
+      salvarNuvemDebounceRef.current = null;
+    }
 
     const fichaAlvo = fichaPendenteSalvarRef.current || fichaAberta;
     fichaPendenteSalvarRef.current = null;
+    fichaPendenteNuvemRef.current = null;
 
     if (!fichaAlvo) return false;
 
@@ -229,12 +298,24 @@ export default function App() {
     setFichaAberta(fichaFinal);
     const listaAtualizada = await salvarFichaLocal(fichaFinal);
     setFichas(listaAtualizada);
+
+    // Sincroniza imediatamente na nuvem ao acionar salvamento manual
+    if (usuarioAtual) {
+      enviarFichaParaNuvem(usuarioAtual.uid, fichaFinal).catch(() => {});
+    }
+
     return true;
   };
 
   const handleExcluirFicha = async (id: string) => {
     const listaAtualizada = await excluirFichaLocal(id);
     setFichas(listaAtualizada);
+
+    // Se logado, remove a ficha correspondente da nuvem
+    if (usuarioAtual) {
+      excluirFichaDaNuvem(usuarioAtual.uid, id).catch(() => {});
+    }
+
     if (fichaAberta?.id === id) {
       setFichaAberta(null);
     }
@@ -541,7 +622,11 @@ export default function App() {
       <StatusBar barStyle="light-content" />
       <View style={styles.container}>
         {!iniciado ? (
-          <TelaInicialScreen onIniciar={() => setIniciado(true)} />
+          <TelaInicialScreen
+            onIniciar={() => setIniciado(true)}
+            usuarioAtual={usuarioAtual}
+            onAbrirConta={() => setModalContaVisivel(true)}
+          />
         ) : fichaAberta ? (
           <FichaDetalheScreen
             ficha={fichaAberta}
@@ -553,6 +638,8 @@ export default function App() {
         ) : (
           <ListaFichasScreen
             fichas={fichas}
+            usuarioAtual={usuarioAtual}
+            onAbrirConta={() => setModalContaVisivel(true)}
             onCriarNova={handleCriarNova}
             onImportarFicha={handleImportarFicha}
             onExportarFicha={handleExportarFicha}
@@ -585,6 +672,12 @@ export default function App() {
           visivel={modalAtualizacaoVisivel}
           info={infoAtualizacao}
           onFechar={() => setModalAtualizacaoVisivel(false)}
+        />
+
+        <ModalContaNuvem
+          visivel={modalContaVisivel}
+          usuarioAtual={usuarioAtual}
+          onFechar={() => setModalContaVisivel(false)}
         />
       </View>
     </SafeAreaView>

@@ -10,18 +10,37 @@ import {
 } from 'react-native';
 import { COLORS } from '../theme/colors';
 import { checarAtualizacaoOnline, InfoAtualizacao, VERSAO_ATUAL } from '../utils/updateChecker';
+import { exportarBackupCompletoLocal } from '../storage/fichaStorage';
 import { ModalAtualizacao } from './ModalAtualizacao';
 
 interface Props {
   visivel: boolean;
   onFechar: () => void;
+  onAbrirConta?: () => void;
 }
 
-export const ModalSobre: React.FC<Props> = ({ visivel, onFechar }) => {
+export const ModalSobre: React.FC<Props> = ({ visivel, onFechar, onAbrirConta }) => {
   const [verificando, setVerificando] = useState(false);
   const [mensagemStatus, setMensagemStatus] = useState<string | null>(null);
   const [infoAtualizacao, setInfoAtualizacao] = useState<InfoAtualizacao | null>(null);
   const [modalAtualizacaoVisivel, setModalAtualizacaoVisivel] = useState(false);
+  const [exportandoBackup, setExportandoBackup] = useState(false);
+  const [mensagemBackup, setMensagemBackup] = useState<string | null>(null);
+
+  const handleExportarBackup = async () => {
+    setExportandoBackup(true);
+    setMensagemBackup(null);
+    try {
+      const ok = await exportarBackupCompletoLocal();
+      if (ok) {
+        setMensagemBackup('✅ Backup completo (.json) exportado com sucesso!');
+      }
+    } catch {
+      setMensagemBackup('⚠️ Não foi possível exportar o backup.');
+    } finally {
+      setExportandoBackup(false);
+    }
+  };
 
   const handleVerificarAtualizacao = async () => {
     setVerificando(true);
@@ -93,6 +112,38 @@ export const ModalSobre: React.FC<Props> = ({ visivel, onFechar }) => {
                     {mensagemStatus && (
                       <View style={styles.statusMessageBox}>
                         <Text style={styles.statusMessageText}>{mensagemStatus}</Text>
+                      </View>
+                    )}
+
+                    {onAbrirConta && (
+                      <TouchableOpacity
+                        style={styles.btnContaSection}
+                        onPress={() => {
+                          handleFecharTudo();
+                          onAbrirConta();
+                        }}
+                        activeOpacity={0.8}
+                      >
+                        <Text style={styles.btnContaSectionText}>☁️ Gerenciar Conta e Nuvem</Text>
+                      </TouchableOpacity>
+                    )}
+
+                    <TouchableOpacity
+                      style={styles.btnBackupSection}
+                      onPress={handleExportarBackup}
+                      disabled={exportandoBackup}
+                      activeOpacity={0.8}
+                    >
+                      {exportandoBackup ? (
+                        <ActivityIndicator size="small" color={COLORS.primaryDark} />
+                      ) : (
+                        <Text style={styles.btnBackupSectionText}>📦 Exportar Backup (.json)</Text>
+                      )}
+                    </TouchableOpacity>
+
+                    {mensagemBackup && (
+                      <View style={styles.statusMessageBox}>
+                        <Text style={styles.statusMessageText}>{mensagemBackup}</Text>
                       </View>
                     )}
                   </View>
@@ -210,6 +261,34 @@ const styles = StyleSheet.create({
   },
   btnCheckUpdateDisabled: {
     opacity: 0.6,
+  },
+  btnContaSection: {
+    marginTop: 8,
+    paddingHorizontal: 16,
+    paddingVertical: 7,
+    backgroundColor: COLORS.surface,
+    borderRadius: 16,
+    borderWidth: 1,
+    borderColor: COLORS.primary,
+  },
+  btnContaSectionText: {
+    fontSize: 11.5,
+    fontWeight: '600',
+    color: COLORS.primaryDark,
+  },
+  btnBackupSection: {
+    marginTop: 8,
+    paddingHorizontal: 16,
+    paddingVertical: 7,
+    backgroundColor: COLORS.surfaceVariant,
+    borderRadius: 16,
+    borderWidth: 1,
+    borderColor: COLORS.gold,
+  },
+  btnBackupSectionText: {
+    fontSize: 11.5,
+    fontWeight: '600',
+    color: COLORS.primaryDark,
   },
   loadingRow: {
     flexDirection: 'row',

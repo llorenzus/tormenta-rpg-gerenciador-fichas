@@ -18,7 +18,7 @@
     "web": "node -r ./polyfill-node.js node_modules/expo/bin/cli start --web",
     "export:web": "node -r ./polyfill-node.js node_modules/expo/bin/cli export -p web",
     "electron": "node electron/run.js",
-    "test": "tsx --test tests/layout_consistencia_plataformas.test.ts tests/regras_calculos_ficha.test.ts tests/regras_compendio_conversao.test.ts tests/regras_prerequisitos_talentos.test.ts tests/updateChecker.test.ts",
+    "test": "tsx --import ./polyfill-node.js --test tests/layout_consistencia_plataformas.test.ts tests/regras_calculos_ficha.test.ts tests/regras_compendio_conversao.test.ts tests/regras_prerequisitos_talentos.test.ts tests/updateChecker.test.ts tests/firebaseConfig.test.ts tests/authService.test.ts tests/syncService.test.ts",
     "build:windows": "node -r ./polyfill-node.js node_modules/expo/bin/cli export -p web && electron-builder --win --x64 --publish never"
   },
   "dependencies": {
@@ -31,6 +31,7 @@
     "expo-print": "~58.0.9",
     "expo-sharing": "~58.0.23",
     "expo-status-bar": "~58.0.5",
+    "firebase": "^13.4.0",
     "react": "19.3.0",
     "react-dom": "19.3.0",
     "react-native": "0.88.1",

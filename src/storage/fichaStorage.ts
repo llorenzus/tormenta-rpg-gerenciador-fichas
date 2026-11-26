@@ -3,7 +3,15 @@ import * as DocumentPicker from 'expo-document-picker';
 import * as FileSystem from 'expo-file-system/legacy';
 import * as Print from 'expo-print';
 import * as Sharing from 'expo-sharing';
-import { Platform, Share } from 'react-native';
+let Platform: any = { OS: typeof window !== 'undefined' ? 'web' : 'node' };
+let Share: any = { share: async () => ({ action: 'dismissedAction' }) };
+try {
+  const rn = require('react-native');
+  if (rn.Platform) Platform = rn.Platform;
+  if (rn.Share) Share = rn.Share;
+} catch {
+  // Ambiente Node / Testes
+}
 import {
   FichaPersonagem,
   criarPericiasPadrao,
@@ -12,8 +20,12 @@ import {
   obterClassesFicha,
   calcularNivelTotal,
   formatarResumoClasses,
+  normalizarFicha,
 } from '../models/ficha';
 import { gerarHtmlFichaPdf } from './fichaPdfGenerator';
+import { VERSAO_ATUAL } from '../utils/updateChecker';
+
+export { normalizarFicha };
 
 const STORAGE_KEY = '@tormenta_rpg:fichas_v1';
 
@@ -24,58 +36,12 @@ export interface EnvelopeExportacaoFicha {
   ficha: FichaPersonagem;
 }
 
-export function normalizarFicha(ficha: FichaPersonagem): FichaPersonagem {
-  const classesNormalizadas = obterClassesFicha(ficha);
-  const nivelCalculado = calcularNivelTotal(classesNormalizadas);
-  const resumoClasse = formatarResumoClasses(classesNormalizadas);
-
-  return {
-    ...ficha,
-    classes: classesNormalizadas,
-    nivel: nivelCalculado > 0 ? nivelCalculado : Math.max(1, Number(ficha.nivel) || 1),
-    classe: resumoClasse || ficha.classe || '',
-    forca: Number.isFinite(ficha.forca) ? ficha.forca : 10,
-
-    destreza: Number.isFinite(ficha.destreza) ? ficha.destreza : 10,
-    constituicao: Number.isFinite(ficha.constituicao) ? ficha.constituicao : 10,
-    inteligencia: Number.isFinite(ficha.inteligencia) ? ficha.inteligencia : 10,
-    sabedoria: Number.isFinite(ficha.sabedoria) ? ficha.sabedoria : 10,
-    carisma: Number.isFinite(ficha.carisma) ? ficha.carisma : 10,
-    pvTotal: Number.isFinite(ficha.pvTotal) ? ficha.pvTotal : 10,
-    pvAtual: Number.isFinite(ficha.pvAtual) ? ficha.pvAtual : 10,
-    pvBonus: Number.isFinite(ficha.pvBonus) ? Number(ficha.pvBonus) : 0,
-    pmTotal: Number.isFinite(ficha.pmTotal) ? ficha.pmTotal : 0,
-    pmAtual: Number.isFinite(ficha.pmAtual) ? ficha.pmAtual : 0,
-    pmBonus: Number.isFinite(ficha.pmBonus) ? Number(ficha.pmBonus) : 0,
-    bba: Number.isFinite(ficha.bba) ? ficha.bba : 0,
-    caBonusTamanho: Number.isFinite(ficha.caBonusTamanho) ? ficha.caBonusTamanho : 0,
-    caOutrosBonus: Number.isFinite(ficha.caOutrosBonus) ? ficha.caOutrosBonus : 0,
-    fortitudeOutros: Number.isFinite(ficha.fortitudeOutros) ? ficha.fortitudeOutros : 0,
-    reflexosOutros: Number.isFinite(ficha.reflexosOutros) ? ficha.reflexosOutros : 0,
-    vontadeOutros: Number.isFinite(ficha.vontadeOutros) ? ficha.vontadeOutros : 0,
-    pericias:
-      Array.isArray(ficha.pericias) && ficha.pericias.length > 0
-        ? garantirPericiasPadrao(ficha.pericias)
-        : criarPericiasPadrao(),
-    habilidadesRaca: Array.isArray(ficha.habilidadesRaca) ? ficha.habilidadesRaca : [],
-    habilidadesClasse: Array.isArray(ficha.habilidadesClasse) ? ficha.habilidadesClasse : [],
-    manobras: Array.isArray(ficha.manobras) ? ficha.manobras : [],
-    talentos: Array.isArray(ficha.talentos) ? ficha.talentos : [],
-    magias: Array.isArray(ficha.magias) ? ficha.magias : [],
-    armas: Array.isArray(ficha.armas)
-      ? ficha.armas.map((a) => ({
-          ...a,
-          usaDestreza: !!a.usaDestreza,
-          outrosBonus: Number.isFinite(a.outrosBonus) ? Number(a.outrosBonus) : 0,
-          habilidadesMagicas: Array.isArray(a.habilidadesMagicas) ? a.habilidadesMagicas : [],
-        }))
-      : [],
-    armaduras: Array.isArray(ficha.armaduras) ? ficha.armaduras : [],
-    itensGerais: Array.isArray(ficha.itensGerais) ? ficha.itensGerais : [],
-    tibares: ficha.tibares || '',
-    ordemAbas: Array.isArray(ficha.ordemAbas) ? ficha.ordemAbas : undefined,
-    buffsTemporarios: ficha.buffsTemporarios || undefined,
-  };
+export interface EnvelopeBackupCompleto {
+  tipoArquivo: 'TORMENTA_RPG_BACKUP_COMPLETO';
+  versaoApp: string;
+  exportadoEm: string;
+  totalFichas: number;
+  fichas: FichaPersonagem[];
 }
 
 export async function carregarFichasLocais(): Promise<FichaPersonagem[]> {
@@ -95,9 +61,11 @@ export async function carregarFichasLocais(): Promise<FichaPersonagem[]> {
 
 export async function salvarFichaLocal(ficha: FichaPersonagem): Promise<FichaPersonagem[]> {
   const atuais = await carregarFichasLocais();
+  const agora = Date.now();
   const atualizada = normalizarFicha({
     ...ficha,
-    atualizadoEm: Date.now(),
+    atualizadoEm: agora,
+    updatedAt: agora,
   });
   const index = atuais.findIndex((item) => item.id === atualizada.id);
   let novaLista: FichaPersonagem[];
@@ -107,9 +75,17 @@ export async function salvarFichaLocal(ficha: FichaPersonagem): Promise<FichaPer
   } else {
     novaLista = [atualizada, ...atuais];
   }
-  novaLista.sort((a, b) => (b.atualizadoEm || 0) - (a.atualizadoEm || 0));
+  novaLista.sort((a, b) => (b.updatedAt || b.atualizadoEm || 0) - (a.updatedAt || a.atualizadoEm || 0));
   await AsyncStorage.setItem(STORAGE_KEY, JSON.stringify(novaLista));
   return novaLista;
+}
+
+export async function salvarListaFichasLocais(fichas: FichaPersonagem[]): Promise<FichaPersonagem[]> {
+  const normalizadas = fichas
+    .map(normalizarFicha)
+    .sort((a, b) => (b.updatedAt || b.atualizadoEm || 0) - (a.updatedAt || a.atualizadoEm || 0));
+  await AsyncStorage.setItem(STORAGE_KEY, JSON.stringify(normalizadas));
+  return normalizadas;
 }
 
 export async function excluirFichaLocal(fichaId: string): Promise<FichaPersonagem[]> {
@@ -254,6 +230,74 @@ export async function salvarJsonNoAparelho(ficha: FichaPersonagem): Promise<bool
     await Sharing.shareAsync(fileUri, {
       mimeType: 'application/json',
       dialogTitle: `Salvar JSON - ${ficha.nomePersonagem || 'Personagem'}`,
+      UTI: 'public.json',
+    });
+    return true;
+  }
+
+  return false;
+}
+
+/**
+ * 2.1 EXPORTAR BACKUP COMPLETO (.JSON) DE TODAS AS FICHAS LOCAIS
+ */
+export async function exportarBackupCompletoLocal(): Promise<boolean> {
+  const fichas = await carregarFichasLocais();
+  const payload: EnvelopeBackupCompleto = {
+    tipoArquivo: 'TORMENTA_RPG_BACKUP_COMPLETO',
+    versaoApp: VERSAO_ATUAL,
+    exportadoEm: new Date().toISOString(),
+    totalFichas: fichas.length,
+    fichas,
+  };
+
+  const conteudoJson = JSON.stringify(payload, null, 2);
+  const dataFormatada = new Date().toISOString().replace(/[:.]/g, '-');
+  const nomeArquivo = `backup_fichas_tormenta_rpg_${dataFormatada}`;
+
+  // No Web / Desktop Windows
+  if (Platform.OS === 'web' && typeof document !== 'undefined') {
+    const blob = new Blob([conteudoJson], { type: 'application/json;charset=utf-8' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `${nomeArquivo}.json`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+    return true;
+  }
+
+  // No Android usando SAF
+  if (Platform.OS === 'android' && FileSystem.StorageAccessFramework) {
+    const permissao = await FileSystem.StorageAccessFramework.requestDirectoryPermissionsAsync();
+    if (!permissao.granted) {
+      return false;
+    }
+
+    const safUri = await FileSystem.StorageAccessFramework.createFileAsync(
+      permissao.directoryUri,
+      nomeArquivo,
+      'application/json'
+    );
+
+    await FileSystem.writeAsStringAsync(safUri, conteudoJson, {
+      encoding: FileSystem.EncodingType.UTF8,
+    });
+    return true;
+  }
+
+  // Fallback com Sharing nativo
+  const diretorio = FileSystem.documentDirectory || FileSystem.cacheDirectory;
+  if (diretorio) {
+    const fileUri = `${diretorio}${nomeArquivo}.json`;
+    await FileSystem.writeAsStringAsync(fileUri, conteudoJson, {
+      encoding: FileSystem.EncodingType.UTF8,
+    });
+    await Sharing.shareAsync(fileUri, {
+      mimeType: 'application/json',
+      dialogTitle: 'Exportar Backup Completo de Fichas',
       UTI: 'public.json',
     });
     return true;

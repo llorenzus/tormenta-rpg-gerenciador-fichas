@@ -1,13 +1,21 @@
 import React, { useState } from 'react';
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { User } from 'firebase/auth';
+import { IndicadorStatusNuvem } from '../components/ModalContaNuvem';
 import { ModalSobre } from '../components/ModalSobre';
 import { COLORS } from '../theme/colors';
 
 interface Props {
   onIniciar: () => void;
+  usuarioAtual?: User | null;
+  onAbrirConta?: () => void;
 }
 
-export const TelaInicialScreen: React.FC<Props> = ({ onIniciar }) => {
+export const TelaInicialScreen: React.FC<Props> = ({
+  onIniciar,
+  usuarioAtual,
+  onAbrirConta,
+}) => {
   const [sobreVisivel, setSobreVisivel] = useState(false);
 
   return (
@@ -18,6 +26,15 @@ export const TelaInicialScreen: React.FC<Props> = ({ onIniciar }) => {
         <View style={styles.authorBadge}>
           <Text style={styles.authorText}>Desenvolvido e produzido por Lorenzo Rech Tochetto</Text>
         </View>
+
+        {onAbrirConta && (
+          <View style={styles.cloudBadgeWrap}>
+            <IndicadorStatusNuvem
+              usuarioAtual={usuarioAtual || null}
+              onPress={onAbrirConta}
+            />
+          </View>
+        )}
       </View>
 
       <View style={styles.centerArea}>
@@ -33,20 +50,38 @@ export const TelaInicialScreen: React.FC<Props> = ({ onIniciar }) => {
       </View>
 
       <View style={styles.footerWrap}>
-        <Text style={styles.footerText}>Toque em Iniciar para acessar suas fichas</Text>
-        <TouchableOpacity
-          style={styles.btnSobre}
-          onPress={() => setSobreVisivel(true)}
-          activeOpacity={0.7}
-          accessibilityLabel="Informações e Aviso Legal"
-        >
-          <Text style={styles.btnSobreText}>ℹ️</Text>
-        </TouchableOpacity>
+        <Text style={styles.footerText}>
+          {usuarioAtual
+            ? 'Toque em Iniciar para acessar suas fichas sincronizadas'
+            : 'Toque em Iniciar para acessar suas fichas (com ou sem login)'}
+        </Text>
+        <View style={styles.footerButtonsRow}>
+          {onAbrirConta && (
+            <TouchableOpacity
+              style={styles.btnContaFooter}
+              onPress={onAbrirConta}
+              activeOpacity={0.7}
+            >
+              <Text style={styles.btnContaFooterText}>
+                {usuarioAtual ? '☁️ Minha Conta' : '☁️ Entrar / Nuvem'}
+              </Text>
+            </TouchableOpacity>
+          )}
+          <TouchableOpacity
+            style={styles.btnSobre}
+            onPress={() => setSobreVisivel(true)}
+            activeOpacity={0.7}
+            accessibilityLabel="Informações e Aviso Legal"
+          >
+            <Text style={styles.btnSobreText}>ℹ️</Text>
+          </TouchableOpacity>
+        </View>
       </View>
 
       <ModalSobre
         visivel={sobreVisivel}
         onFechar={() => setSobreVisivel(false)}
+        onAbrirConta={onAbrirConta}
       />
     </View>
   );
@@ -93,6 +128,10 @@ const styles = StyleSheet.create({
     fontWeight: '600',
     textAlign: 'center',
   },
+  cloudBadgeWrap: {
+    marginTop: 10,
+    alignItems: 'center',
+  },
   centerArea: {
     flex: 1,
     alignItems: 'center',
@@ -136,6 +175,24 @@ const styles = StyleSheet.create({
     fontSize: 13,
     color: COLORS.textSecondary,
     textAlign: 'center',
+  },
+  footerButtonsRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 12,
+  },
+  btnContaFooter: {
+    backgroundColor: COLORS.surfaceVariant,
+    borderWidth: 1,
+    borderColor: COLORS.gold,
+    borderRadius: 18,
+    paddingHorizontal: 14,
+    paddingVertical: 7,
+  },
+  btnContaFooterText: {
+    fontSize: 12,
+    fontWeight: 'bold',
+    color: COLORS.primaryDark,
   },
   btnSobre: {
     width: 38,

@@ -19,9 +19,12 @@ import {
 import { COLORS } from '../theme/colors';
 import { ModalSobre } from '../components/ModalSobre';
 import { abrirCompendioEmJanelaSeparada } from '../utils/janelaCompendio';
+import { User } from 'firebase/auth';
 
 interface Props {
   fichas: FichaPersonagem[];
+  usuarioAtual?: User | null;
+  onAbrirConta?: () => void;
   onCriarNova: () => void;
   onImportarFicha: () => void;
   onExportarFicha: (ficha: FichaPersonagem) => void;
@@ -32,6 +35,8 @@ interface Props {
 
 export const ListaFichasScreen: React.FC<Props> = ({
   fichas,
+  usuarioAtual,
+  onAbrirConta,
   onCriarNova,
   onImportarFicha,
   onExportarFicha,
@@ -79,6 +84,36 @@ export const ListaFichasScreen: React.FC<Props> = ({
           </View>
 
           <View style={[styles.topActionsRow, isDesktop ? styles.actionsDesktop : styles.actionsMobile]}>
+            {onAbrirConta && (
+              <TouchableOpacity
+                style={[
+                  styles.btnAction,
+                  usuarioAtual ? styles.btnNuvemConectado : styles.btnNuvemLocal,
+                  isDesktop ? styles.btnNuvemDesktop : styles.btnNuvemMobile,
+                ]}
+                onPress={onAbrirConta}
+                activeOpacity={0.8}
+                accessibilityLabel="Status da Nuvem e Conta"
+              >
+                <Text style={styles.btnNuvemIcon}>{usuarioAtual ? '☁️' : '📁'}</Text>
+                <Text
+                  style={[
+                    styles.btnNuvemText,
+                    usuarioAtual && styles.btnNuvemTextConectado,
+                  ]}
+                  numberOfLines={1}
+                >
+                  {usuarioAtual
+                    ? isDesktop
+                      ? `Nuvem (${usuarioAtual.email?.split('@')[0]})`
+                      : 'Nuvem'
+                    : isDesktop
+                    ? 'Modo Local'
+                    : 'Local'}
+                </Text>
+              </TouchableOpacity>
+            )}
+
             <TouchableOpacity
               style={[styles.btnAction, styles.btnSobreAction]}
               onPress={() => setSobreVisivel(true)}
@@ -382,6 +417,42 @@ const styles = StyleSheet.create({
     borderColor: 'rgba(255, 255, 255, 0.25)',
     paddingHorizontal: 8,
     paddingVertical: 6,
+  },
+  btnNuvemConectado: {
+    backgroundColor: 'rgba(76, 175, 80, 0.25)',
+    borderWidth: 1,
+    borderColor: '#81C784',
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 4,
+  },
+  btnNuvemLocal: {
+    backgroundColor: 'rgba(255, 255, 255, 0.12)',
+    borderWidth: 1,
+    borderColor: 'rgba(255, 255, 255, 0.25)',
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 4,
+  },
+  btnNuvemMobile: {
+    paddingHorizontal: 7,
+    paddingVertical: 6,
+  },
+  btnNuvemDesktop: {
+    paddingHorizontal: 11,
+    paddingVertical: 8,
+  },
+  btnNuvemIcon: {
+    fontSize: 12,
+  },
+  btnNuvemText: {
+    fontSize: 11.5,
+    color: '#FFEAA7',
+    fontWeight: '600',
+  },
+  btnNuvemTextConectado: {
+    color: '#E8F5E9',
+    fontWeight: 'bold',
   },
   btnSobreActionText: {
     fontSize: 12,
