@@ -26,7 +26,6 @@ assets/expo_qr.png
 !.env.example
 
 # Anotações locais de sessão (não versionados)
-data/issues.txt
-issues.txt
+/issues.txt
 
 
