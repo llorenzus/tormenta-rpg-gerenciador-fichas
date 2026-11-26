@@ -106,12 +106,22 @@ export const AbaDadosCadastrais: React.FC<Props> = ({ ficha, onChange }) => {
 
           <View style={styles.row}>
             <CampoTexto
+              label="Campanha / Mesa"
+              value={ficha.campanha || ''}
+              onChangeText={(v) => onChange({ ...ficha, campanha: v })}
+              placeholder="Ex: Fim dos Tempos, Guilda..."
+              style={styles.col}
+            />
+            <CampoTexto
               label="Jogador (Conta)"
               value={ficha.jogador}
               placeholder="Usuário não conectado"
               style={styles.col}
               editable={false}
             />
+          </View>
+
+          <View style={styles.row}>
             <CampoTexto
               label="Raça"
               value={ficha.raca}

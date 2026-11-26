@@ -6,6 +6,7 @@ import {
   Platform,
   StyleSheet,
   Text,
+  TextInput,
   TouchableOpacity,
   TouchableWithoutFeedback,
   useWindowDimensions,
@@ -23,6 +24,7 @@ import { User } from 'firebase/auth';
 
 interface Props {
   fichas: FichaPersonagem[];
+  fichasCompartilhadas?: FichaPersonagem[];
   usuarioAtual?: User | null;
   onAbrirConta?: () => void;
   onCriarNova: () => void;
@@ -35,6 +37,7 @@ interface Props {
 
 export const ListaFichasScreen: React.FC<Props> = ({
   fichas,
+  fichasCompartilhadas = [],
   usuarioAtual,
   onAbrirConta,
   onCriarNova,
@@ -48,8 +51,28 @@ export const ListaFichasScreen: React.FC<Props> = ({
   const isDesktop = width >= 800;
   const numColumns = width >= 1200 ? 3 : width >= 800 ? 2 : 1;
 
+  const [abaAtiva, setAbaAtiva] = useState<'meus' | 'compartilhados'>('meus');
+  const [filtroCompartilhados, setFiltroCompartilhados] = useState('');
   const [fichaParaExcluir, setFichaParaExcluir] = useState<FichaPersonagem | null>(null);
   const [sobreVisivel, setSobreVisivel] = useState(false);
+
+  // Filtro exclusivo para a aba de personagens compartilhados
+  const listaCompartilhadosFiltrada = React.useMemo(() => {
+    const termo = filtroCompartilhados.trim().toLowerCase();
+    if (!termo) return fichasCompartilhadas;
+    return fichasCompartilhadas.filter((f) => {
+      const nome = (f.nomePersonagem || '').toLowerCase();
+      const dono = (f.donoNome || '').toLowerCase();
+      const jogador = (f.jogador || '').toLowerCase();
+      const campanha = (f.campanha || '').toLowerCase();
+      return (
+        nome.includes(termo) ||
+        dono.includes(termo) ||
+        jogador.includes(termo) ||
+        campanha.includes(termo)
+      );
+    });
+  }, [fichasCompartilhadas, filtroCompartilhados]);
 
   const confirmarExclusao = (ficha: FichaPersonagem) => {
     setFichaParaExcluir(ficha);
@@ -132,30 +155,88 @@ export const ListaFichasScreen: React.FC<Props> = ({
               </Text>
             </TouchableOpacity>
 
-            <TouchableOpacity
-              style={[styles.btnAction, isDesktop ? styles.btnImportarDesktop : styles.btnImportarMobile]}
-              onPress={onImportarFicha}
-              activeOpacity={0.8}
-            >
-              <Text style={[styles.btnText, isDesktop ? styles.btnTextWhiteDesktop : styles.btnTextWhiteMobile]}>
-                {isDesktop ? 'Importar JSON' : 'Importar'}
-              </Text>
-            </TouchableOpacity>
+            {abaAtiva === 'meus' && (
+              <>
+                <TouchableOpacity
+                  style={[styles.btnAction, isDesktop ? styles.btnImportarDesktop : styles.btnImportarMobile]}
+                  onPress={onImportarFicha}
+                  activeOpacity={0.8}
+                >
+                  <Text style={[styles.btnText, isDesktop ? styles.btnTextWhiteDesktop : styles.btnTextWhiteMobile]}>
+                    {isDesktop ? 'Importar JSON' : 'Importar'}
+                  </Text>
+                </TouchableOpacity>
 
-            <TouchableOpacity
-              style={[styles.btnAction, isDesktop ? styles.btnNovaDesktop : styles.btnNovaMobile]}
-              onPress={onCriarNova}
-              activeOpacity={0.8}
-            >
-              <Text style={[styles.btnText, isDesktop ? styles.btnTextDarkDesktop : styles.btnTextDarkMobile]}>
-                {isDesktop ? '+ Nova Ficha' : '+ Nova'}
-              </Text>
-            </TouchableOpacity>
+                <TouchableOpacity
+                  style={[styles.btnAction, isDesktop ? styles.btnNovaDesktop : styles.btnNovaMobile]}
+                  onPress={onCriarNova}
+                  activeOpacity={0.8}
+                >
+                  <Text style={[styles.btnText, isDesktop ? styles.btnTextDarkDesktop : styles.btnTextDarkMobile]}>
+                    {isDesktop ? '+ Nova Ficha' : '+ Nova'}
+                  </Text>
+                </TouchableOpacity>
+              </>
+            )}
           </View>
         </View>
       </View>
 
-      {fichas.length === 0 ? (
+      {/* Abas: Meus Personagens vs Personagens Compartilhados */}
+      <View style={[styles.tabsBarWrap, isDesktop && styles.tabsBarWrapDesktop]}>
+        <View style={[styles.tabsBarContent, isDesktop && styles.desktopMaxWidth]}>
+          <TouchableOpacity
+            style={[styles.mainTabBtn, abaAtiva === 'meus' && styles.mainTabBtnActive]}
+            onPress={() => setAbaAtiva('meus')}
+            activeOpacity={0.8}
+          >
+            <Text style={[styles.mainTabText, abaAtiva === 'meus' && styles.mainTabTextActive]}>
+              🛡️ Meus Personagens ({fichas.length})
+            </Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity
+            style={[styles.mainTabBtn, abaAtiva === 'compartilhados' && styles.mainTabBtnActive]}
+            onPress={() => setAbaAtiva('compartilhados')}
+            activeOpacity={0.8}
+          >
+            <Text style={[styles.mainTabText, abaAtiva === 'compartilhados' && styles.mainTabTextActive]}>
+              👥 Personagens Compartilhados ({fichasCompartilhadas.length})
+            </Text>
+          </TouchableOpacity>
+        </View>
+      </View>
+
+      {/* Barra de Busca e Filtro (Exclusiva para a aba de Personagens Compartilhados) */}
+      {abaAtiva === 'compartilhados' && fichasCompartilhadas.length > 0 && (
+        <View style={[styles.filterBarWrap, isDesktop && styles.filterBarWrapDesktop]}>
+          <View style={[styles.filterBarContent, isDesktop && styles.desktopMaxWidth]}>
+            <View style={styles.filterInputRow}>
+              <Text style={styles.filterIcon}>🔍</Text>
+              <TextInput
+                style={styles.filterInput}
+                value={filtroCompartilhados}
+                onChangeText={setFiltroCompartilhados}
+                placeholder="Filtrar por nome de personagem, jogador ou campanha..."
+                placeholderTextColor={COLORS.textSecondary}
+                autoCapitalize="none"
+                autoCorrect={false}
+              />
+              {filtroCompartilhados.length > 0 && (
+                <TouchableOpacity
+                  onPress={() => setFiltroCompartilhados('')}
+                  style={styles.filterClearBtn}
+                  hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}
+                >
+                  <Text style={styles.filterClearBtnText}>✕</Text>
+                </TouchableOpacity>
+              )}
+            </View>
+          </View>
+        </View>
+      )}
+
+      {abaAtiva === 'meus' && fichas.length === 0 ? (
         <View style={styles.emptyWrap}>
           <View style={[styles.emptyCard, isDesktop && styles.emptyCardDesktop]}>
             <Text style={styles.emptyTitle}>Nenhuma ficha salva ainda</Text>
@@ -191,16 +272,50 @@ export const ListaFichasScreen: React.FC<Props> = ({
             </View>
           </View>
         </View>
+      ) : abaAtiva === 'compartilhados' && fichasCompartilhadas.length === 0 ? (
+        <View style={styles.emptyWrap}>
+          <View style={[styles.emptyCard, isDesktop && styles.emptyCardDesktop]}>
+            <Text style={styles.emptyTitle}>Nenhum personagem compartilhado</Text>
+            <Text style={styles.emptyDesc}>
+              Personagens compartilhados por outros jogadores aparecerão aqui para você acompanhar em tempo real.
+            </Text>
+            <View style={styles.infoBoxShared}>
+              <Text style={styles.infoBoxSharedText}>
+                💡 Para receber acesso, peça para o dono da ficha clicar no botão "👥 Compartilhar" dentro da ficha dele e informar seu username (
+                <Text style={styles.negrito}>
+                  {usuarioAtual?.displayName || usuarioAtual?.email?.split('@')[0] || 'seu usuário'}
+                </Text>
+                ) ou seu e-mail.
+              </Text>
+            </View>
+          </View>
+        </View>
+      ) : abaAtiva === 'compartilhados' && listaCompartilhadosFiltrada.length === 0 ? (
+        <View style={styles.emptyWrap}>
+          <View style={[styles.emptyCard, isDesktop && styles.emptyCardDesktop]}>
+            <Text style={styles.emptyTitle}>Nenhum personagem encontrado</Text>
+            <Text style={styles.emptyDesc}>
+              Nenhum personagem compartilhado corresponde à busca "{filtroCompartilhados}".
+            </Text>
+            <TouchableOpacity
+              style={styles.btnLimparFiltro}
+              onPress={() => setFiltroCompartilhados('')}
+            >
+              <Text style={styles.btnLimparFiltroText}>Limpar Filtro</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
       ) : (
         <FlatList
-          key={`lista-fichas-grid-${numColumns}`}
-          data={fichas}
+          key={`lista-fichas-grid-${numColumns}-${abaAtiva}`}
+          data={abaAtiva === 'meus' ? fichas : listaCompartilhadosFiltrada}
           keyExtractor={(item) => item.id}
           numColumns={numColumns}
           columnWrapperStyle={numColumns > 1 ? styles.gridRow : undefined}
           contentContainerStyle={[styles.listContent, isDesktop && styles.listContentDesktop]}
           renderItem={({ item }) => {
             const ca = calcularCaTotal(item);
+            const isCompartilhada = abaAtiva === 'compartilhados' || !!item.isCompartilhadaComigo;
             const subtitulo = [
               item.raca?.trim(),
               item.classe?.trim(),
@@ -211,10 +326,35 @@ export const ListaFichasScreen: React.FC<Props> = ({
 
             return (
               <TouchableOpacity
-                style={[styles.fichaCard, numColumns > 1 && styles.fichaCardGrid]}
+                style={[
+                  styles.fichaCard,
+                  numColumns > 1 && styles.fichaCardGrid,
+                  isCompartilhada && styles.fichaCardShared,
+                ]}
                 onPress={() => onAbrirFicha(item)}
                 activeOpacity={0.85}
               >
+                {/* Badges de compartilhamento, dono e campanha */}
+                {isCompartilhada && (
+                  <View style={styles.sharedBadgesRow}>
+                    <View style={styles.badgeReadOnly}>
+                      <Text style={styles.badgeReadOnlyText}>👁️ Apenas Leitura</Text>
+                    </View>
+                    <View style={styles.badgeOwner}>
+                      <Text style={styles.badgeOwnerText} numberOfLines={1}>
+                        👤 Dono: {item.donoNome || item.jogador || 'Outro Jogador'}
+                      </Text>
+                    </View>
+                    {item.campanha ? (
+                      <View style={styles.badgeCampanha}>
+                        <Text style={styles.badgeCampanhaText} numberOfLines={1}>
+                          🎲 {item.campanha}
+                        </Text>
+                      </View>
+                    ) : null}
+                  </View>
+                )}
+
                 <View style={styles.fichaCardTop}>
                   <View style={styles.fichaTitleCol}>
                     <Text style={styles.fichaNome} numberOfLines={1}>
@@ -231,12 +371,19 @@ export const ListaFichasScreen: React.FC<Props> = ({
                     >
                       <Text style={styles.btnExportText}>Exportar</Text>
                     </TouchableOpacity>
-                    <TouchableOpacity
-                      style={styles.btnDelete}
-                      onPress={() => confirmarExclusao(item)}
-                    >
-                      <Text style={styles.btnDeleteText}>Excluir</Text>
-                    </TouchableOpacity>
+
+                    {!isCompartilhada ? (
+                      <TouchableOpacity
+                        style={styles.btnDelete}
+                        onPress={() => confirmarExclusao(item)}
+                      >
+                        <Text style={styles.btnDeleteText}>Excluir</Text>
+                      </TouchableOpacity>
+                    ) : (
+                      <View style={styles.btnVer}>
+                        <Text style={styles.btnVerText}>Ver →</Text>
+                      </View>
+                    )}
                   </View>
                 </View>
 
@@ -267,7 +414,11 @@ export const ListaFichasScreen: React.FC<Props> = ({
 
                 {isDesktop && (
                   <View style={styles.desktopOpenHint}>
-                    <Text style={styles.desktopOpenHintText}>Clique para abrir e editar a ficha →</Text>
+                    <Text style={styles.desktopOpenHintText}>
+                      {isCompartilhada
+                        ? 'Clique para visualizar a ficha em tempo real (somente leitura) →'
+                        : 'Clique para abrir e editar a ficha →'}
+                    </Text>
                   </View>
                 )}
               </TouchableOpacity>
@@ -803,6 +954,177 @@ const styles = StyleSheet.create({
     fontSize: 14,
     fontWeight: 'bold',
     color: '#FFFFFF',
+  },
+  // Abas principais (Meus Personagens vs Compartilhados)
+  tabsBarWrap: {
+    backgroundColor: COLORS.primaryDark,
+    borderBottomWidth: 1,
+    borderBottomColor: COLORS.border,
+    paddingHorizontal: 16,
+    paddingTop: 4,
+  },
+  tabsBarWrapDesktop: {
+    paddingHorizontal: 32,
+  },
+  tabsBarContent: {
+    flexDirection: 'row',
+    gap: 8,
+  },
+  mainTabBtn: {
+    paddingVertical: 10,
+    paddingHorizontal: 16,
+    borderBottomWidth: 3,
+    borderBottomColor: 'transparent',
+  },
+  mainTabBtnActive: {
+    borderBottomColor: COLORS.gold,
+  },
+  mainTabText: {
+    fontSize: 14,
+    fontWeight: '600',
+    color: COLORS.textMuted,
+  },
+  mainTabTextActive: {
+    color: COLORS.gold,
+    fontWeight: 'bold',
+  },
+  // Estilos de ficha compartilhada e badges
+  fichaCardShared: {
+    borderColor: '#4A5568',
+  },
+  sharedBadgesRow: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    gap: 8,
+    marginBottom: 8,
+  },
+  badgeReadOnly: {
+    backgroundColor: 'rgba(59, 130, 246, 0.15)',
+    borderWidth: 1,
+    borderColor: '#3B82F6',
+    borderRadius: 4,
+    paddingHorizontal: 8,
+    paddingVertical: 2,
+  },
+  badgeReadOnlyText: {
+    fontSize: 11,
+    fontWeight: 'bold',
+    color: '#93C5FD',
+  },
+  badgeOwner: {
+    backgroundColor: '#FEF3C7',
+    borderWidth: 1,
+    borderColor: '#D97706',
+    borderRadius: 4,
+    paddingHorizontal: 8,
+    paddingVertical: 2,
+    maxWidth: 220,
+  },
+  badgeOwnerText: {
+    fontSize: 11,
+    fontWeight: 'bold',
+    color: '#78350F',
+  },
+  badgeCampanha: {
+    backgroundColor: '#F3E8FF',
+    borderWidth: 1,
+    borderColor: '#9333EA',
+    borderRadius: 4,
+    paddingHorizontal: 8,
+    paddingVertical: 2,
+    maxWidth: 220,
+  },
+  badgeCampanhaText: {
+    fontSize: 11,
+    fontWeight: 'bold',
+    color: '#6B21A8',
+  },
+  // Barra de filtro da aba compartilhados
+  filterBarWrap: {
+    backgroundColor: COLORS.primaryDark,
+    paddingHorizontal: 16,
+    paddingBottom: 10,
+    borderBottomWidth: 1,
+    borderBottomColor: COLORS.border,
+  },
+  filterBarWrapDesktop: {
+    paddingHorizontal: 32,
+  },
+  filterBarContent: {
+    width: '100%',
+  },
+  filterInputRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: COLORS.surface,
+    borderRadius: 8,
+    borderWidth: 1,
+    borderColor: COLORS.border,
+    paddingHorizontal: 12,
+    height: 40,
+  },
+  filterIcon: {
+    fontSize: 15,
+    marginRight: 8,
+  },
+  filterInput: {
+    flex: 1,
+    fontSize: 13,
+    color: COLORS.text,
+    paddingVertical: 0,
+    height: '100%',
+  },
+  filterClearBtn: {
+    padding: 4,
+    marginLeft: 6,
+  },
+  filterClearBtnText: {
+    fontSize: 14,
+    color: COLORS.textSecondary,
+    fontWeight: 'bold',
+  },
+  btnLimparFiltro: {
+    marginTop: 14,
+    paddingHorizontal: 16,
+    paddingVertical: 8,
+    backgroundColor: COLORS.primary,
+    borderRadius: 6,
+  },
+  btnLimparFiltroText: {
+    color: '#FFFFFF',
+    fontWeight: 'bold',
+    fontSize: 13,
+  },
+  btnVer: {
+    paddingHorizontal: 12,
+    paddingVertical: 6,
+    backgroundColor: 'rgba(59, 130, 246, 0.15)',
+    borderWidth: 1,
+    borderColor: '#3B82F6',
+    borderRadius: 6,
+  },
+  btnVerText: {
+    color: '#93C5FD',
+    fontSize: 12,
+    fontWeight: 'bold',
+  },
+  infoBoxShared: {
+    marginTop: 16,
+    backgroundColor: 'rgba(255, 215, 0, 0.08)',
+    borderWidth: 1,
+    borderColor: 'rgba(255, 215, 0, 0.3)',
+    borderRadius: 8,
+    padding: 12,
+  },
+  infoBoxSharedText: {
+    fontSize: 13,
+    color: COLORS.textLight,
+    lineHeight: 18,
+    textAlign: 'center',
+  },
+  negrito: {
+    fontWeight: 'bold',
+    color: COLORS.gold,
   },
 });
 

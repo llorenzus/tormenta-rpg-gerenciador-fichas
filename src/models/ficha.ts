@@ -114,6 +114,7 @@ export interface FichaPersonagem {
   // 1. Dados Cadastrais
   nomePersonagem: string;
   jogador: string;
+  campanha?: string; // Nome da Campanha ou Mesa do personagem
   raca: string;
   classe: string; // Resumo textual (ex: "Samurai 3 / Mago 4")
   nivel: number;  // Nível total do personagem (soma de todas as classes)
@@ -172,6 +173,13 @@ export interface FichaPersonagem {
 
   // Buffs e Efeitos Temporários (Atributos, Resistências e PV Temporário)
   buffsTemporarios?: BuffsTemporarios;
+
+  // Compartilhamento entre jogadores
+  compartilhadaCom?: { uid: string; email?: string; username?: string; compartilhadoEm?: number }[];
+  sharedWithUids?: string[];
+  isCompartilhadaComigo?: boolean;
+  donoNome?: string;
+  donoId?: string;
 }
 
 export interface BuffsTemporarios {
@@ -512,6 +520,7 @@ export function criarNovaFichaPadrao(): FichaPersonagem {
     updatedAt: agora,
     nomePersonagem: '',
     jogador: '',
+    campanha: '',
     raca: '',
     classe: '',
     nivel: 1,
@@ -750,6 +759,7 @@ export function normalizarFicha(ficha: FichaPersonagem): FichaPersonagem {
     updatedAt: timestamp,
     userId: ficha.userId || undefined,
     classes: classesNormalizadas,
+    campanha: ficha.campanha || '',
     nivel: nivelCalculado > 0 ? nivelCalculado : Math.max(1, Number(ficha.nivel) || 1),
     classe: resumoClasse || ficha.classe || '',
     forca: Number.isFinite(ficha.forca) ? ficha.forca : 10,
@@ -792,6 +802,11 @@ export function normalizarFicha(ficha: FichaPersonagem): FichaPersonagem {
     tibares: ficha.tibares || '',
     ordemAbas: Array.isArray(ficha.ordemAbas) ? ficha.ordemAbas : undefined,
     buffsTemporarios: ficha.buffsTemporarios || undefined,
+    compartilhadaCom: Array.isArray(ficha.compartilhadaCom) ? ficha.compartilhadaCom : undefined,
+    sharedWithUids: Array.isArray(ficha.sharedWithUids) ? ficha.sharedWithUids : undefined,
+    isCompartilhadaComigo: !!ficha.isCompartilhadaComigo,
+    donoNome: ficha.donoNome || undefined,
+    donoId: ficha.donoId || undefined,
   };
 }
 

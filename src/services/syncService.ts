@@ -7,6 +7,10 @@ import {
 } from 'firebase/firestore';
 import { FichaPersonagem, normalizarFicha } from '../models/ficha';
 import { db, isFirebaseConfigured } from './firebase';
+import {
+  atualizarFichaCompartilhadaSeHouver,
+  removerFichaCompartilhadaAoExcluir,
+} from './sharingService';
 
 export interface ResultadoMerge {
   mescladas: FichaPersonagem[];
@@ -173,6 +177,11 @@ export async function enviarFichaParaNuvem(userId: string, ficha: FichaPersonage
     const fichaPronta = normalizarFicha(ficha);
     const docRef = doc(db, 'users', userId, 'characters', fichaPronta.id);
     await setDoc(docRef, sanitizarParaFirestore(fichaPronta));
+
+    // Se a ficha possui compartilhamento ativo, replica as alterações em tempo real para os outros jogadores
+    if (fichaPronta.sharedWithUids && fichaPronta.sharedWithUids.length > 0) {
+      await atualizarFichaCompartilhadaSeHouver(userId, fichaPronta);
+    }
   } catch (err) {
     console.warn('Erro ao salvar ficha na nuvem:', err);
   }
@@ -187,6 +196,9 @@ export async function excluirFichaDaNuvem(userId: string, fichaId: string): Prom
   try {
     const docRef = doc(db, 'users', userId, 'characters', fichaId);
     await deleteDoc(docRef);
+
+    // Se estava compartilhada, remove também da coleção de compartilhamento
+    await removerFichaCompartilhadaAoExcluir(fichaId);
   } catch (err) {
     console.warn('Erro ao remover ficha da nuvem:', err);
   }

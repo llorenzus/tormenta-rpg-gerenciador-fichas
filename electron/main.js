@@ -347,7 +347,7 @@ function startLocalServer(distPath) {
         };
         localServer.once('error', onError);
         localServer.once('listening', onListening);
-        localServer.listen(port);
+        localServer.listen(port, '127.0.0.1');
       }
       tryNextPort(0);
     } catch (e) {
