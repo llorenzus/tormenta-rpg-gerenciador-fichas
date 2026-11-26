@@ -2,12 +2,16 @@ import { describe, it } from 'node:test';
 import assert from 'node:assert';
 import {
   cadastrarComEmail,
+  cancelarConfirmacaoPendente,
   fazerLogout,
   loginComEmail,
   loginComGoogle,
   obterUsuarioAtual,
+  obterUsuarioPendenteVerificacao,
   redefinirSenha,
+  reenviarEmailVerificacao,
   traduzirErroAuth,
+  verificarSeEmailConfirmado,
 } from '../src/services/authService';
 
 describe('Serviço de Autenticação (Firebase Auth)', () => {
@@ -135,6 +139,31 @@ describe('Serviço de Autenticação (Firebase Auth)', () => {
 
       assert.strictEqual(fichaAtualizada.jogador, 'MestreArton');
       assert.strictEqual(fichaAtualizada.nomePersonagem, 'Guerreiro da Tormenta');
+    });
+  });
+
+  describe('Confirmação e Validação de E-mail (Opção Bloqueante)', () => {
+    it('obterUsuarioPendenteVerificacao deve retornar null quando não houver usuário deslogado', () => {
+      const pendente = obterUsuarioPendenteVerificacao();
+      assert.strictEqual(pendente, null);
+    });
+
+    it('reenviarEmailVerificacao deve falhar com mensagem amigável quando nenhum usuário estiver ativo', async () => {
+      const res = await reenviarEmailVerificacao(null);
+      assert.strictEqual(res.sucesso, false);
+      assert.ok(res.erro?.includes('Nenhum usuário'));
+    });
+
+    it('verificarSeEmailConfirmado deve retornar confirmado = false quando usuário for nulo', async () => {
+      const res = await verificarSeEmailConfirmado(null);
+      assert.strictEqual(res.confirmado, false);
+      assert.ok(res.erro?.includes('Nenhum usuário'));
+    });
+
+    it('cancelarConfirmacaoPendente deve executar com segurança sem disparar exceção', async () => {
+      await assert.doesNotReject(async () => {
+        await cancelarConfirmacaoPendente();
+      });
     });
   });
 });

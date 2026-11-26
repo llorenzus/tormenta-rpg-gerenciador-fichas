@@ -2,6 +2,8 @@ import {
   createUserWithEmailAndPassword,
   GoogleAuthProvider,
   onAuthStateChanged,
+  reload,
+  sendEmailVerification,
   sendPasswordResetEmail,
   signInWithCredential,
   signInWithEmailAndPassword,
@@ -30,6 +32,7 @@ export interface RespostaAuth {
   sucesso: boolean;
   usuario?: User | null;
   erro?: string;
+  precisaConfirmarEmail?: boolean;
 }
 
 /**
@@ -83,10 +86,17 @@ export function traduzirErroAuth(codigoOuMensagem?: string): string {
 
 /**
  * Observa alterações no estado de autenticação (login / logout)
+ * Apenas emite o usuário se o e-mail estiver devidamente confirmado (Opção Bloqueante)
  */
 export function observarEstadoAuth(callback: (usuario: User | null) => void): () => void {
   try {
-    return onAuthStateChanged(auth, callback);
+    return onAuthStateChanged(auth, (user) => {
+      if (user && !user.emailVerified) {
+        callback(null);
+      } else {
+        callback(user);
+      }
+    });
   } catch (error) {
     callback(null);
     return () => {};
@@ -94,11 +104,12 @@ export function observarEstadoAuth(callback: (usuario: User | null) => void): ()
 }
 
 /**
- * Retorna o usuário logado no momento (ou null se anônimo/offline)
+ * Retorna o usuário logado no momento (apenas se verificado ou null se anônimo/offline/não verificado)
  */
 export function obterUsuarioAtual(): User | null {
   try {
-    return auth?.currentUser || null;
+    const user = auth?.currentUser;
+    return user && user.emailVerified ? user : null;
   } catch {
     return null;
   }
@@ -125,6 +136,16 @@ export async function loginComEmail(email: string, pass: string): Promise<Respos
 
   try {
     const credencial = await signInWithEmailAndPassword(auth, emailTrim, pass);
+
+    if (!credencial.user.emailVerified) {
+      return {
+        sucesso: false,
+        usuario: credencial.user,
+        precisaConfirmarEmail: true,
+        erro: 'Seu e-mail ainda não foi confirmado. Acesse sua caixa de entrada e clique no link para ativar sua conta.',
+      };
+    }
+
     registrarPerfilUsuario(credencial.user).catch(() => {});
     return { sucesso: true, usuario: credencial.user };
   } catch (error: any) {
@@ -188,8 +209,19 @@ export async function cadastrarComEmail(
     } catch {
       // Fallback pontual caso updateProfile falhe
     }
-    registrarPerfilUsuario(credencial.user, usernameTrim).catch(() => {});
-    return { sucesso: true, usuario: credencial.user };
+
+    // Dispara envio do e-mail de confirmação
+    try {
+      await sendEmailVerification(credencial.user);
+    } catch (envioErr) {
+      console.warn('Aviso: falha ao enviar e-mail de confirmação inicial:', envioErr);
+    }
+
+    return {
+      sucesso: true,
+      usuario: credencial.user,
+      precisaConfirmarEmail: true,
+    };
   } catch (error: any) {
     return {
       sucesso: false,
@@ -317,3 +349,99 @@ export async function fazerLogout(): Promise<RespostaAuth> {
     };
   }
 }
+
+/**
+ * Retorna o usuário pendente de verificação (se houver usuário logado no client sem e-mail verificado)
+ */
+export function obterUsuarioPendenteVerificacao(): User | null {
+  try {
+    const user = auth?.currentUser;
+    return user && !user.emailVerified ? user : null;
+  } catch {
+    return null;
+  }
+}
+
+/**
+ * Recarrega a sessão do usuário e verifica se o link de e-mail foi clicado
+ */
+export async function verificarSeEmailConfirmado(
+  usuarioPendente?: User | null
+): Promise<{ confirmado: boolean; usuario: User | null; erro?: string }> {
+  if (!isFirebaseConfigured()) {
+    return { confirmado: true, usuario: usuarioPendente || null };
+  }
+
+  const user = usuarioPendente || auth?.currentUser;
+  if (!user) {
+    return {
+      confirmado: false,
+      usuario: null,
+      erro: 'Nenhum usuário aguardando confirmação.',
+    };
+  }
+
+  try {
+    await reload(user);
+    if (user.emailVerified) {
+      // Registra o perfil agora que o e-mail está confirmado
+      registrarPerfilUsuario(user).catch(() => {});
+      return { confirmado: true, usuario: user };
+    }
+    return {
+      confirmado: false,
+      usuario: user,
+      erro: 'O e-mail ainda não consta como confirmado. Acesse sua caixa de entrada, clique no link de confirmação e tente novamente.',
+    };
+  } catch (error: any) {
+    return {
+      confirmado: false,
+      usuario: user,
+      erro: traduzirErroAuth(error?.code || error?.message),
+    };
+  }
+}
+
+/**
+ * Reenvia o e-mail de confirmação para o usuário aguardando validação
+ */
+export async function reenviarEmailVerificacao(
+  usuarioPendente?: User | null
+): Promise<RespostaAuth> {
+  if (!isFirebaseConfigured()) {
+    return { sucesso: false, erro: 'Firebase não configurado.' };
+  }
+
+  const user = usuarioPendente || auth?.currentUser;
+  if (!user) {
+    return {
+      sucesso: false,
+      erro: 'Nenhum usuário aguardando confirmação.',
+    };
+  }
+
+  try {
+    await sendEmailVerification(user);
+    return { sucesso: true, usuario: user };
+  } catch (error: any) {
+    return {
+      sucesso: false,
+      erro: traduzirErroAuth(error?.code || error?.message),
+    };
+  }
+}
+
+/**
+ * Cancela o fluxo de confirmação pendente deslogando a sessão não verificada
+ */
+export async function cancelarConfirmacaoPendente(): Promise<void> {
+  try {
+    if (auth?.currentUser && !auth.currentUser.emailVerified) {
+      await signOut(auth);
+    }
+  } catch {
+    // Ignora
+  }
+}
+
+
