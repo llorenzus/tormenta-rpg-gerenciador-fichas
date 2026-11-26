@@ -3,12 +3,15 @@ import {
   GoogleAuthProvider,
   onAuthStateChanged,
   sendPasswordResetEmail,
+  signInWithCredential,
   signInWithEmailAndPassword,
   signInWithPopup,
+  browserPopupRedirectResolver,
   signOut,
+  updateProfile,
   User,
 } from 'firebase/auth';
-import { auth, isFirebaseConfigured } from './firebase';
+import { auth, firebaseConfig, isFirebaseConfigured } from './firebase';
 
 function isWebEnvironment(): boolean {
   try {
@@ -61,8 +64,17 @@ export function traduzirErroAuth(codigoOuMensagem?: string): string {
   if (codigoOuMensagem.includes('auth/popup-closed-by-user')) {
     return 'Janela de autenticação cancelada pelo usuário.';
   }
+  if (codigoOuMensagem.includes('auth/cancelled-popup-request')) {
+    return 'A solicitação de login foi cancelada ou substituída.';
+  }
   if (codigoOuMensagem.includes('auth/popup-blocked')) {
     return 'A janela de autenticação foi bloqueada pelo navegador.';
+  }
+  if (codigoOuMensagem.includes('auth/operation-not-allowed')) {
+    return 'O login com Google não foi ativado no Firebase Console (Authentication > Sign-in method).';
+  }
+  if (codigoOuMensagem.includes('auth/unauthorized-domain')) {
+    return 'O domínio de acesso não está autorizado no Firebase Console (Authentication > Settings > Authorized Domains).';
   }
 
   return 'Não foi possível concluir a autenticação. Tente novamente.';
@@ -122,10 +134,30 @@ export async function loginComEmail(email: string, pass: string): Promise<Respos
 }
 
 /**
- * Cria uma nova conta com E-mail e Senha
+ * Cria uma nova conta com E-mail, Senha e Nome de Usuário (Username obrigatório)
  */
-export async function cadastrarComEmail(email: string, pass: string): Promise<RespostaAuth> {
+export async function cadastrarComEmail(
+  email: string,
+  pass: string,
+  username?: string
+): Promise<RespostaAuth> {
   const emailTrim = email.trim();
+  const usernameTrim = (username || '').trim();
+
+  if (!usernameTrim) {
+    return {
+      sucesso: false,
+      erro: 'Informe um nome de usuário (username) obrigatório para se cadastrar.',
+    };
+  }
+
+  if (usernameTrim.length < 2) {
+    return {
+      sucesso: false,
+      erro: 'O nome de usuário deve ter pelo menos 2 caracteres.',
+    };
+  }
+
   if (!emailTrim || !pass) {
     return {
       sucesso: false,
@@ -149,6 +181,11 @@ export async function cadastrarComEmail(email: string, pass: string): Promise<Re
 
   try {
     const credencial = await createUserWithEmailAndPassword(auth, emailTrim, pass);
+    try {
+      await updateProfile(credencial.user, { displayName: usernameTrim });
+    } catch {
+      // Fallback pontual caso updateProfile falhe
+    }
     return { sucesso: true, usuario: credencial.user };
   } catch (error: any) {
     return {
@@ -189,8 +226,12 @@ export async function redefinirSenha(email: string): Promise<RespostaAuth> {
 }
 
 /**
- * Realiza login com conta Google (suportado nativamente no Windows Desktop/Web via Popup).
- * No Android, orienta o usuário ou executa se o provider for suportado.
+ * Realiza login com conta Google.
+ * No Windows Desktop (Electron), abre o navegador padrão do sistema (Chrome/Edge/Firefox)
+ * através do protocolo seguro RFC 8252 (Loopback Flow), contornando o bloqueio
+ * "Esse navegador ou app pode não ser seguro" imposto pelo Google a webviews integradas.
+ * No Web Browser padrão, utiliza popup direto.
+ * No Android, orienta o usuário ou executa com credenciais.
  */
 export async function loginComGoogle(): Promise<RespostaAuth> {
   if (!isFirebaseConfigured()) {
@@ -201,21 +242,53 @@ export async function loginComGoogle(): Promise<RespostaAuth> {
   }
 
   try {
-    const isWebOrDesktop =
-      isWebEnvironment() ||
-      (typeof window !== 'undefined' && Boolean((window as any).electronAPI?.isElectron));
+    // 1. Electron Desktop: Delega para o navegador padrão do sistema
+    if (
+      typeof window !== 'undefined' &&
+      (window as any).electronAPI?.iniciarLoginGoogleNavegador
+    ) {
+      const resultado = await (window as any).electronAPI.iniciarLoginGoogleNavegador(firebaseConfig);
+      if (resultado?.erro) {
+        return {
+          sucesso: false,
+          erro: traduzirErroAuth(resultado.erro),
+        };
+      }
 
-    if (isWebOrDesktop) {
-      const provider = new GoogleAuthProvider();
-      provider.setCustomParameters({ prompt: 'select_account' });
-      const credencial = await signInWithPopup(auth, provider);
+      if (!resultado?.idToken) {
+        return {
+          sucesso: false,
+          erro: 'Credenciais de autenticação não foram retornadas.',
+        };
+      }
+
+      const credential = GoogleAuthProvider.credential(
+        resultado.idToken,
+        resultado.accessToken || undefined
+      );
+      const credencial = await signInWithCredential(auth, credential);
+
+      if (resultado.displayName && !credencial.user.displayName) {
+        try {
+          await updateProfile(credencial.user, { displayName: resultado.displayName });
+        } catch {}
+      }
+
       return { sucesso: true, usuario: credencial.user };
     }
 
-    // No Android mobile nativo, o signInWithPopup do Firebase JS não abre janelas nativas de app
+    // 2. Web Browser padrão: Popup direto
+    if (isWebEnvironment()) {
+      const provider = new GoogleAuthProvider();
+      provider.setCustomParameters({ prompt: 'select_account' });
+      const credencial = await signInWithPopup(auth, provider, browserPopupRedirectResolver);
+      return { sucesso: true, usuario: credencial.user };
+    }
+
+    // 3. Android mobile nativo
     return {
       sucesso: false,
-      erro: 'No momento, o Login com Google está disponível no Desktop Windows. No celular, utilize Login com E-mail e Senha.',
+      erro: 'No momento, o Login com Google está disponível no Desktop Windows e Web. No celular, utilize Login com E-mail e Senha.',
     };
   } catch (error: any) {
     return {

@@ -109,6 +109,7 @@ export interface FichaPersonagem {
   id: string;
   atualizadoEm: number;
   updatedAt?: number;
+  userId?: string; // ID do usuário proprietário na nuvem (evita vazamento de dados entre contas)
 
   // 1. Dados Cadastrais
   nomePersonagem: string;
@@ -747,6 +748,7 @@ export function normalizarFicha(ficha: FichaPersonagem): FichaPersonagem {
     ...ficha,
     atualizadoEm: timestamp,
     updatedAt: timestamp,
+    userId: ficha.userId || undefined,
     classes: classesNormalizadas,
     nivel: nivelCalculado > 0 ? nivelCalculado : Math.max(1, Number(ficha.nivel) || 1),
     classe: resumoClasse || ficha.classe || '',

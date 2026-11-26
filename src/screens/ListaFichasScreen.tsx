@@ -88,28 +88,21 @@ export const ListaFichasScreen: React.FC<Props> = ({
               <TouchableOpacity
                 style={[
                   styles.btnAction,
-                  usuarioAtual ? styles.btnNuvemConectado : styles.btnNuvemLocal,
-                  isDesktop ? styles.btnNuvemDesktop : styles.btnNuvemMobile,
+                  styles.btnUserBadge,
+                  isDesktop ? styles.btnUserBadgeDesktop : styles.btnUserBadgeMobile,
                 ]}
                 onPress={onAbrirConta}
                 activeOpacity={0.8}
-                accessibilityLabel="Status da Nuvem e Conta"
+                accessibilityLabel="Conta e Perfil"
               >
-                <Text style={styles.btnNuvemIcon}>{usuarioAtual ? '☁️' : '📁'}</Text>
+                <Text style={styles.btnUserIcon}>{usuarioAtual ? '👤' : '🔑'}</Text>
                 <Text
-                  style={[
-                    styles.btnNuvemText,
-                    usuarioAtual && styles.btnNuvemTextConectado,
-                  ]}
+                  style={styles.btnUserText}
                   numberOfLines={1}
                 >
                   {usuarioAtual
-                    ? isDesktop
-                      ? `Nuvem (${usuarioAtual.email?.split('@')[0]})`
-                      : 'Nuvem'
-                    : isDesktop
-                    ? 'Modo Local'
-                    : 'Local'}
+                    ? usuarioAtual.displayName || usuarioAtual.email?.split('@')[0] || 'Usuário'
+                    : 'Entrar'}
                 </Text>
               </TouchableOpacity>
             )}
@@ -418,41 +411,31 @@ const styles = StyleSheet.create({
     paddingHorizontal: 8,
     paddingVertical: 6,
   },
-  btnNuvemConectado: {
-    backgroundColor: 'rgba(76, 175, 80, 0.25)',
+  btnUserBadge: {
+    backgroundColor: 'rgba(200, 157, 60, 0.18)',
     borderWidth: 1,
-    borderColor: '#81C784',
+    borderColor: COLORS.gold,
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 4,
+    gap: 5,
   },
-  btnNuvemLocal: {
-    backgroundColor: 'rgba(255, 255, 255, 0.12)',
-    borderWidth: 1,
-    borderColor: 'rgba(255, 255, 255, 0.25)',
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 4,
-  },
-  btnNuvemMobile: {
-    paddingHorizontal: 7,
+  btnUserBadgeMobile: {
+    paddingHorizontal: 8,
     paddingVertical: 6,
+    maxWidth: 120,
   },
-  btnNuvemDesktop: {
-    paddingHorizontal: 11,
+  btnUserBadgeDesktop: {
+    paddingHorizontal: 12,
     paddingVertical: 8,
+    maxWidth: 220,
   },
-  btnNuvemIcon: {
+  btnUserIcon: {
     fontSize: 12,
   },
-  btnNuvemText: {
-    fontSize: 11.5,
+  btnUserText: {
+    fontSize: 12,
     color: '#FFEAA7',
-    fontWeight: '600',
-  },
-  btnNuvemTextConectado: {
-    color: '#E8F5E9',
-    fontWeight: 'bold',
+    fontWeight: '700',
   },
   btnSobreActionText: {
     fontSize: 12,

@@ -131,6 +131,10 @@ export const FichaDetalheScreen: React.FC<Props> = ({
   const [isDragging, setIsDragging] = useState(false);
   const [containerWidth, setContainerWidth] = useState(1200);
   const [compendioGeralAberto, setCompendioGeralAberto] = useState(false);
+  const scrollRefP1 = useRef<ScrollView | null>(null);
+  const scrollRefP2 = useRef<ScrollView | null>(null);
+  const scrollPosP1 = useRef(0);
+  const scrollPosP2 = useRef(0);
 
   const atualizarOrdemAbas = (novaOrdem: AbaKey[]) => {
     setOrdemAbas(novaOrdem);
@@ -323,105 +327,158 @@ export const FichaDetalheScreen: React.FC<Props> = ({
     }
   };
 
-  // Barra de abas reutilizável com botão de Organizar
+  // Barra de abas reutilizável com botão de Organizar e botões de rolagem lateral rápida
   const renderTabBar = (
     abaSelecionada: AbaKey,
     onSelecionar: (chave: AbaKey) => void,
     outroPainelAba?: AbaKey,
     rotuloPainel?: string,
     onFecharPainel?: () => void
-  ) => (
-    <View style={styles.tabBarWrap}>
-      <ScrollView
-        horizontal
-        showsHorizontalScrollIndicator={false}
-        contentContainerStyle={styles.tabBarScroll}
-        keyboardShouldPersistTaps="handled"
-        style={styles.tabBarScrollView}
-      >
-        {rotuloPainel && (
-          <View style={styles.paneIndicator}>
-            <Text style={styles.paneIndicatorText}>{rotuloPainel}</Text>
-          </View>
-        )}
+  ) => {
+    const isPainel2 = rotuloPainel === 'Painel 2';
+    const targetRef = isPainel2 ? scrollRefP2 : scrollRefP1;
+    const posRef = isPainel2 ? scrollPosP2 : scrollPosP1;
 
-        {ordemAbas.map((chave) => {
-          const info = TODAS_AS_ABAS[chave];
-          if (!info) return null;
-          const selecionada = abaSelecionada === chave;
-          const abertaNoOutro = splitAtivo && outroPainelAba === chave;
+    const handleRolarEsquerda = () => {
+      const novoX = Math.max(0, posRef.current - 240);
+      posRef.current = novoX;
+      targetRef.current?.scrollTo({ x: novoX, animated: true });
+    };
 
-          return (
-            <TouchableOpacity
-              key={chave}
-              style={[
-                styles.tabItem,
-                selecionada && styles.tabItemActive,
-                abertaNoOutro && styles.tabItemNoOutro,
-              ]}
-              onPress={() => onSelecionar(chave)}
-              activeOpacity={0.7}
-            >
-              <View style={styles.tabItemContent}>
-                <Text style={styles.tabIcon}>{info.icone}</Text>
-                <Text
-                  style={[
-                    styles.tabText,
-                    selecionada && styles.tabTextActive,
-                    abertaNoOutro && styles.tabTextNoOutro,
-                  ]}
-                >
-                  {info.titulo}
-                </Text>
-                {abertaNoOutro && (
-                  <View style={styles.badgeOutroPainel}>
-                    <Text style={styles.badgeOutroPainelText}>
-                      {rotuloPainel === 'Painel 1' ? 'no P2 ⇄' : 'no P1 ⇄'}
-                    </Text>
-                  </View>
-                )}
-              </View>
-            </TouchableOpacity>
-          );
-        })}
-        {/* Opção no final do scroll das abas */}
+    const handleRolarDireita = () => {
+      const novoX = posRef.current + 240;
+      posRef.current = novoX;
+      targetRef.current?.scrollTo({ x: novoX, animated: true });
+    };
+
+    return (
+      <View style={styles.tabBarWrap}>
+        {/* Botão de navegação para a Esquerda */}
         <TouchableOpacity
-          style={styles.tabItemOrganizar}
+          style={styles.tabScrollArrowBtn}
+          onPress={handleRolarEsquerda}
+          activeOpacity={0.7}
+          hitSlop={{ top: 8, bottom: 8, left: 6, right: 6 }}
+          accessibilityLabel="Rolar abas para a esquerda"
+        >
+          <Text style={styles.tabScrollArrowText}>◀</Text>
+        </TouchableOpacity>
+
+        <ScrollView
+          ref={targetRef}
+          horizontal
+          showsHorizontalScrollIndicator={false}
+          contentContainerStyle={styles.tabBarScroll}
+          keyboardShouldPersistTaps="handled"
+          style={styles.tabBarScrollView}
+          onScroll={(e) => {
+            posRef.current = e.nativeEvent.contentOffset.x;
+          }}
+          scrollEventThrottle={16}
+          // @ts-ignore
+          onWheel={(e: any) => {
+            if (e.deltaY) {
+              const novoX = Math.max(0, posRef.current + e.deltaY * 1.5);
+              posRef.current = novoX;
+              targetRef.current?.scrollTo({ x: novoX, animated: false });
+            }
+          }}
+        >
+          {rotuloPainel && (
+            <View style={styles.paneIndicator}>
+              <Text style={styles.paneIndicatorText}>{rotuloPainel}</Text>
+            </View>
+          )}
+
+          {ordemAbas.map((chave) => {
+            const info = TODAS_AS_ABAS[chave];
+            if (!info) return null;
+            const selecionada = abaSelecionada === chave;
+            const abertaNoOutro = splitAtivo && outroPainelAba === chave;
+
+            return (
+              <TouchableOpacity
+                key={chave}
+                style={[
+                  styles.tabItem,
+                  selecionada && styles.tabItemActive,
+                  abertaNoOutro && styles.tabItemNoOutro,
+                ]}
+                onPress={() => onSelecionar(chave)}
+                activeOpacity={0.7}
+              >
+                <View style={styles.tabItemContent}>
+                  <Text style={styles.tabIcon}>{info.icone}</Text>
+                  <Text
+                    style={[
+                      styles.tabText,
+                      selecionada && styles.tabTextActive,
+                      abertaNoOutro && styles.tabTextNoOutro,
+                    ]}
+                  >
+                    {info.titulo}
+                  </Text>
+                  {abertaNoOutro && (
+                    <View style={styles.badgeOutroPainel}>
+                      <Text style={styles.badgeOutroPainelText}>
+                        {rotuloPainel === 'Painel 1' ? 'no P2 ⇄' : 'no P1 ⇄'}
+                      </Text>
+                    </View>
+                  )}
+                </View>
+              </TouchableOpacity>
+            );
+          })}
+          {/* Opção no final do scroll das abas */}
+          <TouchableOpacity
+            style={styles.tabItemOrganizar}
+            onPress={() => setModalReordenarAberto(true)}
+            activeOpacity={0.7}
+            hitSlop={{ top: 8, bottom: 8, left: 6, right: 6 }}
+          >
+            <View style={styles.tabItemContent}>
+              <Text style={styles.tabIcon}>⚙️</Text>
+              <Text style={styles.tabTextOrganizar}>Ordem das Abas</Text>
+            </View>
+          </TouchableOpacity>
+
+          {/* Botão de Fechar no Painel 2 */}
+          {onFecharPainel && (
+            <TouchableOpacity
+              style={styles.btnFecharDivisao}
+              onPress={onFecharPainel}
+              activeOpacity={0.7}
+              hitSlop={{ top: 10, bottom: 10, left: 8, right: 8 }}
+            >
+              <Text style={styles.btnFecharDivisaoText}>✕ Fechar</Text>
+            </TouchableOpacity>
+          )}
+        </ScrollView>
+
+        {/* Botão de navegação para a Direita */}
+        <TouchableOpacity
+          style={styles.tabScrollArrowBtn}
+          onPress={handleRolarDireita}
+          activeOpacity={0.7}
+          hitSlop={{ top: 8, bottom: 8, left: 6, right: 6 }}
+          accessibilityLabel="Rolar abas para a direita"
+        >
+          <Text style={styles.tabScrollArrowText}>▶</Text>
+        </TouchableOpacity>
+
+        {/* Botão fixo no canto da listagem das abas para acesso rápido */}
+        <TouchableOpacity
+          style={styles.fixedTabOrganizarBtn}
           onPress={() => setModalReordenarAberto(true)}
           activeOpacity={0.7}
           hitSlop={{ top: 8, bottom: 8, left: 6, right: 6 }}
+          accessibilityLabel="Organizar Ordem das Abas"
         >
-          <View style={styles.tabItemContent}>
-            <Text style={styles.tabIcon}>⚙️</Text>
-            <Text style={styles.tabTextOrganizar}>Ordem das Abas</Text>
-          </View>
+          <Text style={styles.fixedTabOrganizarIcon}>⚙️</Text>
         </TouchableOpacity>
-
-        {/* Botão de Fechar no Painel 2 */}
-        {onFecharPainel && (
-          <TouchableOpacity
-            style={styles.btnFecharDivisao}
-            onPress={onFecharPainel}
-            activeOpacity={0.7}
-            hitSlop={{ top: 10, bottom: 10, left: 8, right: 8 }}
-          >
-            <Text style={styles.btnFecharDivisaoText}>✕ Fechar</Text>
-          </TouchableOpacity>
-        )}
-      </ScrollView>
-
-      {/* Botão fixo no canto da listagem das abas para acesso rápido */}
-      <TouchableOpacity
-        style={styles.fixedTabOrganizarBtn}
-        onPress={() => setModalReordenarAberto(true)}
-        activeOpacity={0.7}
-        hitSlop={{ top: 8, bottom: 8, left: 6, right: 6 }}
-        accessibilityLabel="Organizar Ordem das Abas"
-      >
-        <Text style={styles.fixedTabOrganizarIcon}>⚙️</Text>
-      </TouchableOpacity>
-    </View>
-  );
+      </View>
+    );
+  };
 
   return (
     <KeyboardAvoidingView
@@ -727,6 +784,23 @@ const styles = StyleSheet.create({
   },
   desktopSingleBody: {
     flex: 1,
+  },
+  tabScrollArrowBtn: {
+    paddingHorizontal: 10,
+    paddingVertical: 10,
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: 'rgba(139,30,30,0.06)',
+    borderRightWidth: 1,
+    borderLeftWidth: 1,
+    borderColor: COLORS.border,
+    cursor: 'pointer' as any,
+    zIndex: 5,
+  },
+  tabScrollArrowText: {
+    color: COLORS.primary,
+    fontSize: 12,
+    fontWeight: 'bold',
   },
   paneWrap: {
     backgroundColor: COLORS.background,

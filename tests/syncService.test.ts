@@ -1,6 +1,6 @@
 import { describe, it } from 'node:test';
 import assert from 'node:assert';
-import { mesclarFichasLocalENuvem } from '../src/services/syncService';
+import { mesclarFichasLocalENuvem, sanitizarParaFirestore } from '../src/services/syncService';
 import { FichaPersonagem, normalizarFicha } from '../src/models/ficha';
 
 function criarFichaExemplo(id: string, nome: string, timestamp: number): FichaPersonagem {
@@ -108,5 +108,66 @@ describe('Serviço de Sincronização e Merge Offline-First (syncService)', () =
     assert.ok(Number.isFinite(ficha.atualizadoEm));
     assert.strictEqual(ficha.updatedAt, 5000);
     assert.strictEqual(ficha.atualizadoEm, 5000);
+  });
+
+  it('deve remover propriedades com valor undefined para compatibilidade com o Firestore', () => {
+    const fichaComUndefined: any = {
+      id: 'f-und',
+      nomePersonagem: 'Teste Undefined',
+      atualizadoEm: 1000,
+      updatedAt: 1000,
+      pvBonus: undefined,
+      pmBonus: undefined,
+      ordemAbas: undefined,
+      buffsTemporarios: undefined,
+    };
+
+    const limpo = sanitizarParaFirestore(fichaComUndefined);
+    assert.strictEqual(limpo.id, 'f-und');
+    assert.strictEqual(limpo.nomePersonagem, 'Teste Undefined');
+    assert.strictEqual('pvBonus' in limpo, false);
+    assert.strictEqual('pmBonus' in limpo, false);
+    assert.strictEqual('ordemAbas' in limpo, false);
+    assert.strictEqual('buffsTemporarios' in limpo, false);
+  });
+
+  it('NUNCA deve transferir ou mesclar fichas de um usuário A para a conta de um usuário B', () => {
+    // Ficha 1 pertence expressamente ao Usuário A
+    const fichaUserA: FichaPersonagem = {
+      ...criarFichaExemplo('f-user-a', 'Ladino do Usuário A', 1000),
+      userId: 'user_a',
+    };
+
+    // Ficha 2 foi criada localmente sem conta (anônima)
+    const fichaAnonima: FichaPersonagem = criarFichaExemplo('f-anonima', 'Guerreiro Convidado', 2000);
+
+    // O Usuário B faz login com sua lista na nuvem (que tem apenas o Mago do Usuário B)
+    const fichaUserBNuvem: FichaPersonagem = {
+      ...criarFichaExemplo('f-user-b-nuvem', 'Mago do Usuário B', 3000),
+      userId: 'user_b',
+    };
+
+    const { mescladas, enviarParaNuvem } = mesclarFichasLocalENuvem(
+      [fichaUserA, fichaAnonima],
+      [fichaUserBNuvem],
+      'user_b'
+    );
+
+    // A ficha do Usuário A NÃO pode estar na lista do Usuário B!
+    assert.strictEqual(mescladas.some((f) => f.id === 'f-user-a'), false);
+
+    // A ficha do Usuário A NÃO pode ser enviada para a nuvem do Usuário B!
+    assert.strictEqual(enviarParaNuvem.some((f) => f.id === 'f-user-a'), false);
+
+    // A ficha anônima/local sem conta deve ser herdada pelo Usuário B e agendada para envio
+    const herdada = mescladas.find((f) => f.id === 'f-anonima');
+    assert.ok(herdada);
+    assert.strictEqual(herdada.userId, 'user_b');
+    assert.strictEqual(enviarParaNuvem.some((f) => f.id === 'f-anonima'), true);
+
+    // A ficha que já era do Usuário B na nuvem deve permanecer com ele
+    const propria = mescladas.find((f) => f.id === 'f-user-b-nuvem');
+    assert.ok(propria);
+    assert.strictEqual(propria.userId, 'user_b');
   });
 });

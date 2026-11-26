@@ -10,6 +10,7 @@ import {
   obterClassesFicha,
   obterModAtributo,
 } from '../models/ficha';
+import { VERSAO_ATUAL } from '../utils/updateChecker';
 
 export function gerarHtmlFichaPdf(ficha: FichaPersonagem): string {
   const listaClasses = obterClassesFicha(ficha);
@@ -514,7 +515,7 @@ export function gerarHtmlFichaPdf(ficha: FichaPersonagem): string {
       <div style="padding:4px 0;">${itensGeraisHtml}</div>
 
       <div class="footer-impressao">
-        Ficha gerada pelo aplicativo Tormenta RPG Ficha Android • Versão 1.1.0 • ${new Date().toLocaleDateString('pt-BR')}
+        Ficha gerada pelo aplicativo Tormenta RPG Ficha • Versão ${VERSAO_ATUAL} • ${new Date().toLocaleDateString('pt-BR')}
       </div>
     </body>
     </html>

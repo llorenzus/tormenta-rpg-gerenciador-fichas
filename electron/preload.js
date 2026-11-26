@@ -6,4 +6,8 @@ contextBridge.exposeInMainWorld('electronAPI', {
   abrirJanelaCompendio: () => {
     ipcRenderer.send('abrir-janela-compendio');
   },
+  iniciarLoginGoogleNavegador: (firebaseConfig) => {
+    return ipcRenderer.invoke('iniciar-login-google-navegador', firebaseConfig);
+  },
 });
+

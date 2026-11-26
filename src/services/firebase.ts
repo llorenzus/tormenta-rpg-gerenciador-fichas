@@ -4,6 +4,7 @@ import {
   getAuth,
   initializeAuth,
   browserLocalPersistence,
+  browserPopupRedirectResolver,
   inMemoryPersistence,
 } from 'firebase/auth';
 import {
@@ -89,6 +90,7 @@ try {
   if (isWebEnvironment()) {
     auth = initializeAuth(app, {
       persistence: browserLocalPersistence,
+      popupRedirectResolver: browserPopupRedirectResolver,
     });
   } else {
     // React Native (Android / iOS)
@@ -121,6 +123,7 @@ try {
 let db: Firestore;
 try {
   db = initializeFirestore(app, {
+    ignoreUndefinedProperties: true,
     localCache: persistentLocalCache({
       tabManager: persistentMultipleTabManager(),
     }),
@@ -128,6 +131,7 @@ try {
 } catch {
   try {
     db = initializeFirestore(app, {
+      ignoreUndefinedProperties: true,
       localCache: persistentLocalCache(),
     });
   } catch {

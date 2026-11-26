@@ -12,7 +12,7 @@ service cloud.firestore {
       allow read, delete: if isOwner(userId);
 
       // Regra 1, 2 e 4: Apenas o próprio usuário pode criar ou atualizar, com validação de payload
-      allow create, update: if isOwner(userId) && isValidCharacter();
+      allow create, update: if isOwner(userId) && isValidCharacter(characterId);
     }
 
     // ========================================================
@@ -30,12 +30,13 @@ service cloud.firestore {
     }
 
     // Validação de integridade de esquema e prevenção de abuso de cota / payloads gigantes
-    function isValidCharacter() {
+    function isValidCharacter(characterId) {
       let data = request.resource.data;
 
       return (
-        // O campo 'id' deve ser uma string válida de tamanho razoável
+        // O campo 'id' deve ser uma string válida, coincidir com o characterId da rota e ter tamanho restrito
         data.id is string &&
+        data.id == characterId &&
         data.id.size() > 0 &&
         data.id.size() <= 64 &&
 
@@ -45,9 +46,10 @@ service cloud.firestore {
 
         // Timestamp numérico de atualização
         data.atualizadoEm is number &&
+        (!('updatedAt' in data) || data.updatedAt is number) &&
 
-        // Limite de chaves no documento para impedir injeção arbitrária de campos
-        data.keys().size() <= 45 &&
+        // Limite de chaves no documento para acomodar todos os campos da ficha (máx ~48) sem injeção arbitrária
+        data.keys().size() <= 60 &&
 
         // Limites máximos de itens em listas para impedir estouro de cota e tráfego abusivo
         (!('armas' in data) || (data.armas is list && data.armas.size() <= 50)) &&

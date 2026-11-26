@@ -28,6 +28,62 @@ import { VERSAO_ATUAL } from '../utils/updateChecker';
 export { normalizarFicha };
 
 const STORAGE_KEY = '@tormenta_rpg:fichas_v1';
+const USER_CACHE_PREFIX = '@tormenta_rpg:fichas_user_';
+
+/**
+ * Salva as fichas no cache exclusivo do usuário autenticado (isolamento por conta)
+ */
+export async function armazenarCacheUsuario(
+  userId: string,
+  fichas: FichaPersonagem[]
+): Promise<void> {
+  if (!userId) return;
+  try {
+    const normalizadas = fichas.map((f) => normalizarFicha({ ...f, userId }));
+    await AsyncStorage.setItem(`${USER_CACHE_PREFIX}${userId}`, JSON.stringify(normalizadas));
+  } catch (err) {
+    console.warn('Erro ao salvar cache isolado do usuário:', err);
+  }
+}
+
+/**
+ * Carrega as fichas do cache exclusivo do usuário autenticado
+ */
+export async function carregarCacheUsuario(userId: string): Promise<FichaPersonagem[]> {
+  if (!userId) return [];
+  try {
+    const json = await AsyncStorage.getItem(`${USER_CACHE_PREFIX}${userId}`);
+    if (!json) return [];
+    const parsed = JSON.parse(json) as FichaPersonagem[];
+    if (!Array.isArray(parsed)) return [];
+    return parsed
+      .map(normalizarFicha)
+      .sort((a, b) => (b.updatedAt || b.atualizadoEm || 0) - (a.updatedAt || a.atualizadoEm || 0));
+  } catch (err) {
+    console.warn('Erro ao carregar cache do usuário:', err);
+    return [];
+  }
+}
+
+/**
+ * Limpa com segurança as fichas ativas da sessão local ao deslogar.
+ * Se o userId for informado, preserva as fichas no cache dele antes de limpar o espaço compartilhado,
+ * garantindo que um próximo usuário NÃO receba as fichas do usuário anterior.
+ */
+export async function limparFichasAtivasAoDeslogar(userIdDeslogado?: string): Promise<void> {
+  try {
+    if (userIdDeslogado) {
+      const ativas = await carregarFichasLocais();
+      if (ativas.length > 0) {
+        await armazenarCacheUsuario(userIdDeslogado, ativas);
+      }
+    }
+    // Esvazia as fichas ativas locais da máquina
+    await AsyncStorage.setItem(STORAGE_KEY, JSON.stringify([]));
+  } catch (err) {
+    console.warn('Erro ao limpar fichas ativas no logout:', err);
+  }
+}
 
 export interface EnvelopeExportacaoFicha {
   tipoArquivo: 'TORMENTA_RPG_FICHA';
@@ -180,7 +236,7 @@ export async function salvarPdfNoAparelho(ficha: FichaPersonagem): Promise<boole
 export async function salvarJsonNoAparelho(ficha: FichaPersonagem): Promise<boolean> {
   const payload: EnvelopeExportacaoFicha = {
     tipoArquivo: 'TORMENTA_RPG_FICHA',
-    versaoApp: '1.1.0',
+    versaoApp: VERSAO_ATUAL,
     exportadoEm: new Date().toISOString(),
     ficha: normalizarFicha(ficha),
   };
@@ -359,7 +415,7 @@ export async function compartilharJson(ficha: FichaPersonagem): Promise<void> {
 
   const payload: EnvelopeExportacaoFicha = {
     tipoArquivo: 'TORMENTA_RPG_FICHA',
-    versaoApp: '1.1.0',
+    versaoApp: VERSAO_ATUAL,
     exportadoEm: new Date().toISOString(),
     ficha: normalizarFicha(ficha),
   };

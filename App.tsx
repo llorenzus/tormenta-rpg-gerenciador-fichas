@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import {
   Alert,
+  AppState,
   BackHandler,
   Platform,
   SafeAreaView,
@@ -8,9 +9,10 @@ import {
   StyleSheet,
   View,
 } from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { CompendioModal } from './src/components/CompendioModal';
 import { ModalAtualizacao } from './src/components/ModalAtualizacao';
-import { ModalContaNuvem } from './src/components/ModalContaNuvem';
+import { ModalLogin } from './src/components/ModalLogin';
 import { ModalExportarFicha } from './src/components/ModalExportarFicha';
 import {
   ClasseData,
@@ -45,6 +47,7 @@ import {
   excluirFichaLocal,
   imprimirFichaDireto,
   importarFichaArquivoJson,
+  limparFichasAtivasAoDeslogar,
   salvarFichaLocal,
   salvarJsonNoAparelho,
   salvarPdfNoAparelho,
@@ -52,12 +55,21 @@ import {
 import { COLORS } from './src/theme/colors';
 import { checarAtualizacaoOnline, InfoAtualizacao } from './src/utils/updateChecker';
 import { User } from 'firebase/auth';
-import { observarEstadoAuth } from './src/services/authService';
+import {
+  fazerLogout,
+  observarEstadoAuth,
+  obterUsuarioAtual,
+} from './src/services/authService';
 import {
   sincronizarPrimeiroLogin,
   enviarFichaParaNuvem,
   excluirFichaDaNuvem,
 } from './src/services/syncService';
+
+const obterNomeJogadorAtual = (user: User | null): string => {
+  if (!user) return '';
+  return user.displayName?.trim() || user.email?.split('@')[0]?.trim() || '';
+};
 
 export default function App() {
   const [iniciado, setIniciado] = useState(false);
@@ -77,6 +89,7 @@ export default function App() {
   // Debounce de 2.5s para economizar as 20.000 escritas diárias gratuitas do Cloud Firestore
   const salvarNuvemDebounceRef = useRef<NodeJS.Timeout | null>(null);
   const fichaPendenteNuvemRef = useRef<FichaPersonagem | null>(null);
+  const ultimoHashSalvoNuvemRef = useRef<Map<string, string>>(new Map());
 
   // Limpa timers se desmontar
   useEffect(() => {
@@ -89,6 +102,45 @@ export default function App() {
       }
     };
   }, []);
+
+  // Flush automático e resiliente para evitar qualquer perda de dados ao fechar ou minimizar o app
+  useEffect(() => {
+    const flushDadosPendentes = async () => {
+      if (fichaPendenteSalvarRef.current) {
+        const pendente = fichaPendenteSalvarRef.current;
+        await salvarFichaLocal(pendente);
+        const user = usuarioAtual || obterUsuarioAtual();
+        if (user) {
+          const serial = JSON.stringify(pendente);
+          if (ultimoHashSalvoNuvemRef.current.get(pendente.id) !== serial) {
+            ultimoHashSalvoNuvemRef.current.set(pendente.id, serial);
+            enviarFichaParaNuvem(user.uid, pendente).catch(() => {});
+          }
+        }
+      }
+    };
+
+    // Mobile Android/iOS: salva imediatamente ao pausar ou colocar o app em background
+    const subAppState = AppState.addEventListener('change', (estado) => {
+      if (estado === 'background' || estado === 'inactive') {
+        flushDadosPendentes();
+      }
+    });
+
+    // Windows Desktop / Web: salva imediatamente ao fechar a janela ou perder o foco
+    if (Platform.OS === 'web' && typeof window !== 'undefined') {
+      window.addEventListener('beforeunload', flushDadosPendentes);
+      window.addEventListener('blur', flushDadosPendentes);
+    }
+
+    return () => {
+      subAppState.remove();
+      if (Platform.OS === 'web' && typeof window !== 'undefined') {
+        window.removeEventListener('beforeunload', flushDadosPendentes);
+        window.removeEventListener('blur', flushDadosPendentes);
+      }
+    };
+  }, [usuarioAtual]);
 
   useEffect(() => {
     carregarFichasLocais().then(setFichas);
@@ -119,22 +171,75 @@ export default function App() {
       window.addEventListener('focus', sincronizarFichas);
     }
 
-    // Observa o estado de autenticação do usuário (login/logout)
-    const unsubAuth = observarEstadoAuth((user) => {
+    // Checagem imediata de sessão anterior persistida para evitar tela inicial piscar
+    AsyncStorage.getItem('@tormenta_rpg:usuario_conectado_uid')
+      .then((uid) => {
+        if (uid) {
+          AsyncStorage.getItem('@tormenta_rpg:manter_conectado').then((pref) => {
+            if (pref !== 'false') {
+              setIniciado(true);
+            }
+          });
+        }
+      })
+      .catch(() => {});
+
+    // Observa o estado de autenticação do usuário (login/logout e restauração de sessão)
+    const unsubAuth = observarEstadoAuth(async (user) => {
       setUsuarioAtual(user);
       if (user) {
-        // Executa a primeira sincronização / merge seguro sem apagar fichas locais
+        AsyncStorage.setItem('@tormenta_rpg:usuario_conectado_uid', user.uid).catch(() => {});
+
+        // Verifica a preferência do usuário de persistir o login
+        let manterConectado = true;
+        try {
+          const pref = await AsyncStorage.getItem('@tormenta_rpg:manter_conectado');
+          if (pref === 'false') {
+            manterConectado = false;
+          }
+        } catch {}
+
+        if (!manterConectado) {
+          // Se o usuário desmarcou "Permanecer conectado", efetua logout ao reabrir
+          await AsyncStorage.removeItem('@tormenta_rpg:usuario_conectado_uid');
+          await fazerLogout();
+          return;
+        }
+
+        // Se está conectado e com persistência ativa, entra direto na tela de fichas
+        setIniciado(true);
+
+        const nomeJogador = obterNomeJogadorAtual(user);
+
+        // Ao abrir a aplicação, se logado ou ao logar, busca os dados do usuário e carrega para o app
         sincronizarPrimeiroLogin(user.uid)
           .then((listaConsolidada) => {
-            setFichas(listaConsolidada);
+            const listaComJogador = nomeJogador
+              ? listaConsolidada.map((f) => ({ ...f, jogador: nomeJogador }))
+              : listaConsolidada;
+            setFichas(listaComJogador);
             setFichaAberta((atual) => {
               if (!atual) return atual;
-              return listaConsolidada.find((f) => f.id === atual.id) || atual;
+              const fEncontrada = listaComJogador.find((f) => f.id === atual.id);
+              return fEncontrada || (nomeJogador ? { ...atual, jogador: nomeJogador } : atual);
             });
           })
           .catch((err) => {
             console.warn('Erro ao mesclar dados com a nuvem:', err);
           });
+      } else {
+        // Se deslogou, cancela qualquer gravação pendente em nuvem e volta para a tela inicial
+        if (salvarNuvemDebounceRef.current) {
+          clearTimeout(salvarNuvemDebounceRef.current);
+          salvarNuvemDebounceRef.current = null;
+        }
+        fichaPendenteNuvemRef.current = null;
+        setIniciado(false);
+        setFichaAberta(null);
+        setFichas([]); // Limpa as fichas da tela imediatamente para evitar vazamento entre usuários
+        AsyncStorage.removeItem('@tormenta_rpg:usuario_conectado_uid').catch(() => {});
+        const userAnterior = usuarioAtual || obterUsuarioAtual();
+        limparFichasAtivasAoDeslogar(userAnterior?.uid).catch(() => {});
       }
     });
 
@@ -196,8 +301,10 @@ export default function App() {
     setFichas(listaAtualizada);
 
     // Se logado, envia a versão final imediata para o Firestore
-    if (usuarioAtual) {
-      enviarFichaParaNuvem(usuarioAtual.uid, fichaFinal).catch(() => {});
+    const userAuth = usuarioAtual || obterUsuarioAtual();
+    if (userAuth) {
+      ultimoHashSalvoNuvemRef.current.set(fichaFinal.id, JSON.stringify(fichaFinal));
+      enviarFichaParaNuvem(userAuth.uid, fichaFinal).catch(() => {});
     }
 
     setFichaAberta(null);
@@ -229,10 +336,27 @@ export default function App() {
   const handleCriarNova = () => {
     // Cria ficha nova com nome vazio conforme especificação
     const nova = criarNovaFichaPadrao();
+    const user = usuarioAtual || obterUsuarioAtual();
+    if (user?.uid) {
+      nova.userId = user.uid;
+    }
+    const nomeJogador = obterNomeJogadorAtual(user);
+    if (nomeJogador) {
+      nova.jogador = nomeJogador;
+    }
     setFichaAberta(nova);
   };
 
   const handleAtualizarFicha = (editada: FichaPersonagem) => {
+    const user = usuarioAtual || obterUsuarioAtual();
+    if (user?.uid && !editada.userId) {
+      editada.userId = user.uid;
+    }
+    const nomeJogador = obterNomeJogadorAtual(user);
+    if (nomeJogador && editada.jogador !== nomeJogador) {
+      editada.jogador = nomeJogador;
+    }
+
     // 1. Atualização imediata em memória para digitação e cliques fluidos a 60 FPS
     setFichaAberta(editada);
     fichaPendenteSalvarRef.current = editada;
@@ -252,17 +376,24 @@ export default function App() {
     }, 600);
 
     // 3. Envio para a nuvem no Firestore com debounce de 2.5s para economizar cota diária
-    if (usuarioAtual) {
+    const userAuth = usuarioAtual || obterUsuarioAtual();
+    if (userAuth) {
       fichaPendenteNuvemRef.current = editada;
       if (salvarNuvemDebounceRef.current) {
         clearTimeout(salvarNuvemDebounceRef.current);
       }
       salvarNuvemDebounceRef.current = setTimeout(async () => {
         salvarNuvemDebounceRef.current = null;
-        if (fichaPendenteNuvemRef.current && usuarioAtual) {
+        const currentUser = obterUsuarioAtual();
+        if (fichaPendenteNuvemRef.current && currentUser) {
           const alvoNuvem = fichaPendenteNuvemRef.current;
           fichaPendenteNuvemRef.current = null;
-          await enviarFichaParaNuvem(usuarioAtual.uid, alvoNuvem);
+          const serial = JSON.stringify(alvoNuvem);
+          if (ultimoHashSalvoNuvemRef.current.get(alvoNuvem.id) === serial) {
+            return; // Sem alteração real nos dados; evita conexão desnecessária com o Firestore
+          }
+          ultimoHashSalvoNuvemRef.current.set(alvoNuvem.id, serial);
+          await enviarFichaParaNuvem(currentUser.uid, alvoNuvem);
         }
       }, 2500);
     }
@@ -300,11 +431,26 @@ export default function App() {
     setFichas(listaAtualizada);
 
     // Sincroniza imediatamente na nuvem ao acionar salvamento manual
-    if (usuarioAtual) {
-      enviarFichaParaNuvem(usuarioAtual.uid, fichaFinal).catch(() => {});
+    const userManual = usuarioAtual || obterUsuarioAtual();
+    const nomeJogadorManual = obterNomeJogadorAtual(userManual);
+    if (nomeJogadorManual && fichaFinal.jogador !== nomeJogadorManual) {
+      fichaFinal.jogador = nomeJogadorManual;
+    }
+    if (userManual) {
+      ultimoHashSalvoNuvemRef.current.set(fichaFinal.id, JSON.stringify(fichaFinal));
+      enviarFichaParaNuvem(userManual.uid, fichaFinal).catch(() => {});
     }
 
     return true;
+  };
+
+  const handleIniciar = () => {
+    const user = usuarioAtual || obterUsuarioAtual();
+    if (!user) {
+      setModalContaVisivel(true);
+    } else {
+      setIniciado(true);
+    }
   };
 
   const handleExcluirFicha = async (id: string) => {
@@ -312,8 +458,9 @@ export default function App() {
     setFichas(listaAtualizada);
 
     // Se logado, remove a ficha correspondente da nuvem
-    if (usuarioAtual) {
-      excluirFichaDaNuvem(usuarioAtual.uid, id).catch(() => {});
+    const userDel = usuarioAtual || obterUsuarioAtual();
+    if (userDel) {
+      excluirFichaDaNuvem(userDel.uid, id).catch(() => {});
     }
 
     if (fichaAberta?.id === id) {
@@ -623,7 +770,7 @@ export default function App() {
       <View style={styles.container}>
         {!iniciado ? (
           <TelaInicialScreen
-            onIniciar={() => setIniciado(true)}
+            onIniciar={handleIniciar}
             usuarioAtual={usuarioAtual}
             onAbrirConta={() => setModalContaVisivel(true)}
           />
@@ -643,7 +790,13 @@ export default function App() {
             onCriarNova={handleCriarNova}
             onImportarFicha={handleImportarFicha}
             onExportarFicha={handleExportarFicha}
-            onAbrirFicha={(f) => setFichaAberta(f)}
+            onAbrirFicha={(f) => {
+              const user = usuarioAtual || obterUsuarioAtual();
+              const nomeJogador = obterNomeJogadorAtual(user);
+              const fichaComJogador =
+                nomeJogador && f.jogador !== nomeJogador ? { ...f, jogador: nomeJogador } : f;
+              setFichaAberta(fichaComJogador);
+            }}
             onExcluirFicha={handleExcluirFicha}
             onAbrirCompendio={() => setCompendioGeralAberto(true)}
           />
@@ -674,10 +827,25 @@ export default function App() {
           onFechar={() => setModalAtualizacaoVisivel(false)}
         />
 
-        <ModalContaNuvem
+        <ModalLogin
           visivel={modalContaVisivel}
           usuarioAtual={usuarioAtual}
           onFechar={() => setModalContaVisivel(false)}
+          onLoginSucesso={(user) => {
+            setUsuarioAtual(user);
+            setIniciado(true);
+            setModalContaVisivel(false);
+          }}
+          onLogoutSucesso={() => {
+            setUsuarioAtual(null);
+            setIniciado(false);
+            setFichaAberta(null);
+            if (salvarNuvemDebounceRef.current) {
+              clearTimeout(salvarNuvemDebounceRef.current);
+              salvarNuvemDebounceRef.current = null;
+            }
+            fichaPendenteNuvemRef.current = null;
+          }}
         />
       </View>
     </SafeAreaView>

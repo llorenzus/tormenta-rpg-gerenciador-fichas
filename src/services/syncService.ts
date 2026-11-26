@@ -14,19 +14,41 @@ export interface ResultadoMerge {
 }
 
 /**
+ * Remove propriedades com valor `undefined` para garantir compatibilidade estrita com Firestore
+ */
+export function sanitizarParaFirestore(ficha: FichaPersonagem): Record<string, any> {
+  const limpo: Record<string, any> = {};
+  for (const [chave, valor] of Object.entries(ficha)) {
+    if (valor !== undefined) {
+      limpo[chave] = valor;
+    }
+  }
+  return limpo;
+}
+
+/**
  * Algoritmo puro de mesclagem (Merge) Offline-First:
  * - NUNCA apaga fichas locais se a nuvem estiver vazia (faz upload de tudo que é local).
  * - Se uma ficha existe apenas localmente: sobe para a nuvem.
  * - Se uma ficha existe apenas na nuvem: baixa e salva localmente.
  * - Se existe em ambos os lugares: mantém a versão com o updatedAt (ou atualizadoEm) mais recente.
+ * - PROTEÇÃO MULTI-USUÁRIO: Se uma ficha local pertencer a outro usuário (f.userId !== userId),
+ *   ela NUNCA é enviada nem mesclada na conta do novo usuário.
  */
 export function mesclarFichasLocalENuvem(
   fichasLocais: FichaPersonagem[] = [],
-  fichasNuvem: FichaPersonagem[] = []
+  fichasNuvem: FichaPersonagem[] = [],
+  userId?: string
 ): ResultadoMerge {
   const mapLocal = new Map<string, FichaPersonagem>();
   fichasLocais.forEach((f) => {
-    if (f && f.id) mapLocal.set(f.id, normalizarFicha(f));
+    if (f && f.id) {
+      // Bloqueia contaminação cruzada: ignora fichas de outros usuários
+      if (userId && f.userId && f.userId !== userId) {
+        return;
+      }
+      mapLocal.set(f.id, normalizarFicha(f));
+    }
   });
 
   const mapNuvem = new Map<string, FichaPersonagem>();
@@ -44,23 +66,27 @@ export function mesclarFichasLocalENuvem(
 
     if (local && !cloud) {
       // 1. Existe somente no aparelho local: preserva e agenda upload para a nuvem
-      mescladas.push(local);
-      enviarParaNuvem.push(local);
+      const fichaComDono = userId ? { ...local, userId } : local;
+      mescladas.push(fichaComDono);
+      enviarParaNuvem.push(fichaComDono);
     } else if (!local && cloud) {
       // 2. Existe somente na nuvem: baixa para o aparelho local
-      mescladas.push(cloud);
+      const fichaComDono = userId ? { ...cloud, userId } : cloud;
+      mescladas.push(fichaComDono);
     } else if (local && cloud) {
       // 3. Existe nos dois: compara timestamps mais recentes
       const timeLocal = Number(local.updatedAt || local.atualizadoEm) || 0;
       const timeCloud = Number(cloud.updatedAt || cloud.atualizadoEm) || 0;
 
       if (timeLocal >= timeCloud) {
-        mescladas.push(local);
+        const fichaComDono = userId ? { ...local, userId } : local;
+        mescladas.push(fichaComDono);
         if (timeLocal > timeCloud) {
-          enviarParaNuvem.push(local);
+          enviarParaNuvem.push(fichaComDono);
         }
       } else {
-        mescladas.push(cloud);
+        const fichaComDono = userId ? { ...cloud, userId } : cloud;
+        mescladas.push(fichaComDono);
       }
     }
   }
@@ -85,7 +111,20 @@ export async function sincronizarPrimeiroLogin(
   fichasLocaisParam?: FichaPersonagem[]
 ): Promise<FichaPersonagem[]> {
   const storage = await import('../storage/fichaStorage');
-  const locais = fichasLocaisParam || (await storage.carregarFichasLocais());
+  let locais: FichaPersonagem[] = fichasLocaisParam || (await storage.carregarFichasLocais());
+
+  // Se a lista ativa estiver vazia (ex: logout recente de outro usuário), restaura o cache isolado deste usuário
+  if (locais.length === 0 && userId) {
+    const cacheDoUsuario = await storage.carregarCacheUsuario(userId);
+    if (cacheDoUsuario.length > 0) {
+      locais = cacheDoUsuario;
+    }
+  }
+
+  // Filtra qualquer ficha que pertença expressamente a outro usuário
+  if (userId) {
+    locais = locais.filter((f) => !f.userId || f.userId === userId);
+  }
 
   if (!isFirebaseConfigured() || !userId) {
     return locais;
@@ -96,17 +135,22 @@ export async function sincronizarPrimeiroLogin(
     const snapshot = await getDocs(colRef);
     const nuvem: FichaPersonagem[] = snapshot.docs.map((docSnap) => docSnap.data() as FichaPersonagem);
 
-    const { mescladas, enviarParaNuvem } = mesclarFichasLocalENuvem(locais, nuvem);
+    const { mescladas, enviarParaNuvem } = mesclarFichasLocalENuvem(locais, nuvem, userId);
 
-    // Salva a lista consolidada no armazenamento local do dispositivo
+    // Salva a lista consolidada no armazenamento local da sessão ativa
     await storage.salvarListaFichasLocais(mescladas);
+
+    // Salva também no cache isolado deste usuário
+    await storage.armazenarCacheUsuario(userId, mescladas);
 
     // Envia para o Firestore as fichas locais novas ou mais atualizadas
     if (enviarParaNuvem.length > 0) {
       Promise.allSettled(
-        enviarParaNuvem.map((ficha) =>
-          setDoc(doc(db, 'users', userId, 'characters', ficha.id), ficha)
-        )
+        enviarParaNuvem.map((ficha) => {
+          const comDono = normalizarFicha({ ...ficha, userId });
+          const limpa = sanitizarParaFirestore(comDono);
+          return setDoc(doc(db, 'users', userId, 'characters', ficha.id), limpa);
+        })
       ).catch((err) => {
         console.warn('Erro ao sincronizar uploads iniciais para o Firestore:', err);
       });
@@ -128,7 +172,7 @@ export async function enviarFichaParaNuvem(userId: string, ficha: FichaPersonage
   try {
     const fichaPronta = normalizarFicha(ficha);
     const docRef = doc(db, 'users', userId, 'characters', fichaPronta.id);
-    await setDoc(docRef, fichaPronta);
+    await setDoc(docRef, sanitizarParaFirestore(fichaPronta));
   } catch (err) {
     console.warn('Erro ao salvar ficha na nuvem:', err);
   }
