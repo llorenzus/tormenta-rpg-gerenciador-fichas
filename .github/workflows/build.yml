@@ -106,11 +106,11 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Publicar Executáveis Windows nos Artifacts
+      - name: Publicar Instalador Windows nos Artifacts
         uses: actions/upload-artifact@v7
         with:
-          name: TRPG-Ficha-Windows-v${{ env.APP_VERSION }}
-          path: dist-electron/*.exe
+          name: TRPG-Ficha-Windows-Setup-v${{ env.APP_VERSION }}
+          path: dist-electron/*Setup*.exe
 
   # ========================================================
   # JOB 3: Publicação da Release no GitHub (Apenas em Tags)
@@ -133,14 +133,14 @@ jobs:
       - name: Listar arquivos para a Release
         run: ls -la release-assets
 
-      - name: Publicar GitHub Release com APK e Executáveis
+      - name: Publicar GitHub Release com APK e Instalador Setup
         uses: softprops/action-gh-release@v2
         with:
           files: |
             release-assets/*.apk
-            release-assets/*.exe
+            release-assets/*Setup*.exe
             release-assets/**/*.apk
-            release-assets/**/*.exe
+            release-assets/**/*Setup*.exe
           name: Versão ${{ github.ref_name }}
           generate_release_notes: true
           draft: false

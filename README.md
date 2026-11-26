@@ -107,14 +107,13 @@ npm run electron
 ```
 *O script compila a interface web via Expo e abre a janela do Electron com recarregamento integrado.*
 
-#### Compilar Executável Windows (.exe):
-Para gerar o executável final standalone (instalador e versão portátil):
+#### Compilar Instalador Windows (.exe):
+Para gerar o executável de instalação (Setup NSIS):
 ```bash
 npm run build:windows
 ```
-Os arquivos gerados estarão disponíveis no diretório **`dist-electron/`**:
-- Instalador NSIS (`TRPG-Gerenciador-Fichas-Setup-*.exe`)
-- Executável Portátil (`TRPG-Gerenciador-Fichas-*.exe`)
+O arquivo gerado estará disponível no diretório **`dist-electron/`**:
+- Instalador Setup NSIS (`TRPG-Gerenciador-Fichas-Setup-*.exe`)
 
 ---
 

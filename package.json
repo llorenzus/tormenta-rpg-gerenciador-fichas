@@ -63,8 +63,7 @@
     "win": {
       "icon": "assets/icon.ico",
       "target": [
-        "nsis",
-        "portable"
+        "nsis"
       ]
     },
     "nsis": {
@@ -73,9 +72,6 @@
       "createDesktopShortcut": true,
       "createStartMenuShortcut": true,
       "artifactName": "${productName}-Setup-v${version}.${ext}"
-    },
-    "portable": {
-      "artifactName": "${productName}-v${version}.${ext}"
     }
   },
   "private": true
