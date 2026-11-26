@@ -1,0 +1,67 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // Por padrão, qualquer coleção ou documento não explicitado é negado automaticamente.
+    // A coleção raiz 'users' não possui regra 'allow', logo ninguém pode listá-la nem lê-la.
+
+    // Subcoleção de personagens: users/{userId}/characters/{characterId}
+    match /users/{userId}/characters/{characterId} {
+      // Regra 1 e 2: Apenas o próprio usuário autenticado pode ler ou apagar suas fichas
+      allow read, delete: if isOwner(userId);
+
+      // Regra 1, 2 e 4: Apenas o próprio usuário pode criar ou atualizar, com validação de payload
+      allow create, update: if isOwner(userId) && isValidCharacter(characterId);
+    }
+
+    // ========================================================
+    // Funções Auxiliares de Segurança e Validação
+    // ========================================================
+
+    // Verifica se a requisição provém de um usuário autenticado no Firebase Auth
+    function isAuthenticated() {
+      return request.auth != null && request.auth.uid != null;
+    }
+
+    // Verifica se o ID do usuário autenticado coincide com o dono do documento na rota
+    function isOwner(userId) {
+      return isAuthenticated() && request.auth.uid == userId;
+    }
+
+    // Validação de integridade de esquema e prevenção de abuso de cota / payloads gigantes
+    function isValidCharacter(characterId) {
+      let data = request.resource.data;
+
+      return (
+        // O campo 'id' deve ser uma string válida, coincidir com o characterId da rota e ter tamanho restrito
+        data.id is string &&
+        data.id == characterId &&
+        data.id.size() > 0 &&
+        data.id.size() <= 64 &&
+
+        // Nome do personagem obrigatório com limite de tamanho
+        data.nomePersonagem is string &&
+        data.nomePersonagem.size() <= 120 &&
+
+        // Timestamp numérico de atualização
+        data.atualizadoEm is number &&
+        (!('updatedAt' in data) || data.updatedAt is number) &&
+
+        // Limite de chaves no documento para acomodar todos os campos da ficha (máx ~48) sem injeção arbitrária
+        data.keys().size() <= 60 &&
+
+        // Limites máximos de itens em listas para impedir estouro de cota e tráfego abusivo
+        (!('armas' in data) || (data.armas is list && data.armas.size() <= 50)) &&
+        (!('armaduras' in data) || (data.armaduras is list && data.armaduras.size() <= 50)) &&
+        (!('magias' in data) || (data.magias is list && data.magias.size() <= 150)) &&
+        (!('talentos' in data) || (data.talentos is list && data.talentos.size() <= 100)) &&
+        (!('habilidadesRaca' in data) || (data.habilidadesRaca is list && data.habilidadesRaca.size() <= 50)) &&
+        (!('habilidadesClasse' in data) || (data.habilidadesClasse is list && data.habilidadesClasse.size() <= 80)) &&
+        (!('manobras' in data) || (data.manobras is list && data.manobras.size() <= 50)) &&
+        (!('itensGerais' in data) || (data.itensGerais is list && data.itensGerais.size() <= 150)) &&
+        (!('pericias' in data) || (data.pericias is list && data.pericias.size() <= 60))
+      );
+    }
+  }
+}

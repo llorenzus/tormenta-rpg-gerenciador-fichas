@@ -19,9 +19,12 @@ import {
 import { COLORS } from '../theme/colors';
 import { ModalSobre } from '../components/ModalSobre';
 import { abrirCompendioEmJanelaSeparada } from '../utils/janelaCompendio';
+import { User } from 'firebase/auth';
 
 interface Props {
   fichas: FichaPersonagem[];
+  usuarioAtual?: User | null;
+  onAbrirConta?: () => void;
   onCriarNova: () => void;
   onImportarFicha: () => void;
   onExportarFicha: (ficha: FichaPersonagem) => void;
@@ -32,6 +35,8 @@ interface Props {
 
 export const ListaFichasScreen: React.FC<Props> = ({
   fichas,
+  usuarioAtual,
+  onAbrirConta,
   onCriarNova,
   onImportarFicha,
   onExportarFicha,
@@ -79,6 +84,29 @@ export const ListaFichasScreen: React.FC<Props> = ({
           </View>
 
           <View style={[styles.topActionsRow, isDesktop ? styles.actionsDesktop : styles.actionsMobile]}>
+            {onAbrirConta && (
+              <TouchableOpacity
+                style={[
+                  styles.btnAction,
+                  styles.btnUserBadge,
+                  isDesktop ? styles.btnUserBadgeDesktop : styles.btnUserBadgeMobile,
+                ]}
+                onPress={onAbrirConta}
+                activeOpacity={0.8}
+                accessibilityLabel="Conta e Perfil"
+              >
+                <Text style={styles.btnUserIcon}>{usuarioAtual ? '👤' : '🔑'}</Text>
+                <Text
+                  style={styles.btnUserText}
+                  numberOfLines={1}
+                >
+                  {usuarioAtual
+                    ? usuarioAtual.displayName || usuarioAtual.email?.split('@')[0] || 'Usuário'
+                    : 'Entrar'}
+                </Text>
+              </TouchableOpacity>
+            )}
+
             <TouchableOpacity
               style={[styles.btnAction, styles.btnSobreAction]}
               onPress={() => setSobreVisivel(true)}
@@ -382,6 +410,32 @@ const styles = StyleSheet.create({
     borderColor: 'rgba(255, 255, 255, 0.25)',
     paddingHorizontal: 8,
     paddingVertical: 6,
+  },
+  btnUserBadge: {
+    backgroundColor: 'rgba(200, 157, 60, 0.18)',
+    borderWidth: 1,
+    borderColor: COLORS.gold,
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 5,
+  },
+  btnUserBadgeMobile: {
+    paddingHorizontal: 8,
+    paddingVertical: 6,
+    maxWidth: 120,
+  },
+  btnUserBadgeDesktop: {
+    paddingHorizontal: 12,
+    paddingVertical: 8,
+    maxWidth: 220,
+  },
+  btnUserIcon: {
+    fontSize: 12,
+  },
+  btnUserText: {
+    fontSize: 12,
+    color: '#FFEAA7',
+    fontWeight: '700',
   },
   btnSobreActionText: {
     fontSize: 12,

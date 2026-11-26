@@ -1,69 +1,109 @@
 import React, { useState } from 'react';
-import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import {
+  Platform,
+  SafeAreaView,
+  ScrollView,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  useWindowDimensions,
+  View,
+} from 'react-native';
+import { User } from 'firebase/auth';
 import { ModalSobre } from '../components/ModalSobre';
 import { COLORS } from '../theme/colors';
 
 interface Props {
   onIniciar: () => void;
+  usuarioAtual?: User | null;
+  onAbrirConta?: () => void;
 }
 
-export const TelaInicialScreen: React.FC<Props> = ({ onIniciar }) => {
+export const TelaInicialScreen: React.FC<Props> = ({
+  onIniciar,
+  usuarioAtual,
+  onAbrirConta,
+}) => {
   const [sobreVisivel, setSobreVisivel] = useState(false);
+  const { height } = useWindowDimensions();
+  const isCompactScreen = height < 680;
 
   return (
-    <View style={styles.container}>
-      <View style={styles.headerBlock}>
-        <Text style={styles.title}>TORMENTA RPG</Text>
-        <Text style={styles.subtitle}>Gerenciador de Fichas de Personagem</Text>
-        <View style={styles.authorBadge}>
-          <Text style={styles.authorText}>Desenvolvido e produzido por Lorenzo Rech Tochetto</Text>
-        </View>
-      </View>
-
-      <View style={styles.centerArea}>
-        <TouchableOpacity
-          style={styles.botaoCircular}
-          onPress={onIniciar}
-          activeOpacity={0.85}
-        >
-          <View style={styles.botaoCircularInner}>
-            <Text style={styles.botaoTexto}>Iniciar</Text>
+    <SafeAreaView style={styles.safeArea}>
+      <ScrollView
+        contentContainerStyle={[
+          styles.scrollContainer,
+          isCompactScreen && styles.scrollContainerCompact,
+        ]}
+        bounces={false}
+      >
+        <View style={styles.headerBlock}>
+          <Text style={styles.title}>TORMENTA RPG</Text>
+          <Text style={styles.subtitle}>Gerenciador de Fichas de Personagem</Text>
+          <View style={styles.authorBadge}>
+            <Text style={styles.authorText}>Desenvolvido e produzido por Lorenzo Rech Tochetto</Text>
           </View>
-        </TouchableOpacity>
-      </View>
+        </View>
 
-      <View style={styles.footerWrap}>
-        <Text style={styles.footerText}>Toque em Iniciar para acessar suas fichas</Text>
-        <TouchableOpacity
-          style={styles.btnSobre}
-          onPress={() => setSobreVisivel(true)}
-          activeOpacity={0.7}
-          accessibilityLabel="Informações e Aviso Legal"
-        >
-          <Text style={styles.btnSobreText}>ℹ️</Text>
-        </TouchableOpacity>
-      </View>
+        <View style={styles.centerArea}>
+          <TouchableOpacity
+            style={[styles.botaoCircular, isCompactScreen && styles.botaoCircularCompact]}
+            onPress={onIniciar}
+            activeOpacity={0.85}
+            accessibilityRole="button"
+            accessibilityLabel="Iniciar Gerenciador de Fichas"
+          >
+            <View style={[styles.botaoCircularInner, isCompactScreen && styles.botaoCircularInnerCompact]}>
+              <Text style={styles.botaoTexto}>Iniciar</Text>
+            </View>
+          </TouchableOpacity>
+        </View>
+
+        <View style={styles.footerWrap}>
+          <Text style={styles.footerText}>
+            {usuarioAtual
+              ? `Conectado como ${usuarioAtual.displayName || usuarioAtual.email?.split('@')[0]}`
+              : 'Toque em Iniciar para acessar suas fichas'}
+          </Text>
+
+          <TouchableOpacity
+            style={styles.btnSobre}
+            onPress={() => setSobreVisivel(true)}
+            activeOpacity={0.7}
+            accessibilityLabel="Informações e Aviso Legal"
+          >
+            <Text style={styles.btnSobreText}>ℹ️</Text>
+          </TouchableOpacity>
+        </View>
+      </ScrollView>
 
       <ModalSobre
         visivel={sobreVisivel}
         onFechar={() => setSobreVisivel(false)}
+        onAbrirConta={onAbrirConta}
       />
-    </View>
+    </SafeAreaView>
   );
 };
 
 const styles = StyleSheet.create({
-  container: {
+  safeArea: {
     flex: 1,
     backgroundColor: COLORS.background,
+  },
+  scrollContainer: {
+    flexGrow: 1,
     alignItems: 'center',
     justifyContent: 'space-between',
-    paddingVertical: 64,
+    paddingVertical: Platform.OS === 'web' ? 56 : 36,
     paddingHorizontal: 24,
+  },
+  scrollContainerCompact: {
+    paddingVertical: 20,
   },
   headerBlock: {
     alignItems: 'center',
-    marginTop: 16,
+    marginTop: 8,
   },
   title: {
     fontSize: 32,
@@ -94,9 +134,9 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
   centerArea: {
-    flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
+    marginVertical: 24,
   },
   botaoCircular: {
     width: 168,
@@ -113,6 +153,11 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.3,
     shadowRadius: 6,
   },
+  botaoCircularCompact: {
+    width: 144,
+    height: 144,
+    borderRadius: 72,
+  },
   botaoCircularInner: {
     width: 146,
     height: 146,
@@ -122,6 +167,11 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
+  botaoCircularInnerCompact: {
+    width: 124,
+    height: 124,
+    borderRadius: 62,
+  },
   botaoTexto: {
     color: COLORS.white,
     fontSize: 24,
@@ -130,7 +180,7 @@ const styles = StyleSheet.create({
   },
   footerWrap: {
     alignItems: 'center',
-    gap: 10,
+    gap: 12,
   },
   footerText: {
     fontSize: 13,

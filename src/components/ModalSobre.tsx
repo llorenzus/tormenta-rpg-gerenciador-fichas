@@ -1,5 +1,6 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
+  ActivityIndicator,
   Modal,
   StyleSheet,
   Text,
@@ -8,62 +9,180 @@ import {
   View,
 } from 'react-native';
 import { COLORS } from '../theme/colors';
+import { checarAtualizacaoOnline, InfoAtualizacao, VERSAO_ATUAL } from '../utils/updateChecker';
+import { exportarBackupCompletoLocal } from '../storage/fichaStorage';
+import { ModalAtualizacao } from './ModalAtualizacao';
 
 interface Props {
   visivel: boolean;
   onFechar: () => void;
+  onAbrirConta?: () => void;
 }
 
-export const ModalSobre: React.FC<Props> = ({ visivel, onFechar }) => {
+export const ModalSobre: React.FC<Props> = ({ visivel, onFechar, onAbrirConta }) => {
+  const [verificando, setVerificando] = useState(false);
+  const [mensagemStatus, setMensagemStatus] = useState<string | null>(null);
+  const [infoAtualizacao, setInfoAtualizacao] = useState<InfoAtualizacao | null>(null);
+  const [modalAtualizacaoVisivel, setModalAtualizacaoVisivel] = useState(false);
+  const [exportandoBackup, setExportandoBackup] = useState(false);
+  const [mensagemBackup, setMensagemBackup] = useState<string | null>(null);
+
+  const handleExportarBackup = async () => {
+    setExportandoBackup(true);
+    setMensagemBackup(null);
+    try {
+      const ok = await exportarBackupCompletoLocal();
+      if (ok) {
+        setMensagemBackup('✅ Backup completo (.json) exportado com sucesso!');
+      }
+    } catch {
+      setMensagemBackup('⚠️ Não foi possível exportar o backup.');
+    } finally {
+      setExportandoBackup(false);
+    }
+  };
+
+  const handleVerificarAtualizacao = async () => {
+    setVerificando(true);
+    setMensagemStatus(null);
+    try {
+      const info = await checarAtualizacaoOnline(true);
+      if (info && info.temAtualizacao) {
+        setInfoAtualizacao(info);
+        setModalAtualizacaoVisivel(true);
+        setMensagemStatus(null);
+      } else if (info && !info.temAtualizacao) {
+        setMensagemStatus(`✅ O aplicativo já está na versão mais recente (v${VERSAO_ATUAL}).`);
+      } else {
+        setMensagemStatus('⚠️ Não foi possível verificar no momento. Verifique sua conexão com a internet.');
+      }
+    } catch {
+      setMensagemStatus('⚠️ Erro ao consultar atualizações. Tente novamente mais tarde.');
+    } finally {
+      setVerificando(false);
+    }
+  };
+
+  const handleFecharTudo = () => {
+    setMensagemStatus(null);
+    onFechar();
+  };
+
   return (
-    <Modal
-      visible={visivel}
-      transparent
-      animationType="fade"
-      onRequestClose={onFechar}
-    >
-      <TouchableWithoutFeedback onPress={onFechar}>
-        <View style={styles.modalOverlay}>
-          <TouchableWithoutFeedback>
-            <View style={styles.modalCard}>
-              <View style={styles.header}>
-                <Text style={styles.title}>ℹ️ Sobre o Aplicativo</Text>
-                <TouchableOpacity onPress={onFechar} style={styles.btnClose}>
-                  <Text style={styles.btnCloseText}>✕</Text>
-                </TouchableOpacity>
-              </View>
+    <>
+      <Modal
+        visible={visivel}
+        transparent
+        animationType="fade"
+        onRequestClose={handleFecharTudo}
+      >
+        <TouchableWithoutFeedback onPress={handleFecharTudo}>
+          <View style={styles.modalOverlay}>
+            <TouchableWithoutFeedback>
+              <View style={styles.modalCard}>
+                <View style={styles.header}>
+                  <Text style={styles.title}>ℹ️ Sobre o Aplicativo</Text>
+                  <TouchableOpacity onPress={handleFecharTudo} style={styles.btnClose}>
+                    <Text style={styles.btnCloseText}>✕</Text>
+                  </TouchableOpacity>
+                </View>
 
-              <View style={styles.content}>
-                <Text style={styles.appTitle}>Tormenta RPG - Gerenciador de Fichas</Text>
-                <Text style={styles.versionText}>Versão 1.2.0 (Comunidade)</Text>
+                <View style={styles.content}>
+                  <Text style={styles.appTitle}>Tormenta RPG - Gerenciador de Fichas</Text>
+                  <Text style={styles.versionText}>Versão {VERSAO_ATUAL} (Comunidade)</Text>
 
-                <View style={styles.disclaimerBox}>
-                  <Text style={styles.disclaimerTitle}>⚖️ Aviso Legal / Isenção de Vínculo</Text>
-                  <Text style={styles.disclaimerText}>
-                    Este é um projeto de código aberto desenvolvido por fãs, de forma independente e sem fins lucrativos. Não é um produto oficial da Jambô Editora e não possui qualquer vínculo com a mesma. Todos os direitos sobre o universo, termos e marcas de Tormenta pertencem à Jambô Editora e seus respectivos autores.
+                  {/* Botão de Verificação Manual de Atualização */}
+                  <View style={styles.updateSection}>
+                    <TouchableOpacity
+                      style={[styles.btnCheckUpdate, verificando && styles.btnCheckUpdateDisabled]}
+                      onPress={handleVerificarAtualizacao}
+                      disabled={verificando}
+                      activeOpacity={0.8}
+                    >
+                      {verificando ? (
+                        <View style={styles.loadingRow}>
+                          <ActivityIndicator size="small" color={COLORS.primaryDark} />
+                          <Text style={styles.btnCheckUpdateText}>Consultando atualizações...</Text>
+                        </View>
+                      ) : (
+                        <Text style={styles.btnCheckUpdateText}>🔄 Verificar Novas Versões</Text>
+                      )}
+                    </TouchableOpacity>
+
+                    {mensagemStatus && (
+                      <View style={styles.statusMessageBox}>
+                        <Text style={styles.statusMessageText}>{mensagemStatus}</Text>
+                      </View>
+                    )}
+
+                    {onAbrirConta && (
+                      <TouchableOpacity
+                        style={styles.btnContaSection}
+                        onPress={() => {
+                          handleFecharTudo();
+                          onAbrirConta();
+                        }}
+                        activeOpacity={0.8}
+                      >
+                        <Text style={styles.btnContaSectionText}>☁️ Gerenciar Conta e Nuvem</Text>
+                      </TouchableOpacity>
+                    )}
+
+                    <TouchableOpacity
+                      style={styles.btnBackupSection}
+                      onPress={handleExportarBackup}
+                      disabled={exportandoBackup}
+                      activeOpacity={0.8}
+                    >
+                      {exportandoBackup ? (
+                        <ActivityIndicator size="small" color={COLORS.primaryDark} />
+                      ) : (
+                        <Text style={styles.btnBackupSectionText}>📦 Exportar Backup (.json)</Text>
+                      )}
+                    </TouchableOpacity>
+
+                    {mensagemBackup && (
+                      <View style={styles.statusMessageBox}>
+                        <Text style={styles.statusMessageText}>{mensagemBackup}</Text>
+                      </View>
+                    )}
+                  </View>
+
+                  <View style={styles.disclaimerBox}>
+                    <Text style={styles.disclaimerTitle}>⚖️ Aviso Legal / Isenção de Vínculo</Text>
+                    <Text style={styles.disclaimerText}>
+                      Este é um projeto de código aberto desenvolvido por fãs, de forma independente e sem fins lucrativos. Não é um produto oficial da Jambô Editora e não possui qualquer vínculo com a mesma. Todos os direitos sobre o universo, termos e marcas de Tormenta pertencem à Jambô Editora e seus respectivos autores.
+                    </Text>
+                  </View>
+
+                  <Text style={styles.creditsText}>
+                    Desenvolvido e produzido por Lorenzo Rech Tochetto
+                  </Text>
+                  <Text style={styles.infoText}>
+                    Criado para auxiliar jogadores e mestres na gestão prática de fichas e consulta rápida de regras durante sessões de RPG de mesa.
                   </Text>
                 </View>
 
-                <Text style={styles.creditsText}>
-                  Desenvolvido e produzido por Lorenzo Rech Tochetto
-                </Text>
-                <Text style={styles.infoText}>
-                  Criado para auxiliar jogadores e mestres na gestão prática de fichas e consulta rápida de regras durante sessões de RPG de mesa.
-                </Text>
+                <TouchableOpacity
+                  style={styles.btnEntendido}
+                  onPress={handleFecharTudo}
+                  activeOpacity={0.85}
+                >
+                  <Text style={styles.btnEntendidoText}>Entendido</Text>
+                </TouchableOpacity>
               </View>
+            </TouchableWithoutFeedback>
+          </View>
+        </TouchableWithoutFeedback>
+      </Modal>
 
-              <TouchableOpacity
-                style={styles.btnEntendido}
-                onPress={onFechar}
-                activeOpacity={0.85}
-              >
-                <Text style={styles.btnEntendidoText}>Entendido</Text>
-              </TouchableOpacity>
-            </View>
-          </TouchableWithoutFeedback>
-        </View>
-      </TouchableWithoutFeedback>
-    </Modal>
+      {/* Modal de Atualização acionado manualmente */}
+      <ModalAtualizacao
+        visivel={modalAtualizacaoVisivel}
+        info={infoAtualizacao}
+        onFechar={() => setModalAtualizacaoVisivel(false)}
+      />
+    </>
   );
 };
 
@@ -125,8 +244,75 @@ const styles = StyleSheet.create({
     fontSize: 12,
     color: COLORS.textSecondary,
     textAlign: 'center',
-    marginBottom: 16,
+    marginBottom: 10,
     fontWeight: '500',
+  },
+  updateSection: {
+    alignItems: 'center',
+    marginBottom: 16,
+  },
+  btnCheckUpdate: {
+    paddingHorizontal: 16,
+    paddingVertical: 8,
+    backgroundColor: COLORS.surfaceVariant,
+    borderRadius: 20,
+    borderWidth: 1,
+    borderColor: COLORS.gold,
+  },
+  btnCheckUpdateDisabled: {
+    opacity: 0.6,
+  },
+  btnContaSection: {
+    marginTop: 8,
+    paddingHorizontal: 16,
+    paddingVertical: 7,
+    backgroundColor: COLORS.surface,
+    borderRadius: 16,
+    borderWidth: 1,
+    borderColor: COLORS.primary,
+  },
+  btnContaSectionText: {
+    fontSize: 11.5,
+    fontWeight: '600',
+    color: COLORS.primaryDark,
+  },
+  btnBackupSection: {
+    marginTop: 8,
+    paddingHorizontal: 16,
+    paddingVertical: 7,
+    backgroundColor: COLORS.surfaceVariant,
+    borderRadius: 16,
+    borderWidth: 1,
+    borderColor: COLORS.gold,
+  },
+  btnBackupSectionText: {
+    fontSize: 11.5,
+    fontWeight: '600',
+    color: COLORS.primaryDark,
+  },
+  loadingRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
+  },
+  btnCheckUpdateText: {
+    fontSize: 12,
+    fontWeight: '600',
+    color: COLORS.primaryDark,
+  },
+  statusMessageBox: {
+    marginTop: 8,
+    paddingHorizontal: 12,
+    paddingVertical: 6,
+    borderRadius: 6,
+    backgroundColor: COLORS.surfaceVariant,
+    borderWidth: 1,
+    borderColor: COLORS.border,
+  },
+  statusMessageText: {
+    fontSize: 12,
+    color: COLORS.text,
+    textAlign: 'center',
   },
   disclaimerBox: {
     backgroundColor: COLORS.surfaceVariant,

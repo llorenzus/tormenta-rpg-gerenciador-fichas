@@ -43,7 +43,7 @@ export interface CampoTextoProps {
   label?: string;
   rightAction?: React.ReactNode;
   value: string;
-  onChangeText: (text: string) => void;
+  onChangeText?: (text: string) => void;
   placeholder?: string;
   multiline?: boolean;
   numberOfLines?: number;
@@ -51,6 +51,7 @@ export interface CampoTextoProps {
   keyboardType?: 'default' | 'numeric' | 'number-pad' | 'decimal-pad' | 'email-address' | 'phone-pad';
   style?: ViewStyle;
   inputStyle?: TextStyle;
+  editable?: boolean;
 }
 
 export const CampoTexto: React.FC<CampoTextoProps> = ({
@@ -65,6 +66,7 @@ export const CampoTexto: React.FC<CampoTextoProps> = ({
   keyboardType,
   style,
   inputStyle,
+  editable = true,
 }) => {
   const hasHeader = Boolean((label && label.trim().length > 0) || rightAction);
   return (
@@ -86,6 +88,7 @@ export const CampoTexto: React.FC<CampoTextoProps> = ({
           styles.textInput,
           multiline && styles.textInputMultiline,
           minHeight ? { minHeight } : undefined,
+          !editable && styles.textInputDisabled,
           inputStyle,
         ]}
         value={value}
@@ -95,6 +98,7 @@ export const CampoTexto: React.FC<CampoTextoProps> = ({
         multiline={multiline}
         numberOfLines={numberOfLines}
         keyboardType={keyboardType}
+        editable={editable}
       />
     </View>
   );
@@ -284,6 +288,11 @@ const styles = StyleSheet.create({
     height: 42,
     fontSize: 14,
     color: COLORS.text,
+  },
+  textInputDisabled: {
+    backgroundColor: '#F0E8D9',
+    color: COLORS.textSecondary,
+    opacity: 0.85,
   },
   textInputMultiline: {
     height: undefined,

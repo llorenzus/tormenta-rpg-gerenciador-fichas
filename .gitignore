@@ -19,3 +19,10 @@ scripts/
 .agent/
 assets/expo_qr.png
 
+# Variáveis de ambiente locais (sensíveis)
+.env
+.env.local
+.env.*.local
+!.env.example
+
+
