@@ -10,6 +10,15 @@ on:
 permissions:
   contents: write
 
+env:
+  EXPO_PUBLIC_FIREBASE_API_KEY: ${{ secrets.EXPO_PUBLIC_FIREBASE_API_KEY || 'AIzaSyCQNRuOD1YANvq9UX0FjmC7XdCXA_qWNyA' }}
+  EXPO_PUBLIC_FIREBASE_AUTH_DOMAIN: ${{ secrets.EXPO_PUBLIC_FIREBASE_AUTH_DOMAIN || 'trpg-gerenciador-fichas.firebaseapp.com' }}
+  EXPO_PUBLIC_FIREBASE_PROJECT_ID: ${{ secrets.EXPO_PUBLIC_FIREBASE_PROJECT_ID || 'trpg-gerenciador-fichas' }}
+  EXPO_PUBLIC_FIREBASE_STORAGE_BUCKET: ${{ secrets.EXPO_PUBLIC_FIREBASE_STORAGE_BUCKET || 'trpg-gerenciador-fichas.firebasestorage.app' }}
+  EXPO_PUBLIC_FIREBASE_MESSAGING_SENDER_ID: ${{ secrets.EXPO_PUBLIC_FIREBASE_MESSAGING_SENDER_ID || '1027929319516' }}
+  EXPO_PUBLIC_FIREBASE_APP_ID: ${{ secrets.EXPO_PUBLIC_FIREBASE_APP_ID || '1:1027929319516:web:b427353797cbb5824d1e99' }}
+  EXPO_PUBLIC_FIREBASE_MEASUREMENT_ID: ${{ secrets.EXPO_PUBLIC_FIREBASE_MEASUREMENT_ID || 'G-DXQ8F9F6LG' }}
+
 jobs:
   # ========================================================
   # JOB 1: Compilação do APK Android
@@ -128,6 +137,8 @@ jobs:
         uses: softprops/action-gh-release@v2
         with:
           files: |
+            release-assets/*.apk
+            release-assets/*.exe
             release-assets/**/*.apk
             release-assets/**/*.exe
           name: Versão ${{ github.ref_name }}
