@@ -11,8 +11,11 @@ import {
   obterBonusArmaduraEquipada,
   obterBonusEscudoEquipado,
   obterBuffsTemporarios,
+  obterBbaTotal,
   obterMeioNivel,
   obterModAtributo,
+  obterPvMaxEfetivo,
+  obterPmMaxEfetivo,
   temBuffsAtivos,
 } from '../models/ficha';
 import { calcularSugestoesClasses } from '../data';
@@ -34,6 +37,9 @@ export const AbaAtributos: React.FC<Props> = ({ ficha, onChange }) => {
   const qtdBuffs = contarBuffsAtivos(ficha);
 
   const sugestao = React.useMemo(() => calcularSugestoesClasses(ficha), [ficha]);
+
+  const pvMaxEfetivo = obterPvMaxEfetivo(ficha);
+  const pmMaxEfetivo = obterPmMaxEfetivo(ficha);
 
   const meioNivel = obterMeioNivel(ficha.nivel);
   const modDes = obterModAtributo(ficha, 'DES');
@@ -70,6 +76,8 @@ export const AbaAtributos: React.FC<Props> = ({ ficha, onChange }) => {
         vontade: 0,
         ca: 0,
         pvTemporario: 0,
+        pvMax: 0,
+        pmMax: 0,
       },
     });
     Alert.alert(
@@ -173,16 +181,24 @@ export const AbaAtributos: React.FC<Props> = ({ ficha, onChange }) => {
               <Text style={[styles.statusGroupTitle, styles.statusTitlePv]}>❤️ PONTOS DE VIDA (PV)</Text>
               <Text style={[styles.statusValDestaque, { color: '#C62828' }]}>
                 {ficha.pvAtual}
-                {buffs.pvTemporario > 0 ? ` (+${buffs.pvTemporario} temp)` : ''} / {ficha.pvTotal}
+                {buffs.pvTemporario > 0 ? ` (+${buffs.pvTemporario} temp)` : ''} / {pvMaxEfetivo}
+                {buffs.pvMax !== 0 ? ` (${formatarModificador(buffs.pvMax)} buff)` : ''}
               </Text>
             </View>
             <BarraDeProgressoRecurso
               atual={ficha.pvAtual}
-              max={ficha.pvTotal}
+              max={pvMaxEfetivo}
               cor="#C62828"
               corFundo="rgba(198,40,40,0.12)"
               unidade="PV"
             />
+            {buffs.pvMax !== 0 && (
+              <View style={styles.pvMaxBuffBadge}>
+                <Text style={styles.pvMaxBuffBadgeText}>
+                  ✨ {formatarModificador(buffs.pvMax)} PV Máximo temporário ativo (Base: {ficha.pvTotal} → Máx: {pvMaxEfetivo})
+                </Text>
+              </View>
+            )}
             {buffs.pvTemporario > 0 && (
               <View style={styles.pvTempBadge}>
                 <Text style={styles.pvTempBadgeText}>
@@ -197,7 +213,8 @@ export const AbaAtributos: React.FC<Props> = ({ ficha, onChange }) => {
                 onValorChange={(v) => onChange({ ...ficha, pvAtual: v })}
                 min={-999}
                 max={9999}
-                style={styles.col}
+                comStepper
+                style={styles.colDestaque}
               />
               <CampoInteiro
                 label="Bônus"
@@ -219,7 +236,7 @@ export const AbaAtributos: React.FC<Props> = ({ ficha, onChange }) => {
                 }}
                 min={-999}
                 max={9999}
-                style={styles.col}
+                style={styles.colSmall}
               />
               <CampoInteiro
                 label="PV Totais"
@@ -227,7 +244,8 @@ export const AbaAtributos: React.FC<Props> = ({ ficha, onChange }) => {
                 onValorChange={(v) => onChange({ ...ficha, pvTotal: v })}
                 min={1}
                 max={9999}
-                style={styles.col}
+                comStepper
+                style={styles.colDestaque}
               />
             </View>
             {sugestao && (() => {
@@ -271,16 +289,24 @@ export const AbaAtributos: React.FC<Props> = ({ ficha, onChange }) => {
             <View style={styles.statusHeaderRow}>
               <Text style={[styles.statusGroupTitle, styles.statusTitlePm]}>✨ PONTOS DE MAGIA (PM)</Text>
               <Text style={[styles.statusValDestaque, { color: '#1565C0' }]}>
-                {ficha.pmAtual} / {ficha.pmTotal}
+                {ficha.pmAtual} / {pmMaxEfetivo}
+                {buffs.pmMax !== 0 ? ` (${formatarModificador(buffs.pmMax)} buff)` : ''}
               </Text>
             </View>
             <BarraDeProgressoRecurso
               atual={ficha.pmAtual}
-              max={ficha.pmTotal}
+              max={pmMaxEfetivo}
               cor="#1565C0"
               corFundo="rgba(21,101,192,0.12)"
               unidade="PM"
             />
+            {buffs.pmMax !== 0 && (
+              <View style={styles.pmMaxBuffBadge}>
+                <Text style={styles.pmMaxBuffBadgeText}>
+                  ✨ {formatarModificador(buffs.pmMax)} PM Máximo temporário ativo (Base: {ficha.pmTotal} → Máx: {pmMaxEfetivo})
+                </Text>
+              </View>
+            )}
             <View style={styles.row}>
               <CampoInteiro
                 label="PM Atuais"
@@ -288,7 +314,8 @@ export const AbaAtributos: React.FC<Props> = ({ ficha, onChange }) => {
                 onValorChange={(v) => onChange({ ...ficha, pmAtual: v })}
                 min={0}
                 max={9999}
-                style={styles.col}
+                comStepper
+                style={styles.colDestaque}
               />
               <CampoInteiro
                 label="Bônus"
@@ -310,7 +337,7 @@ export const AbaAtributos: React.FC<Props> = ({ ficha, onChange }) => {
                 }}
                 min={-999}
                 max={9999}
-                style={styles.col}
+                style={styles.colSmall}
               />
               <CampoInteiro
                 label="PM Totais"
@@ -318,7 +345,8 @@ export const AbaAtributos: React.FC<Props> = ({ ficha, onChange }) => {
                 onValorChange={(v) => onChange({ ...ficha, pmTotal: v })}
                 min={0}
                 max={9999}
-                style={styles.col}
+                comStepper
+                style={styles.colDestaque}
               />
             </View>
             {sugestao && (() => {
@@ -379,6 +407,7 @@ export const AbaAtributos: React.FC<Props> = ({ ficha, onChange }) => {
                 onValorChange={(v) => onChange({ ...ficha, peAtual: v })}
                 min={0}
                 max={9999}
+                comStepper
                 style={styles.col}
               />
               <CampoInteiro
@@ -387,6 +416,7 @@ export const AbaAtributos: React.FC<Props> = ({ ficha, onChange }) => {
                 onValorChange={(v) => onChange({ ...ficha, peTotal: v })}
                 min={0}
                 max={9999}
+                comStepper
                 style={styles.col}
               />
             </View>
@@ -413,13 +443,29 @@ export const AbaAtributos: React.FC<Props> = ({ ficha, onChange }) => {
           {/* BBA */}
           <View style={styles.row}>
             <CampoInteiro
-              label="BBA (Bônus Base de Ataque)"
+              label="BBA (Base)"
               valor={ficha.bba}
               onValorChange={(v) => onChange({ ...ficha, bba: v })}
               min={-20}
               max={99}
               style={styles.col}
             />
+            <CampoInteiro
+              label="Outros (BBA)"
+              valor={Number(ficha.bbaOutros) || 0}
+              onValorChange={(v) => onChange({ ...ficha, bbaOutros: v })}
+              min={-99}
+              max={99}
+              style={styles.col}
+            />
+            <View style={[styles.col, styles.bbaTotalCol]}>
+              <Text style={styles.bbaTotalLabel}>BBA TOTAL</Text>
+              <View style={styles.bbaTotalBadge}>
+                <Text style={styles.bbaTotalText}>
+                  {formatarModificador(obterBbaTotal(ficha))}
+                </Text>
+              </View>
+            </View>
           </View>
           {sugestao && (
             <View style={styles.sugestaoRow}>
@@ -1032,6 +1078,34 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     color: '#2E6B3E',
   },
+  pvMaxBuffBadge: {
+    marginTop: 6,
+    backgroundColor: 'rgba(198, 40, 40, 0.08)',
+    borderWidth: 1,
+    borderColor: 'rgba(198, 40, 40, 0.25)',
+    padding: 6,
+    borderRadius: 6,
+  },
+  pvMaxBuffBadgeText: {
+    fontSize: 11,
+    fontWeight: '600',
+    color: '#C62828',
+    textAlign: 'center',
+  },
+  pmMaxBuffBadge: {
+    marginTop: 6,
+    backgroundColor: 'rgba(21, 101, 192, 0.08)',
+    borderWidth: 1,
+    borderColor: 'rgba(21, 101, 192, 0.25)',
+    padding: 6,
+    borderRadius: 6,
+  },
+  pmMaxBuffBadgeText: {
+    fontSize: 11,
+    fontWeight: '600',
+    color: '#1565C0',
+    textAlign: 'center',
+  },
   pvTempBadge: {
     marginTop: 8,
     backgroundColor: 'rgba(198, 40, 40, 0.08)',
@@ -1083,6 +1157,36 @@ const styles = StyleSheet.create({
     paddingHorizontal: 8,
     paddingVertical: 4,
     borderRadius: 4,
+  },
+  colDestaque: {
+    flex: 1.25,
+  },
+  bbaTotalCol: {
+    alignItems: 'center',
+    justifyContent: 'flex-end',
+    paddingBottom: 2,
+  },
+  bbaTotalLabel: {
+    fontSize: 11,
+    fontWeight: 'bold',
+    color: COLORS.primaryDark,
+    marginBottom: 4,
+  },
+  bbaTotalBadge: {
+    backgroundColor: COLORS.surfaceVariant,
+    borderWidth: 1,
+    borderColor: COLORS.border,
+    borderRadius: 8,
+    paddingVertical: 9,
+    paddingHorizontal: 12,
+    minWidth: 54,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  bbaTotalText: {
+    fontSize: 15,
+    fontWeight: 'bold',
+    color: COLORS.primaryDark,
   },
   btnAplicarSugestaoTexto: {
     color: '#FFF',

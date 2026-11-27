@@ -16,6 +16,10 @@ import {
   zerarBuffsTemporarios,
   calcularPmInicialTexto,
   aplicarClasseNaFicha,
+  obterBbaTotal,
+  obterPvMaxEfetivo,
+  obterPmMaxEfetivo,
+  normalizarFicha,
   FichaPersonagem,
   ArmaduraEquipamento,
   ArmaItem,
@@ -400,5 +404,70 @@ describe('Regras do Tormenta RPG - Cálculos e Modificadores', () => {
     ficha.pmAtual += deltaPm;
     assert.strictEqual(ficha.pmTotal, 12);
     assert.strictEqual(ficha.pmAtual, 12);
+  });
+
+  it('deve calcular BBA total incluindo bbaOutros e refletir em calcularAtaqueArma', () => {
+    const ficha = criarFichaBase();
+    ficha.bba = 5;
+    ficha.bbaOutros = 2;
+    ficha.forca = 16; // mod = +3
+    ficha.caBonusTamanho = 0;
+
+    assert.strictEqual(obterBbaTotal(ficha), 7);
+
+    const espada: ArmaItem = {
+      id: 'arm-espada',
+      nome: 'Espada Bastarda',
+      bonusAtaque: '+0',
+      dano: '1d10',
+      critico: '19-20/x2',
+      tipo: 'Corpo a corpo',
+      outrosBonus: '1',
+    };
+
+    // BBA total (5 + 2 = 7) + FOR (3) + Tam (0) + Outros (1) = 11
+    assert.strictEqual(calcularAtaqueArma(ficha, espada), 11);
+  });
+
+  it('deve normalizar ficha preservando abasOcultas e bbaOutros', () => {
+    const fichaIncompleta = {
+      id: 'f-norm',
+      nomePersonagem: 'Normalizado',
+      bba: 3,
+      bbaOutros: 2,
+      abasOcultas: ['manobras', 'magias'],
+    } as unknown as FichaPersonagem;
+
+    const normalizada = normalizarFicha(fichaIncompleta);
+    assert.strictEqual(normalizada.bba, 3);
+    assert.strictEqual(normalizada.bbaOutros, 2);
+    assert.deepStrictEqual(normalizada.abasOcultas, ['manobras', 'magias']);
+  });
+
+  it('deve aplicar buffs temporários de Vida Máxima (pvMax) e Mana Máxima (pmMax)', () => {
+    const ficha = criarFichaBase();
+    ficha.pvTotal = 30;
+    ficha.pmTotal = 15;
+
+    // Sem buffs
+    assert.strictEqual(obterPvMaxEfetivo(ficha), 30);
+    assert.strictEqual(obterPmMaxEfetivo(ficha), 15);
+
+    // Adiciona buff de Fúria (+10 PV Máximo) e Concentração (+5 PM Máximo)
+    ficha.buffsTemporarios = {
+      pvMax: 10,
+      pmMax: 5,
+    };
+
+    assert.strictEqual(temBuffsAtivos(ficha), true);
+    assert.strictEqual(contarBuffsAtivos(ficha), 2);
+    assert.strictEqual(obterPvMaxEfetivo(ficha), 40);
+    assert.strictEqual(obterPmMaxEfetivo(ficha), 20);
+
+    // Ao zerar
+    const zerada = zerarBuffsTemporarios(ficha);
+    assert.strictEqual(temBuffsAtivos(zerada), false);
+    assert.strictEqual(obterPvMaxEfetivo(zerada), 30);
+    assert.strictEqual(obterPmMaxEfetivo(zerada), 15);
   });
 });

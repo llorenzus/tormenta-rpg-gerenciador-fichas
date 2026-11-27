@@ -22,6 +22,7 @@ import {
   gerarId,
   HabilidadeMagicaArma,
   ItemGeral,
+  obterBbaTotal,
   obterBonusArmaduraEquipada,
   obterBonusEscudoEquipado,
   obterHabilidadesMagicasArma,
@@ -214,7 +215,7 @@ export const AbaEquipamentos: React.FC<Props> = ({ ficha, onChange }) => {
             </Text>
           ) : (
             ficha.armas.map((arma) => {
-              const bba = Number(ficha.bba) || 0;
+              const bba = obterBbaTotal(ficha);
               const modFor = obterModAtributo(ficha, 'FOR');
               const modDes = obterModAtributo(ficha, 'DES');
               const modAtrib = arma.usaDestreza ? modDes : modFor;

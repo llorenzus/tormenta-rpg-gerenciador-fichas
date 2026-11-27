@@ -9,6 +9,7 @@ import {
   formatarResumoClasses,
   obterClassesFicha,
   obterModAtributo,
+  obterBbaTotal,
 } from '../models/ficha';
 import { VERSAO_ATUAL } from '../utils/updateChecker';
 
@@ -436,7 +437,7 @@ export function gerarHtmlFichaPdf(ficha: FichaPersonagem): string {
         <div class="dado-item"><span class="dado-label">Sexo / Idade</span><span class="dado-valor">${ficha.sexo || '-'} / ${ficha.idade || '-'}</span></div>
         <div class="dado-item"><span class="dado-label">Tibares (Riqueza)</span><span class="dado-valor">${ficha.tibares || '0 TO'}</span></div>
         <div class="dado-item"><span class="dado-label">Meio Nível</span><span class="dado-valor">+${meioNivel}</span></div>
-        <div class="dado-item"><span class="dado-label">BBA (Base)</span><span class="dado-valor">+${ficha.bba || 0}</span></div>
+        <div class="dado-item"><span class="dado-label">BBA (Total)</span><span class="dado-valor">+${obterBbaTotal(ficha)}${ficha.bbaOutros ? ` (Base: ${ficha.bba || 0}, Outros: ${ficha.bbaOutros > 0 ? '+' : ''}${ficha.bbaOutros})` : ''}</span></div>
       </div>
 
       <!-- Atributos e Combate -->

@@ -21,24 +21,35 @@ export { AbaKey, AbaInfo, TODAS_AS_ABAS, ORDEM_ABAS_PADRAO };
 interface Props {
   visivel: boolean;
   ordemAtual: AbaKey[];
+  abasOcultas?: string[];
   onFechar: () => void;
   onSalvarOrdem: (novaOrdem: AbaKey[]) => void;
+  onSalvarAbasOcultas?: (novasOcultas: string[]) => void;
 }
 
 export const ModalReordenarAbas: React.FC<Props> = ({
   visivel,
   ordemAtual,
+  abasOcultas,
   onFechar,
   onSalvarOrdem,
+  onSalvarAbasOcultas,
 }) => {
   const { height: windowHeight } = useWindowDimensions();
   const [listaOrdem, setListaOrdem] = React.useState<AbaKey[]>(ordemAtual);
+  const [ocultas, setOcultas] = React.useState<string[]>(abasOcultas || []);
 
   React.useEffect(() => {
     if (visivel && Array.isArray(ordemAtual) && ordemAtual.length > 0) {
       setListaOrdem(ordemAtual);
     }
   }, [visivel, JSON.stringify(ordemAtual)]);
+
+  React.useEffect(() => {
+    if (visivel) {
+      setOcultas(Array.isArray(abasOcultas) ? abasOcultas : []);
+    }
+  }, [visivel, JSON.stringify(abasOcultas)]);
 
   const moverParaCima = (index: number) => {
     if (index <= 0) return;
@@ -64,9 +75,29 @@ export const ModalReordenarAbas: React.FC<Props> = ({
     });
   };
 
+  const alternarOcultar = (chave: AbaKey) => {
+    const jaOculta = ocultas.includes(chave);
+    if (!jaOculta) {
+      // Regra de segurança: não pode ocultar todas as abas (deve restar pelo menos 1 visível)
+      const visiveisRestantes = listaOrdem.filter((k) => k !== chave && !ocultas.includes(k));
+      if (visiveisRestantes.length === 0) {
+        return;
+      }
+      const novas = [...ocultas, chave];
+      setOcultas(novas);
+      onSalvarAbasOcultas?.(novas);
+    } else {
+      const novas = ocultas.filter((k) => k !== chave);
+      setOcultas(novas);
+      onSalvarAbasOcultas?.(novas);
+    }
+  };
+
   const restaurarPadrao = () => {
     setListaOrdem(ORDEM_ABAS_PADRAO);
+    setOcultas([]);
     onSalvarOrdem(ORDEM_ABAS_PADRAO);
+    onSalvarAbasOcultas?.([]);
   };
 
   const modalBoxHeight = Math.min(windowHeight * 0.85, 640);
@@ -84,9 +115,9 @@ export const ModalReordenarAbas: React.FC<Props> = ({
           {/* Cabeçalho */}
           <View style={styles.header}>
             <View style={styles.headerInfo}>
-              <Text style={styles.titulo}>⚙️ Organizar Ordem das Abas</Text>
+              <Text style={styles.titulo}>⚙️ Organizar e Ocultar Abas</Text>
               <Text style={styles.subtitulo}>
-                Personalize a sequência das abas utilizando os botões Subir e Descer.
+                Personalize a sequência das abas ou oculte aquelas que seu personagem não utiliza.
               </Text>
             </View>
             <TouchableOpacity style={styles.btnFechar} onPress={onFechar}>
@@ -94,7 +125,7 @@ export const ModalReordenarAbas: React.FC<Props> = ({
             </TouchableOpacity>
           </View>
 
-          {/* Lista Reordenável */}
+          {/* Lista Reordenável e Ocultável */}
           <ScrollView
             style={styles.listaScroll}
             contentContainerStyle={styles.listaContent}
@@ -105,20 +136,32 @@ export const ModalReordenarAbas: React.FC<Props> = ({
               if (!info) return null;
               const isFirst = index === 0;
               const isLast = index === listaOrdem.length - 1;
+              const isOculta = ocultas.includes(chave);
 
               return (
-                <View key={chave} style={styles.itemRow}>
-                  <View style={styles.posicaoBadge}>
-                    <Text style={styles.posicaoText}>{index + 1}º</Text>
+                <View key={chave} style={[styles.itemRow, isOculta && styles.itemRowOculta]}>
+                  <View style={[styles.posicaoBadge, isOculta && styles.posicaoBadgeOculta]}>
+                    <Text style={[styles.posicaoText, isOculta && styles.posicaoTextOculta]}>
+                      {isOculta ? '—' : `${index + 1}º`}
+                    </Text>
                   </View>
 
-                  <View style={styles.iconeBox}>
+                  <View style={[styles.iconeBox, isOculta && styles.iconeBoxOculta]}>
                     <Text style={styles.iconeText}>{info.icone}</Text>
                   </View>
 
                   <View style={styles.infoCol}>
-                    <Text style={styles.abaNomeText}>{info.titulo}</Text>
-                    <Text style={styles.abaSubText}>
+                    <View style={styles.abaNomeRow}>
+                      <Text style={[styles.abaNomeText, isOculta && styles.abaNomeTextOculta]}>
+                        {info.titulo}
+                      </Text>
+                      {isOculta && (
+                        <View style={styles.badgeOculta}>
+                          <Text style={styles.badgeOcultaText}>OCULTA</Text>
+                        </View>
+                      )}
+                    </View>
+                    <Text style={[styles.abaSubText, isOculta && styles.abaSubTextOculta]}>
                       {chave === 'atributos' ? 'PV, PM, PA, CA, Atributos e Resistências' : ''}
                       {chave === 'manobras' ? 'Posturas e Golpes Marciais (PE)' : ''}
                       {chave === 'habilidades_classe' ? 'Habilidades e características de classe' : ''}
@@ -130,6 +173,18 @@ export const ModalReordenarAbas: React.FC<Props> = ({
                       {chave === 'habilidades_raca' ? 'Traços e habilidades da raça' : ''}
                     </Text>
                   </View>
+
+                  {/* Botão de Alternar Visibilidade */}
+                  <TouchableOpacity
+                    style={[styles.btnVisibilidade, isOculta && styles.btnVisibilidadeOculta]}
+                    onPress={() => alternarOcultar(chave)}
+                    activeOpacity={0.7}
+                    accessibilityLabel={isOculta ? `Exibir aba ${info.titulo}` : `Ocultar aba ${info.titulo}`}
+                  >
+                    <Text style={[styles.btnVisibilidadeText, isOculta && styles.btnVisibilidadeTextOculta]}>
+                      {isOculta ? '🙈 Oculta' : '👁️ Visível'}
+                    </Text>
+                  </TouchableOpacity>
 
                   {/* Botões de Mover */}
                   <View style={styles.botoesMoverRow}>
@@ -262,6 +317,11 @@ const styles = StyleSheet.create({
     borderColor: COLORS.border,
     gap: 8,
   },
+  itemRowOculta: {
+    opacity: 0.65,
+    backgroundColor: '#F9F6F0',
+    borderColor: '#E0D8C8',
+  },
   posicaoBadge: {
     width: 26,
     height: 26,
@@ -270,15 +330,24 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
+  posicaoBadgeOculta: {
+    backgroundColor: 'rgba(0,0,0,0.06)',
+  },
   posicaoText: {
     fontSize: 11,
     fontWeight: 'bold',
     color: '#8A6414',
   },
+  posicaoTextOculta: {
+    color: COLORS.textSecondary,
+  },
   iconeBox: {
     width: 28,
     alignItems: 'center',
     justifyContent: 'center',
+  },
+  iconeBoxOculta: {
+    opacity: 0.5,
   },
   iconeText: {
     fontSize: 18,
@@ -287,15 +356,63 @@ const styles = StyleSheet.create({
     flex: 1,
     marginRight: 4,
   },
+  abaNomeRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
   abaNomeText: {
     fontSize: 13.5,
     fontWeight: 'bold',
     color: COLORS.text,
   },
+  abaNomeTextOculta: {
+    color: COLORS.textSecondary,
+    textDecorationLine: 'line-through',
+  },
+  badgeOculta: {
+    backgroundColor: 'rgba(198, 40, 40, 0.1)',
+    borderRadius: 4,
+    paddingHorizontal: 5,
+    paddingVertical: 1,
+    marginLeft: 6,
+    borderWidth: 1,
+    borderColor: 'rgba(198, 40, 40, 0.25)',
+  },
+  badgeOcultaText: {
+    fontSize: 9.5,
+    fontWeight: 'bold',
+    color: '#C62828',
+  },
   abaSubText: {
     fontSize: 10.5,
     color: COLORS.textSecondary,
     marginTop: 1,
+  },
+  abaSubTextOculta: {
+    opacity: 0.6,
+  },
+  btnVisibilidade: {
+    paddingHorizontal: 8,
+    paddingVertical: 7,
+    borderRadius: 6,
+    backgroundColor: 'rgba(46, 125, 50, 0.1)',
+    borderWidth: 1,
+    borderColor: 'rgba(46, 125, 50, 0.3)',
+    alignItems: 'center',
+    justifyContent: 'center',
+    minWidth: 74,
+  },
+  btnVisibilidadeOculta: {
+    backgroundColor: 'rgba(198, 40, 40, 0.1)',
+    borderColor: 'rgba(198, 40, 40, 0.3)',
+  },
+  btnVisibilidadeText: {
+    fontSize: 11,
+    fontWeight: 'bold',
+    color: '#2E7D32',
+  },
+  btnVisibilidadeTextOculta: {
+    color: '#C62828',
   },
   botoesMoverRow: {
     flexDirection: 'row',

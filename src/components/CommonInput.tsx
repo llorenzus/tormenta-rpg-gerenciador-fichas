@@ -114,6 +114,7 @@ interface CampoInteiroProps {
   style?: ViewStyle;
   inputStyle?: TextStyle;
   compact?: boolean;
+  comStepper?: boolean;
 }
 
 export const CampoInteiro: React.FC<CampoInteiroProps> = ({
@@ -126,6 +127,7 @@ export const CampoInteiro: React.FC<CampoInteiroProps> = ({
   style,
   inputStyle,
   compact = false,
+  comStepper = false,
 }) => {
   const [texto, setTexto] = useState(String(valor));
 
@@ -170,19 +172,54 @@ export const CampoInteiro: React.FC<CampoInteiroProps> = ({
           {rightAction}
         </View>
       )}
-      <TextInput
-        style={[
-          styles.textInput,
-          styles.numberInput,
-          compact && styles.compactNumberInput,
-          inputStyle,
-        ]}
-        value={texto}
-        onChangeText={handleChange}
-        onBlur={handleBlur}
-        keyboardType="numeric"
-        selectTextOnFocus
-      />
+      {comStepper ? (
+        <View style={styles.stepperContainer}>
+          <TouchableOpacity
+            style={styles.stepBtn}
+            onPress={() => onValorChange(Math.max(min, valor - 1))}
+            activeOpacity={0.7}
+            hitSlop={{ top: 4, bottom: 4, left: 4, right: 4 }}
+          >
+            <Text style={styles.stepBtnText}>-</Text>
+          </TouchableOpacity>
+          <TextInput
+            style={[
+              styles.textInput,
+              styles.numberInput,
+              styles.stepperInput,
+              compact && styles.compactNumberInput,
+              inputStyle,
+            ]}
+            value={texto}
+            onChangeText={handleChange}
+            onBlur={handleBlur}
+            keyboardType="numeric"
+            selectTextOnFocus
+          />
+          <TouchableOpacity
+            style={styles.stepBtn}
+            onPress={() => onValorChange(Math.min(max, valor + 1))}
+            activeOpacity={0.7}
+            hitSlop={{ top: 4, bottom: 4, left: 4, right: 4 }}
+          >
+            <Text style={styles.stepBtnText}>+</Text>
+          </TouchableOpacity>
+        </View>
+      ) : (
+        <TextInput
+          style={[
+            styles.textInput,
+            styles.numberInput,
+            compact && styles.compactNumberInput,
+            inputStyle,
+          ]}
+          value={texto}
+          onChangeText={handleChange}
+          onBlur={handleBlur}
+          keyboardType="numeric"
+          selectTextOnFocus
+        />
+      )}
     </View>
   );
 };
@@ -316,9 +353,13 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
   },
+  stepperContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
   stepBtn: {
-    width: 32,
-    height: 34,
+    width: 30,
+    height: 38,
     borderRadius: 8,
     backgroundColor: COLORS.surfaceVariant,
     borderWidth: 1,
@@ -335,6 +376,11 @@ const styles = StyleSheet.create({
     marginBottom: 0,
     marginHorizontal: 6,
     width: 56,
+  },
+  stepperInput: {
+    flex: 1,
+    minWidth: 36,
+    marginHorizontal: 4,
   },
 });
 

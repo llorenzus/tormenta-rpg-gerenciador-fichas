@@ -146,6 +146,7 @@ export interface FichaPersonagem {
   peTotal?: number;    // Pontos de Energia Totais (PE)
   peAtual?: number;    // Pontos de Energia Atuais (PE)
   bba: number;
+  bbaOutros?: number;  // Bônus adicionais de BBA (Outros)
   caBonusTamanho: number;
   caOutrosBonus: number;
   fortitudeOutros: number;
@@ -170,6 +171,8 @@ export interface FichaPersonagem {
 
   // Ordem personalizada das abas da ficha
   ordemAbas?: string[];
+  // Abas ocultas da ficha
+  abasOcultas?: string[];
 
   // Buffs e Efeitos Temporários (Atributos, Resistências e PV Temporário)
   buffsTemporarios?: BuffsTemporarios;
@@ -194,6 +197,8 @@ export interface BuffsTemporarios {
   vontade?: number;
   ca?: number;
   pvTemporario?: number;
+  pvMax?: number; // Buff temporário que aumenta a Vida Máxima (PV Máximo)
+  pmMax?: number; // Buff temporário que aumenta a Mana Máxima (PM Máximo)
 }
 
 export function obterBuffsTemporarios(ficha: FichaPersonagem): Required<BuffsTemporarios> {
@@ -210,6 +215,8 @@ export function obterBuffsTemporarios(ficha: FichaPersonagem): Required<BuffsTem
     vontade: Number(b.vontade) || 0,
     ca: Number(b.ca) || 0,
     pvTemporario: Number(b.pvTemporario) || 0,
+    pvMax: Number(b.pvMax) || 0,
+    pmMax: Number(b.pmMax) || 0,
   };
 }
 
@@ -226,7 +233,9 @@ export function temBuffsAtivos(ficha: FichaPersonagem): boolean {
     b.reflexos !== 0 ||
     b.vontade !== 0 ||
     b.ca !== 0 ||
-    b.pvTemporario !== 0
+    b.pvTemporario !== 0 ||
+    b.pvMax !== 0 ||
+    b.pmMax !== 0
   );
 }
 
@@ -244,6 +253,8 @@ export function contarBuffsAtivos(ficha: FichaPersonagem): number {
   if (b.vontade !== 0) count++;
   if (b.ca !== 0) count++;
   if (b.pvTemporario !== 0) count++;
+  if (b.pvMax !== 0) count++;
+  if (b.pmMax !== 0) count++;
   return count;
 }
 
@@ -262,8 +273,20 @@ export function zerarBuffsTemporarios(ficha: FichaPersonagem): FichaPersonagem {
       vontade: 0,
       ca: 0,
       pvTemporario: 0,
+      pvMax: 0,
+      pmMax: 0,
     },
   };
+}
+
+export function obterPvMaxEfetivo(ficha: FichaPersonagem): number {
+  const buffs = obterBuffsTemporarios(ficha);
+  return Math.max(1, (Number(ficha.pvTotal) || 10) + buffs.pvMax);
+}
+
+export function obterPmMaxEfetivo(ficha: FichaPersonagem): number {
+  const buffs = obterBuffsTemporarios(ficha);
+  return Math.max(0, (Number(ficha.pmTotal) || 0) + buffs.pmMax);
 }
 
 export function gerarId(): string {
@@ -405,8 +428,12 @@ export function calcularResistencia(
   return meioNivel + modSab + (Number(ficha.vontadeOutros) || 0) + buffs.vontade;
 }
 
+export function obterBbaTotal(ficha: FichaPersonagem): number {
+  return (Number(ficha.bba) || 0) + (Number(ficha.bbaOutros) || 0);
+}
+
 export function calcularAtaqueArma(ficha: FichaPersonagem, arma: ArmaItem): number {
-  const bba = Number(ficha.bba) || 0;
+  const bba = obterBbaTotal(ficha);
   const modAtributo = arma.usaDestreza
     ? obterModAtributo(ficha, 'DES')
     : obterModAtributo(ficha, 'FOR');
@@ -546,6 +573,7 @@ export function criarNovaFichaPadrao(): FichaPersonagem {
     peTotal: 0,
     peAtual: 0,
     bba: 0,
+    bbaOutros: 0,
     caBonusTamanho: 0,
     caOutrosBonus: 0,
     fortitudeOutros: 0,
@@ -775,6 +803,7 @@ export function normalizarFicha(ficha: FichaPersonagem): FichaPersonagem {
     pmAtual: Number.isFinite(ficha.pmAtual) ? ficha.pmAtual : 0,
     pmBonus: Number.isFinite(ficha.pmBonus) ? Number(ficha.pmBonus) : 0,
     bba: Number.isFinite(ficha.bba) ? ficha.bba : 0,
+    bbaOutros: Number.isFinite(ficha.bbaOutros) ? Number(ficha.bbaOutros) : 0,
     caBonusTamanho: Number.isFinite(ficha.caBonusTamanho) ? ficha.caBonusTamanho : 0,
     caOutrosBonus: Number.isFinite(ficha.caOutrosBonus) ? ficha.caOutrosBonus : 0,
     fortitudeOutros: Number.isFinite(ficha.fortitudeOutros) ? ficha.fortitudeOutros : 0,
@@ -801,6 +830,7 @@ export function normalizarFicha(ficha: FichaPersonagem): FichaPersonagem {
     itensGerais: Array.isArray(ficha.itensGerais) ? ficha.itensGerais : [],
     tibares: ficha.tibares || '',
     ordemAbas: Array.isArray(ficha.ordemAbas) ? ficha.ordemAbas : undefined,
+    abasOcultas: Array.isArray(ficha.abasOcultas) ? (ficha.abasOcultas as string[]) : [],
     buffsTemporarios: ficha.buffsTemporarios || undefined,
     compartilhadaCom: Array.isArray(ficha.compartilhadaCom) ? ficha.compartilhadaCom : undefined,
     sharedWithUids: Array.isArray(ficha.sharedWithUids) ? ficha.sharedWithUids : undefined,

@@ -52,10 +52,70 @@ export const AbaDadosCadastrais: React.FC<Props> = ({ ficha, onChange }) => {
   };
 
 
+  const sincronizarHabilidadesDeClasse = (
+    fichaAtual: FichaPersonagem,
+    nomeClasse: string,
+    novoNivel: number
+  ): HabilidadeOuTalento[] => {
+    const classeInfo = getClassePorNome(nomeClasse);
+    if (!classeInfo || !Array.isArray(classeInfo.habilidades)) {
+      return fichaAtual.habilidadesClasse || [];
+    }
+
+    const nomesExistentes = new Set(
+      (fichaAtual.habilidadesClasse || []).map((h) => h.nome.trim().toLowerCase())
+    );
+
+    const novasHabs: HabilidadeOuTalento[] = [];
+
+    classeInfo.habilidades.forEach((h) => {
+      const nivelHab = Number(h.nivel) || 1;
+      if (nivelHab <= novoNivel) {
+        const nomeFormatado = `${h.nome} [${classeInfo.nome} ${nivelHab}]`;
+        const nomeFormatadoLower = nomeFormatado.toLowerCase();
+        const nomeBaseLower = h.nome.trim().toLowerCase();
+
+        const jaExiste =
+          nomesExistentes.has(nomeFormatadoLower) ||
+          nomesExistentes.has(nomeBaseLower);
+
+        if (!jaExiste) {
+          novasHabs.push({
+            id: gerarId(),
+            nome: nomeFormatado,
+            descricao: h.descricao,
+          });
+          nomesExistentes.add(nomeFormatadoLower);
+        }
+      }
+    });
+
+    if (novasHabs.length === 0) {
+      return fichaAtual.habilidadesClasse || [];
+    }
+
+    return [...(fichaAtual.habilidadesClasse || []), ...novasHabs];
+  };
+
   const handleAlterarNomeClasse = (index: number, novoNome: string) => {
     const novas = [...classesAtuais];
     novas[index] = { ...novas[index], nome: novoNome };
-    onChange(atualizarClassesFicha(ficha, novas));
+    let fichaAtualizada = atualizarClassesFicha(ficha, novas);
+
+    const classeInfo = getClassePorNome(novoNome);
+    if (classeInfo) {
+      const habsAtualizadas = sincronizarHabilidadesDeClasse(
+        fichaAtualizada,
+        novoNome,
+        novas[index].nivel || 1
+      );
+      fichaAtualizada = {
+        ...fichaAtualizada,
+        habilidadesClasse: habsAtualizadas,
+      };
+    }
+
+    onChange(fichaAtualizada);
   };
 
   const handleAlterarNivelClasse = (index: number, delta: number) => {
@@ -63,7 +123,21 @@ export const AbaDadosCadastrais: React.FC<Props> = ({ ficha, onChange }) => {
     const atual = novas[index].nivel || 1;
     const novoNivel = Math.max(1, Math.min(20, atual + delta));
     novas[index] = { ...novas[index], nivel: novoNivel };
-    onChange(atualizarClassesFicha(ficha, novas));
+    let fichaAtualizada = atualizarClassesFicha(ficha, novas);
+
+    if (delta > 0 && novas[index].nome?.trim()) {
+      const habsAtualizadas = sincronizarHabilidadesDeClasse(
+        fichaAtualizada,
+        novas[index].nome,
+        novoNivel
+      );
+      fichaAtualizada = {
+        ...fichaAtualizada,
+        habilidadesClasse: habsAtualizadas,
+      };
+    }
+
+    onChange(fichaAtualizada);
   };
 
   const handleAdicionarNovaClasse = () => {

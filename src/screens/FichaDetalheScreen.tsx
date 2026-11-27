@@ -194,6 +194,24 @@ export const FichaDetalheScreen: React.FC<Props> = ({
     AsyncStorage.setItem(STORAGE_KEY_ORDEM_PREFERIDA, JSON.stringify(novaOrdem)).catch(() => { });
   };
 
+  const atualizarAbasOcultas = (novasOcultas: string[]) => {
+    handleSafeChange({ ...ficha, abasOcultas: novasOcultas });
+
+    const abasVisiveis = ordemAbas.filter((k) => !novasOcultas.includes(k));
+    const fallbackAba = abasVisiveis[0] || 'atributos';
+
+    if (novasOcultas.includes(abaMobile)) {
+      setAbaMobile(fallbackAba);
+    }
+    if (novasOcultas.includes(abaEsquerda)) {
+      setAbaEsquerda(fallbackAba);
+    }
+    if (novasOcultas.includes(abaDireita)) {
+      const outraFallback = abasVisiveis.find((k) => k !== fallbackAba) || fallbackAba;
+      setAbaDireita(outraFallback);
+    }
+  };
+
   const handleAdicionarTalento = (talento: TalentoData) => {
     const novo = converterTalentoParaItem(talento);
     handleSafeChange({ ...ficha, talentos: [...ficha.talentos, novo] });
@@ -472,7 +490,9 @@ export const FichaDetalheScreen: React.FC<Props> = ({
             </View>
           )}
 
-          {ordemAbas.map((chave) => {
+          {ordemAbas
+            .filter((chave) => !ficha.abasOcultas?.includes(chave))
+            .map((chave) => {
             const info = TODAS_AS_ABAS[chave];
             if (!info) return null;
             const selecionada = abaSelecionada === chave;
@@ -724,8 +744,10 @@ export const FichaDetalheScreen: React.FC<Props> = ({
       <ModalReordenarAbas
         visivel={modalReordenarAberto}
         ordemAtual={ordemAbas}
+        abasOcultas={ficha.abasOcultas}
         onFechar={() => setModalReordenarAberto(false)}
         onSalvarOrdem={atualizarOrdemAbas}
+        onSalvarAbasOcultas={atualizarAbasOcultas}
       />
 
       {/* Compêndio Geral Aberto da Top Bar */}

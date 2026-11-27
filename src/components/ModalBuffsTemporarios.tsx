@@ -17,6 +17,8 @@ import {
   formatarModificador,
   obterBuffsTemporarios,
   obterValorAtributoBase,
+  obterPvMaxEfetivo,
+  obterPmMaxEfetivo,
   temBuffsAtivos,
   zerarBuffsTemporarios,
 } from '../models/ficha';
@@ -72,6 +74,16 @@ export const ModalBuffsTemporarios: React.FC<Props> = ({
   const adicionarPvTemp = (qtd: number) => {
     const atual = buffs.pvTemporario || 0;
     atualizarBuff('pvTemporario', Math.max(0, atual + qtd));
+  };
+
+  const adicionarPvMaxBuff = (qtd: number) => {
+    const atual = buffs.pvMax || 0;
+    atualizarBuff('pvMax', Math.max(-999, atual + qtd));
+  };
+
+  const adicionarPmMaxBuff = (qtd: number) => {
+    const atual = buffs.pmMax || 0;
+    atualizarBuff('pmMax', Math.max(-999, atual + qtd));
   };
 
   return (
@@ -247,10 +259,140 @@ export const ModalBuffsTemporarios: React.FC<Props> = ({
                   </View>
                 </View>
 
-                {/* 4. PONTOS DE VIDA (PV) TEMPORÁRIOS */}
+                {/* 4. VIDA E MANA MÁXIMAS TEMPORÁRIAS */}
+                <View style={styles.secaoBox}>
+                  <Text style={styles.secaoTitulo}>✨ VIDA E MANA MÁXIMAS TEMPORÁRIAS</Text>
+                  <Text style={styles.secaoDesc}>
+                    Bônus temporários que aumentam o limite máximo de PV e PM (ex: Fúria, Heroísmo, rituais ou poções).
+                  </Text>
+
+                  {/* Vida Máxima */}
+                  <View style={styles.itemCard}>
+                    <View style={styles.itemTopRow}>
+                      <View style={styles.itemIdent}>
+                        <Text style={[styles.itemSigla, { color: '#C62828' }]}>PV</Text>
+                        <View style={styles.itemNomeCol}>
+                          <Text style={styles.itemNome}>Vida Máxima (PV Máximo)</Text>
+                          <Text style={styles.itemBaseText}>Base da Ficha: {ficha.pvTotal} PV</Text>
+                        </View>
+                      </View>
+
+                      <View style={[styles.totalCol, buffs.pvMax !== 0 && styles.totalColAtivo]}>
+                        {buffs.pvMax !== 0 && (
+                          <Text style={styles.totalLabel}>
+                            {formatarModificador(buffs.pvMax)} temp
+                          </Text>
+                        )}
+                        <Text style={styles.totalValor}>
+                          Máx: {obterPvMaxEfetivo(ficha)} PV
+                        </Text>
+                      </View>
+                    </View>
+
+                    <View style={styles.itemBottomRow}>
+                      <Text style={styles.stepperDescLabel}>Bônus no PV Máximo:</Text>
+                      <View style={styles.recursoBuffControlRow}>
+                        <StepperValor
+                          valor={buffs.pvMax}
+                          onValorChange={(v) => atualizarBuff('pvMax', v)}
+                          min={-50}
+                          max={999}
+                        />
+                        <View style={styles.quickStepGroup}>
+                          <TouchableOpacity
+                            style={styles.btnPvQuick}
+                            onPress={() => adicionarPvMaxBuff(5)}
+                            activeOpacity={0.7}
+                          >
+                            <Text style={styles.btnPvQuickText}>+5</Text>
+                          </TouchableOpacity>
+                          <TouchableOpacity
+                            style={styles.btnPvQuick}
+                            onPress={() => adicionarPvMaxBuff(10)}
+                            activeOpacity={0.7}
+                          >
+                            <Text style={styles.btnPvQuickText}>+10</Text>
+                          </TouchableOpacity>
+                          {buffs.pvMax !== 0 && (
+                            <TouchableOpacity
+                              style={[styles.btnPvQuick, styles.btnPvZerar]}
+                              onPress={() => atualizarBuff('pvMax', 0)}
+                              activeOpacity={0.7}
+                            >
+                              <Text style={styles.btnPvZerarText}>Zerar</Text>
+                            </TouchableOpacity>
+                          )}
+                        </View>
+                      </View>
+                    </View>
+                  </View>
+
+                  {/* Mana Máxima */}
+                  <View style={[styles.itemCard, { marginTop: 10 }]}>
+                    <View style={styles.itemTopRow}>
+                      <View style={styles.itemIdent}>
+                        <Text style={[styles.itemSigla, { color: '#1565C0' }]}>PM</Text>
+                        <View style={styles.itemNomeCol}>
+                          <Text style={styles.itemNome}>Mana Máxima (PM Máximo)</Text>
+                          <Text style={styles.itemBaseText}>Base da Ficha: {ficha.pmTotal} PM</Text>
+                        </View>
+                      </View>
+
+                      <View style={[styles.totalCol, buffs.pmMax !== 0 && styles.totalColAtivo]}>
+                        {buffs.pmMax !== 0 && (
+                          <Text style={styles.totalLabel}>
+                            {formatarModificador(buffs.pmMax)} temp
+                          </Text>
+                        )}
+                        <Text style={styles.totalValor}>
+                          Máx: {obterPmMaxEfetivo(ficha)} PM
+                        </Text>
+                      </View>
+                    </View>
+
+                    <View style={styles.itemBottomRow}>
+                      <Text style={styles.stepperDescLabel}>Bônus no PM Máximo:</Text>
+                      <View style={styles.recursoBuffControlRow}>
+                        <StepperValor
+                          valor={buffs.pmMax}
+                          onValorChange={(v) => atualizarBuff('pmMax', v)}
+                          min={-50}
+                          max={999}
+                        />
+                        <View style={styles.quickStepGroup}>
+                          <TouchableOpacity
+                            style={styles.btnPvQuick}
+                            onPress={() => adicionarPmMaxBuff(5)}
+                            activeOpacity={0.7}
+                          >
+                            <Text style={styles.btnPvQuickText}>+5</Text>
+                          </TouchableOpacity>
+                          <TouchableOpacity
+                            style={styles.btnPvQuick}
+                            onPress={() => adicionarPmMaxBuff(10)}
+                            activeOpacity={0.7}
+                          >
+                            <Text style={styles.btnPvQuickText}>+10</Text>
+                          </TouchableOpacity>
+                          {buffs.pmMax !== 0 && (
+                            <TouchableOpacity
+                              style={[styles.btnPvQuick, styles.btnPvZerar]}
+                              onPress={() => atualizarBuff('pmMax', 0)}
+                              activeOpacity={0.7}
+                            >
+                              <Text style={styles.btnPvZerarText}>Zerar</Text>
+                            </TouchableOpacity>
+                          )}
+                        </View>
+                      </View>
+                    </View>
+                  </View>
+                </View>
+
+                {/* 5. PONTOS DE VIDA (PV) TEMPORÁRIOS */}
                 <View style={[styles.secaoBox, styles.secaoBoxPv]}>
                   <Text style={[styles.secaoTitulo, { color: '#C62828' }]}>
-                    ❤️ PONTOS DE VIDA (PV) TEMPORÁRIOS
+                    🛡️ PONTOS DE VIDA (PV) TEMPORÁRIOS (ABSORÇÃO)
                   </Text>
                   <Text style={styles.secaoDesc}>
                     Pontos de vida extras (ex: Vitalidade Ilusória) que absorvem dano antes do seu PV real.
@@ -519,6 +661,17 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     color: COLORS.text,
     marginTop: 1,
+  },
+  recursoBuffControlRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
+    flexWrap: 'wrap',
+  },
+  quickStepGroup: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 6,
   },
   pvTempRow: {
     gap: 10,
